@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long-Term Contract Reservation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 560px;
+            background: #2d3748;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: #1a202c;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            background: #4a5568;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #1a202c;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 16px 12px;
+            background: #4a5568;
+            color: #a0aec0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border-right: 1px solid #2d3748;
+            white-space: nowrap;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            background: #3182ce;
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #5a6c7d;
+        }
+
+        .content {
+            padding: 24px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-group {
+            margin-bottom: 16px;
+        }
+
+        .checkbox-item {
+            background: #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #edf2f7;
+        }
+
+        .checkbox-item.dark {
+            background: transparent;
+            padding: 16px 0;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #4a5568;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+            background: white;
+        }
+
+        .checkbox-item.dark .checkbox {
+            background: transparent;
+            border-color: white;
+        }
+
+        .checkbox.checked {
+            background: #4a5568;
+            border-color: #4a5568;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .checkbox-content {
+            flex: 1;
+        }
+
+        .checkbox-label {
+            color: #1a202c;
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .checkbox-item.dark .checkbox-label {
+            color: white;
+        }
+
+        .checkbox-description {
+            color: #718096;
+            font-size: 15px;
+        }
+
+        .toggle-item {
+            background: #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .toggle-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+        }
+
+        /* .toggle-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #4a5568;
+            border-radius: 4px;
+            background: white;
+            flex-shrink: 0;
+        } */
+
+        .toggle-label {
+            color: #1a202c;
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            width: 56px;
+            height: 32px;
+            background: #3182ce;
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            right: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.off {
+            background: #cbd5e0;
+        }
+
+        .toggle-switch.off::after {
+            transform: translateX(-24px);
+        }
+
+        .btn {
+            width: 50%;
+            padding: 16px;
+            background: #3182ce;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .content {
+                max-height: none;
+            }
+
+            .nav-tab {
+                min-width: 120px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn">←</button>
+            <h1 class="header-title">Long-Term Contract Reservation</h1>
+            <div class="profile-icon">👤</div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab" data-tab="company-info">Company Info</button>
+            <button class="nav-tab" data-tab="contract-route">Contract & Route</button>
+            <button class="nav-tab" data-tab="cargo">Cargo</button>
+            <button class="nav-tab active" data-tab="services">Service & Submit</button>
+            <button class="nav-tab" data-tab="submission">Submission</button>
+        </div>
+
+        <div class="content">
+            <h2 class="section-title">Service Level & Compliance</h2>
+
+            <div class="checkbox-group">
+                <div class="checkbox-item" data-checkbox="transit">
+                    <div class="checkbox"></div>
+                    <div class="checkbox-content">
+                        <div class="checkbox-label">Required Transit Time (SLA)</div>
+                        <div class="checkbox-description">(e.g, 48 hours)</div>
+                    </div>
+                </div>
+
+                <div class="checkbox-item" data-checkbox="certifications">
+                    <div class="checkbox checked"></div>
+                    <div class="checkbox-content">
+                        <div class="checkbox-label">Required Certifications/Permits</div>
+                        <div class="checkbox-description">(e.g, ADR, FDA)</div>
+                    </div>
+                </div>
+
+                <div class="checkbox-item" data-checkbox="insurance">
+                    <div class="checkbox"></div>
+                    <div class="checkbox-content">
+                        <div class="checkbox-label">Insurance Requirements</div>
+                        <div class="checkbox-description">(e.g. All-Risk Transit Policy)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkbox-item dark" data-checkbox="api">
+                <div class="checkbox"></div>
+                <div class="checkbox-content">
+                    <div class="checkbox-label">API Tracking Integration</div>
+                </div>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-content">
+                    <!-- <div class="toggle-checkbox"></div> -->
+                    <div class="toggle-label">Dedicated Fleet Need (Yes/No)</div>
+                </div>
+                <div class="toggle-switch" id="fleetToggle"></div>
+            </div>
+            <button class="btn">Done</button>
+        </div>
+    </div>
+
+    <script>
+        // Navigation tabs
+        const navTabs = document.querySelectorAll('.nav-tab');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                navTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Checkbox items
+        const checkboxItems = document.querySelectorAll('.checkbox-item[data-checkbox]');
+
+        checkboxItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const checkbox = this.querySelector('.checkbox');
+                checkbox.classList.toggle('checked');
+            });
+        });
+
+        // Toggle switch
+        const fleetToggle = document.getElementById('fleetToggle');
+
+        fleetToggle.addEventListener('click', function () {
+            this.classList.toggle('off');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Sharing App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        /* Map Container */
+        .map-container {
+            width: 100%;
+            height: 50vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .map-control-btn {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .map-control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 2px;
+            background: #333;
+            position: relative;
+        }
+
+        .menu-icon::before,
+        .menu-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #333;
+            left: 0;
+        }
+
+        .menu-icon::before {
+            top: -6px;
+        }
+
+        .menu-icon::after {
+            top: 6px;
+        }
+
+        /* Map Search Box */
+        .map-search-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 250px;
+            z-index: 1000;
+        }
+
+        .map-search-box input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            flex: 1;
+            background: transparent;
+        }
+
+        .map-search-icon {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Content Container */
+        .content-container {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+            min-height: 60vh;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Advertisement Banner */
+        .ad-banner {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 20px;
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20px;
+            width: 100px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            transform: rotate(45deg);
+        }
+
+        .ad-content {
+            flex: 1;
+        }
+
+        .ad-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .ad-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .ad-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ad-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .ad-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-left: 15px;
+        }
+
+        .close-ad {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Trip Header */
+        .trip-header {
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+
+        .trip-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Trip Options */
+        .trip-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .trip-option {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .trip-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .trip-option.active {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .trip-icon {
+            width: 50px;
+            height: 40px;
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .rides-icon {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+        }
+
+        .schedule-icon {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+        }
+
+        .trip-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .trip-subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 0 20px 20px;
+        }
+
+        .distance-button {
+            padding: 8px 15px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .distance-button:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #2196f3;
+        }
+
+        /* Transaction Cards */
+        .transaction-cards {
+            padding: 0 20px;
+        }
+
+        /* Single Trip Card */
+        .single-trip-card {
+            background: #ececec;
+            border-radius: 18px;
+            padding: 18px 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            min-height: 135px;
+        }
+
+        .truck-section {
+            flex: 0 0 190px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .truck-image {
+            width: 170px;
+            height: auto;
+            margin-bottom: 6px;
+        }
+
+        .dimensions {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .details-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            justify-content: center;
+        }
+
+        .price {
+            font-size: 30px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .rupee {
+            font-family: Arial, sans-serif;
+        }
+
+        .trip-type {
+            font-size: 15px;
+            color: #5b8ac4;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .info-line {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.4;
+            margin-bottom: 1px;
+        }
+
+        .info-line strong {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .material-section {
+            flex: 0 0 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .material-image {
+            width: 130px;
+            height: 85px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 6px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .material-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1px;
+        }
+
+        .material-type {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Reserved Contract Card */
+        .reserved-contract-card {
+            background: #e8e8e8;
+            border-radius: 25px;
+            padding: 25px 35px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .reserved-left-section {
+            flex: 0 0 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reserved-truck-image {
+            width: 240px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .reserved-dimensions {
+            color: #666;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .reserved-middle-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .reserved-price-header {
+            font-size: 38px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 18px;
+            line-height: 1;
+        }
+
+        .reserved-details-list {
+            list-style: none;
+        }
+
+        .reserved-details-list li {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .reserved-label {
+            font-weight: 600;
+            color: #444;
+        }
+
+        .reserved-right-section {
+            flex: 0 0 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reserved-material-image {
+            width: 200px;
+            height: 120px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .reserved-material-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .reserved-material-type {
+            font-size: 15px;
+            color: #888;
+        }
+
+        /* Distance Modal */
+        .distance-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .distance-modal.active {
+            display: flex;
+        }
+
+        .distance-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .distance-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .distance-option {
+            padding: 15px 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .distance-option:hover {
+            border-color: #2196f3;
+            background: #f8f9fa;
+        }
+
+        .distance-option.selected {
+            border-color: #2196f3;
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .distance-range {
+            font-weight: 600;
+        }
+
+        .distance-description {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            padding: 2px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+
+        .nav-item.active {
+            color: #2196f3;
+        }
+
+        .nav-icon {
+            font-size: 25px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .nav-label {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .last-card {
+            margin-bottom: 80px !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .single-trip-card,
+            .reserved-contract-card {
+                flex-direction: column;
+                padding: 18px;
+            }
+
+            .truck-section,
+            .material-section,
+            .reserved-left-section,
+            .reserved-right-section {
+                flex: 0 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="map-container">
+        <div id="map"></div>
+        
+        <div class="map-overlay">
+            <div class="menu-icon"></div>
+        </div>
+
+        <div class="map-search-box">
+            <span class="map-search-icon">📍</span>
+            <input type="text" placeholder="Search location...">
+        </div>
+
+        <div class="map-controls">
+            <button class="map-control-btn" title="Search" onclick="showTooltip('Search')"><i class="fas fa-search"></i></button>
+            <button class="map-control-btn" title="Settings" onclick="showTooltip('Settings')"><i class="fas fa-cog"></i></button>
+            <button class="map-control-btn" title="Location" onclick="handleLocation()"><i class="fas fa-location-arrow"></i></button>
+            <button class="map-control-btn" title="Layers" onclick="showTooltip('Layers')"><i class="fas fa-layer-group"></i></button>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="ad-banner" id="adBanner">
+            <button class="close-ad" onclick="closeAd()">×</button>
+            <div class="ad-content">
+                <div class="ad-title">30% off 5 rides</div>
+                <div class="ad-subtitle">Limited time offer</div>
+                <button class="ad-button" onclick="viewAdDetails()">View details</button>
+            </div>
+            <div class="ad-icon">🎯</div>
+        </div>
+
+        <div class="trip-header">
+            <h1 class="trip-title">Smooth Dispatch ahead.</h1>
+        </div>
+
+        <div class="trip-options">
+            <div class="trip-option active" onclick="selectTripOption(this, 'rides')">
+                <div class="trip-icon rides-icon">🚚</div>
+                <div class="trip-label">Trip</div>
+                <div class="trip-subtitle">Let's go for Shipment</div>
+            </div>
+            <div class="trip-option" onclick="selectTripOption(this, 'schedule')">
+                <div class="trip-icon schedule-icon">📅</div>
+                <div class="trip-label">Schedule</div>
+                <div class="trip-subtitle">Book ahead</div>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <button class="distance-button" onclick="openDistanceModal()">
+                <span>🖐</span>
+                <span id="distanceText">Filter</span>
+            </button>
+        </div>
+
+        <div class="transaction-cards" id="transactionCards"></div>
+    </div>
+
+    <div class="distance-modal" id="distanceModal">
+        <div class="distance-content">
+            <h3 class="distance-title">Select Distance Range</h3>
+            <div class="distance-option" onclick="selectDistance('< 100 km', 'Nearby')">
+                <div>
+                    <div class="distance-range">&lt; 100 km</div>
+                    <div class="distance-description">Nearby locations</div>
+                </div>
+            </div>
+            <div class="distance-option" onclick="selectDistance('100-300 km', 'Medium')">
+                <div>
+                    <div class="distance-range">100-300 km</div>
+                    <div class="distance-description">Medium distance</div>
+                </div>
+            </div>
+            <div class="distance-option" onclick="selectDistance('300-600 km', 'Far')">
+                <div>
+                    <div class="distance-range">300-600 km</div>
+                    <div class="distance-description">Far locations</div>
+                </div>
+            </div>
+            <div class="distance-option" onclick="selectDistance('600+ km', 'Out of State')">
+                <div>
+                    <div class="distance-range">600+ km</div>
+                    <div class="distance-description">Out of State travel</div>
+                </div>
+            </div>
+            <div class="distance-option" onclick="selectDistance('Any distance', 'Out of Country')">
+                <div>
+                    <div class="distance-range">Any distance</div>
+                    <div class="distance-description">Out of Country</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <div class="nav-label">Home</div>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">📋</span>
+            <div class="nav-label">Order</div>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">👤</span>
+            <div class="nav-label">Account</div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize map with Abu Dhabi coordinates
+        const map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([24.4539, 54.3773], 12);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add custom markers
+        const marker1 = L.marker([24.4539, 54.3773], {
+            icon: L.divIcon({
+                className: 'custom-marker',
+                html: '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #ff4444;"></i>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            })
+        }).addTo(map);
+
+        const marker2 = L.marker([24.4239, 54.4373], {
+            icon: L.divIcon({
+                className: 'custom-marker',
+                html: '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #ff4444;"></i>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            })
+        }).addTo(map);
+
+        const transactions = [
+            {
+                type: 'single',
+                truckColor: '#c44539',
+                price: '₹ 80,000',
+                tripType: 'Single Trip',
+                pickup: 'Surat, NCR (26-10-2024, 10:00am)',
+                dropoff: 'Delhi,DJ (26-10-2024, 08:00pm)',
+                duration: '10 hrs',
+                weight: '18,000 KG',
+                dimensions: 'Dimensions: 15m x 2.5 x 4m',
+                material: 'General Cargo (Class 3)',
+                distance: '< 100 km'
+            },
+            {
+                type: 'allotment',
+                truckColor: '#5d8fb8',
+                price: '₹ 80,000',
+                tripType: 'Allotment Trip',
+                pickup: 'Delhi,NCR (26-10-2024, 10:00am)',
+                dropoff: 'Delhi,DJ (26-10-2024, 11:00pm)',
+                duration: '10 hrs',
+                weight: '18,000 KG',
+                dimensions: 'Dimensions: 15m x 2.5 x 4m',
+                material: 'General Cargo (Class 3)',
+                distance: '100-300 km'
+            },
+            {
+                type: 'reserved',
+                price: '₹ 150,000 / 30 Days',
+                orderType: 'Reserved Contract',
+                companyAddress: 'GMDC, Mandvi-Gujarat',
+                duration: '8 hrs/day (6 days/week)',
+                contractPeriod: 'yearly (from 24-08-2024 to 23-08-2025)',
+                billingCycle: 'Every 30 days',
+                dimensions: 'Dimensions: 15m x 2.5 x 4m',
+                material: 'General Cargo (Class 3)',
+                distance: '300-600 km'
+            },
+            {
+                type: 'single',
+                truckColor: '#c44539',
+                price: '₹ 95,000',
+                tripType: 'Single Trip',
+                pickup: 'Mumbai, MH (27-10-2024, 09:00am)',
+                dropoff: 'Pune, MH (27-10-2024, 03:00pm)',
+                duration: '6 hrs',
+                weight: '12,000 KG',
+                dimensions: 'Dimensions: 12m x 2.3 x 3.8m',
+                material: 'General Cargo (Class 3)',
+                distance: '600+ km'
+            }
+        ];
+
+        function renderTransactions(filteredTransactions = transactions) {
+            const container = document.getElementById('transactionCards');
+            container.innerHTML = '';
+
+            filteredTransactions.forEach((transaction, index) => {
+                const isLast = index === filteredTransactions.length - 1;
+                
+                if (transaction.type === 'single' || transaction.type === 'allotment') {
+                    const card = document.createElement('div');
+                    card.className = 'single-trip-card' + (isLast ? ' last-card' : '');
+                    
+                    const cabinColor = transaction.type === 'allotment' ? '#4a7ba7' : transaction.truckColor;
+                    const containerColor = transaction.type === 'allotment' ? '#5d8fb8' : transaction.truckColor;
+                    
+                    card.innerHTML = `
+                        <div class="truck-section">
+                            <svg class="truck-image" viewBox="0 0 180 100" xmlns="http://www.w3.org/2000/svg">
+                                <rect class="truck-container" x="50" y="20" width="120" height="50" fill="${containerColor}" rx="3"/>
+                                ${transaction.type === 'single' ? `
+                                <line x1="60" y1="25" x2="60" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="70" y1="25" x2="70" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="80" y1="25" x2="80" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="90" y1="25" x2="90" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="100" y1="25" x2="100" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="110" y1="25" x2="110" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="120" y1="25" x2="120" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="130" y1="25" x2="130" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="140" y1="25" x2="140" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="150" y1="25" x2="150" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                <line x1="160" y1="25" x2="160" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                                ` : ''}
+                                <path class="truck-cabin" d="M 15 40 L 15 72 L 50 72 L 50 30 L 38 30 L 32 40 Z" fill="${cabinColor}"/>
+                                <rect x="18" y="43" width="13" height="16" fill="${transaction.type === 'allotment' ? '#3a4a5a' : '#4a5a6a'}" rx="1"/>
+                                <rect x="34" y="43" width="13" height="16" fill="${transaction.type === 'allotment' ? '#3a4a5a' : '#4a5a6a'}" rx="1"/>
+                                <circle cx="38" cy="75" r="10" fill="#2c3e50"/>
+                                <circle cx="38" cy="75" r="5" fill="#555"/>
+                                <circle cx="138" cy="75" r="10" fill="#2c3e50"/>
+                                <circle cx="138" cy="75" r="5" fill="#555"/>
+                                <circle cx="160" cy="75" r="10" fill="#2c3e50"/>
+                                <circle cx="160" cy="75" r="5" fill="#555"/>
+                                <rect x="20" y="62" width="5" height="8" fill="#ffd700" rx="1"/>
+                            </svg>
+                            <p class="dimensions">${transaction.dimensions}</p>
+                        </div>
+                        <div class="details-section">
+                            <div class="price">${transaction.price}</div>
+                            <div class="trip-type">${transaction.tripType}</div>
+                            <div class="info-line"><strong>Pickup:</strong> ${transaction.pickup}</div>
+                            <div class="info-line"><strong>Drop off:</strong> ${transaction.dropoff}</div>
+                            <div class="info-line"><strong>Duration:</strong> ${transaction.duration} • <strong>Range KM</strong> • <strong>Weight:</strong> ${transaction.weight}</div>
+                        </div>
+                        <div class="material-section">
+                            <img class="material-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 90'%3E%3Cdefs%3E%3Cpattern id='wood2' patternUnits='userSpaceOnUse' width='10' height='10'%3E%3Crect width='10' height='10' fill='%23d4a574'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='140' height='90' fill='%2387ceeb'/%3E%3Crect x='85' y='8' width='28' height='28' fill='%23b8a58f'/%3E%3Crect x='108' y='18' width='22' height='18' fill='%23a89478'/%3E%3Cg%3E%3Crect x='52' y='18' width='33' height='30' fill='url(%23wood2)' stroke='%23a07850'/%3E%3Crect x='55' y='23' width='27' height='4' fill='%238b6f47'/%3E%3Crect x='55' y='35' width='27' height='4' fill='%238b6f47'/%3E%3C/g%3E%3Cg%3E%3Crect x='22' y='33' width='38' height='34' fill='url(%23wood2)' stroke='%23a07850'/%3E%3Crect x='25' y='39' width='32' height='5' fill='%238b6f47'/%3E%3Crect x='25' y='52' width='32' height='5' fill='%238b6f47'/%3E%3C/g%3E%3Cg%3E%3Crect x='67' y='48' width='36' height='32' fill='url(%23wood2)' stroke='%23a07850'/%3E%3Crect x='70' y='54' width='30' height='5' fill='%238b6f47'/%3E%3Crect x='70' y='67' width='30' height='5' fill='%238b6f47'/%3E%3C/g%3E%3C/svg%3E" alt="Pallets">
+                            <div class="material-label">Material:</div>
+                            <div class="material-type">${transaction.material}</div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                } else if (transaction.type === 'reserved') {
+                    const card = document.createElement('div');
+                    card.className = 'reserved-contract-card' + (isLast ? ' last-card' : '');
+                    
+                    card.innerHTML = `
+                        <div class="reserved-left-section">
+                            <svg class="reserved-truck-image" viewBox="0 0 280 150" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="80" y="30" width="180" height="80" fill="#c44539" rx="5"/>
+                                <line x1="95" y1="40" x2="95" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="110" y1="40" x2="110" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="125" y1="40" x2="125" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="140" y1="40" x2="140" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="155" y1="40" x2="155" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="170" y1="40" x2="170" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="185" y1="40" x2="185" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="200" y1="40" x2="200" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="215" y1="40" x2="215" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="230" y1="40" x2="230" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <line x1="245" y1="40" x2="245" y2="100" stroke="#a03830" stroke-width="2"/>
+                                <path d="M 20 60 L 20 110 L 80 110 L 80 45 L 60 45 L 50 60 Z" fill="#c44539"/>
+                                <rect x="25" y="65" width="20" height="25" fill="#4a5a6a" rx="2"/>
+                                <rect x="52" y="65" width="20" height="25" fill="#4a5a6a" rx="2"/>
+                                <circle cx="60" cy="115" r="15" fill="#2c3e50"/>
+                                <circle cx="60" cy="115" r="8" fill="#555"/>
+                                <circle cx="210" cy="115" r="15" fill="#2c3e50"/>
+                                <circle cx="210" cy="115" r="8" fill="#555"/>
+                                <circle cx="245" cy="115" r="15" fill="#2c3e50"/>
+                                <circle cx="245" cy="115" r="8" fill="#555"/>
+                                <rect x="28" y="95" width="8" height="12" fill="#ffd700" rx="1"/>
+                                <line x1="20" y1="90" x2="35" y2="90" stroke="#a03830" stroke-width="2"/>
+                            </svg>
+                            <p class="reserved-dimensions">${transaction.dimensions}</p>
+                        </div>
+                        <div class="reserved-middle-section">
+                            <h1 class="reserved-price-header">${transaction.price}</h1>
+                            <ul class="reserved-details-list">
+                                <li><span class="reserved-label">Order Type:</span> ${transaction.orderType}</li>
+                                <li><span class="reserved-label">Company address:</span> ${transaction.companyAddress}</li>
+                                <li><span class="reserved-label">Duration:</span> ${transaction.duration}</li>
+                                <li><span class="reserved-label">Contract period:</span> ${transaction.contractPeriod}</li>
+                                <li><span class="reserved-label">Billing and payment cycle:</span> ${transaction.billingCycle}</li>
+                            </ul>
+                        </div>
+                        <div class="reserved-right-section">
+                            <svg class="reserved-material-image" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <pattern id="wood" patternUnits="userSpaceOnUse" width="20" height="20">
+                                        <rect width="20" height="20" fill="#d4a574"/>
+                                        <path d="M0,0 L20,20 M20,0 L0,20" stroke="#b8935f" stroke-width="0.5"/>
+                                    </pattern>
+                                </defs>
+                                <g transform="translate(30, 20)">
+                                    <rect x="80" y="10" width="40" height="30" fill="url(#wood)" stroke="#a07850" stroke-width="1"/>
+                                    <rect x="85" y="15" width="30" height="4" fill="#8b6f47"/>
+                                    <rect x="85" y="26" width="30" height="4" fill="#8b6f47"/>
+                                    <rect x="40" y="25" width="45" height="35" fill="url(#wood)" stroke="#a07850" stroke-width="1"/>
+                                    <rect x="45" y="30" width="35" height="5" fill="#8b6f47"/>
+                                    <rect x="45" y="45" width="35" height="5" fill="#8b6f47"/>
+                                    <rect x="0" y="40" width="50" height="40" fill="url(#wood)" stroke="#a07850" stroke-width="1"/>
+                                    <rect x="5" y="46" width="40" height="6" fill="#8b6f47"/>
+                                    <rect x="5" y="62" width="40" height="6" fill="#8b6f47"/>
+                                    <rect x="110" y="-5" width="25" height="50" fill="#b8a58f" opacity="0.6"/>
+                                    <rect x="138" y="5" width="20" height="40" fill="#a89478" opacity="0.6"/>
+                                    <rect x="-30" y="-20" width="200" height="30" fill="#87ceeb" opacity="0.3"/>
+                                </g>
+                            </svg>
+                            <p class="reserved-material-label">Material:</p>
+                            <p class="reserved-material-type">${transaction.material}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function showTooltip(feature) {
+            alert(`${feature} feature activated!`);
+        }
+
+        function handleLocation() {
+            map.setView([24.4539, 54.3773], 12);
+        }
+
+        function selectTripOption(element, type) {
+            document.querySelectorAll('.trip-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            // Navigate to total.html when Schedule is clicked
+            if (type === 'schedule') {
+                window.location.href = "C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/total.html";
+            }
+        }
+
+        function closeAd() {
+            const adBanner = document.getElementById('adBanner');
+            adBanner.style.transform = 'translateX(100%)';
+            adBanner.style.opacity = '0';
+            setTimeout(() => {
+                adBanner.style.display = 'none';
+            }, 300);
+        }
+
+        function viewAdDetails() {
+            alert('30% off your next 5 rides! Use code SAVE30. Valid until end of month.');
+        }
+
+        function openDistanceModal() {
+            document.getElementById('distanceModal').classList.add('active');
+        }
+
+        function closeDistanceModal() {
+            document.getElementById('distanceModal').classList.remove('active');
+        }
+
+        function selectDistance(distance, shortName) {
+            document.getElementById('distanceText').textContent = shortName;
+
+            document.querySelectorAll('.distance-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            closeDistanceModal();
+            filterTransactionsByDistance(distance);
+        }
+
+        function filterTransactionsByDistance(distance) {
+            let filteredTransactions = distance === 'Any distance' 
+                ? transactions 
+                : transactions.filter(transaction => transaction.distance === distance);
+            renderTransactions(filteredTransactions);
+        }
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('distanceModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDistanceModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            renderTransactions();
+            console.log('Ride sharing app initialized with interactive map');
+        });
+    </script>
+</body>
+
+</html>

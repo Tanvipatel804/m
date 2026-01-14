@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver's Bank Details</title>
+    <style>
+        * {
+            background-color: black;
+            color: white;
+            width: 500px;
+            margin-left: 20px;
+        }
+
+        .bank {
+            height: min-content;
+            margin: 15px 5px;
+        }
+
+        #note {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: larger;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h4 {
+            font-size: larger;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        label {
+            width: 200px;
+            height: 15px;
+            margin: 10px;
+            font-size: medium;
+            font-weight: bold;
+        }
+
+        input {
+            width: 300px;
+            height: 30px;
+            display: block;
+            border: 2px solid whitesmoke;
+            border-radius: 25px;
+            background-color: white;
+            color: black;
+            margin: 5px;
+        }
+
+        .bank p {
+            font-size: small;
+            margin-top: 0px;
+        }
+
+        span {
+            color: red;
+            margin: 5px;
+        }
+        #btnad{
+            border: 2px solid whitesmoke;
+            background-color: white;
+            color: black;
+            width: 170px;
+            height: 40px;
+            margin: 15px 30px;
+            font-weight: bolder;
+            font-size: large;
+            text-decoration: none;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <h2>Lorry Driver</h2>
+    <form action="backend.php">
+
+        <div class="bank" id="note">
+            <h4>Payment Details</h4>
+            <p>We need your payment details to pay you.</p>
+        </div>
+
+        <div class="bank">
+            <label for="daddress"> Address:<span>*</span> <input type="text" name="daddress" id="daddress" placeholder="501,Anant Apartment,Ambience Tiverton,Sector-50,Noida"></label>
+        </div>
+
+        <div class="bank">
+            <label for="dbac" > Bank Account Holder Name: <span>*</span><input type="text" name=" dbac"
+                    id="dbac" placeholder="Advin Joseph Maria"></label>
+            <p>Bank account holder name,person or company</p>
+        </div>
+
+        <div class="bank">
+            <label for="dban "> Bank Account Number: <span>*</span><input type="text" name="dban" id="dban " placeholder="012345678910111"></label>
+            <p>Your bank account number,in IBAN or other format</p>
+        </div>
+
+        <div class="bank">
+            <label for="dbnobs"> Bank IFSC Code : <span>*</span><input type="text" name="dbnobs"
+                    id="dbnobs " placeholder="SBIN0123456"></label>
+            <p>Bank Name: State Bank of India</p>
+            <p>Branch Name: Sector 50, Noida</p>
+            <p>State: Uttar Pradesh</p>
+        </div>
+    </form>
+<a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\7pin-code.html"><button id="btnad" class="btn">Submit Details</button> </a> <!--Insert this data into database when click on Add Detail-->
+<!--when user click on add detail msg displays that driver is successfully registered and then go to driveronline page-->
+</body>
+
+</html>

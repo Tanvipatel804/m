@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Future Trip - Order Time</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            max-width: 550px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #3d4a4d;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* .check-btn {
+            background: #5cb85c;
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 26px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background: #4a9d4a;
+            transform: scale(1.05);
+        } */
+
+        .content {
+            padding: 35px 30px;
+        }
+
+        .main-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 35px;
+            line-height: 1.2;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .time-section {
+            margin-bottom: 35px;
+        }
+
+        .time-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .time-btn {
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            padding: 16px 28px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .time-btn:hover {
+            border-color: #5cb85c;
+            transform: translateY(-2px);
+        }
+
+        .time-btn.active {
+            background: #5cb85c;
+            color: white;
+            border-color: #5cb85c;
+        }
+
+        .time-btn .checkmark {
+            width: 26px;
+            height: 26px;
+            background: #5cb85c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .time-btn.active .checkmark {
+            background: white;
+            color: #5cb85c;
+        }
+
+        .comments-section {
+            margin-bottom: 30px;
+        }
+
+        .comment-input {
+            width: 100%;
+            background: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 15px;
+            padding: 20px 25px;
+            font-size: 17px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s;
+            color: #999;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: #5cb85c;
+            color: #333;
+        }
+
+        .comment-wrapper {
+            position: relative;
+        }
+
+        .edit-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: #999;
+            font-size: 22px;
+            pointer-events: none;
+        }
+
+        .post-btn {
+            background: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .post-btn:hover {
+            background: #4a9d4a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(92, 184, 92, 0.3);
+        }
+
+        .post-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .time-options {
+                grid-template-columns: 1fr;
+            }
+
+            .main-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="history.back()">←</button>
+                <h1>Post Future Trip</h1>
+            </div>
+            <!-- <button class="check-btn" onclick="handleSubmit()">✓</button> -->
+        </div>
+
+        <div class="content">
+            <h2 class="main-title">Order Time & Final Notes ⏰✏️</h2>
+
+            <div class="time-section">
+                <h3 class="section-title">When Can You Confirm?</h3>
+                <div class="time-options">
+                    <button class="time-btn active" onclick="selectTime(this)">Confirm Order Time</button>
+                    <button class="time-btn" onclick="selectTime(this)">Flexible Time</button>
+                </div>
+                <div class="time-options">
+                    <!-- <button class="time-btn" onclick="selectTime(this)">
+                        <span>Flexible Time</span>
+                        <span class="checkmark">✓</span>
+                    </button> -->
+                    <button class="time-btn" onclick="selectTime(this)">Both</button>
+                </div>
+            </div>
+
+            <div class="comments-section">
+                <h3 class="section-title">Additional Comments</h3>
+                <div class="comment-wrapper">
+                    <textarea 
+                        class="comment-input" 
+                        id="comments"
+                        placeholder="Write any extra details here..."
+                    ></textarea>
+                    <span class="edit-icon">✏️</span>
+                </div>
+            </div>
+
+            <button class="post-btn" onclick="handlePost()">Post My Trip!</button>
+        </div>
+    </div>
+
+    <script>
+        function selectTime(btn) {
+            const buttons = document.querySelectorAll('.time-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function handlePost() {
+            const selectedTime = document.querySelector('.time-btn.active');
+            const comments = document.getElementById('comments').value;
+
+            console.log('Order Time:', selectedTime?.textContent.trim());
+            console.log('Comments:', comments);
+
+            if (comments.trim()) {
+                alert('🎉 Trip Posted Successfully!\n\nOrder Time: ' + selectedTime?.textContent.trim() + '\nComments: ' + comments);
+            } else {
+                alert('🎉 Trip Posted Successfully!\n\nOrder Time: ' + selectedTime?.textContent.trim());
+            }
+        }
+
+        function handleSubmit() {
+            const selectedTime = document.querySelector('.time-btn.active');
+            const comments = document.getElementById('comments').value;
+
+            if (!selectedTime) {
+                alert('Please select an order time option.');
+                return;
+            }
+
+            console.log('Quick submit!');
+            console.log('Order Time:', selectedTime?.textContent.trim());
+            console.log('Comments:', comments);
+
+            alert('✓ Trip submitted successfully!');
+        }
+
+        // Update placeholder color on focus
+        const textarea = document.getElementById('comments');
+        textarea.addEventListener('focus', function() {
+            this.style.color = '#333';
+        });
+        
+        textarea.addEventListener('blur', function() {
+            if (!this.value) {
+                this.style.color = '#999';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver Personal Information</title>
+  <style>
+    body {
+      width: 500px;
+      margin: 0px auto;
+      border: 2px solid black;
+      background-color: black;
+      color: white;
+    }
+
+    h2 {
+      font-size: xx-large;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .diff {
+      margin: 5px 10px;
+    }
+
+    label {
+      width: 200px;
+      margin: 5px;
+      padding: 5px;
+      font-size: medium;
+    }
+
+    input,
+    select {
+      width: 270px;
+      height: 30px;
+      display: block;
+      border: 2px solid whitesmoke;
+      border-radius: 25px;
+      background-color: white;
+      color: black;
+      margin: 10px;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      margin: 15px;
+      display: inline;
+      vertical-align: middle;
+    }
+
+    button {
+      border: 2px solid whitesmoke;
+      border-radius: 20px;
+      background-color: white;
+      color: black;
+      text-align: center;
+      height: 35px;
+      width: 150px;
+      font-weight: bolder;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #btnnext {
+      width: 140px;
+      height: 40px;
+      background-color: white;
+      border-radius: 0px;
+      color: black;
+      font-weight: bold;
+      font-size: large;
+      margin: 40px auto;
+      border: 2px solid white;
+      cursor: pointer;
+    }
+
+    #btnnext a {
+      text-decoration: none;
+      color: black;
+    }
+
+    h3 {
+      font-size: large;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    span {
+      color: red;
+      margin: 5px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .vehicle-section {
+      border: 1px solid white;
+      padding: 10px;
+      margin: 15px 0;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .remove-btn {
+      background-color: crimson;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 120px;
+      height: 30px;
+      font-size: small;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Personal information</h2>
+  <form action="backend.php">
+
+    <!-- Basic Info -->
+    <div class="diff">
+      <label for="ufname"> First Name:<span>*</span>
+        <input type="text" id="ufname" placeholder="Joseph Maria">
+      </label>
+    </div>
+
+    <div class="diff">
+      <label for="ulname"> Last Name:<span>*</span>
+        <input type="text" id="ulname" placeholder="Advin">
+      </label>
+    </div>
+
+    <div class="diff">
+      <label for="ulang"> Language:<span>*</span></label>
+      <select id="ulang">
+        <option>Gujarati</option>
+        <option>Hindi</option>
+        <option>English</option>
+      </select>
+    </div>
+
+    <div class="diff">
+      <label for="uano"> Aadharcard No:<span>*</span>
+        <input type="number" id="uano" placeholder="1234 5678 9012">
+      </label>
+    </div>
+
+    <!-- Multiple vehicle option -->
+    <div class="diff">
+      <input type="checkbox" id="multiCheck">
+      <label for="multiCheck"> Have multiple vehicles? </label>
+    </div>
+
+    <div id="singleVehicleText" class="diff">
+      <label>I have a vehicle that I will drive.</label>
+    </div>
+
+    <div id="multiVehicleInput" class="diff hidden">
+      <label for="vehicleCount">Number of vehicles you have:
+        <input type="number" id="vehicleCount" min="1" placeholder="Enter number of vehicles">
+      </label>
+      <button type="button" id="addVehicleBtn">+ Add Vehicles Details</button>
+    </div>
+
+    <!-- Vehicle details container -->
+    <div id="vehicleContainer"></div>
+
+    <button type="button" id="btnnext"><a href="6payment-details.html">Next</a></button>
+  </form>
+
+  <script>
+    const multiCheck = document.getElementById("multiCheck");
+    const singleText = document.getElementById("singleVehicleText");
+    const multiInput = document.getElementById("multiVehicleInput");
+    const vehicleCount = document.getElementById("vehicleCount");
+    const addVehicleBtn = document.getElementById("addVehicleBtn");
+    const container = document.getElementById("vehicleContainer");
+
+    let addedVehicles = 0;
+
+    function createVehicleSection(index) {
+      const section = document.createElement("div");
+      section.classList.add("vehicle-section");
+      section.innerHTML = `
+        <h3>Vehicle ${index}</h3>
+        <div class="diff">
+          <label>Driving License No.:<span>*</span>
+            <input type="text" placeholder="AB12 00003456789">
+          </label>
+        </div>
+        <div class="diff">
+          <label>Vehicle Registration No.:<span>*</span>
+            <input type="text" placeholder="V1234567890">
+          </label>
+        </div>
+        <div class="diff">
+          <label>Manufacturer and Model:<span>*</span>
+            <select>
+              <option>Tata,LPT 710</option>
+              <option>Ashok Leyland</option>
+              <option>Bharat Benz</option>
+              <option>Eicher</option>
+              <option>Mahindra</option>
+              <option>Volvo</option>
+            </select>
+          </label>
+        </div>
+        <div class="diff">
+          <label>Registration Date:<span>*</span>
+            <input type="date">
+          </label>
+        </div>
+        <div class="diff">
+          <label>Registration Validity:<span>*</span>
+            <input type="date">
+          </label>
+        </div>
+        <div class="diff">
+          <label>Plate No.:<span>*</span>
+            <input type="text" placeholder="MH12 25366897345">
+          </label>
+        </div>
+        <div class="diff">
+          <label>Vehicle Color:<span>*</span>
+            <select>
+              <option>Red</option>
+              <option>Yellow</option>
+              <option>Blue</option>
+            </select>
+          </label>
+        </div>
+        <button type="button" class="remove-btn">Remove Vehicle</button>
+      `;
+
+      // Remove functionality
+      section.querySelector(".remove-btn").addEventListener("click", () => {
+        container.removeChild(section);
+        addedVehicles--;
+        renumberVehicles();
+      });
+
+      return section;
+    }
+
+    function renumberVehicles() {
+      const sections = container.querySelectorAll(".vehicle-section");
+      sections.forEach((sec, i) => {
+        sec.querySelector("h3").innerText = `Vehicle ${i + 1}`;
+      });
+    }
+
+    // Checkbox toggle
+    multiCheck.addEventListener("change", () => {
+      container.innerHTML = "";
+      addedVehicles = 0;
+      if (multiCheck.checked) {
+        singleText.classList.add("hidden");
+        multiInput.classList.remove("hidden");
+      } else {
+        singleText.classList.remove("hidden");
+        multiInput.classList.add("hidden");
+        container.appendChild(createVehicleSection(1));
+        addedVehicles = 1;
+      }
+    });
+
+    // Add Vehicle button logic
+    addVehicleBtn.addEventListener("click", () => {
+      const totalVehicles = parseInt(vehicleCount.value) || 0;
+      if (addedVehicles < totalVehicles) {
+        addedVehicles++;
+        container.appendChild(createVehicleSection(addedVehicles));
+      } else {
+        alert("You already added all vehicles!");
+      }
+    });
+
+    // Default single vehicle at start
+    container.appendChild(createVehicleSection(1));
+    addedVehicles = 1;
+  </script>
+</body>
+
+</html>

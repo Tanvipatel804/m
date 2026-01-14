@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LorryPilot - Welcome Back</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* Background image with overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23c4a574" width="1200" height="800"/><rect fill="%238b7355" y="400" width="1200" height="400"/></svg>'); */
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            background-image: url("C:/Users/DADAGA/Pictures/Saved Pictures/lorrypilot.png");
+        }
+
+        .logo {
+            margin-top: 30px;
+            margin-bottom: 40px;
+            font-size: 32px;
+            font-weight: bold;
+            /* text-transform: uppercase; */
+            letter-spacing: 2px;
+            z-index: -1;
+        }
+
+        .logo .lorry {
+            color: white;
+        }
+
+        .logo .pilot {
+            color: #ff8c42;
+        }
+
+        .truck-icon {
+            display: inline-block;
+            margin-left: 5px;
+            color: #ff8c42;
+            font-size: 28px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+            z-index: 1;
+        }
+
+        .welcome-title {
+            font-size: 42px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .welcome-subtitle {
+            font-size: 18px;
+            color: #ff8c42;
+        }
+
+        .login-card {
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 40px 35px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .phone-display {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .country-flag {
+            width: 35px;
+            height: 35px;
+            margin-right: 15px;
+            border-radius: 50%;
+            background: #ff8c42;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .phone-number {
+            font-size: 18px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .pin-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .pin-dot {
+            width: 70px;
+            height: 70px;
+            border: 3px solid #d0d0d0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .pin-dot.filled {
+            border-color: #ff8c42;
+        }
+
+        .pin-dot-inner {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #666;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .pin-dot.filled .pin-dot-inner {
+            opacity: 1;
+        }
+
+        /* Hidden input for PIN */
+        .pin-input-hidden {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .biometric-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .biometric-section:hover {
+            background: #f0f0f0;
+        }
+
+        .biometric-icon {
+            width: 50px;
+            height: 50px;
+            background: #ff8c42;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .biometric-text {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .forgot-pin {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .forgot-pin a {
+            color: #ff8c42;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-pin a:hover {
+            color: #ff7a28;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: #ff8c42;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
+        }
+
+        .btn-login:hover {
+            background: #ff7a28;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 66, 0.5);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 28px;
+                margin-bottom: 30px;
+            }
+
+            .welcome-title {
+                font-size: 36px;
+            }
+
+            .welcome-subtitle {
+                font-size: 16px;
+            }
+
+            .login-card {
+                padding: 35px 25px;
+            }
+
+            .pin-dot {
+                width: 60px;
+                height: 60px;
+            }
+
+            .btn-login {
+                font-size: 18px;
+                padding: 14px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 24px;
+            }
+
+            .welcome-title {
+                font-size: 30px;
+            }
+
+            .welcome-subtitle {
+                font-size: 14px;
+            }
+
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .pin-inputs {
+                gap: 8px;
+            }
+
+            .pin-dot {
+                width: 55px;
+                height: 55px;
+            }
+
+            .biometric-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 24px;
+            }
+
+            .biometric-text {
+                font-size: 16px;
+            }
+
+            .btn-login {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .welcome-section {
+            animation: fadeIn 0.8s ease-out 0.2s backwards;
+        }
+
+        .login-card {
+            animation: fadeIn 0.8s ease-out 0.4s backwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <span class="lorry">LORRY</span> <span class="pilot">Pilot</span>
+    </div>
+
+    <div class="welcome-section">
+        <h1 class="welcome-title">Welcome Back!</h1>
+        <p class="welcome-subtitle">Login to continue your journey</p>
+    </div>
+
+    <div class="login-card">
+        <div class="phone-display">
+            <div class="country-flag">IND</div>
+            <span class="phone-number">+91 1234567890</span>
+        </div>
+
+        <div class="pin-inputs" id="pinDisplay">
+            <div class="pin-dot"><div class="pin-dot-inner"></div></div>
+            <div class="pin-dot"><div class="pin-dot-inner"></div></div>
+            <div class="pin-dot"><div class="pin-dot-inner"></div></div>
+            <div class="pin-dot"><div class="pin-dot-inner"></div></div>
+        </div>
+
+        <input type="password" class="pin-input-hidden" id="pinInput" maxlength="4" autocomplete="off">
+
+        <div class="biometric-section" onclick="handleBiometric()">
+            <div class="biometric-icon">👍</div>
+            <span class="biometric-text">Use Biometric Login</span>
+        </div>
+
+        <div class="forgot-pin">
+            <a href="#" onclick="handleForgotPin(event)">Forgot PIN?</a>
+        </div>
+
+        <button class="btn-login" id="loginBtn" onclick="handleLogin()">Log In</button>
+    </div>
+
+    <script>
+        const pinInput = document.getElementById('pinInput');
+        const pinDots = document.querySelectorAll('.pin-dot');
+        const loginBtn = document.getElementById('loginBtn');
+        const pinDisplay = document.getElementById('pinDisplay');
+
+        // Make PIN dots clickable to focus hidden input
+        pinDisplay.addEventListener('click', () => {
+            pinInput.focus();
+        });
+
+        // Auto-focus on load
+        window.addEventListener('load', () => {
+            pinInput.focus();
+        });
+
+        // Handle PIN input
+        pinInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value;
+            
+            // Update dots
+            pinDots.forEach((dot, index) => {
+                if (index < value.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            });
+            
+            // Enable/disable login button
+            loginBtn.disabled = value.length !== 4;
+            
+            // Auto-submit when 4 digits entered
+            if (value.length === 4) {
+                setTimeout(() => handleLogin(), 300);
+            }
+        });
+
+        // Handle biometric login
+        function handleBiometric() {
+            console.log('Biometric login requested');
+            alert('Biometric authentication would be triggered here');
+            // In real app: Use Web Authentication API or native biometric
+        }
+
+        // Handle forgot PIN
+        function handleForgotPin(e) {
+            e.preventDefault();
+            console.log('Forgot PIN clicked');
+            alert('Redirecting to PIN recovery...');
+            // window.location.href = '/forgot-pin';
+        }
+
+        // Handle login
+        function handleLogin() {
+            const pin = pinInput.value;
+            
+            if (pin.length !== 4) {
+                alert('Please enter complete 4-digit PIN');
+                return;
+            }
+            
+            console.log('Logging in with PIN:', pin);
+          //  alert('Login successful! Redirecting to dashboard...');
+             window.location.href = "C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/10practice.html";
+        }
+
+        // Handle Enter key
+        pinInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && pinInput.value.length === 4) {
+                handleLogin();
+            }
+        });
+
+        // Add ripple effect to button
+        loginBtn.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.4)';
+            ripple.style.width = ripple.style.height = '100px';
+            ripple.style.left = e.clientX - rect.left - 50 + 'px';
+            ripple.style.top = e.clientY - rect.top - 50 + 'px';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.animation = 'ripple-effect 0.6s ease-out';
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple-effect {
+                from {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initially disable login button
+        loginBtn.disabled = true;
+    </script>
+</body>
+</html>

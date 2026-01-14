@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allotment Post Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .app-header {
+            background: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+            padding: 0 16px;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Content Container */
+        .content-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Earnings Card */
+        .earnings-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 24px;
+        }
+
+        .earnings-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .earnings-amount {
+            font-size: 56px;
+            font-weight: 700;
+            color: #667eea;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .earnings-amount .currency {
+            font-size: 32px;
+            color: #999;
+        }
+
+        .trip-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .meta-item ion-icon {
+            font-size: 20px;
+            color: #667eea;
+        }
+
+        /* Section Container */
+        .section-container {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            position: relative;
+        }
+
+        .timeline-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .timeline-icon.pickup {
+            background: #d4edda;
+            color: #28a745;
+        }
+
+        .timeline-icon.delivery {
+            background: #cfe2ff;
+            color: #0d6efd;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding-bottom: 24px;
+        }
+
+        .stop-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .location-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .location-address {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .time-window {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .time-window ion-icon {
+            font-size: 18px;
+            color: #667eea;
+        }
+
+        .timeline-connector {
+            position: absolute;
+            left: 23px;
+            top: 48px;
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom, #28a745, #0d6efd);
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(186px, 1fr));
+            gap: 16px;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .card-data {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .card-data .label {
+            font-size: 11px;
+            color: #999;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .card-data .value {
+            font-size: 14px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        /* Requirements List */
+        .requirements-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .requirements-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #333;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .requirements-list li ion-icon {
+            font-size: 20px;
+            color: #28a745;
+            flex-shrink: 0;
+        }
+
+        /* Action Bar */
+        .action-bar-placeholder {
+            height: 100px;
+        }
+
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .earnings-amount {
+                font-size: 48px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .trip-meta {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+     <header class="app-header">
+        <button class="icon-btn back-btn" aria-label="Go Back" onclick="goBack()">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <div class="header-title">
+            <h1>Allotment #9482</h1>
+            <span class="status-badge pending">Pending Acceptance</span>
+        </div>
+        <button class="icon-btn more-btn" aria-label="Options" onclick="showOptions()">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+        </button>
+    </header> 
+
+    <main class="content-container">   
+        <!-- Hero Section: Earnings -->
+        <section class="earnings-card">
+            <div class="earnings-label">Estimated Earnings</div>
+            <div class="earnings-amount">₹20,450<span class="currency">.00</span></div>
+            <div class="trip-meta">
+                <div class="meta-item">
+                    <ion-icon name="speedometer-outline"></ion-icon>
+                    <span>840 mi</span>
+                </div>
+                <div class="meta-item">
+                    <ion-icon name="time-outline"></ion-icon>
+                    <span>48 hours</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Route Timeline -->
+        <section class="section-container">
+            <h2 class="section-title">Route Details</h2>
+            <div class="timeline">
+                <!-- Pickup -->
+                <div class="timeline-item">
+                    <div class="timeline-icon pickup">
+                        <ion-icon name="arrow-up-circle"></ion-icon>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="stop-label">PICKUP</div>
+                        <h3 class="location-name">Dallas Distribution Center</h3>
+                        <p class="location-address">2500 S Cockrell Hill Rd, Dallas, TX 75211</p>
+                        <div class="time-window">
+                            <ion-icon name="time-outline"></ion-icon>
+                            <span>Today, 08:00 AM - 12:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connector Line -->
+                <div class="timeline-connector"></div>
+
+                <!-- Delivery -->
+                <div class="timeline-item">
+                    <div class="timeline-icon delivery">
+                        <ion-icon name="arrow-down-circle"></ion-icon>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="stop-label">DELIVERY</div>
+                        <h3 class="location-name">Chicago Hub</h3>
+                        <p class="location-address">3800 W 73rd St, Chicago, IL 60629</p>
+                        <div class="time-window">
+                            <ion-icon name="time-outline"></ion-icon>
+                            <span>Tomorrow, 10:00 AM - 02:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Commodity Details -->
+        <section class="section-container">
+            <h2 class="section-title">Cargo Details</h2>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="cube"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Commodity</span>
+                        <span class="value">Auto Parts</span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="layers"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Quantity</span>
+                        <span class="value">24 Pallets</span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="resize"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Dimensions/Pallets(L*W*H)</span>
+                        <span class="value">(48" * 40" * 42")</span>
+                    </div>
+                </div>
+                <!-- <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="bus"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Vehicle</span>
+                        <span class="value">Box-Flatted Truck</span>
+                    </div>
+                </div> -->
+                <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="logo-dropbox"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Loading/Unloading facility</span>
+                        <span class="value">Yes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<!-- start -->
+<!-- <section class="section-container">
+            <h2 class="section-title">Vehicle Type</h2>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="bus"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Vehicle</span>
+                        <span class="value">Box-Flatted Truck</span>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+<section class="section-container">
+           
+                <h2 class="section-title"style="margin-bottom: 15px;">Vehicle & Material Photos</h2>
+            <div class="details-grid">
+                <!-- <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="bus"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Vehicle</span>
+                        <span class="value">Box-Flatted Truck</span>
+                    </div>
+                </div> --><div class="items" id="9item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\open box truck.jpg">
+                <li>Open Box Truck</li>
+            </div>
+               
+                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;"></div>
+                <button class="icon-btn" onclick="attachPhoto()" style="background: #667eea; color: white;" title="Attach Vehicle Photo">
+                    <!-- <ion-icon name="camera-outline"></ion-icon> -->
+                     <img src="C:\Users\DADAGA\Pictures\Saved Pictures\box.jpg" alt="Attach Vehicle Photo" style="width: 240px; height: 124px;">
+                </button>
+                 </div>
+            </div>
+        </section>
+
+<!-- end -->
+        <!-- Requirements / Equipment -->
+        <section class="section-container">
+            <h2 class="section-title">Requirements</h2>
+            <ul class="requirements-list">
+                <li><ion-icon name="checkbox-outline"></ion-icon> <span>Load Bars / Straps Required (min 4)</span></li>
+                <li><ion-icon name="checkbox-outline"></ion-icon> <span>PPE: Safety Vest & Boots at Pickup</span></li>
+                <li><ion-icon name="scan-outline"></ion-icon> <span>App Tracking Mandatory</span></li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Bottom Action Bar -->
+    <div class="action-bar-placeholder"></div>
+    <footer class="action-bar">
+        <button class="btn btn-secondary" onclick="declineLoad()">Decline</button>
+        <button class="btn btn-primary" onclick="acceptLoad()">Accept Load</button>
+    </footer>
+
+    <script>
+        function goBack() {
+            alert('Going back...');
+            // window.history.back();
+        }
+
+        function showOptions() {
+            alert('Options menu');
+        }
+
+        function declineLoad() {
+            if (confirm('Are you sure you want to decline this load?')) {
+                alert('Load declined');
+            }
+        }
+
+        function acceptLoad() {
+            alert('Load accepted! Redirecting to confirmation...');
+        }
+    </script>
+</body>
+</html> 

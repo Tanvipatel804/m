@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page Documents</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            background-color: #e5e5e5;
+            /* Placeholder background */
+            position: relative;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 1000;
+        }
+
+        .top-bar button,
+        .top-bar i {
+            background: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .top-bar button.go-offline {
+            background-color: rgb(251, 160, 3);
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .bottom-left,
+        .bottom-right {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .bottom-left {
+            left: 15px;
+        }
+
+        .bottom-right {
+            right: 15px;
+        }
+
+        .map-type-btn,
+        .location-btn {
+            background: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-type-btn:hover,
+        .location-btn:hover,
+        .go-offline:hover {
+            opacity: 0.8;
+        }
+
+        .abc {
+            height: 100%;
+            width: 100%;
+        }
+
+        .abc img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map">
+        <div class="abc">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\location3.jpg">
+        </div>
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <i class="fas fa-bars"></i>
+            <button class="go-offline">Go Offline</button>
+            <i class="fas fa-shield-virus"></i>
+        </div>
+
+        <!-- Bottom Left -->
+        <div class="bottom-left">
+            <button class="map-type-btn" title="Change Map Type">
+                <i class="fas fa-map"></i>
+            </button>
+        </div>
+
+        <!-- Bottom Right -->
+        <div class="bottom-right">
+            <button class="location-btn" title="Current Location">
+                <i class="fas fa-location-crosshairs"></i>
+            </button>
+            <button class="location-btn" title="Swap Locations">
+                <i class="fas fa-exchange-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Example JS handlers (you can expand these)
+        document.querySelector('.go-offline').addEventListener('click', () => {
+            alert('Switched to Offline Mode');
+        });
+
+        document.querySelector('.map-type-btn').addEventListener('click', () => {
+            alert('Change Map Type Clicked');
+        });
+
+        document.querySelectorAll('.location-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('Location action triggered');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

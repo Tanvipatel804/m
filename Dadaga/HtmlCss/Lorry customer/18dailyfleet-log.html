@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Fleet Inventory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a5a3a 0%, #16502f 50%, #1a5a3a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2a2a2a;
+            padding: 32px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #3a3a3a;
+        }
+
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .date-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: #1a1a1a;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #3a3a3a;
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .date-text {
+            color: white;
+            font-weight: 500;
+            font-size: 18px;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        h2 {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: inline;
+        }
+.fleet-header{
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+}
+        .fleet-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .summary-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .summary-circle.total {
+            background: #4a4a4a;
+        }
+
+        .summary-circle.active {
+            background: #16a34a;
+        }
+
+        .summary-circle.maintenance {
+            background: #dc2626;
+        }
+
+        .summary-circle.idle {
+            background: #ca8a04;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .summary-circle.total .summary-label {
+            color: #9ca3af;
+        }
+
+        .summary-circle.active .summary-label,
+        .summary-circle.maintenance .summary-label,
+        .summary-circle.idle .summary-label {
+            color: white;
+        }
+
+        .summary-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .vehicle-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .vehicle-card {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 24px;
+            transition: background 0.3s;
+        }
+
+        .vehicle-card:hover {
+            background: #333333;
+        }
+
+        .vehicle-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .vehicle-id {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .status-badge.ready {
+            background: #16a34a;
+        }
+
+        .status-badge.transit {
+            background: #ca8a04;
+        }
+
+        .status-badge.workshop {
+            background: #dc2626;
+        }
+
+        .edit-btn-mobile {
+            background: #4a4a4a;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: auto;
+            transition: background 0.3s;
+        }
+
+        .edit-btn-mobile:hover {
+            background: #5a5a5a;
+        }
+
+        .vehicle-info {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .vehicle-info span {
+            color: white;
+        }
+
+        .vehicle-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .detail-item label {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            background: #1a1a1a;
+            padding: 10px 16px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .edit-btn-desktop {
+            display: none;
+        }
+
+        .finalize-btn {
+            width: 100%;
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 32px;
+            transition: background 0.3s;
+        }
+
+        .finalize-btn:hover {
+            background: #15803d;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 40px;
+            }
+
+            .header {
+                padding: 40px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .fleet-summary {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .summary-circle {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .vehicle-card {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .vehicle-content {
+                flex: 1;
+            }
+
+            .edit-btn-mobile {
+                display: none;
+            }
+
+            .edit-btn-desktop {
+                display: inline-block;
+                margin-left: auto;
+                background: #4a4a4a;
+                color: white;
+                border: none;
+                padding: 10px 24px;
+                border-radius: 8px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: background 0.3s;
+                white-space: nowrap;
+            }
+
+            .edit-btn-desktop:hover {
+                background: #5a5a5a;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="header-top">
+                    <button class="back-btn" onclick="goBack()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <h1>Daily Fleet Inventory</h1>
+                </div>
+                
+                <div class="date-selector">
+                    <button class="nav-btn" onclick="changeDate(-1)">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <span class="date-text" id="currentDate">Today, 31 Dec</span>
+                    <button class="nav-btn" onclick="changeDate(1)">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="fleet-header">
+                <h2>Fleet Summary</h2><button class="edit-btn-desktop">Edit Log</button></div>
+                <div class="fleet-summary">
+                    <div class="summary-item">
+                        <div class="summary-circle total">
+                            <span class="summary-label">Total</span>
+                            <span class="summary-value">10</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-circle active">
+                            <span class="summary-label">Active</span>
+                            <span class="summary-value">8</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-circle maintenance">
+                            <span class="summary-label">Maintenance</span>
+                            <span class="summary-value">1</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-circle idle">
+                            <span class="summary-label">Idle</span>
+                            <span class="summary-value">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vehicle-list">
+                    <div class="vehicle-card">
+                        <div class="vehicle-content">
+                            <div class="vehicle-header">
+                                <span class="vehicle-id">TRK-101</span>
+                                <span class="status-badge ready">Ready</span>
+                                <button class="edit-btn-mobile">Edit Log</button>
+                            </div>
+                            <p class="vehicle-info">Trip 1 (Day) | <span>Mumbai &lt;-&gt; Delhi</span></p>
+                            <p class="vehicle-info">Driver: <span>Rajesh K.</span></p>
+                            <p class="vehicle-info">Load: <span>15000 KG</span></p>
+                            <p class="vehicle-info">Material: <span>Row Sand</span></p>
+                            <div class="vehicle-details">
+                                <div class="detail-item">
+                                    <label>Start Odo:</label>
+                                    <div class="detail-value">45,300 km</div>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Fuel:</label>
+                                    <div class="detail-value">85%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <button class="edit-btn-desktop">Edit Log</button> -->
+                    </div>
+
+                    <div class="vehicle-card">
+                        <div class="vehicle-content">
+                            <div class="vehicle-header">
+                                <span class="vehicle-id">TRK-102</span>
+                                <span class="status-badge transit">Transit</span>
+                            </div>
+                            <p class="vehicle-info">Trip 1 (Day) | <span>Mumbai &lt;-&gt; Delhi</span></p>
+                            <p class="vehicle-info">Driver: <span>Amit S.</span></p>
+                            <p class="vehicle-info">Load: <span>5000 KG</span></p>
+                            <p class="vehicle-info">Material: <span>Cement</span></p>
+                            <div class="vehicle-details">
+                                <div class="detail-item">
+                                    <label>Start Odo:</label>
+                                    <div class="detail-value">12,150 km</div>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Fuel:</label>
+                                    <div class="detail-value">40%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vehicle-card">
+                        <div class="vehicle-content">
+                            <div class="vehicle-header">
+                                <span class="vehicle-id">TRK-103</span>
+                                <span class="status-badge workshop">Workshop</span>
+                            </div>
+                            <p class="vehicle-info">Service: <span>Scheduled Maintenance</span></p>
+                            <p class="vehicle-info">Driver: <span>N/A</span></p>
+                            <p class="vehicle-info">Load: <span>10000 KG</span></p>
+                            <p class="vehicle-info">Material: <span>Bricks</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="finalize-btn" onclick="finalizeLog()">Finalize Daily Log</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var currentDate = new Date(2026, 1, 1);
+
+        function formatDate(date) {
+            var options = { day: 'numeric', month: 'short' };
+            return 'Today, ' + date.toLocaleDateString('en-US', options);
+        }
+
+        function updateDateDisplay() {
+            document.getElementById('currentDate').textContent = formatDate(currentDate);
+        }
+
+        function changeDate(days) {
+            currentDate.setDate(currentDate.getDate() + days);
+            updateDateDisplay();
+        }
+
+        function goBack() {
+            alert('Going back to previous page...');
+        }
+
+        function finalizeLog() {
+            alert('Finalizing daily log...');
+        }
+
+        updateDateDisplay();
+    </script>
+</body>
+</html>

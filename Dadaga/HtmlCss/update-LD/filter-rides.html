@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Rides</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #e8e8e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-width: 980px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2d2d2d;
+            color: white;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .clear-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.9;
+        }
+
+        .clear-btn:hover {
+            opacity: 1;
+        }
+
+        .content {
+            padding: 40px 32px;
+            background: #f5f5f5;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .weight-icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .weight-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .option-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 28px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .option-card:hover {
+            border-color: #5cb85c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .option-card.selected {
+            border-color: #5cb85c;
+            background: #f0fdf4;
+        }
+
+        .option-card.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            background: #5cb85c;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .truck-icon {
+            width: 56px;
+            height: 56px;
+        }
+
+        .option-text {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1a1a1a;
+            flex: 1;
+        }
+
+        .weight-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .weight-card:hover {
+            border-color: #5cb85c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .weight-card.selected {
+            border-color: #5cb85c;
+            background: #f0fdf4;
+        }
+
+        .weight-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .weight-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .option-text {
+                font-size: 20px;
+            }
+
+            .weight-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <h1 class="header-title">Filter Rides</h1>
+            </div>
+            <button class="clear-btn" onclick="clearAll()">Clear All</button>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">What is Your Truck Type?</h2>
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectTruckType(this, 'container')">
+                        <svg class="truck-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="8" y="20" width="40" height="24" stroke-linejoin="round"/>
+                            <rect x="8" y="20" width="6" height="24"/>
+                            <circle cx="18" cy="48" r="4"/>
+                            <circle cx="38" cy="48" r="4"/>
+                            <path d="M14 44h8m8 0h8"/>
+                        </svg>
+                        <span class="option-text">Container</span>
+                    </div>
+                    <div class="option-card selected" onclick="selectTruckType(this, 'tipper')">
+                        <svg class="truck-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 44 L8 28 L48 20 L48 44 Z" stroke-linejoin="round"/>
+                            <rect x="8" y="20" width="6" height="24"/>
+                            <circle cx="18" cy="48" r="4"/>
+                            <circle cx="38" cy="48" r="4"/>
+                            <path d="M14 44h8m8 0h8"/>
+                        </svg>
+                        <span class="option-text">Tipper</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-subtitle">
+                    <svg class="weight-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M32 12v-4m-8 8l-4-4m20 4l4-4"/>
+                        <circle cx="32" cy="36" r="20"/>
+                        <circle cx="32" cy="36" r="12"/>
+                        <path d="M32 24v8"/>
+                    </svg>
+                    <div>
+                        <h3 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px;">Max Weight You Carry?</h3>
+                        <p style="font-size: 18px; color: #888;">Load Weight (KG)</p>
+                    </div>
+                </div>
+                <div class="weight-options">
+                    <div class="weight-card" onclick="selectWeight(this, '<5000')">
+                        <span class="weight-text">< 5000</span>
+                    </div>
+                    <div class="weight-card" onclick="selectWeight(this, '5000-1000')">
+                        <span class="weight-text">5000 - 1000</span>
+                    </div>
+                    <div class="weight-card" onclick="selectWeight(this, '>1000')">
+                        <span class="weight-text">> 1000</span>
+                    </div>
+                    <div class="weight-card selected" onclick="selectWeight(this, 'any')">
+                        <span class="weight-text">Any Weight</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedTruck = 'tipper';
+        let selectedWeight = 'any';
+
+        function selectTruckType(element, type) {
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedTruck = type;
+            console.log('Selected truck type:', type);
+        }
+
+        function selectWeight(element, weight) {
+            document.querySelectorAll('.weight-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedWeight = weight;
+            console.log('Selected weight:', weight);
+        }
+
+        function clearAll() {
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelectorAll('.weight-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            selectedTruck = null;
+            selectedWeight = null;
+            console.log('All filters cleared');
+        }
+
+        function goBack() {
+            console.log('Going back with filters:', { truck: selectedTruck, weight: selectedWeight });
+            alert('Back button clicked!\nSelected Truck: ' + (selectedTruck || 'None') + '\nSelected Weight: ' + (selectedWeight || 'None'));
+        }
+    </script>
+</body>
+</html>

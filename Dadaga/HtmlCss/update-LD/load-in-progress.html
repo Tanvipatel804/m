@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading in Progress</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #2a2a2a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            background: #3f4447;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 20px;
+            background: #3f4447;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trip-id {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .main-title {
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .progress-section {
+            margin-bottom: 40px;
+        }
+
+        .progress-bar-container {
+            position: relative;
+            width: 100%;
+            height: 12px;
+            background: #555;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            overflow: visible;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #76c043;
+            border-radius: 20px;
+            width: 60%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-handle {
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: #76c043;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .status-text {
+            margin-bottom: 5px;
+        }
+
+        .status-label {
+            font-size: 20px;
+            color: #a8d574;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .status-sublabel {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .timer {
+            font-size: 80px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin: 30px 0 20px;
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        .finish-button {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            padding: 22px;
+            background: #a8d574;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .finish-button:hover {
+            background: #96c262;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 213, 116, 0.4);
+        }
+
+        .finish-button:active {
+            transform: translateY(0);
+        }
+
+        .attach-button {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            padding: 20px;
+            background: #b3d9e8;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .attach-button:hover {
+            background: #a0cfe0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(179, 217, 232, 0.4);
+        }
+
+        .attach-button:active {
+            transform: translateY(0);
+        }
+
+        .bottom-nav {
+            background: #2a2a2a;
+            border-top: 1px solid #444;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex: 1;
+            color: #888;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #76c043;
+        }
+
+        .nav-icon {
+            font-size: 26px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .mobile-container {
+                min-height: 100vh;
+                border-radius: 0;
+            }
+
+            .timer {
+                font-size: 64px;
+            }
+
+            .main-title {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <div class="trip-id">TRIP ID: #TRP-12345</div>
+            <div class="menu-icon">⋮</div>
+        </div>
+
+        <div class="content">
+            <h1 class="main-title">3. Loading in Progress</h1>
+
+            <div class="progress-section">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-handle"></div>
+                    </div>
+                </div>
+                <div class="status-text">
+                    <div class="status-label">At Pickup</div>
+                    <div class="status-sublabel">Loading</div>
+                </div>
+            </div>
+
+            <div class="timer" id="timer">00:59:30</div>
+            <div class="timer-label">Countdown to finish loading...</div>
+
+            <button class="finish-button" onclick="finishLoading()">Finish Loading</button>
+            <button class="attach-button" onclick="attachPhoto()">Attach Photo</button>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="setActive(0)">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item active" onclick="setActive(1)">
+                <div class="nav-icon">📦</div>
+                <div class="nav-label">Order</div>
+            </div>
+            <div class="nav-item" onclick="setActive(2)">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Account</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Timer countdown functionality
+        let totalSeconds = 3570; // 59 minutes and 30 seconds
+
+        function updateTimer() {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timer').textContent = display;
+            
+            if (totalSeconds > 0) {
+                totalSeconds--;
+                
+                // Update progress bar
+                const totalTime = 3570;
+                const elapsed = totalTime - totalSeconds;
+                const progressPercent = (elapsed / totalTime) * 100;
+                document.getElementById('progressBar').style.width = Math.min(progressPercent + 60, 100) + '%';
+            }
+        }
+
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+
+        // Navigation functionality
+        function setActive(index) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Button functions
+        function finishLoading() {
+            alert('Loading completed! Moving to next step...');
+        }
+
+        function attachPhoto() {
+            alert('Opening camera to attach photo...');
+        }
+
+        // Initial progress
+        document.getElementById('progressBar').style.width = '60%';
+    </script>
+</body>
+</html>

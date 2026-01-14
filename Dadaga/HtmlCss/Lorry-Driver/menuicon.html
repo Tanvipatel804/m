@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver Map UI</title>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 15px;
+      z-index: 1000;
+    }
+
+    .menu-icon,
+    .shield-icon {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .menu-icon {
+      object-fit: cover;
+    }
+
+    .go-online-btn {
+      background-color: rgb(7, 143, 14);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      position: absolute;
+      top: 330px;
+      right: 45%;
+    }
+
+    .shield-icon {
+      position: absolute;
+      top: 10px;
+      right: 50px;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .map-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .car-icon {
+      position: absolute;
+      top: 45%;
+      left: 55%;
+      transform: translate(-50%, -50%);
+      font-size: 30px;
+    }
+
+    .bottom-left,
+    .bottom-right {
+      position: absolute;
+      bottom: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .bottom-left {
+      left: 20px;
+    }
+
+    .bottom-right {
+      right: 20px;
+      flex-direction: column;
+    }
+
+    .icon {
+      width: 45px;
+      height: 45px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      font-size: 22px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- Top Menu -->
+    <div class="top-bar">
+      <div class="icon menu-icon">☰</div>
+      <button class="go-online-btn">Go Online</button>
+      <div class="icon shield-icon">🛡️</div>
+    </div>
+
+    <!-- Map Background (can replace with a real map) -->
+    <div id="map">
+      <img src="C:\Users\DADAGA\Pictures\Saved Pictures\location3.jpg" alt="Map" class="map-image" />
+      <div class="car-icon">🚗</div>
+    </div>
+
+    <!-- Bottom Icons -->
+    <div class="bottom-left">
+      <div class="icon map-icon">🗺️</div>
+    </div>
+
+    <div class="bottom-right">
+      <div class="icon zoom-icon">🔍</div>
+      <div class="icon settings-icon">⚙️</div>
+    </div>
+
+  </div>
+  <script>
+    document.querySelector(".go-online-btn").addEventListener("click", () => {
+      alert("Going online...");
+    });
+
+  </script>
+
+</body>
+
+</html>

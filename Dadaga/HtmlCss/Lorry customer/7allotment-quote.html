@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Your Instant Allotment Quote</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8eef3 0%, #c8d5e0 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .form-wrapper {
+            background: #4a5f7f;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            background: #3a4d66;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-row-three {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px 45px 14px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            padding: 14px 18px;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #999;
+        }
+
+        .icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+        }
+
+        label {
+            display: block;
+            color: white;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .dimensions-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .dim-input {
+            position: relative;
+        }
+
+        .dim-label {
+            display: block;
+            color: white;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: #ff6b4a;
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(255, 107, 74, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #ff5533;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 74, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .form-wrapper {
+                padding: 25px;
+            }
+
+            .input-row,
+            .input-row-three {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 16px 30px;
+                font-size: 1rem;
+                text-decoration: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .dimensions-group {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Get Your Instant Allotment Quote</h1>
+            <p>Just tell us about your load, and we'll find the best shared freight solution.</p>
+        </div>
+
+        <div class="form-wrapper">
+            <form id="quoteForm">
+                <!-- Origin & Destination Section -->
+                <div class="section">
+                    <div class="section-title">Origin & Destination</div>
+                    <div class="input-group">
+                        <input type="text" id="pickup" placeholder="Pickup Location (City, State/Zip)" required>
+                        <span class="icon">📍</span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="delivery" placeholder="Delivery Location (City, State/Zip)" required>
+                        <span class="icon">📍</span>
+                    </div>
+                </div>
+
+                <!-- Timing Section -->
+                <div class="section">
+                    <div class="section-title">Timing</div>
+                    <div class="input-group">
+                        <input type="text" id="readyDate" placeholder="Ready Date" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
+                        <span class="icon">📅</span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="deliveryDate" placeholder="Required Delivery Date (Optional)" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'">
+                        <span class="icon">🗓️</span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="deliveryTime" placeholder="Required Delivery Time" onfocus="(this.type='time')" onblur="if(!this.value)this.type='text'">
+                        <span class="icon">🕒</span>
+                    </div>
+                </div>
+
+                <!-- Freight Details Section -->
+                <div class="section">
+                    <div class="section-title">Freight Details</div>
+                    
+                    <div class="input-group">
+                        <label for="goodsName">Name of Goods</label>
+                        <input type="text" id="goodsName" placeholder="e.g., Electronics, Furniture, etc." required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="specialNotes">Special Notes (for goods)</label>
+                        <textarea id="specialNotes" placeholder="Any special handling requirements, fragile items, temperature control, etc."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="totalWeight">Total Weight (in kg)</label>
+                        <input type="number" id="totalWeight" placeholder="Enter total weight in kilograms" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="totalUnits">Total Goods Units/Packets</label>
+                        <input type="number" id="totalUnits" placeholder="Enter number of units/packets" min="1" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Size of Unit/Packets (in inches)</label>
+                        <div class="dimensions-group">
+                            <div class="dim-input">
+                                <span class="dim-label">Length (L)</span>
+                                <input type="number" id="length" placeholder="Length" min="0" step="0.1" required>
+                            </div>
+                            <div class="dim-input">
+                                <span class="dim-label">Width (W)</span>
+                                <input type="number" id="width" placeholder="Width" min="0" step="0.1" required>
+                            </div>
+                            <div class="dim-input">
+                                <span class="dim-label">Height (H)</span>
+                                <input type="number" id="height" placeholder="Height" min="0" step="0.1" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Section -->
+                <div class="section">
+                    <div class="section-title">Contact</div>
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="Email Address" required>
+                        <span class="icon">📧</span>
+                    </div>
+                    <div class="input-group">
+                        <input type="tel" id="phone" placeholder="Phone Number" required>
+                        <span class="icon">📱</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn"><a href="8book.html" ref="Page isn't available"></a>Allotment Quote</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('quoteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Gather form data
+            const formData = {
+                pickup: document.getElementById('pickup').value,
+                delivery: document.getElementById('delivery').value,
+                readyDate: document.getElementById('readyDate').value,
+                deliveryDate: document.getElementById('deliveryDate').value,
+                deliveryTime: document.getElementById('deliveryTime').value,
+                goodsName: document.getElementById('goodsName').value,
+                specialNotes: document.getElementById('specialNotes').value,
+                totalWeight: document.getElementById('totalWeight').value,
+                totalUnits: document.getElementById('totalUnits').value,
+                dimensions: {
+                    length: document.getElementById('length').value,
+                    width: document.getElementById('width').value,
+                    height: document.getElementById('height').value
+                },
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
+            
+            // Display success message
+            // alert('Quote request submitted successfully!\n\nWe will contact you shortly with your allotment quote.');
+            window.location.href = "8book.html";
+            
+            // Optional: Log form data (remove in production)
+            console.log('Form Data:', formData);
+            
+            // Optional: Reset form after submission
+            // this.reset();
+        });
+
+        // Set minimum date to today for date inputs
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('readyDate').setAttribute('min', today);
+        document.getElementById('deliveryDate').setAttribute('min', today);
+    </script>
+</body>
+</html>

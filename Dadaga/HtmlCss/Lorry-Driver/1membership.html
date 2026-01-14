@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Membership</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .menu {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      font-size: 24px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 15px 0;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background-color: #ccc;
+      border-radius: 34px;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px; width: 22px;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(30px);
+    }
+
+    .benefits, .policy {
+      margin: 20px 0;
+    }
+
+    .benefits ul {
+      padding-left: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .accept-green {
+      background-color: #4CAF50;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .accept-white {
+      background-color: white;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+
+    .submit-btn {
+      background-color: #000;
+      color: #fff;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        font-size: 20px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <span class="menu">☰</span>
+      <span>Membership</span>
+    </div>
+
+    <p>Apply for pool membership campaign</p>
+
+    <div class="toggle">
+      <label class="switch">
+        <input type="checkbox" id="membershipToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="benefits">
+      <strong>Benefits</strong>
+      <ul>
+        <li>Access to all pool facilities</li>
+        <li>Discount on swimming lessons</li>
+        <li>Priority booking for events</li>
+      </ul>
+    </div>
+
+    <button class="accept-green" onclick="alert('Membership Accepted!')">Accept</button>
+
+    <div class="policy">
+      <strong>Policy</strong>
+      <p>
+        Wares to all pool facilities, membersing orl the Membership eopwniset for eaking and all abes, par boents.
+        Secble cerofic fiorest the policy sur cereia of the terms arl conditions.
+      </p>
+      <button class="accept-white" onclick="alert('Policy Accepted!')">Accept</button>
+    </div>
+
+    <button class="submit-btn" onclick="handleSubmit()">Submit</button>
+  </div>
+
+  <script>
+    function handleSubmit() {
+      const isOn = document.getElementById('membershipToggle').checked;
+      alert("Membership toggle is " + (isOn ? "ON" : "OFF"));
+    }
+  </script>
+
+</body>
+</html>

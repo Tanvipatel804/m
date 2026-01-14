@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Safety Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-tab.active {
+            color: white;
+            position: relative;
+        }
+
+        .nav-tab.settings.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .nav-tab.location.active {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+
+        .nav-tab.emergency.active {
+            background: linear-gradient(135deg, #FF6B6B, #FF5252);
+        }
+
+        /* Page Content */
+        .page {
+            display: none;
+            padding: 0;
+            min-height: 500px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            padding: 20px;
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        /* Dropdown Menu Styles */
+        .menu-button {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .dropdown-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 20px;
+            padding: 0;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-body {
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Content Styles */
+        .help-section {
+            margin-bottom: 30px;
+        }
+
+        .help-section h3 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .help-section h4 {
+            color: #555;
+            font-size: 16px;
+            margin: 15px 0 8px 0;
+            font-weight: 600;
+        }
+
+        .help-section p {
+            margin-bottom: 12px;
+            color: #666;
+        }
+
+        .help-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .help-section li {
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .privacy-section {
+            margin-bottom: 25px;
+        }
+
+        .privacy-section h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 12px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #764ba2;
+        }
+
+        .contact-buttons {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .contact-btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .contact-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .contact-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feedback-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .settings-page .page-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .location-page .page-header {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+
+        .emergency-page .page-header {
+            background: linear-gradient(135deg, #FF6B6B, #FF5252);
+        }
+
+        .page-content {
+            padding: 20px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .section-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .section-item:hover {
+            background: #e9ecef;
+        }
+
+        .section-item-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon {
+            font-size: 20px;
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #ccc;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle.active {
+            background: #4CAF50;
+        }
+
+        .toggle::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle.active::before {
+            transform: translateX(24px);
+        }
+
+        /* SOS Button */
+        .sos-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B, #FF5252);
+            border: 4px solid #FF8A80;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .sos-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6);
+        }
+
+        .sos-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Mini Map */
+        .mini-map {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(45deg, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        /* Status */
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status.inactive {
+            background: #ffebee;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Checkboxes */
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: #4CAF50;
+        }
+
+        /* Emergency Numbers */
+        .emergency-numbers {
+            display: grid;
+            gap: 10px;
+        }
+
+        .emergency-number {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #fff3e0;
+            border-radius: 10px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .number-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .call-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tab {
+                font-size: 12px;
+                padding: 12px 5px;
+            }
+            
+            .page-header {
+                font-size: 20px;
+                padding: 15px;
+            }
+            
+            .sos-button {
+                width: 120px;
+                height: 120px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab settings active" data-page="settings">
+                <span>🔧</span> Settings
+            </button>
+            <button class="nav-tab location" data-page="location">
+                <span>📍</span> Location
+            </button>
+            <button class="nav-tab emergency" data-page="emergency">
+                <span>🚨</span> Emergency
+            </button>
+        </div>
+
+        <!-- Safety Settings Page -->
+        <div class="page settings-page active" id="settings">
+            <div class="page-header">
+                <span>🔧</span> Safety Settings
+                <button class="menu-button" onclick="toggleDropdown(this)">⋮</button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" onclick="showModal('help')">
+                        <span>❓</span> Help/FAQ
+                    </div>
+                    <div class="dropdown-item" onclick="showModal('privacy')">
+                        <span>🔒</span> Privacy
+                    </div>
+                </div>
+            </div>
+            <div class="page-content">
+                <!-- Emergency Contacts Section -->
+                <div class="section">
+                    <div class="section-title">Emergency Contacts</div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span class="icon">➕</span>
+                            <span>Add Contact</span>
+                        </div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span class="icon">📋</span>
+                            <span>View/Edit Contacts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOS & Alerts Section -->
+                <div class="section">
+                    <div class="section-title">SOS & Alerts</div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Enable SOS Shortcut</span>
+                        </div>
+                        <div class="toggle active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Night Safety Alert</span>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Fatigue Alert Reminder</span>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <!-- Security Section -->
+                <div class="section">
+                    <div class="section-title">Security</div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span class="icon">🔒</span>
+                            <span>PIN / Biometric Lock for Safety Features</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary">✅ Save Settings</button>
+                <button class="btn btn-secondary">❌ Cancel</button>
+            </div>
+        </div>
+
+        <!-- Share Live Location Page -->
+        <div class="page location-page" id="location">
+            <div class="page-header">
+                <span>📍</span> Share Live Location
+                <button class="menu-button" onclick="toggleDropdown(this)">⋮</button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" onclick="showModal('help')">
+                        <span>❓</span> Help/FAQ
+                    </div>
+                    <div class="dropdown-item" onclick="showModal('privacy')">
+                        <span>🔒</span> Privacy
+                    </div>
+                </div>
+            </div>
+            <div class="page-content">
+                <!-- Share Options Section -->
+                <div class="section">
+                    <div class="section-title">Share Options</div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Share for trip duration</span>
+                        </div>
+                        <div class="toggle active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Share for fixed time (2 hours)</span>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Always on until stopped</span>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <!-- Share With Section -->
+                <div class="section">
+                    <div class="section-title">Share With</div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>Dispatcher / Company</span>
+                        </div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <input type="checkbox" class="checkbox" checked>
+                            <span>Family / Trusted Contact</span>
+                        </div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span class="icon">➕</span>
+                            <span>Add New Contact</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Section -->
+                <div class="section">
+                    <div class="section-title">Status</div>
+                    <div class="mini-map">
+                        📍 Current Location Map Preview
+                    </div>
+                    <div class="status">
+                        <span>Live Location Sharing</span>
+                        <span style="color: #ff5252; font-weight: bold;">OFF</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary">✅ Start Sharing</button>
+                <button class="btn btn-danger">❌ Stop Sharing</button>
+            </div>
+        </div>
+
+        <!-- Emergency Help Page -->
+        <div class="page emergency-page" id="emergency">
+            <div class="page-header">
+                <span>🚨</span> Emergency Help
+                <button class="menu-button" onclick="toggleDropdown(this)">⋮</button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" onclick="showModal('help')">
+                        <span>❓</span> Help/FAQ
+                    </div>
+                    <div class="dropdown-item" onclick="showModal('privacy')">
+                        <span>🔒</span> Privacy
+                    </div>
+                </div>
+            </div>
+            <div class="page-content">
+                <!-- Quick Actions Section -->
+                <div class="section">
+                    <div class="section-title">Quick Actions</div>
+                    <div class="sos-button" onclick="sosAlert()">
+                        <div>🆘</div>
+                        <div>Call Police</div>
+                    </div>
+                </div>
+
+                <!-- Auto Actions Section -->
+                <div class="section">
+                    <div class="section-title">Auto Actions</div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span class="icon">📍</span>
+                            <span>Automatically send location to police</span>
+                        </div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span class="icon">📤</span>
+                            <span>Notify emergency contacts instantly</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Numbers Section -->
+                <div class="section">
+                    <div class="section-title">Other Numbers</div>
+                    <div class="emergency-numbers">
+                        <div class="emergency-number">
+                            <div class="number-info">
+                                <span>🚔</span>
+                                <span>Highway Patrol</span>
+                            </div>
+                            <button class="call-btn">Call</button>
+                        </div>
+                        <div class="emergency-number">
+                            <div class="number-info">
+                                <span>🚑</span>
+                                <span>Ambulance</span>
+                            </div>
+                            <button class="call-btn">Call</button>
+                        </div>
+                        <div class="emergency-number">
+                            <div class="number-info">
+                                <span>🔥</span>
+                                <span>Fire Service</span>
+                            </div>
+                            <button class="call-btn">Call</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Options Section -->
+                <div class="section">
+                    <div class="section-title">Options</div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Silent SOS (no sound, only alerts)</span>
+                        </div>
+                        <div class="toggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="section-item">
+                        <div class="section-item-content">
+                            <span>Enable Alarm Sound (panic alarm)</span>
+                        </div>
+                        <div class="toggle active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary">🧪 Test SOS (Demo Mode)</button>
+                <button class="btn btn-primary">⬅️ Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Help Center
+                <button class="close-btn" onclick="closeModal('helpModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Welcome to the Help Center. Find answers to your questions below or use the search bar for quick results.</p>
+                
+                <div class="help-section">
+                    <h3>Getting Started</h3>
+                    <h4>How do I set up my emergency contacts?</h4>
+                    <p>From the main <strong>Safety Settings</strong> screen, tap <strong>"Add Contact."</strong> You can add phone numbers for family, friends, or a manager.</p>
+                    
+                    <h4>How do I link my app to a company dispatcher?</h4>
+                    <p>Go to the <strong>Contacts</strong> page from the main menu and select <strong>"Company/Dispatcher."</strong> Enter the required details to share your location and status with your fleet manager.</p>
+                    
+                    <h4>Why is my location not updating?</h4>
+                    <p>First, check your phone's GPS settings to ensure location services are enabled for the app. If the issue persists, check your data connection. Location updates require a stable internet connection.</p>
+                </div>
+
+                <div class="help-section">
+                    <h3>SOS & Alerts</h3>
+                    <h4>What is "Silent SOS"?</h4>
+                    <p>Silent SOS sends a discreet alert to your emergency contacts without making a sound or showing an on-screen notification. This is for situations where making noise could be dangerous.</p>
+                    
+                    <h4>What triggers a "Fatigue Alert Reminder"?</h4>
+                    <p>This alert is based on your trip duration and driving patterns. You can customize the alert frequency in the <strong>Safety Settings</strong> menu to best fit your driving schedule.</p>
+                </div>
+
+                <div class="help-section">
+                    <h3>Location Sharing</h3>
+                    <h4>How do I share my live location?</h4>
+                    <p>Go to the <strong>Share Live Location</strong> page. Choose who to share with (Dispatcher, family, etc.) and select a duration (e.g., "for trip duration" or "for a fixed time"). Tap <strong>"Start Sharing."</strong></p>
+                    
+                    <h4>How do I stop sharing my location?</h4>
+                    <p>You can stop sharing at any time by simply returning to the <strong>Share Live Location</strong> page and tapping the <strong>"Stop Sharing"</strong> button.</p>
+                </div>
+
+                <div class="help-section">
+                    <h3>Troubleshooting</h3>
+                    <h4>My app is not sending alerts. What's wrong?</h4>
+                    <p>Check your app permissions in your phone's settings. Ensure the app has permission to send notifications and access your contacts.</p>
+                    
+                    <h4>What if I lose my phone?</h4>
+                    <p>Immediately contact our support team. We can help secure your account and prevent unauthorized use of your safety features.</p>
+                </div>
+
+                <div class="help-section">
+                    <h3>Help & Feedback</h3>
+                    <p>We're here to help. If you can't find the answer you need in our Help Center, please reach out to us. We also appreciate your feedback!</p>
+                    
+                    <h4>Contact Support</h4>
+                    <div class="contact-buttons">
+                        <button class="contact-btn primary" onclick="contactSupport('phone')">
+                            <span>📞</span> Call Support Hotline
+                        </button>
+                        <p style="margin: 0; text-align: center; color: #666; font-size: 14px;">Our support team is available 24/7 to assist you.</p>
+                        
+                        <button class="contact-btn secondary" onclick="contactSupport('email')">
+                            <span>✉️</span> Email Support
+                        </button>
+                        <p style="margin: 0; text-align: center; color: #666; font-size: 14px;">Send us a detailed message, and we'll get back to you as soon as possible.</p>
+                        
+                        <button class="contact-btn secondary" onclick="contactSupport('chat')">
+                            <span>💬</span> Message Support
+                        </button>
+                        <p style="margin: 0; text-align: center; color: #666; font-size: 14px;">Start a chat with a support agent directly within the app.</p>
+                    </div>
+
+                    <h4>Feedback & Suggestions</h4>
+                    <div class="contact-buttons">
+                        <button class="contact-btn secondary" onclick="showFeedbackForm('bug')">
+                            <span>🐛</span> Report a Bug
+                        </button>
+                        <button class="contact-btn secondary" onclick="showFeedbackForm('feedback')">
+                            <span>💡</span> Give Feedback
+                        </button>
+                    </div>
+
+                    <div class="feedback-form" id="bugForm" style="display: none;">
+                        <h4>Report a Bug</h4>
+                        <div class="form-group">
+                            <label>Describe the problem:</label>
+                            <textarea placeholder="Tell us what went wrong..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>What were you doing when it happened?</label>
+                            <textarea placeholder="Describe the steps you took..."></textarea>
+                        </div>
+                        <button class="contact-btn primary" onclick="submitFeedback('bug')">Submit Bug Report</button>
+                    </div>
+
+                    <div class="feedback-form" id="feedbackForm" style="display: none;">
+                        <h4>Share Your Feedback</h4>
+                        <div class="form-group">
+                            <label>Your suggestion:</label>
+                            <textarea placeholder="What would you like to see improved or added?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>How would this help you?</label>
+                            <textarea placeholder="Tell us how this would make your experience better..."></textarea>
+                        </div>
+                        <button class="contact-btn primary" onclick="submitFeedback('feedback')">Submit Feedback</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div class="modal" id="privacyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Privacy & Security
+                <button class="close-btn" onclick="closeModal('privacyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Your privacy is our top priority. We are committed to protecting your personal and location data. This policy explains what information we collect and how we use it to provide our safety services.</p>
+                
+                <div class="privacy-section">
+                    <h3>What We Collect</h3>
+                    <p>We only collect data necessary to make this app function as a safety tool. This includes:</p>
+                    <ul>
+                        <li><strong>Personal Information:</strong> Your name, phone number, and emergency contact details.</li>
+                        <li><strong>Location Data:</strong> Your GPS coordinates, but only when you have activated a safety feature like live location sharing or SOS alerts.</li>
+                        <li><strong>Device Information:</strong> Your phone's model and operating system to help us fix bugs and improve performance.</li>
+                    </ul>
+                </div>
+
+                <div class="privacy-section">
+                    <h3>How We Use Your Data</h3>
+                    <p>Your information is used to:</p>
+                    <ul>
+                        <li>Send SOS alerts and location data to your pre-set emergency contacts and the police in a crisis.</li>
+                        <li>Allow you to securely share your location with your company dispatcher or family.</li>
+                        <li>Provide you with helpful alerts based on your trip (e.g., Fatigue Alert).</li>
+                        <li>Improve the app's performance and fix technical issues.</li>
+                    </ul>
+                </div>
+
+                <div class="privacy-section">
+                    <h3>Data Security</h3>
+                    <p>We use industry-standard security measures, including encryption, to protect your data from unauthorized access. Your data is stored on secure servers and is never sold to third parties.</p>
+                </div>
+
+                <div class="privacy-section">
+                    <h3>Your Control</h3>
+                    <p>You are always in control of your data.</p>
+                    <ul>
+                        <li>You can stop sharing your live location at any time.</li>
+                        <li>You can edit or delete your emergency contacts.</li>
+                        <li>You can delete your account and all associated data by contacting our support team.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and pages
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding page
+                const pageId = tab.getAttribute('data-page');
+                document.getElementById(pageId).classList.add('active');
+
+                // Close any open dropdowns
+                document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            });
+        });
+
+        // Dropdown functionality
+        function toggleDropdown(button) {
+            const dropdown = button.nextElementSibling;
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if (menu !== dropdown) {
+                    menu.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('show');
+            
+            // Close dropdown when clicking outside
+            setTimeout(() => {
+                document.addEventListener('click', function closeDropdown(e) {
+                    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                });
+            }, 100);
+        }
+
+        // Modal functionality
+        function showModal(type) {
+            const modalId = type === 'help' ? 'helpModal' : 'privacyModal';
+            const modal = document.getElementById(modalId);
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            
+            // Hide any visible feedback forms
+            document.querySelectorAll('.feedback-form').forEach(form => {
+                form.style.display = 'none';
+            });
+        }
+
+        // Contact support functionality
+        function contactSupport(type) {
+            switch(type) {
+                case 'phone':
+                    alert('📞 Calling Support Hotline...\n\n🕐 Available 24/7\n📱 +1-800-DRIVER-HELP');
+                    break;
+                case 'email':
+                    alert('✉️ Opening email client...\n\n📧 support@driversafety.com\n\nWe typically respond within 2-4 hours.');
+                    break;
+                case 'chat':
+                    alert('💬 Starting chat with support agent...\n\n👋 Hello! How can we help you today?\n\nAverage response time: 2 minutes');
+                    break;
+            }
+        }
+
+        // Feedback form functionality
+        function showFeedbackForm(type) {
+            // Hide all feedback forms first
+            document.querySelectorAll('.feedback-form').forEach(form => {
+                form.style.display = 'none';
+            });
+            
+            // Show the requested form
+            const formId = type === 'bug' ? 'bugForm' : 'feedbackForm';
+            document.getElementById(formId).style.display = 'block';
+        }
+
+        function submitFeedback(type) {
+            if (type === 'bug') {
+                alert('🐛 Bug report submitted successfully!\n\n✅ Thank you for helping us improve the app.\n📧 We\'ll contact you if we need more details.');
+                document.getElementById('bugForm').style.display = 'none';
+            } else {
+                alert('💡 Feedback submitted successfully!\n\n🙏 Thank you for your suggestions.\n📈 Your input helps us make the app better for all drivers.');
+                document.getElementById('feedbackForm').style.display = 'none';
+            }
+        }
+
+        // Toggle switch functionality
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
+
+        // SOS Alert functionality
+        function sosAlert() {
+            if (confirm('🚨 EMERGENCY ALERT 🚨\n\nThis will immediately call emergency services and notify your emergency contacts.\n\nDo you want to proceed?')) {
+                alert('🆘 Emergency services have been contacted!\n📍 Your location has been shared\n📱 Emergency contacts notified');
+            }
+        }
+
+        // Status update functionality
+        function updateLocationStatus() {
+            const status = document.querySelector('.status');
+            const statusText = status.querySelector('span:last-child');
+            
+            if (statusText.textContent === 'OFF') {
+                statusText.textContent = 'ON';
+                statusText.style.color = '#4CAF50';
+                status.classList.remove('inactive');
+            } else {
+                statusText.textContent = 'OFF';
+                statusText.style.color = '#ff5252';
+                status.classList.add('inactive');
+            }
+        }
+
+        // Action button functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start/Stop sharing buttons
+            const startBtn = document.querySelector('#location .btn-primary');
+            const stopBtn = document.querySelector('#location .btn-danger');
+            
+            startBtn.addEventListener('click', () => {
+                updateLocationStatus();
+                alert('📍 Location sharing started successfully!');
+            });
+            
+            stopBtn.addEventListener('click', () => {
+                updateLocationStatus();
+                alert('❌ Location sharing stopped.');
+            });
+            
+            // Save settings button
+            document.querySelector('#settings .btn-primary').addEventListener('click', () => {
+                alert('✅ Settings saved successfully!');
+            });
+            
+            // Test SOS button
+            document.querySelector('#emergency .btn-secondary').addEventListener('click', () => {
+                alert('🧪 SOS Test Mode\n\nThis is a test - no emergency services will be contacted.');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            border: 2px solid gray;
+            height: auto;
+            background-color: black;
+            color: white;
+        }
+
+        .custdetail {
+            width: fit-content;
+            margin: 10px;
+            padding: 5px;
+            border: 2px solid gray;
+            display: block;
+        }
+
+        h2 {
+            font: x-large bold Arial, Helvetica, sans-serif;
+            width: 200px;
+            margin: 10px auto;
+            padding: 15px;
+        }
+
+        label {
+            font-size: large;
+            display: inline-block;
+            margin: 15px;
+        }
+
+       input ,select {
+            margin: 10px;
+            display: inline-flex;
+            height: 30px;
+            width: 250px;
+            border-radius: 30px;
+        }
+
+        #btngord {
+            width: 200px;
+            height: 40px;
+            margin-left:550px;
+            margin-top: 20px;
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            font-size: large;
+            cursor: pointer;
+        }
+        #btngord a{
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <div class="container">
+            <h2>Customer Details</h2>
+            <div class="custdetail">
+                <label for="cdtrip">Trip:</label>
+               <input type="text" name="cdtrip" id="cdtrip" placeholder="single trip"><span>Return trip/Truck pool</span>
+            </div>
+            <div class="custdetail">
+                <label for="ordtyp">Order Type:</label>
+                <input type="text" name="ordtyp" id="ordtyp" placeholder="Immediate"><span>Advance</span>
+            </div>
+            <div class="custdetail">
+                <label for="pulocation">Pick up location:</label><input type="text" name="pulocation" id="pulocation" placeholder="Enter Pick-up Location"></div><div class="custdetail">
+                <label for="dolocation">Drop-off location:</label><input type="text" name="dolocation" id="dolocation" placeholder="Enter Drop-off Location">
+            </div>
+            <div class="custdetail">
+                <label for="range">Range:</label> <input type="number" name="range" id="range" placeholder="500">Km.
+            </div>
+            <div class="custdetail">
+                <label for="widght">Weight:</label> <input type="text" name="widght" id="widght" placeholder="10000 KG.">
+            </div>
+            <div class="custdetail">
+                <label for="material">Material:</label> <input type="text" name="material" id="material"
+                    placeholder="write detail like name,extra care etc">
+            </div>
+            <div class="custdetail">
+                <label for="vehicle">Type of Vehicle:</label> <input type="text" name="vehicle" id="vehicle" placeholder="Close box Truck"><span><img src="#"></span>
+            </div>
+            <div class="custdetail">
+                <label for="dduration">Delivery Duration:</label> <input type="datetime-local" name="dduration" id="dduration">
+            </div>
+            <div class="custdetail">
+                <label for="dcharge">Delivery Charge:</label> <input type="text" name="dcharge" id="dcharge" placeholder="₹50000">
+                <input type="text" name="dcharge" id="dchargesupp" placeholder="By customer"><span>By supplier</span>
+            </div>
+             <div class="custdetail">
+                <label for="dduration">Customers other Requirements:</label> <input type="text" name="dcor" id="dcor">
+            </div>
+
+        <button type="submit" id="btngord"><a href="C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry-Driver/4.2ordconfirm.html">  >> Grab Order</a></button>
+        </div>
+
+    </form>
+</body>
+
+</html>

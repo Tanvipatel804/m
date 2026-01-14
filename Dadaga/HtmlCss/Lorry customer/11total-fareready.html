@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing & Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #1a1a1b;
+            --card-bg: #262626;
+            --inner-bg: #333333;
+            --accent-orange: #f39c12;
+            --accent-blue: #3498db;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        /* Total Fare Section */
+        .fare-header { 
+            margin-bottom: 30px; 
+        }
+        
+        .fare-title { 
+            font-size: 1.8rem; 
+            color: var(--accent-orange); 
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .fare-sub { 
+            font-size: 0.85rem; 
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        h3 { 
+            font-size: 1rem; 
+            margin-bottom: 15px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+
+        .mb-30 {
+            margin-bottom: 30px;
+        }
+
+        /* Payment Method Box */
+        .payment-box {
+            background: var(--inner-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        /* Toggle Container */
+        .toggle-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toggle-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        /* Toggle Switch Buttons */
+        .toggle-switch {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .toggle-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-option.active {
+            background: var(--accent-blue);
+            color: white;
+            font-weight: 600;
+        }
+        /* Policy Section */
+        .policy-section { 
+            margin-bottom: 30px; 
+        }
+        
+        .policy-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .policy-text { 
+            font-size: 0.8rem; 
+            color: var(--text-dim); 
+            line-height: 1.4; 
+            flex: 1;
+            padding-right: 15px;
+        }
+        
+        .policy-text b { 
+            color: var(--text-main); 
+            text-decoration: underline; 
+        }
+
+        /* Switch Styling for Policy */
+        .switch { 
+            position: relative; 
+            display: inline-block; 
+            width: 44px; 
+            height: 22px; 
+        }
+        
+        .switch input { 
+            opacity: 0; 
+            width: 0; 
+            height: 0; 
+        }
+        
+        .slider { 
+            position: absolute; 
+            cursor: pointer; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background-color: #555; 
+            transition: .4s; 
+            border-radius: 20px; 
+        }
+        
+        .slider:before { 
+            position: absolute; 
+            content: ""; 
+            height: 16px; 
+            width: 16px; 
+            left: 3px; 
+            bottom: 3px; 
+            background-color: white; 
+            transition: .4s; 
+            border-radius: 50%; 
+        }
+        
+        input:checked + .slider { 
+            background-color: var(--accent-blue); 
+        }
+        
+        input:checked + .slider:before { 
+            transform: translateX(22px); 
+        }
+
+        /* Proceed Bar */
+        .proceed-btn {
+            width: 100%;
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+        }
+        
+        .proceed-btn:hover { 
+            background: #e67e22; 
+            transform: translateY(-1px); 
+        }
+        
+        .proceed-btn:active { 
+            transform: translateY(1px); 
+        }
+        
+        .proceed-btn:disabled { 
+            background: #555; 
+            cursor: not-allowed; 
+            box-shadow: none;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="payment-container">
+    <div class="fare-header">
+        <div class="fare-title">Total Fare: ₹ 12,500</div>
+        <div class="fare-sub">
+            Inclusive of Tolls, Taxes, and Fuel. No hidden fees.<br>
+            <!-- <small style="color: var(--accent-blue);">*Fare is auto-calculated based on route tolls & charges.</small> -->
+        </div>
+    </div>
+
+    <div class="mb-30">
+        <h3>Payment Details</h3>
+        <div class="payment-box">
+            <div class="toggle-container">
+                <div class="toggle-group">
+                    <label>Payment Method</label>
+                    <div class="toggle-switch" id="paymentMethodToggle">
+                        <button class="toggle-option active" data-value="cash">Cash</button>
+                        <button class="toggle-option" data-value="online">Online</button>
+                    </div>
+                </div>
+                <div class="toggle-group">
+                    <label>Payment Done By</label>
+                    <div class="toggle-switch" id="paymentByToggle">
+                        <button class="toggle-option active" data-value="supplier">Supplier</button>
+                        <button class="toggle-option" data-value="receiver">Receiver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Cancellation Policy</h3>
+    <div class="policy-section">
+        <div class="policy-box">
+            <span class="policy-text">
+                I agree to the <b>cancellation policy</b> and <b>terms of service</b> for this trip.
+            </span>
+            <label class="switch">
+                <input type="checkbox" id="policyCheck">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <button class="proceed-btn" id="proceedBtn">Proceed to Review</button>
+</div>
+
+<script>
+    // Elements
+    const policyCheck = document.getElementById('policyCheck');
+    const proceedBtn = document.getElementById('proceedBtn');
+
+    // Payment Method Toggle
+    const paymentMethodToggle = document.getElementById('paymentMethodToggle');
+    const paymentMethodButtons = paymentMethodToggle.querySelectorAll('.toggle-option');
+    let selectedPaymentMethod = 'cash';
+
+    paymentMethodButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            paymentMethodButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            selectedPaymentMethod = this.getAttribute('data-value');
+        });
+    });
+
+    // Payment Done By Toggle
+    const paymentByToggle = document.getElementById('paymentByToggle');
+    const paymentByButtons = paymentByToggle.querySelectorAll('.toggle-option');
+    let selectedPaymentBy = 'supplier';
+
+    paymentByButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            paymentByButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            selectedPaymentBy = this.getAttribute('data-value');
+        });
+    });
+
+    // Enable button only if policy is checked
+    policyCheck.addEventListener('change', function() {
+        proceedBtn.disabled = !policyCheck.checked;
+    });
+
+    // Proceed logic
+    proceedBtn.addEventListener('click', function() {
+        const tripData = {
+            fare: 12500,
+            paymentMethod: selectedPaymentMethod,
+            paymentBy: selectedPaymentBy,
+            policyAccepted: policyCheck.checked,
+            status: "ready_to_review"
+        };
+        console.log("Submitting Trip Data:", tripData);
+        alert("Trip details captured! Moving to Review Page.\n\nPayment Method: " + selectedPaymentMethod + "\nPayment By: " + selectedPaymentBy);
+    });
+</script>
+
+</body>
+</html>

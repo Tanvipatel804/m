@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review & Submit - Logistics</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
+            --primary-orange: #ff8c00;
+            --text-gray: #b0b0b0;
+            --text-white: #ffffff;
+            --border-color: #333;
+            --toggle-bg: #444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { width: 100%; max-width: 600px; }
+
+        header { text-align: center; margin-bottom: 25px; }
+
+        .section-block {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+
+        .section-title {
+            color: var(--primary-orange);
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .edit-btn {
+            background: #2a2a2a;
+            color: var(--primary-orange);
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        /* 1st Block: Map Styling */
+        .map-wrapper {
+            width: 100%;
+            height: 180px;
+            background: #252525;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .map-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .full-width { grid-column: span 2; }
+
+        .label { color: var(--text-gray); font-size: 0.75rem; display: block; }
+        .value { font-size: 0.9rem; font-weight: 500; }
+
+        /* Toggle Button */
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .switch { position: relative; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #555; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px;
+            left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-orange); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Image Proofs */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .photo-box {
+            height: 90px; background: #333; border: 1px dashed #555;
+            border-radius: 8px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-gray);
+        }
+
+        /* Pricing Hero */
+        .pricing-hero { text-align: center; margin-bottom: 15px; }
+        .fare-large { font-size: 2.2rem; font-weight: bold; color: white; }
+        .fare-small { font-size: 0.75rem; color: var(--text-gray); display: block; }
+
+        .confirm-btn {
+            background-color: var(--primary-orange);
+            color: white; width: 100%; padding: 16px; border: none;
+            border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;
+            margin-top: 10px; text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h2 style="margin:0;">Review & Submit</h2>
+    </header>
+
+    <div class="section-block">
+        <div class="section-header">
+            <span class="section-title">Route Map Preview</span>
+            <!-- <button class="edit-btn">Edit</button> -->
+        </div>
+        <div class="map-wrapper">
+            <!-- <img src="https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/pin-s-a+ff8c00(72.87,19.07),pin-s-b+ff4444(73.85,18.52)/auto/600x200?access_token=pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjajB4cmZ4Z2wwMDAwMnFvNHR4Z2wwMDAwIn0" alt="Pick-up to Drop-off Route"> -->
+             <img src="C:\Users\DADAGA\Pictures\Saved Pictures\5.1trip.png">
+        </div>
+    </div>
+
+    <div class="section-block">
+        <div class="section-header"><span class="section-title">Route</span><button class="edit-btn">Edit</button></div>
+        <div class="grid-2">
+            <div><span class="label">Pickup Location</span><span class="value">Mumbai Terminal 1</span></div>
+            <div style="text-align: right;"><span class="label">Pickup Date & Time</span><span class="value">26 Dec, 10:00 AM</span></div>
+            <div><span class="label">Drop-off Location</span><span class="value">Pune Logistics Hub</span></div>
+            <div style="text-align: right;"><span class="label">Drop-off Date & Time</span><span class="value">27 Dec, 11:30 PM</span></div>
+            <div><span class="label">Distance Range</span><span class="value">250 KM</span></div>
+            <div style="text-align: right;"><span class="label">Duration</span><span class="value">38 Hour</span></div>
+        </div>
+    </div>
+
+    <div class="section-block">
+        <div class="section-header"><span class="section-title">Trip</span><button class="edit-btn">Edit</button></div>
+        <div class="grid-3">
+            <div><span class="label">Vehicle Type</span><span class="value">Flated Truck</span><span class="value">(30*10*5ft)</span></div>
+            <div style="text-align: center;"><span class="label">Trip Type</span><span class="value">Single</span></div>
+            <div style="text-align: right;"><span class="label">Booking Way</span><span class="value">Normal</span></div>
+        </div>
+    </div>
+
+    <div class="section-block">
+        <div class="section-header"><span class="section-title">Cargo</span><button class="edit-btn">Edit</button></div>
+        <div class="grid-2">
+            <div><span class="label">Weight</span><span class="value">15000 KG</span></div>
+            <div style="text-align: right;"><span class="label">Name of Goods</span><span class="value">Cement 50kg Pkg</span></div>
+            <div><span class="label">Types of Goods</span><span class="value">Package Type</span></div>
+            <div style="text-align: right;"><span class="label">Special Notes</span><span class="value">Handle with care</span></div>
+            
+            <div class="full-width">
+                <div class="toggle-row">
+                    <span class="value">Loading/Unloading Facilities</span>
+                    <label class="switch">
+                        <input type="checkbox" id="facilityToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="full-width">
+                <span class="label">Additional Comments</span>
+                <span class="value">Delivery required by noon,keeta,amazon,flipkart etc.</span>
+            </div>
+        </div>
+        <div class="photo-grid">
+            <div class="photo-box">📦<br>Material Photo</div>
+            <div class="photo-box">📄<br>Requirement Proof</div>
+        </div>
+    </div>
+
+    <div class="section-block">
+        <div class="section-header"><span class="section-title">Pricing & Payment</span><button class="edit-btn">Edit</button></div>
+        <div class="pricing-hero">
+            <span class="fare-large">₹ 15,000</span>
+            <span class="fare-small">(All included, no hidden charges)</span>
+        </div>
+        <div class="grid-2">
+            <div><span class="label">Payment Method</span><span class="value">Online Transfer</span></div>
+            <div style="text-align: right;"><span class="label">Payment By</span><span class="value">Receiver</span></div>
+        </div>
+        <div style="margin-top: 15px; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="terms" checked> <label for="terms">I agree to the Cancellation Policy & T&C</label>
+        </div>
+    </div>
+
+    <div class="section-block">
+        <div class="section-header"><span class="section-title">Contact Details</span><button class="edit-btn">Edit</button></div>
+        <div class="grid-2">
+            <div>
+                <span class="label">Customer Name</span>
+                <span class="value">Global Industry Pvt.</span><br>
+                <span class="value" style="font-size: 0.8rem;">9099123456</span>
+            </div>
+            <div style="text-align: right;">
+                <span class="label">Receiver Name</span>
+                <span class="value">Skyline Trending Ltd.</span><br>
+                <span class="value" style="font-size: 0.8rem;">9712345678</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="confirm-btn" onclick="submitForm()">Confirm & Submit</button>
+    <p style="text-align: center; font-size: 0.8rem; color: #888; margin-top: 15px;">
+        Need Assistance? Call: <span style="color: var(--primary-orange); font-weight: bold;">(881) TRIP-FRT</span>
+    </p>
+</div>
+
+<script>
+    function submitForm() {
+        const terms = document.getElementById('terms').checked;
+        const facility = document.getElementById('facilityToggle').checked;
+        if(!terms) {
+            alert("Please agree to the Terms & Conditions.");
+            return;
+        }
+        console.log("Facility Required:", facility);
+        alert("Trip Request Submitted Successfully!");
+    }
+</script>
+
+</body>
+</html>

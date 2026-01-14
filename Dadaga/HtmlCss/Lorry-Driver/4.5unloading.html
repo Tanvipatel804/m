@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        h3 {
+            height: 50px;
+            font-size: 20px;
+            background-color: rgb(165, 218, 200);
+            text-align: center;
+            padding-top: 15px;
+            cursor: -webkit-grabbing;
+        }
+
+        #btntimer {
+            float: right;
+        }
+
+        .box {
+            width: 100%;
+            height: auto;
+            background-color: black;
+            color: white;
+            display: block;
+            padding: 15px;
+        }
+
+        .box label {
+            font-size: large;
+            display: inline;
+            margin: 15px;
+            vertical-align: middle;
+            text-align: right
+        }
+
+        .box input {
+            margin-left: 20px;
+            display: inline-block;
+            height: 40px;
+            width: 350px;
+            vertical-align: middle;
+            border-radius: 30px;
+        }
+
+        .photo {
+            display: block;
+            background-color: black;
+            color: white;
+        }
+
+        .photo label {
+            display: inline;
+            position: relative;
+            vertical-align: 35px;
+        }
+
+        .btn {
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            font-size: large;
+            cursor: pointer;
+        }
+
+        #btnstart {
+            width: 200px;
+            height: 40px;
+            margin-left: 550px;
+            margin-top: 40px;
+        }
+
+        #btnfinish {
+            width: 210px;
+            height: 40px;
+            margin-left: 550px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h3>Awaiting for Unloading<button class="btn" id="btntimer">Timer clock</button></h3>
+
+        <div class="box"> <label for="rcno" >Reciever Contact Details:</label> <input type="number" name="rcno"
+                id="rcno" placeholder="9874563210"></div>
+
+
+        <div class="box">
+            <label for="Timer">Recieving Date/time</label><input type="datetime-local" name="Timer" id="Timer">
+        </div>
+
+
+        <div class="box"> <label for="payamount">Payable Amount Balance</label><input type="number" name="payamount"
+                id="payamount" placeholder="₹"></div>
+
+                <div class="box"> <label for="pmode" >Mode of Payment:</label> <input type="text" name="pmode"
+                    id="pmode" placeholder="Cash/Account"></div>
+
+        <button class="btn" id="btnstart">Start Unloading</button>
+    </div>
+
+    <div class="container">
+        <h3>Attachments of Goods Photos:</h3>
+        <div class="photo">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\camera1.png"><label>Before Unloading</label>
+        </div>
+
+        <div class="photo">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\camera1.png"><label>After Unloading</label>
+        </div>
+        <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry-Driver\5starttrip.html">
+            <button class="btn" id="btnfinish">End Trip</button></a>
+    </div>
+</body>
+
+</html>

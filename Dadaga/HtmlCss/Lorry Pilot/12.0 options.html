@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Responsive Toolbar with Blur</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      transition: filter 0.3s ease;
+      background-color: #222;
+    }
+
+    /* Top-left menu button */
+    .menu-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      font-size: 20px;
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      cursor: pointer;
+      z-index: 1001;
+      border-radius: 6px;
+    }
+
+    /* Sidebar / Toolbar */
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: -270px;
+      width: 250px;
+      height: 100%;
+      background-color: #222;
+      padding-top: 60px;
+      transition: 0.4s ease;
+      z-index: 1002;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .toolbar a {
+      display: block;
+      color: #fff;
+      padding: 14px 24px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .toolbar a:hover {
+      background-color: #444;
+    }
+
+    /* Close (X) button inside toolbar */
+    .toolbar .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 26px;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* Overlay blur effect */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+    }
+
+    /* Open state */
+    .toolbar.open {
+      left: 0;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    /* Page content */
+    .content {
+      padding: 1px;
+    }
+
+    .back-img {
+      width: 100%;
+      height: 50%;
+      object-fit: cover;
+    }
+
+    /* Toolbar Profile */
+    .profile img {
+      height: 80px;
+      width: 80px;
+      border-radius: 50%;
+      object-fit: fill;
+      display: inline;
+    }
+
+    h4,
+    h5 {
+      color: white;
+      display: inline-block;
+    }
+
+    h5 {
+      margin-left: 85px;
+      margin-top: 0;
+    }
+
+    @media (max-width: 600px) {
+      .toolbar {
+        width: 220px;
+      }
+
+      .menu-btn {
+        font-size: 20px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Menu Button -->
+  <button class="menu-btn" onclick="toggleToolbar()"><i class="fas fa-bars"></i></button>
+
+  <!-- Sidebar Toolbar -->
+  <div id="toolbar" class="toolbar">
+    <div class="profile">
+      <img src="C:\Users\DADAGA\Pictures\Saved Pictures\Lorry.png" alt="No Profile Photo">
+      <h4>Profile Name</h4>
+      <h5>Rating *****</h5>
+    </div>
+    <span class="close-btn" onclick="toggleToolbar()">&times;</span>
+    <a href="12.1 inbox.html"><i class="fas fa-envelope"></i> Inbox</a>
+    <a href="12.2 earning.html"><i class="fas fa-sack-dollar"></i> Earning</a>
+    <a href="12.3 opportunity.html"><i class="fas fa-clover"></i>Opportunities</a>
+    <a href="12.4 poolmember.html"><i class="fas fa-users"></i>Pool Members</a>
+    <a href="12.5 wallet.html"><i class="fas fa-wallet"></i>Wallet</a>
+    <a href="12.6 account.html"><i class="fas fa-user"></i>Account</a>
+    <a href="12.7 vehicle recovery.html"><i class="fas fa-truck-fast"></i>Vehicle Recovery</a>
+    <a href="12.8 invitefrds.html"><i class="fas fa-user-group"></i>Refer Friends</a>
+  </div>
+
+  <!-- Background Blur Overlay -->
+  <div id="overlay" class="overlay" onclick="toggleToolbar()"></div>
+
+  <!-- Main Page Content -->
+  <div class="content">
+    <div><button class="menu-btn" onclick="toggleToolbar()"><i class="fas fa-bars"></i></button>
+      <img src="C:\Users\DADAGA\Pictures\Saved Pictures\map.jpg" alt="Image not found" class="back-img">
+    </div>
+  </div>
+  <!-- JavaScript -->
+  <script>
+    function toggleToolbar() {
+      document.getElementById('toolbar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('show');
+    }
+    function goback() {
+      window.history.back();
+      // document.getElementById('toolbar').classList.toggle('open'); 
+    }
+  </script>
+
+</body>
+
+</html>

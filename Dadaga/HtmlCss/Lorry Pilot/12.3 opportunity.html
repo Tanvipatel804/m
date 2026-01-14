@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opportunity Page with Filters</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0; padding: 0;
+        background: #f4f4f4;
+    }
+    header {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 15px; background: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: sticky; top: 0; z-index: 1000;
+    }
+    header h2 { margin: 0; font-size: 20px; }
+    .notification { font-size: 24px; cursor: pointer; }
+
+    /* Filter Bar */
+    .filter-bar {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        background: #fff;
+        overflow-x: auto;
+        white-space: nowrap;
+        position: sticky;
+        top: 60px;
+        z-index: 999;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .filter-bar select {
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    /* Cards */
+    .cards-container { padding: 10px; }
+    .card {
+        background: #fff;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        transition: 0.3s;
+        cursor: pointer;
+        opacity: 1;
+    }
+    .card.hide {
+        opacity: 0;
+        transform: scale(0.98);
+        height: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    .card img {
+        width: 60px; height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-left: 12px;
+    }
+    .card-content { flex: 1; }
+    .card-content h3 { margin: 0; font-size: 16px; }
+    .card-content p { margin: 4px 0; color: #555; font-size: 14px; }
+
+    /* Modal */
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+        width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); overflow-y: auto; }
+    .modal-content {
+        background: #fff; margin: 10% auto; padding: 20px;
+        border-radius: 12px; width: 90%; max-width: 500px;
+        animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+    .close-btn { float: right; font-size: 24px; cursor: pointer; color: #333; }
+    .book-btn {
+        margin-top: 15px; width: 100%; padding: 12px;
+        background: #28a745; color: white; font-weight: bold;
+        border: none; border-radius: 8px; cursor: pointer; font-size: 16px;
+    }
+    .book-btn:hover { background: #218838; }
+
+    @media (max-width: 600px) {
+        .card img { width: 50px; height: 50px; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h2>Opportunity</h2>
+    <span class="notification">&#128276;</span>
+</header>
+
+<!-- Filter & Sort Bar -->
+<div class="filter-bar">
+    <select id="tripTypeFilter">
+        <option value="all">All Trip Types</option>
+        <option value="Starred Trip">Starred Trip</option>
+        <option value="Reserve Long Term">Reserve Long Term</option>
+        <option value="Allotment Post">Allotment Post</option>
+        <option value="Occasional Post">Occasional Post</option>
+        <option value="Advertisement Post">Advertisement Post</option>
+        <option value="Pre-Schedule Ride">Pre-Schedule Ride</option>
+    </select>
+    <select id="fareSort">
+        <option value="default">Sort by Fare</option>
+        <option value="lowHigh">Fare: Low to High</option>
+        <option value="highLow">Fare: High to Low</option>
+    </select>
+</div>
+
+<!-- Cards Container -->
+<div class="cards-container" id="cardsContainer"></div>
+
+<!-- Modal -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <p><b>Vehicle Type:</b> 14ft Truck</p>
+        <p><b>Available:</b> Yes</p>
+        <p><b>Estimated Distance:</b> 50 mi</p>
+        <p><b>Estimated Cost:</b> ₹2,000</p>
+        <p><b>Extra Services:</b> Loading, GPS Tracking, Insurance</p>
+        <button class="book-btn">Book Now</button>
+    </div>
+</div>
+
+<script>
+const posts = [
+    {title:"Starred Trip", date:"2025-08-01", fare:2000, desc:"Pickup → Drop | Apr 25, 10:00 AM", img:"https://i.ibb.co/QN2Pk5h/pallet.jpg"},
+    {title:"Reserve Long Term", date:"2025-08-05", fare:3500, desc:"30 Days | 2 Vehicles", img:"https://i.ibb.co/2nXf3Cp/boxes.jpg"},
+    {title:"Allotment Post", date:"2025-08-02", fare:1500, desc:"Load: 2.5 tons | Multiple locations", img:"https://i.ibb.co/kxMMZ7H/pipes.jpg"},
+    {title:"Occasional Post", date:"2025-09-01", fare:1800, desc:"Jan 5 - Mar 15 | 5 Vehicles", img:"https://i.ibb.co/3W6PxtC/crates.jpg"},
+    {title:"Advertisement Post", date:"2025-08-10", fare:12000, desc:"Campaign May 1 - Jun 30", img:"https://i.ibb.co/2P6gfBd/brand.jpg"},
+    {title:"Pre-Schedule Ride", date:"2025-08-03", fare:2200, desc:"Pickup → Drop | Scheduled", img:"https://i.ibb.co/3yKDnKq/truck.jpg"}
+];
+
+const container = document.getElementById('cardsContainer');
+const typeFilter = document.getElementById('tripTypeFilter');
+const fareSort = document.getElementById('fareSort');
+
+function renderCards(data) {
+    container.innerHTML = "";
+    data.forEach(post => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.onclick = () => openModal(post.title);
+        card.innerHTML = `
+            <div class="card-content">
+                <h3>${post.title}</h3>
+                <p>${post.desc}</p>
+                <p>Fare: ₹${post.fare}</p>
+            </div>
+            <img src="${post.img}" alt="${post.title}">
+        `;
+        container.appendChild(card);
+    });
+}
+
+function applyFilters() {
+    let filtered = [...posts];
+
+    // Trip type filter
+    if (typeFilter.value !== "all") {
+        filtered = filtered.filter(p => p.title === typeFilter.value);
+    }
+
+    // Fare sorting
+    if (fareSort.value === "lowHigh") {
+        filtered.sort((a,b) => a.fare - b.fare);
+    } else if (fareSort.value === "highLow") {
+        filtered.sort((a,b) => b.fare - a.fare);
+    }
+
+    renderCards(filtered);
+}
+
+function openModal(title) {
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('detailModal').style.display = 'block';
+}
+function closeModal() {
+    document.getElementById('detailModal').style.display = 'none';
+}
+window.onclick = function(event) {
+    let modal = document.getElementById('detailModal');
+    if (event.target == modal) modal.style.display = 'none';
+}
+
+typeFilter.addEventListener('change', applyFilters);
+fareSort.addEventListener('change', applyFilters);
+
+// Initial render
+renderCards(posts);
+</script>
+
+</body>
+</html>

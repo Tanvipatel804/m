@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long-Term Contract Reservation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 560px;
+            background: #2d3748;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: #1a202c;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            background: #4a5568;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #1a202c;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 16px 12px;
+            background: #4a5568;
+            color: #a0aec0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border-right: 1px solid #2d3748;
+            white-space: nowrap;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            background: #3182ce;
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #5a6c7d;
+        }
+
+        .content {
+            padding: 24px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #2d3748;
+        }
+
+        .input-field::placeholder {
+            color: #4a5568;
+        }
+
+        .driver-requirement {
+            width: 100%;
+            padding: 18px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .driver-label {
+            color: #2d3748;
+            font-size: 16px;
+        }
+
+        .driver-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .driver-text {
+            color: #2d3748;
+            font-size: 16px;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: #cbd5e0;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #3182ce;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        .textarea-field {
+            width: 100%;
+            padding: 18px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #2d3748;
+            min-height: 60px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .textarea-field::placeholder {
+            color: #4a5568;
+        }
+        button.btn {
+            width: 50%;
+            padding: 16px;
+            background: #3182ce;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn">←</button>
+            <h1 class="header-title">Long-Term Contract Reservation</h1>
+            <div class="profile-icon">👤</div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab" data-tab="company-info">Company Info</button>
+            <button class="nav-tab" data-tab="contract-route">Contract & Route</button>
+            <button class="nav-tab active" data-tab="cargo">Cargo</button>
+            <button class="nav-tab" data-tab="services">Services</button>
+            <button class="nav-tab" data-tab="submission">Submission</button>
+        </div>
+
+        <div class="content">
+            <h2 class="section-title">Cargo & Truck Requirements</h2>
+  
+            <div class="form-group">
+                <input type="text" class="input-field" placeholder="Number of Trucks Required">
+            </div>
+
+            <div class="form-group">
+                <div class="driver-requirement">
+                    <span class="driver-label">Driver Requirement</span>
+                    <div class="driver-option">
+                        <span class="driver-text">With Driver</span>
+                        <div class="toggle-switch" id="driverToggle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <textarea class="textarea-field" placeholder="Truck Type Required (e.g. Flatbed, Reefer" rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="input-field" placeholder="Desired Size/Capacity (e.. 40 MT, 32 ft)">
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="input-field" placeholder="Type of Goods (e.g. HAZMAT, Perishables)">
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="input-field" placeholder="Special Cargo Notes (e.. Fragile, ODC)">
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="input-field" placeholder="Loading/Unloading Facilities">
+            </div>
+             <button class="btn">Fix</button>
+        </div>
+    </div>
+
+    <script>
+        // Navigation tabs
+        const navTabs = document.querySelectorAll('.nav-tab');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                navTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Toggle switch
+        const driverToggle = document.getElementById('driverToggle');
+        
+        driverToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

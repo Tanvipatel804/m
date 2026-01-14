@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Sharing App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        /* Map Container */
+        .map-container {
+            width: 100%;
+            height: 50vh;
+            background: linear-gradient(135deg, #a8e6cf, #88d8c0, #7fcdcd);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .map-control-btn {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .map-control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            background: #333;
+            position: relative;
+        }
+
+        .menu-icon::before,
+        .menu-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #333;
+            left: 0;
+        }
+
+        .menu-icon::before {
+            top: -6px;
+        }
+
+        .menu-icon::after {
+            top: 6px;
+        }
+
+        .menu-icon {
+            height: 2px;
+        }
+
+        /* Map Search Box */
+        .map-search-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 250px;
+        }
+
+        .map-search-box input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            flex: 1;
+            background: transparent;
+        }
+
+        .map-search-icon {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Map elements simulation */
+        .map-pin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ff4444;
+            border-radius: 50% 50% 50% 0;
+            border: 3px solid white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transform: rotate(-45deg);
+        }
+
+        .map-pin::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .pin-1 {
+            top: 45%;
+            left: 50%;
+            z-index: 10;
+        }
+
+        .pin-2 {
+            top: 60%;
+            left: 30%;
+        }
+
+        /* Content Container */
+        .content-container {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+            min-height: 60vh;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Advertisement Banner */
+        .ad-banner {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 20px;
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20px;
+            width: 100px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            transform: rotate(45deg);
+        }
+
+        .ad-content {
+            flex: 1;
+        }
+
+        .ad-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .ad-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .ad-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ad-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .ad-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-left: 15px;
+        }
+
+        .close-ad {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Trip Header */
+        .trip-header {
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+
+        .trip-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Trip Options */
+        .trip-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 55px;
+            padding: 0 20px;
+        }
+
+        .trip-option {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .trip-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .trip-option.active {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .trip-icon {
+            width: 50px;
+            height: 40px;
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .rides-icon {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+        }
+
+        .schedule-icon {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+        }
+
+        .trip-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .trip-subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Search Section - Removed contents, kept for structure */
+        .search-section {
+            padding: 0 20px 20px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        
+         .distance-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 15px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .distance-button:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #2196f3;
+        }
+
+        .distance-button.active {
+            background: #2196f3;
+            border-color: #2196f3;
+            color: white;
+        }
+       /* .search-input, .search-icon, .distance-button styles are no longer needed for their original purpose
+        */
+
+        /* Recent Destinations */
+        .recent-destinations {
+            padding: 0 20px;
+        }
+
+        .destination-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .destination-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .destination-item:last-child {
+            margin-bottom: 80px;
+        }
+
+        .destination-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #666;
+            font-size: 30px;
+        }
+
+        .destination-info {
+            flex: 1;
+        }
+
+        .destination-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .destination-address {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .destination-details {
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* --- NEW STYLES FOR IN-LINE PRODUCT DETAILS --- */
+        /* Re-purpose product-details-content for in-line display */
+        .inline-product-details {
+            background: #1a1a1a;
+            color: white;
+            border-radius: 15px; /* Slightly smaller radius for in-line */
+            padding: 20px;
+            margin: 0 20px 25px; /* Add margin to center and separate */
+            text-align: left;
+            position: relative;
+        }
+
+        .inline-product-details .product-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .inline-product-details .product-image-container {
+            width: 60px; /* Smaller for in-line */
+            height: 60px;
+            background: #2a2a2a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+
+        .inline-product-details .product-image {
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inline-product-details .product-info {
+            flex-grow: 1;
+        }
+
+        .inline-product-details .product-price {
+            font-size: 32px; /* Smaller price for in-line */
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .inline-product-details .product-title {
+            font-size: 16px; /* Smaller title for in-line */
+            color: #ccc;
+            margin-bottom: 0;
+        }
+
+        .inline-product-details .product-details {
+            line-height: 1.5;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .inline-product-details .detail-line {
+            font-size: 14px; /* Smaller font for details */
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+
+        .inline-product-details .detail-line strong {
+            color: white;
+        }
+
+        /* Original modal styles - Hide the original modal to prevent conflict */
+        .product-details-modal {
+            display: none !important;
+        }
+        /* --- END NEW STYLES --- */
+
+
+        /* Distance Modal - Keeping original styles for completeness, though it's less relevant now */
+        .distance-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .distance-modal.active {
+            display: flex;
+        }
+
+        .distance-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .distance-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .distance-option {
+            padding: 15px 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .distance-option:hover {
+            border-color: #2196f3;
+            background: #f8f9fa;
+        }
+
+        .distance-option.selected {
+            border-color: #2196f3;
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .distance-range {
+            font-weight: 600;
+        }
+
+        .distance-description, .destination-dimention , .destination-productname {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            padding: 2px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+
+        .nav-item.active {
+            color: #2196f3;
+        }
+
+        .nav-icon {
+            font-size: 25px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .nav-label {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-container {
+                margin-top: -10px;
+            }
+
+            .map-search-box {
+                min-width: 200px;
+            }
+
+            .map-controls {
+                gap: 8px;
+            }
+
+            .map-control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+
+        /* styling buttons */
+        .map-controls #btn-layers {
+            position: absolute;
+            bottom: -215px;
+            right: 1440px;
+        }
+
+        .map-controls #btn-search {
+            position: absolute;
+            bottom: -150px;
+            right: 1px;
+        }
+
+        .map-controls #btn-settings {
+            position: absolute;
+            bottom: -205px;
+            right: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="map-container">
+        <div class="map-overlay">
+            <div class="menu-icon"></div>
+        </div>
+
+        <div class="map-controls">
+            <button id="btn-search" class="map-control-btn" title="Search" onclick="showTooltip('Search')">🔍</button>
+            <button id="btn-settings" class="map-control-btn" title="Settings"
+                onclick="showTooltip('Settings')">⚙️</button>
+            <button id="btn-location" class="map-control-btn" title="Location"
+                onclick="showTooltip('Location')">📍</button>
+            <button id="btn-layers" class="map-control-btn" title="Layers" onclick="showTooltip('Layers')">🗺️</button>
+        </div>
+
+        <div class="map-pin pin-1"></div>
+        <div class="map-pin pin-2"></div>
+    </div>
+
+    <div class="content-container">
+        <div class="ad-banner" id="adBanner">
+            <button class="close-ad" onclick="closeAd()">×</button>
+            <div class="ad-content">
+                <div class="ad-title">30% off 5 rides</div>
+                <div class="ad-subtitle">Limited time offer</div>
+                <button class="ad-button" onclick="viewAdDetails()">View details</button>
+            </div>
+            <div class="ad-icon">🎯</div>
+        </div>
+
+        <div class="trip-header">
+            <h1 class="trip-title">Smooth Dispatch ahead.</h1>
+        </div>
+
+        <div class="trip-options">
+            <div class="trip-option active" onclick="selectTripOption(this, 'rides')">
+                <div class="trip-icon rides-icon">🚚</div>
+                <div class="trip-label">Trip</div>
+                <div class="trip-subtitle">Let's go for Shipment</div>
+            </div>
+            <div class="trip-option" onclick="selectTripOption(this, 'schedule')">
+                <div class="trip-icon schedule-icon">📅</div>
+                <div class="trip-label">Schedule</div>
+                <div class="trip-subtitle">Book ahead</div>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <button class="distance-button" id="distanceButton" onclick="openDistanceModal()">
+                        <span>🝖</span>
+                        <span id="distanceText">Filter</span>
+                    </button>
+                    </div>
+            </div>
+        </div>
+
+        <div class="recent-destinations" id="productListings">
+            </div>
+
+    </div>
+
+    <div class="product-details-modal" id="productDetailsModal">
+        <div class="product-details-content">
+            <button class="close-product-details" onclick="closeProductDetails()">×</button>
+            <div class="product-image-container">
+                <div class="product-image" id="productImage">📦</div>
+            </div>
+            <div class="product-price" id="productPrice">$200</div>
+            <div class="product-title" id="productTitle">Dry Van load • 45,000 lbs.</div>
+             <div class="product-dimention" id="productDimention"> Dimension: 65*45*35. lbh</div>
+             <div class="product-name" id="productname"> Fruits</div>
+            <div class="product-details">
+                <div class="detail-line"><strong>Pickup:</strong> <span id="pickupDetails">Atlanta, GA - Oct 4, 07:00
+                        PM</span></div>
+                <div class="detail-line"><strong>Delivery:</strong> <span id="deliveryDetails">Dallas, TX - Oct 5, 11:00
+                        AM</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="distance-modal" id="distanceModal">
+        <div class="distance-content">
+            <h3 class="distance-title">Select Distance Range</h3>
+            <div class="distance-option" onclick="selectDistance('< 100 km', 'Nearby')">
+                <div>
+                    <div class="distance-range">
+                        < 100 km </div>
+                            <div class="distance-description">Nearby locations</div>
+                    </div>
+                </div>
+                <div class="distance-option" onclick="selectDistance('100-300 km', 'Medium')">
+                    <div>
+                        <div class="distance-range">100-300 km</div>
+                        <div class="distance-description">Medium distance</div>
+                    </div>
+                </div>
+                <div class="distance-option" onclick="selectDistance('300-600 km', 'Far')">
+                    <div>
+                        <div class="distance-range">300-600 km</div>
+                        <div class="distance-description">Far locations</div>
+                    </div>
+                </div>
+                <div class="distance-option" onclick="selectDistance('600+ km', 'Out of State')">
+                    <div>
+                        <div class="distance-range">600+ km</div>
+                        <div class="distance-description">Out of State travel</div>
+                    </div>
+                </div>
+                <div class="distance-option" onclick="selectDistance('Any distance', 'Out of Country')">
+                    <div>
+                        <div class="distance-range">Any distance</div>
+                        <div class="distance-description">Out of Country</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🗏</span>
+                <div class="nav-label">Order</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <div class="nav-label">Account</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Global state
+        let selectedTripType = 'rides';
+        let selectedDistance = 'Any distance';
+        let selectedRangeText = 'Distance Range';
+
+        // Product data (kept for the 'Recent Destinations' section)
+        const products = [
+            {
+                icon: '📦',
+                price: '$150',
+                description: 'Dry Van load • 35,000 kg.',
+               dimention:  '65*45*35',
+                productname: 'Charcoal box',
+                pickupPlace: 'Atlanta, GA',
+                pickupTime: 'Oct 4, 07:00 PM',
+                deliveryPlace: 'Sharjah, UAE',
+                deliveryTime: 'Oct 5, 11:00 AM',
+                distance: '< 100 km'
+            },
+            {
+                icon: '🚚',
+                price: '$200',
+                description: 'Dry Van load • 45,000 lbs.',
+                dimention:  '65*45*35',
+                productname: 'fruit box',
+                pickupPlace: 'Atlanta, GA',
+                pickupTime: 'Oct 4, 07:00 PM',
+                deliveryPlace: 'Dubai, UAE',
+                deliveryTime: 'Oct 5, 11:00 AM',
+                distance: '< 100 km'
+            },
+            {
+                icon: '📦',
+                price: '$120',
+                description: 'Express delivery • 25,000 lbs.',
+                dimention:  '65*45*35',
+                productname: 'Cement bag',
+                pickupPlace: 'Miami, FL',
+                pickupTime: 'Oct 4, 08:00 PM',
+                deliveryPlace: 'Downtown Dubai',
+                deliveryTime: 'Oct 5, 10:00 AM',
+                distance: '100-300 km'
+            },
+            {
+                icon: '🚛',
+                price: '$180',
+                description: 'Heavy load • 55,000 lbs.',
+                dimention:  '65*45*35',
+                productname: 'Charcoal box',
+                pickupPlace: 'Houston, TX',
+                pickupTime: 'Oct 4, 06:00 PM',
+               deliveryPlace: 'Downtown Dubai',                
+                deliveryTime: 'Oct 5, 12:00 PM',
+                distance: '100-300 km'
+            },
+            {
+                icon: '✈️',
+                price: '$250',
+                description: 'Air cargo • 60,000 lbs.',
+               dimention:  '65*45*35',
+                productname: 'fruit box',
+                pickupPlace: 'New York, NY',
+                pickupTime: 'Oct 4, 05:00 PM',
+                deliveryPlace: 'Dubai International Airport',
+                deliveryTime: 'Oct 6, 09:00 AM',
+                distance: '300-600 km'
+            },
+            {
+                icon: '🚢',
+                price: '$160',
+                description: 'Standard load • 40,000 lbs.',
+               dimention:  '65*45*35',
+                productname: 'Cement bag',
+                pickupPlace: 'Los Angeles, CA',
+                pickupTime: 'Oct 4, 07:30 PM',
+                deliveryPlace: 'Dubai Marina',
+                deliveryTime: 'Oct 5, 10:30 AM',
+                distance: '600+ km'
+            },
+            {
+                icon: '📦',
+                price: '$190',
+                description: 'Refrigerated Van • 38,000 lbs.',
+                dimention:  '65*45*35',
+                productname: 'fruit box',
+                pickupPlace: 'Chicago, IL',
+                pickupTime: 'Oct 4, 06:30 PM',
+                deliveryPlace: 'Abu Dhabi, UAE',
+                deliveryTime: 'Oct 5, 01:00 PM',
+                distance: 'Any distance'
+            },
+            {
+                icon: '🚚',
+                price: '$220',
+                description: 'Flatbed load • 50,000 lbs.',
+                dimention:  '65*45*35',
+                productname: 'Electronics',
+                pickupPlace: 'Dallas, TX',
+                pickupTime: 'Oct 4, 08:00 PM',
+                deliveryPlace: 'Sharjah, UAE',
+                deliveryTime: 'Oct 5, 02:00 PM',
+                distance: 'Any distance'
+            }
+        ];
+
+        // Render product listings
+        function renderProducts(filteredProducts = products) {
+            const container = document.getElementById('productListings');
+            container.innerHTML = '';
+
+            filteredProducts.forEach((product, index) => {
+                const productCard = document.createElement('div');
+                productCard.className = 'destination-item';
+                productCard.style.opacity = '0';
+                productCard.style.transform = 'translateY(20px)';
+
+                productCard.innerHTML = `
+                    <div class="destination-icon">${product.icon}</div>
+                    <div class="destination-info">
+                        <div class="destination-name">${product.price}</div>
+                        <div class="destination-address">${product.description}</div>
+                        <div class="destination-dimention">${product.dimention}</div>
+                        <div class="destination-productname">${product.productname}</div>
+                        <div class="destination-details">Pickup: ${product.pickupPlace} • ${product.pickupTime}</div>
+                        <div class="destination-details">Delivery: ${product.deliveryPlace} • ${product.deliveryTime}</div>
+                    </div>
+                `;
+
+                // NOTE: Clicking now only updates the inline product details
+                productCard.onclick = () => updateInlineProductDetails(product);
+                container.appendChild(productCard);
+
+                // Animate in
+                setTimeout(() => {
+                    productCard.style.transition = 'all 0.3s ease';
+                    productCard.style.opacity = '1';
+                    productCard.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        // Map control tooltips
+        function showTooltip(feature) {
+            alert(`${feature} feature activated!`);
+        }
+
+        // Trip option selection
+        function selectTripOption(element, type) {
+            document.querySelectorAll('.trip-option').forEach(option => {
+                option.classList.remove('active');
+            });
+
+            element.classList.add('active');
+            selectedTripType = type;
+            // Removed search input logic
+        }
+
+        // Advertisement functions
+        function closeAd() {
+            const adBanner = document.getElementById('adBanner');
+            adBanner.style.transform = 'translateX(100%)';
+            adBanner.style.opacity = '0';
+            setTimeout(() => {
+                adBanner.style.display = 'none';
+            }, 300);
+        }
+
+        function viewAdDetails() {
+            alert('30% off your next 5 rides! Use code SAVE30. Valid until end of month.');
+        }
+
+        // Distance modal functions (Kept but no longer triggered by a button)
+        function openDistanceModal() {
+            document.getElementById('distanceModal').classList.add('active');
+        }
+
+        function closeDistanceModal() {
+            document.getElementById('distanceModal').classList.remove('active');
+        }
+
+        function selectDistance(distance, shortName) {
+            selectedDistance = distance;
+            selectedRangeText = shortName;
+            // Removed button update logic
+
+            document.querySelectorAll('.distance-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            closeDistanceModal();
+            filterProductsByDistance(distance);
+        }
+
+        function filterProductsByDistance(distance) {
+            let filteredProducts;
+
+            if (distance === 'Any distance') {
+                filteredProducts = products;
+            } else {
+                filteredProducts = products.filter(product => product.distance === distance);
+            }
+
+            renderProducts(filteredProducts);
+        }
+
+        // NEW: Function to update the INLINE product details section
+        function updateInlineProductDetails(product) {
+            const inlineDetails = document.getElementById('inlineProductDetails');
+            inlineDetails.querySelector('.product-image').textContent = product.icon;
+            inlineDetails.querySelector('.product-price').textContent = product.price;
+            inlineDetails.querySelector('.product-title').textContent = product.description;
+             inlineDetails.querySelector('.product-dimention').textContent = product.dimention;
+             inlineDetails.querySelector('.product-productname').textContent = product.productname;
+            // Find and update the detail lines based on their content structure
+            const detailLines = inlineDetails.querySelectorAll('.detail-line');
+            detailLines[0].innerHTML = `<strong>Pickup:</strong> ${product.pickupPlace} - ${product.pickupTime}`;
+            detailLines[1].innerHTML = `<strong>Delivery:</strong> ${product.deliveryPlace} - ${product.deliveryTime}`;
+
+            // Optional: Scroll to the details section to ensure visibility
+            inlineDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+
+        // Search functionality is removed. The product details functions are modified.
+        // The original search event listener is also removed from the script.
+
+        // Navigation (Kept as original)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function () {
+            renderProducts();
+            console.log('Ride sharing app initialized');
+        });
+    </script>
+</body>
+
+</html>

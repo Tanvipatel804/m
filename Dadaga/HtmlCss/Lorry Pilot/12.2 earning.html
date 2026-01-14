@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earnings</title>
+  <style>
+     body {
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: #fff;
+  margin: 0;
+  padding: 16px;
+}
+
+.header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.back {
+  cursor: pointer;
+  color:orange
+  /* color: #4caf50; */
+}
+
+.summary-box, .trip-detail {
+  background: #1e1e1e;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.label {
+  color: #bbb;
+  font-size: 14px;
+}
+
+.total {
+  font-size: 28px;
+  color: #4caf50;
+  margin: 10px 0;
+}
+
+.green-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.link {
+  color: #4caf50;
+  margin-top: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.calendar {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.day {
+  background: #2a2a2a;
+  padding: 8px;
+  border-radius: 8px;
+  min-width: 40px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.day.active {
+  background: #4caf50;
+  color: #fff;
+  font-weight: bold;
+}
+
+.note {
+  text-align: center;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.entry {
+  background: #2a2a2a;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.time {
+  font-size: 12px;
+  color: #bbb;
+}
+
+.desc {
+  font-size: 14px;
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+.tag {
+  font-size: 12px;
+  color: #aaa;
+}
+ @media (min-width: 600px) {
+      h1, h2 {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .green-btn {
+        font-size: 14px;
+        padding: 10px;
+      }
+      .day {
+        font-size: 12px;
+        padding: 8px 4px;
+        min-width: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Earnings</h1>
+  </div>
+
+  <div class="summary-box">
+    <p class="label">This Week</p>
+    <h2 class="total">$782.00</h2>
+    <button onclick="location.href='cashout.html'" class="green-btn">Cash Out</button>
+    <p class="link" onclick="location.href='history.html'">View Payment History</p>
+  </div>
+
+  <div class="calendar">
+    <div class="day" onclick="location.href='day.html'">M<br>15</div>
+    <div class="day">T<br>16</div>
+    <div class="day active">W<br>17</div>
+    <div class="day">T<br>18</div>
+    <div class="day">F<br>19</div>
+    <div class="day">S<br>20</div>
+    <div class="day">S<br>21</div>
+  </div>
+
+  <div class="note">Tap a day to view earnings breakdown</div>
+
+
+
+<!-- Daily Breakdown Page -->
+  <div class="header back" onclick="history.back()">← Earnings</div>
+  <h2>Wednesday, Jul 17</h2>
+
+  <div class="entry">
+    <p class="time">6:00 AM - 7:00 AM</p>
+    <p class="desc" onclick="location.href='trip.html'">Trip earnings: $34</p>
+    <span class="tag">Boost+</span>
+  </div>
+
+  <div class="entry">
+    <p class="time">7:00 AM - 8:00 AM</p>
+    <p class="desc" onclick="location.href='trip.html'">Bonus: $12</p>
+    <span class="tag">Quest</span>
+  </div>
+
+<!-- (Trip Detail Page) -->
+  <div class="header back" onclick="history.back()">← Day Details</div>
+  <h2>Trip Detail</h2>
+  <div class="trip-detail">
+    <p><strong>Start Time:</strong> 6:03 AM</p>
+    <p><strong>End Time:</strong> 6:25 AM</p>
+    <p><strong>Duration:</strong> 22 mins</p>
+    <p><strong>Distance:</strong> 12.5 km</p>
+    <p><strong>Earned:</strong> $34.00</p>
+  </div>
+
+<!-- Payment History Page -->
+  <div class="header back" onclick="history.back()">← Earnings</div>
+  <h2>Payment History</h2>
+
+  <div class="entry">
+    <p>Jul 10, 2025</p>
+    <p><strong>$550.00</strong> transferred to bank</p>
+  </div>
+
+  <div class="entry">
+    <p>Jul 3, 2025</p>
+    <p><strong>$690.00</strong> transferred to bank</p>
+  </div>
+
+<!-- Cash Out Page -->
+  <div class="header back" onclick="history.back()">← Earnings</div>
+  <h2>Cash Out</h2>
+  <div class="summary-box">
+    <p class="label">Available Balance</p>
+    <h2 class="total">$782.00</h2>
+    <button class="green-btn">Transfer to Bank</button>
+    <p class="note">Transfers typically take 1–2 business days</p>
+  </div>
+  
+  <script>
+  function applyResponsiveStyles() {
+      const width = window.innerWidth;
+
+      // >= 600px
+      if (width >= 600) {
+        document.querySelectorAll('h1, h2').forEach(el => {
+          el.style.fontSize = '24px';
+        });
+      }
+
+      // <= 400px
+      if (width <= 400) {
+        document.querySelectorAll('.green-btn').forEach(btn => {
+          btn.style.fontSize = '14px';
+          btn.style.padding = '10px';
+        });
+        document.querySelectorAll('.day').forEach(day => {
+          day.style.fontSize = '12px';
+          day.style.padding = '8px 4px';
+          day.style.minWidth = '40px';
+        });
+      }
+    }
+    // Run on load and resize
+    window.addEventListener('load', applyResponsiveStyles);
+    window.addEventListener('resize', applyResponsiveStyles);
+  </script>
+</body>
+</html>
+
+ <!-- function applyResponsiveStyles() {
+      const width = window.innerWidth;
+      const body = document.body;
+
+      // Clear both classes
+      body.classList.remove('large-text', 'small-screen');
+
+      if (width >= 600) {
+        body.classList.add('large-text');
+      } else if (width <= 400) {
+        body.classList.add('small-screen');
+      }
+    }
+
+    // Apply on load and resize
+    window.addEventListener('DOMContentLoaded', applyResponsiveStyles);
+    window.addEventListener('resize', applyResponsiveStyles); -->

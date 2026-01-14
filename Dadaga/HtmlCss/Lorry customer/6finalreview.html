@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Review & Book Contract</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #d0d0d0 0%, #e0e0e0 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #2a2e35;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: #3a3f47;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .user-icon {
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .user-icon::before {
+            content: "👤";
+            font-size: 1.2rem;
+        }
+ 
+        .content {
+            padding: 20px;
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .edit-btn {
+             background:  white;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background: #5a6578;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-card {
+            background: #353a42;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            color: #b0b8c1;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: white;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .notes-box {
+            background: #353a42;
+            padding: 15px;
+            border-radius: 8px;
+            color: #d0d5db;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .notes-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+h2.section-title {
+    margin-bottom: 10px;
+}
+        .submit-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .cancel-btn {
+            background: none;
+            border: none;
+            color: #2196F3;
+            padding: 15px;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            color: #1976D2;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 15px;
+            }
+
+            .header-title {
+                font-size: 1rem;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .step-badge {
+                margin: 15px 15px 0;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header-title {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+
+            .submit-btn {
+                font-size: 1rem;
+                padding: 16px;
+            }
+        }
+
+        .divider {
+            height: 1px;
+            background: #4a5568;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <h1 class="header-title">Final Review & Book Contract</h1>
+            </div>
+            <div class="user-icon"></div>
+        </div>
+
+        <div class="content">
+            <!-- Company & Contact Information -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Company & Contact Information</h2>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Company Name</div>
+                        <div class="info-value">Jane Doe</div>
+                        <div class="info-label" style="margin-top: 10px;">Email</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">Global Logistics Inc.</div>
+                        <div class="info-value">+1 (555) 123-4567</div>
+                        <div class="info-value">101 Supply Chain Blvd., Metropark, NY 12345</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Primary Contact</div>
+                        <div class="info-label">Start Date/Tionne/Flaeint</div>
+                        <div class="info-label">Address</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">Nov 1, 2024 → 08:00 AM</div>
+                        <div class="info-value">Oct 31, 2025, :05:00 PM</div>
+                        <div class="info-value">Weekly (M, W, F) - Round-trip</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contract & Route Details -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Contract & Route Details</h2>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-value">5</div>
+                        <div class="info-label">Estimated 20 trips / 500 MT</div>
+                        <div class="info-label">Fronthly Volume</div>
+                        <div class="info-label">Dedicted Fleet</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Primary Route</div>
+                        <div class="info-value">40ft Container, Reefer</div>
+                        <div class="info-value">40 MT</div>
+                        <div class="info-value">Contract_Draft_v1.pdf, NDA.pdf (2 files)</div>
+                        <div class="info-value">Yes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cargo & Truck Requirements -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Cargo & Truck Requirements</h2>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-value">5</div>
+                        <div class="info-label">Truck Type</div>
+                        <div class="info-label">Size/Capacity</div>
+                        <div class="info-label">Size/Capacity</div>
+                        <div class="info-label">Loading/Unaluding</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Goods Type</div>
+                        <div class="info-value">Perishable Goods, Packaged Foods</div>
+                        <div class="info-value">Special (M, W/t), Deloing</div>
+                        <div class="info-value">Temperature-controlled (Value: $2,000,000)</div>
+                        <div class="info-value">Cranes (Pickup), Dock (Delivery)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Level & Compliance -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Service Level & Compliance</h2>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Billing Cycle</div>
+                        <div class="info-label">Payment Terms</div>
+                        <div class="info-label">Budget Indication (Optional)</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">FDA, EURO 6</div>
+                        <div class="info-value">Net 30 days</div>
+                        <div class="info-value">API Tracking, Monthly Reporting)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing & Payment -->
+            <div class="section">
+                <div class="section-header">
+                <h2 class="section-title">Pricing & Payment</h2>
+                <button class="edit-btn">Edit</button>
+                </div>
+            </div>
+ <div class="divider"></div>
+            <!-- Notes -->
+            <div class="section">
+                 <h2 class="section-title">Additional Notes</h2>
+                <div class="notes-box">
+                    <div class="notes-title">Notes</div>
+                    <div>Driver background checks required. Prefer trucks with GPS locks. Contact warehouse 24 hours prior to pickup.</div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="submit-btn" onclick="submitRequest()">Confirm & Submit Request</button>
+            <button class="cancel-btn" onclick="cancelRequest()">Cancel Request</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            if (confirm('Are you sure you want to go back? Any unsaved changes will be lost.')) {
+                window.history.back();
+            }
+        }
+
+        function submitRequest() {
+            if (confirm('Are you ready to submit your contract request?')) {
+                alert('Contract request submitted successfully! You will receive a confirmation email shortly.');
+                // Here you would normally send the data to your backend
+            }
+        }
+
+        function cancelRequest() {
+            if (confirm('Are you sure you want to cancel this request? All information will be lost.')) {
+                alert('Request cancelled.');
+                window.history.back();
+            }
+        }
+
+        // Add edit functionality to all edit buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Edit functionality would open a modal or navigate to the edit page for this section.');
+            });
+        });
+    </script>
+</body>
+</html>

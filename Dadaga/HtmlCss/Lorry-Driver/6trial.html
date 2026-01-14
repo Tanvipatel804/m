@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Long-Term Contract Reservation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #434343 0%, #2d2d2d 100%);
+      color: white;
+      padding: 25px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .header-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .user-icon {
+      width: 35px;
+      height: 35px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .steps {
+      display: flex;
+      padding: 20px 30px;
+      gap: 10px;
+      background: #f5f5f5;
+      overflow-x: auto;
+    }
+
+    .step {
+      padding: 12px 25px;
+      border-radius: 8px;
+      background: #d0d0d0;
+      color: #666;
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .step.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .form-content {
+      padding: 40px 30px;
+    }
+
+    .form-title {
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #2d2d2d;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #f9f9f9;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+    }
+
+    .date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .map-btn {
+      padding: 15px 25px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .map-btn:hover {
+      background: #5568d3;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .option-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+      background: #e0e0e0;
+    }
+
+    .option-btn.active {
+      background: rgb(70, 214, 70);
+      color: white;
+    }
+
+    .upload-btn {
+      width: 50%;
+      padding: 18px;
+      background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 300;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(132, 250, 176, 0.4);
+    }
+
+    .checkbox-group {
+      background: #e8eaf0;
+      padding: 18px;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 15px;
+      color: #2d2d2d;
+      cursor: pointer;
+    }
+
+    .toggle-switch {
+      background: #5a6270;
+      padding: 18px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toggle-switch label {
+      font-size: 15px;
+      color: white;
+      font-weight: 500;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #667eea;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(26px);
+    }
+
+    .continue-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s;
+    }
+
+    .continue-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(132, 250, 176, 0.4);
+    }
+
+    .confirm-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s;
+    }
+
+    .confirm-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .success-message {
+      display: none;
+      background: #4caf50;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .day-selection-container {
+      display: none;
+      margin-top: 15px;
+      background: #fff;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .day-chip {
+      display: inline-block;
+      padding: 8px 15px;
+      margin: 5px;
+      border: 1px solid #667eea;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.3s;
+    }
+
+    .day-chip.selected {
+      background: #667eea;
+      color: white;
+    }
+
+    /* page 4 */
+    .checkbox-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .checkbox-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 5px;
+    }
+
+    .checkbox-header label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-input-sub {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 5px 0 5px 35px;
+      color: #888;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .simple-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .toggle-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+
+    .items {
+      height: 80px;
+      min-width: 200px;
+      border: 2px solid rgb(70, 69, 69);
+      background-color: white;
+      border-radius: 95px;
+      margin-bottom: 15px;
+      padding: 25px;
+      float: left;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-flow: column nowrap;
+    }
+
+    .items img {
+      height: 100px;
+      width: 50%;
+      padding: 10px;
+    }
+
+    .items li {
+      margin: -10px;
+      list-style: none;
+    }
+
+    /* Review Page Styles */
+    .review-container {
+      /* background: #2a2e35;*/
+      background: #818488;
+      border-radius: 15px;
+      padding: 20px;
+      color: white;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .edit-btn {
+      background: white;
+      color: #000;
+      border: none;
+      font-weight: bold;
+      padding: 6px 16px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .edit-btn:hover {
+      background: #e0e0e0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+    }
+
+    .info-card {
+      background: #353a42;
+      padding: 3px;
+      /* border-radius: 8px; */
+    }
+
+    .info-label {
+      color: #b0b8c1;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      color: white;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .notes-box {
+      background: #353a42;
+      padding: 15px;
+      border-radius: 8px;
+      color: #d0d5db;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .notes-title {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #4a5568;
+      margin: 20px 0;
+    }
+
+    .cancel-btn {
+      background: none;
+      border: none;
+      color: #2196F3;
+      padding: 15px;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: color 0.3s ease;
+    }
+
+    .cancel-btn:hover {
+      color: #1976D2;
+    }
+
+    @media (max-width: 768px) {
+      .date-row {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-btn {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-left">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <h1 class="header-title">Long-Term Contract Reservation</h1>
+      </div>
+      <div class="header-right">
+        <button class="header-btn" onclick="editForm()">Edit</button>
+        <button class="header-btn" onclick="saveFormData()">Save</button>
+        <div class="user-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step active" data-page="1" onclick="navigateToPage(1)">1. Company Info</div>
+      <div class="step" data-page="2" onclick="navigateToPage(2)">2. Contract & Route</div>
+      <div class="step" data-page="3" onclick="navigateToPage(3)">3. Cargo</div>
+      <div class="step" data-page="4" onclick="navigateToPage(4)">4. Service & Compliance</div>
+      <div class="step" data-page="5" onclick="navigateToPage(5)">5. Pricing</div>
+      <div class="step" data-page="6" onclick="navigateToPage(6)">6. Review & Submit</div>
+    </div>
+
+    <!-- Page 1: Company Info -->
+    <div class="page active" id="page1">
+      <div class="form-content">
+        <h2 class="form-title">Company & Contact Information</h2>
+        <form id="companyForm">
+          <div class="form-group">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-input" placeholder="Enter company name" id="companyName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary Contact Name</label>
+            <input type="text" class="form-input" placeholder="Enter contact name" id="contactName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary Contact Number</label>
+            <input type="text" class="form-input" placeholder="Enter contact number" id="contactNumber">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company Contact Number</label>
+            <input type="tel" class="form-input" placeholder="Enter phone number" id="phoneNumber">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Email Address</label>
+            <input type="email" class="form-input" placeholder="Enter email address" id="emailAddress">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company Address/HQ Location</label>
+            <div class="input-wrapper">
+              <input type="text" class="form-input" placeholder="Enter address" id="companyAddress">
+              <button type="button" class="map-btn" onclick="openMap()">📍 Map</button>
+            </div>
+          </div>
+          <button type="button" class="continue-btn" onclick="navigateToPage(2)">Continue to Contract & Route</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Page 2: Contract & Route Details -->
+    <div class="page" id="page2">
+      <div class="form-content">
+        <h2 class="form-title">Contract & Route Details</h2>
+        <form id="contractForm">
+          <div class="date-row">
+            <div class="form-group">
+              <label class="form-label">Contract Start Date</label>
+              <input type="date" class="form-input" id="startDate">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contract End Date</label>
+              <input type="date" class="form-input" id="endDate">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contract Duration (In days Only)</label>
+            <input type="text" class="form-input" placeholder="Enter duration" id="contractDuration">
+          </div>
+          <label class="form-label">Duty Time</label>
+          <div class="date-row">
+            <div class="form-group">
+              <label class="form-label">Start</label>
+              <input type="time" class="form-input" id="startime">
+            </div>
+            <div class="form-group">
+              <label class="form-label">End</label>
+              <input type="time" class="form-input" id="endtime">
+            </div>
+          </div>
+
+          <div class="date-row">
+            <div class="form-group">
+              <label class="form-label">pick up(Start) Location</label>
+              <input type="text" class="form-input" id="pickupLocation" placeholder="Enter pickup location/Bhuj APMC"
+                style="width:87%; display: inline;">
+              <button type="button" class="map-btn"
+                style="width:5%; position:absolute; border: 2px solid #e0e0e0; background: #f9f9f9;"
+                onclick="openMap()">📍 </button>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Destination(End) Location</label>
+              <input type="text" class="form-input" id="destinationLocation"
+                placeholder="Enter destination location/Mundra Port" style="width:87%; display: inline;">
+              <button type="button" class="map-btn"
+                style="width:5%; position:absolute; border: 2px solid #e0e0e0; background: #f9f9f9;"
+                onclick="openMap()">📍 </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Estimated Monthly Trips/Volume (Write in Numbers)</label>
+            <input type="text" class="form-input" placeholder="Enter estimated trips" id="estimatedTrips">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Range of Trip(In km)</label>
+            <input type="text" class="form-input" placeholder="Enter range of trip" id="rangeTrip">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Frequency of Trips</label>
+            <div class="button-group">
+              <button type="button" class="option-btn" onclick="selectFrequency(this, 'Daily')">Daily</button>
+              <button type="button" class="option-btn" id="weeklyBtn" onclick="toggleWeeklyList(this)">Weekly</button>
+              <button type="button" class="option-btn" onclick="selectFrequency(this, 'On-Demand')">On-Demand</button>
+            </div>
+
+            <div id="weeklyDayPicker" class="day-selection-container">
+              <p style="font-size: 13px; color: #666; margin-bottom: 10px;">Select applicable days:</p>
+              <span class="day-chip" onclick="toggleDay(this, 'Monday')">Monday</span>
+              <span class="day-chip" onclick="toggleDay(this, 'Tuesday')">Tuesday</span>
+              <span class="day-chip" onclick="toggleDay(this, 'Wednesday')">Wednesday</span>
+              <span class="day-chip" onclick="toggleDay(this, 'Thursday')">Thursday</span>
+              <span class="day-chip" onclick="toggleDay(this, 'Friday')">Friday</span>
+              <span class="day-chip" onclick="toggleDay(this, 'Saturday')">Saturday</span>
+              <span class="day-chip" onclick="toggleDay(this, 'Sunday')">Sunday</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Route Type</label>
+            <div class="button-group">
+              <button type="button" class="option-btn" onclick="selectRouteType(this, 'One-way Haulage')">One-way
+                Haulage</button>
+              <button type="button" class="option-btn" onclick="selectRouteType(this, 'Round-trip')">Round-trip</button>
+              <button type="button" class="option-btn" onclick="selectRouteType(this, 'Multi-drop')">Multi-drop</button>
+            </div>
+          </div>
+
+          <button type="button" class="upload-btn" onclick="uploadAttachment()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+              <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" />
+            </svg>
+            Upload Attachments (PDF only [max 3MB])
+          </button>
+          <button type="button" class="continue-btn" onclick="navigateToPage(3)">Continue to Cargo Requirements</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Page 3: Cargo & Truck Requirements -->
+    <div class="page" id="page3">
+      <div class="form-content">
+        <h2 class="form-title">Cargo & Truck Requirements</h2>
+        <form id="cargoForm">
+          <div class="form-group">
+            <label class="form-label">Number of Trucks Required</label>
+            <input type="number" class="form-input" placeholder="Enter number of trucks" id="numTrucks">
+          </div>
+          <div class="toggle-switch">
+            <label>Driver Requirement</label>
+            <label class="switch">
+              <input type="checkbox" id="driverRequired">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Truck Type Required (e.g. Flatbed, Reefer)</label>
+            <!-- <input type="text" class="form-input" placeholder="Enter truck type" id="truckType"> -->
+            <div class="input-wrapper" style="flex-direction:row; max-height: 1000px; overflow: auto;">
+              <div class="items" id="7item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg">
+                <li>Flatbed Truck</li>
+              </div>
+
+              <div class="items" id="6item"><img
+                  src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed isolated truck.jpg">
+                <li>Flatbed Isolated Truck</li>
+              </div>
+
+              <div class="items" id="9item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\open box truck.jpg">
+                <li>Open Box Truck</li>
+              </div>
+
+              <div class="items" id="2item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\close box truck.jpg">
+                <li>Close Box Truck</li>
+              </div>
+
+              <div class="items" id="11item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\stake truck.jpg">
+                <li>Stake Truck</li>
+              </div>
+
+              <div class="items" id="10item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\reefer truck.jpg">
+                <li>Reefer Truck</li>
+              </div>
+
+              <div class="items" id="4item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\dump truck.jpg">
+                <li>Dump Truck</li>
+              </div>
+
+              <div class="items" id="3item"><img
+                  src="C:\Users\DADAGA\Pictures\Saved Pictures\concrete transport truck.jpg">
+                <li style="font-size: 15px;">Concrete Transport Truck</li>
+              </div>
+
+              <div class="items" id="8item"><img
+                  src="C:\Users\DADAGA\Pictures\Saved Pictures\fly ash transport truck.jpg">
+                <li>Fly Ash Transport Truck</li>
+              </div>
+
+              <div class="items" id="2item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\tanker truck.jpg">
+                <li>Tanker Truck</li>
+              </div>
+              <div class="items" id="1item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\car transport truck.jpg">
+                <li>Car Transport Truck</li>
+              </div>
+
+              <div class="items" id="5item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\fixed crane truck.jpg">
+                <li>Fixed Crane Truck</li>
+              </div>
+
+              <div class="items" id="12item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\special.png">
+                <li>Special Truck</li>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Freight Capacity (In kg)</label>
+            <input type="text" class="form-input" placeholder="Enter size/capacity" id="sizeCapacity">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Type of Goods</label>
+            <div class="input-wrapper">
+              <select class="form-input" id="goodsType" style="font-size: 15px; ">
+                <option value="" disabled selected>Select goods type</option>
+                <option value="Solid">Solid(steel rolls,bricks,metal sheets)</option>
+                <option value="Liquid">Liquid(water,fuel,oil,chemicals)</option>
+                <option value="Gaseous">Gaseous(LPG,oxygen,nitrogen,co2)</option>
+                <option value="powdered">Powdered(cement,flour,grains,fertilizers,sand)</option>
+                <option value="Bulky">Bulky(foam,insulation,mattresses,empty drums,tyres)</option>
+                <option value="Fragile">Fragile(glass,ceremics,electronics,mirrors)</option>
+                <option value="fragmented/scrap">Fragmented/scrap(broken glass,metal scrap,demolition waste)</option>
+                <option value="packaged">Packaged(food items,boxes,clothes,retail goods)</option>
+                <option value="electrical">Electrical(TVs,computers,printers,batteries,power tools,fridge,washing
+                  machine)</option>
+                <option value="equipment">Equipment(cranes,forklifts,generators,compressors,welding
+                  machines,cars,motorcycles)</option>
+                <option value="containers">Containers(20ft,40ft,refeer,storage)</option>
+                <option value="frozen">Frozen(food,ice,seafood,meat)</option>
+                <option value="medical">Medical(medicines,vaccines,surgical tools,hospital supplies,medical waste)
+                </option>
+                <option value="instrument">Instrument(auto parts,mechanical tools,mechanical instruments,toys)</option>
+                <option value="living-beings">Living beings(humans,animals,trees,plants,microorganisms)</option>
+              </select>
+
+              <button type="button" class="map-btn" onclick="uploadGoodsPhoto()"
+                style="display: flex; align-items: center; gap: 5px;">
+                📷 Photo
+              </button>
+            </div>
+            <small id="photoStatus" style="color: #666; font-size: 12px; margin-top: 5px; display: block;"></small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Name of Goods</label>
+            <input type="text" class="form-input" placeholder="Enter name of goods" id="goodsName">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Special Cargo Notes (e.g. Fragile, ODC, hazards, waste)</label>
+            <input type="text" class="form-input" placeholder="Enter special notes" id="specialNotes">
+          </div>
+
+          <div class="toggle-switch">
+            <label>Loading/Unloading Facilities</label>
+            <label class="switch">
+              <input type="checkbox" id="goodsType">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <button type="button" class="continue-btn" onclick="navigateToPage(4)">Continue to Service &
+            Compliance</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Page 4: Service & Compliance -->
+    <div class="page" id="page4">
+      <div class="form-content">
+        <h2 class="form-title">Service Level & Compliance</h2>
+
+        <form id="serviceForm">
+
+          <div class="checkbox-card">
+            <div class="toggle-switch">
+              <label>Required Certifications/Permits</label>
+              <label class="switch">
+                <input type="checkbox" id="certCheck checked">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <textarea class="form-input-sub" placeholder="(e.g., ADR, FDA)" id="certDetail"></textarea>
+          </div>
+
+
+
+          <div class="checkbox-card">
+            <div class="toggle-switch">
+              <label>Insurance Requirements</label>
+              <label class="switch">
+                <input type="checkbox" id="insuranceCheck">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <textarea class="form-input-sub" placeholder="(e.g., All-Risk Transit Policy)"
+              id="insuranceDetail"></textarea>
+          </div>
+
+          <div class="toggle-switch">
+            <label>API Tracking Integration</label>
+            <label class="switch">
+              <input type="checkbox" id="apiTracking">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-switch">
+            <label>Dedicated Fleet Need (Yes/No)</label>
+            <label class="switch">
+              <input type="checkbox" id="dedicatedFleetCheck">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <button type="button" class="continue-btn" onclick="navigateToPage(5)">Continue to Pricing</button>
+          <div class="success-message" id="successMessage4">
+            ✓ Form submitted successfully!
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Page 5: Pricing & Payment -->
+    <div class="page" id="page5">
+      <div class="form-content">
+        <h2 class="form-title">Pricing & Payment</h2>
+        <div class="form-group">
+          <label class="form-label">Total Contract Amount</label>
+          <input type="number" class="form-input" placeholder="Enter Amount" id="contractAmount">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cycle Amount</label>
+          <input type="number" class="form-input" placeholder="Enter Amount" id="cycleAmount">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferred Billing & Payment Cycle (In Days)</label>
+          <input type="number" class="form-input" placeholder="Enter number of days" id="paymentTerms">
+        </div>
+
+        <div class="checkbox-card">
+          <div class="toggle-switch">
+            <label>Other Expenses</label>
+            <label class="switch">
+              <input type="checkbox" id="certCheck checked">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <textarea class="form-input-sub" placeholder="(e.g toll,equ. maintainance,accomodation,allowance)"
+            id="otherExpenses"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Additional Comments(max. 1000 text)</label>
+          <textarea type="text" class="form-input" placeholder="Enter any additional comments" id="additionalComments"
+            maxlength="1000"></textarea>
+        </div>
+
+        <button type="button" class="continue-btn" onclick="navigateToPage(6)">Continue to Review & Submit</button>
+        <div class="success-message" id="successMessage6">
+          ✓ Form submitted successfully!
+        </div>
+        <form>
+      </div>
+    </div>
+    <!-- Page 6: Review & Submit -->
+    <div class="page" id="page6">
+      <div class="form-content">
+        <div class="review-container">
+          <!-- <h2 class="form-title" style="color: white;">Final Review & Book Contract</h2>  -->
+
+          <!-- try -->
+          <!-- Page 1 -->
+          <div class="review-section">
+            <div class="review-header">
+              <span class="review-title">Company Information</span>
+              <button class="header-btn" onclick="navigateToPage(1)">Edit</button>
+            </div>
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-label">Company Name</div>
+                <div class="info-value" id="rev-company">--</div>
+                <hr>
+
+                <div class="info-label">Primary Contact Name</div>
+                <div class="info-value" id="rev-company">--</div>
+                <hr>
+
+                <div class="info-label">Email Address</div>
+                <div class="info-value" id="rev-company">--</div>
+                <hr>
+
+                <div class="info-label">Primary Contact Number</div>
+                <div class="info-value" id="rev-company">--</div>
+              </div>
+              <div class="info-card">
+
+                <div class="info-label">Company Contact Number</div>
+                <div class="info-value" id="rev-company">--</div>
+                <hr>
+
+                <div class="info-label">Adress</div>
+                <div class="info-value" id="rev-contact">--</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-section">
+            <div class="review-header">
+              <span class="review-title">Contract & Route</span>
+              <button class="header-btn" onclick="navigateToPage(2)">Edit</button>
+            </div>
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-label">startDate</div>
+                <div class="info-value" id="rev-dates">--</div>
+                <hr>
+
+                <div class="info-label">endDate</div>
+                <div class="info-value" id="rev-dates">--</div>
+                <hr>
+
+                <div class="info-label">Contract Duration</div>
+                <div class="info-value" id="rev-dates">--</div>
+                <hr>
+
+                <div class="info-label">Duty-Time(start)</div>
+                <div class="info-value" id="rev-dates">--</div>
+                <hr>
+
+                <div class="info-label">Duty-Time(end)</div>
+                <div class="info-value" id="rev-dates">--</div>
+                <hr>
+
+                <div class="info-label">Attached Agreement</div>
+                <div class="info-value" id="rev-freq">--</div>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Pick-up Location</div>
+                <div class="info-value" id="rev-freq">--</div>
+                <hr>
+
+                <div class="info-label">Destination Location</div>
+                <div class="info-value" id="rev-freq">--</div>
+                <hr>
+
+                <div class="info-label">Estimated Monthly Trips</div>
+                <div class="info-value" id="rev-freq">--</div>
+                <hr>
+
+                <div class="info-label">Range of Trips</div>
+                <div class="info-value" id="rev-freq">--</div>
+                <hr>
+
+                <div class="info-label">Frequency of Trips</div>
+                <div class="info-value" id="rev-freq">--</div>
+                <hr>
+
+                <div class="info-label">route Type</div>
+                <div class="info-value" id="rev-freq">--</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-section">
+            <div class="review-header">
+              <span class="review-title">Cargo Details</span>
+              <button class="header-btn" onclick="navigateToPage(3)">Edit</button>
+            </div>
+            <div class="info-grid">
+              <div class="info-card">
+
+                <div class="info-label">Required Trucks</div>
+                <div class="info-value" id="rev-truck">--</div>
+                <hr>
+
+                <div class="info-label">Driver Requirement</div>
+                <div class="info-value" id="rev-truck">--</div>
+                <hr>
+
+                <div class="info-label">Truck Type</div>
+                <div class="info-value" id="rev-truck">--</div>
+                <hr>
+
+                <div class="info-label">Freight Capacity</div>
+                <div class="info-value" id="rev-truck">--</div>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Goods Type</div>
+                <div class="info-value" id="rev-goods">--</div>
+                <hr>
+
+                <div class="info-label">Goods Name</div>
+                <div class="info-value" id="rev-goods">--</div>
+                <hr>
+
+                <div class="info-label">Cargo Notes</div>
+                <div class="info-value" id="rev-goods">--</div>
+                <hr>
+
+                <div class="info-label">Loading/Unloading Facility</div>
+                <div class="info-value" id="rev-goods">--</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-section">
+            <div class="review-header">
+              <span class="review-title">Service & Compliance</span>
+            </div>
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-label">Required Certification/Permits</div>
+                <div class="info-value" id="rev-price">--</div>
+                <hr>
+
+                <div class="info-label">Insurance Requirement</div>
+                <div class="info-value" id="rev-notes">--</div>
+              </div>
+
+              <div class="info-card">
+                <div class="info-label">API Tracking Integration</div>
+                <div class="info-value" id="rev-price">--</div>
+                <hr>
+
+                <div class="info-label">Dedicated Fleet Need</div>
+                <div class="info-value" id="rev-notes">--</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-section">
+            <div class="review-header">
+              <span class="review-title">Pricing & Notes</span>
+            </div>
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-label">Total contract Amount</div>
+                <div class="info-value" id="rev-price">--</div>
+                <hr>
+
+                <div class="info-label">Cycle Amount</div>
+                <div class="info-value" id="rev-price">--</div>
+                <hr>
+
+                <div class="info-label">Preffered Billing & Payment Cycle</div>
+                <div class="info-value" id="rev-notes">--</div>
+              </div>
+
+              <div class="info-card">
+                <div class="info-label">Other Expenses</div>
+                <div class="info-value" id="rev-price">--</div>
+                <hr>
+
+                <div class="info-label">Additional Comments</div>
+                <div class="info-value" id="rev-notes">--</div>
+              </div>
+            </div>
+          </div>
+          <button class="confirm-btn" onclick="submitRequest()">Confirm & Submit Request</button>
+          <button class="cancel-btn" onclick="cancelRequest()">Cancel Request</button>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      let formData = {
+        page1: {},
+        page2: {
+          selectedDays: []
+        },
+        page3: {},
+        page4: {},
+        page5: {},
+        page6: {},
+        frequency: '',
+        routeType: ''
+      };
+
+      function navigateToPage(pageNum) {
+        // Save current page data before navigating
+        saveCurrentPageData();
+
+        // If navigating to review page, update review content
+        if (pageNum === 7) {
+          updateReviewPage();
+        }
+
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.getElementById('page' + pageNum).classList.add('active');
+
+        document.querySelectorAll('.step').forEach((step, index) => {
+          if (index + 1 === pageNum) step.classList.add('active');
+          else step.classList.remove('active');
+        });
+
+        // Scroll to top
+        window.scrollTo(0, 0);
+      }
+
+      function saveCurrentPageData() {
+        // Page 1
+        formData.page1.companyName = document.getElementById('companyName')?.value || '';
+        formData.page1.contactName = document.getElementById('contactName')?.value || '';
+        formData.page1.contactNumber = document.getElementById('contactNumber')?.value || '';
+        formData.page1.phoneNumber = document.getElementById('phoneNumber')?.value || '';
+        formData.page1.emailAddress = document.getElementById('emailAddress')?.value || '';
+        formData.page1.companyAddress = document.getElementById('companyAddress')?.value || '';
+
+        // Page 2
+        formData.page2.startDate = document.getElementById('startDate')?.value || '';
+        formData.page2.endDate = document.getElementById('endDate')?.value || '';
+        formData.page2.contractDuration = document.getElementById('contractDuration')?.value || '';
+        formData.page2.startime = document.getElementById('startime')?.value || '';
+        formData.page2.endtime = document.getElementById('endtime')?.value || '';
+        formData.page2.estimatedTrips = document.getElementById('estimatedTrips')?.value || '';
+        formData.page2.rangeTrip = document.getElementById('rangeTrip')?.value || '';
+
+        // Page 3
+        formData.page3.numTrucks = document.getElementById('numTrucks')?.value || '';
+        formData.page3.driverRequired = document.getElementById('driverRequired')?.checked || false;
+        formData.page3.truckType = document.getElementById('truckType')?.value || '';
+        formData.page3.sizeCapacity = document.getElementById('sizeCapacity')?.value || '';
+        formData.page3.goodsType = document.getElementById('goodsType')?.value || '';
+        formData.page3.goodsName = document.getElementById('goodsName')?.value || '';
+        formData.page3.specialNotes = document.getElementById('specialNotes')?.value || '';
+        formData.page3.facilities = document.getElementById('facilities')?.value || '';
+
+        // Page 4
+        formData.page4.transitTimeCheck = document.getElementById('transitTimeCheck')?.checked || false;
+        formData.page4.certCheck = document.getElementById('certCheck')?.checked || false;
+        formData.page4.dedicatedFleetToggle = document.getElementById('dedicatedFleetToggle')?.checked || false;
+
+        // Page 5
+        formData.page5.contractAmount = document.getElementById('contractAmount')?.value || '';
+        formData.page5.cycleAmount = document.getElementById('cycleAmount')?.value || '';
+        formData.page5.paymentTerms = document.getElementById('paymentTerms')?.value || '';
+        formData.page5.otherExpenses = document.getElementById('otherExpenses')?.value || '';
+        formData.page5.additionalComments = document.getElementById('additionalComments')?.value || '';
+      }
+
+      function updateReviewPage() {
+        // Company Info
+        document.getElementById('review-companyName').textContent = formData.page1.companyName || '-';
+        document.getElementById('review-contactName').textContent = formData.page1.contactName || '-';
+        document.getElementById('review-contactNumber').textContent = formData.page1.contactNumber || '-';
+        document.getElementById('review-phoneNumber').textContent = formData.page1.phoneNumber || '-';
+        document.getElementById('review-emailAddress').textContent = formData.page1.emailAddress || '-';
+        document.getElementById('review-companyAddress').textContent = formData.page1.companyAddress || '-';
+
+        // Contract Details
+        document.getElementById('review-startDate').textContent = formData.page2.startDate || '-';
+        document.getElementById('review-endDate').textContent = formData.page2.endDate || '-';
+        document.getElementById('review-contractDuration').textContent = formData.page2.contractDuration ? formData.page2.contractDuration + ' days' : '-';
+        document.getElementById('review-dutyTime').textContent = (formData.page2.startime && formData.page2.endtime) ?
+          formData.page2.startime + ' - ' + formData.page2.endtime : '-';
+        document.getElementById('review-estimatedTrips').textContent = formData.page2.estimatedTrips || '-';
+        document.getElementById('review-rangeTrip').textContent = formData.page2.rangeTrip ? formData.page2.rangeTrip + ' km' : '-';
+
+        let freqText = formData.frequency || '-';
+        if (formData.frequency === 'Weekly' && formData.page2.selectedDays.length > 0) {
+          freqText += ' (' + formData.page2.selectedDays.join(', ') + ')';
+        }
+        document.getElementById('review-frequency').textContent = freqText;
+        document.getElementById('review-routeType').textContent = formData.routeType || '-';
+
+        // Cargo Info
+        document.getElementById('review-numTrucks').textContent = formData.page3.numTrucks || '-';
+        document.getElementById('review-driverRequired').textContent = formData.page3.driverRequired ? 'Yes' : 'No';
+        document.getElementById('review-truckType').textContent = formData.page3.truckType || '-';
+        document.getElementById('review-sizeCapacity').textContent = formData.page3.sizeCapacity ? formData.page3.sizeCapacity + ' kg' : '-';
+        document.getElementById('review-goodsType').textContent = formData.page3.goodsType || '-';
+        document.getElementById('review-goodsName').textContent = formData.page3.goodsName || '-';
+        document.getElementById('review-specialNotes').textContent = formData.page3.specialNotes || 'None';
+        document.getElementById('review-facilities').textContent = formData.page3.facilities || '-';
+
+        // Service & Compliance
+        document.getElementById('review-transitTimeCheck').textContent = formData.page4.transitTimeCheck ? 'Required' : 'Not Required';
+        document.getElementById('review-certCheck').textContent = formData.page4.certCheck ? 'Required' : 'Not Required';
+        document.getElementById('review-dedicatedFleetToggle').textContent = formData.page4.dedicatedFleetToggle ? 'Yes' : 'No';
+
+        // Pricing
+        document.getElementById('review-contractAmount').textContent = formData.page5.contractAmount ? '₦' + formData.page5.contractAmount : '-';
+        document.getElementById('review-cycleAmount').textContent = formData.page5.cycleAmount ? '₦' + formData.page5.cycleAmount : '-';
+        document.getElementById('review-paymentTerms').textContent = formData.page5.paymentTerms ? formData.page5.paymentTerms + ' days' : '-';
+        document.getElementById('review-otherExpenses').textContent = formData.page5.otherExpenses || '-';
+        document.getElementById('review-additionalComments').textContent = formData.page5.additionalComments || 'No additional comments provided.';
+      }
+
+      function toggleWeeklyList(btn) {
+        selectFrequency(btn, 'Weekly');
+        const picker = document.getElementById('weeklyDayPicker');
+        picker.style.display = 'block';
+      }
+
+      function toggleDay(chip, day) {
+        chip.classList.toggle('selected');
+
+        if (formData.page2.selectedDays.includes(day)) {
+          formData.page2.selectedDays = formData.page2.selectedDays.filter(d => d !== day);
+        } else {
+          formData.page2.selectedDays.push(day);
+        }
+      }
+
+      function selectFrequency(btn, value) {
+        const group = btn.parentElement;
+        group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        formData.frequency = value;
+
+        if (value !== 'Weekly') {
+          document.getElementById('weeklyDayPicker').style.display = 'none';
+          formData.page2.selectedDays = [];
+          document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('selected'));
+        }
+      }
+
+      function selectRouteType(btn, value) {
+        btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        formData.routeType = value;
+      }
+
+      function saveFormData() {
+        saveCurrentPageData();
+        alert('Form data saved successfully!');
+        console.log('Saved Data:', formData);
+      }
+
+      function submitRequest() {
+        saveCurrentPageData();
+        if (confirm('Are you ready to submit your contract request?')) {
+          alert('Contract request submitted successfully! You will receive a confirmation email shortly.');
+          console.log('Final Submitted Data:', formData);
+        }
+      }
+
+      function cancelRequest() {
+        if (confirm('Are you sure you want to cancel this request? All information will be lost.')) {
+          alert('Request cancelled.');
+          window.history.back();
+        }
+      }
+
+      function goBack() {
+        if (confirm('Are you sure you want to go back? Any unsaved changes may be lost.')) {
+          window.history.back();
+        }
+      }
+
+      function openMap() {
+        const addr = document.getElementById('companyAddress').value;
+        if (addr) window.open(`https://www.google.com/maps/search/${encodeURIComponent(addr)}`, '_blank');
+        else alert('Please enter an address');
+      }
+
+      function uploadAttachment() {
+        alert('File picker opened - PDF files only (max 3MB)');
+      }
+
+      function uploadGoodsPhoto() {
+        alert('Camera/Gallery opened for goods photo');
+      }
+
+      function editForm() {
+        alert('Edit mode enabled');
+      }
+    </script>
+</body>
+
+</html>

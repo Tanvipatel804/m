@@ -1,0 +1,160 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wallet Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #090909;
+      color: white;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background-color:#201f1f;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .back-button {
+      margin-right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .heading {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .wallet-box {
+      background-color: rgb(2, 2, 2);
+      margin: 20px;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px #6f6d6d;
+    }
+
+    .wallet-box h2 {
+      margin-top: 0;
+    }
+
+    .info {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .cashout-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .cashout-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .bottom-options {
+      margin: 20px;
+    }
+
+    .option-item {
+      background-color: #201f1f;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .option-item span {
+      margin-left: 10px;
+    }
+
+    .option-item:hover {
+      background-color: #7a7676;
+    }
+     @media screen and (max-width: 600px) {
+      .wallet-box, .bottom-options {
+        margin: 15px;
+        padding: 15px;
+      }
+
+      .heading {
+        font-size: 18px;
+      }
+
+      .option-item {
+        font-size: 16px;
+        padding: 12px;
+      }
+
+      .cashout-btn {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="back-button" onclick="goBack()">←</div>
+    <div class="heading">Wallet</div>
+  </div>
+
+  <div class="wallet-box">
+    <h2>Balance</h2>
+    <div class="info" id="balanceText">Current Balance: <strong>Loading...</strong></div>
+    <div class="info" id="paymentText">Next Payment Date: <strong>Loading...</strong></div>
+    <button class="cashout-btn">Cash Out</button>
+  </div>
+
+  <div class="bottom-options">
+    <div class="option-item" onclick="openPaymentMethod()">
+      💳<span>Payment Method</span>
+    </div>
+    <div class="option-item" onclick="openHelp()">
+      ❓<span>Help</span>
+    </div>
+  </div>
+
+   <script>
+    // Simulate dynamic values
+    const balance = 1290.75;
+    const nextPaymentDate = new Date();
+    nextPaymentDate.setDate(nextPaymentDate.getDate() + 10); // 10 days from today
+
+    document.getElementById("balanceText").innerHTML = `Current Balance: <strong>$${balance.toFixed(2)}</strong>`;
+
+    document.getElementById("paymentText").innerHTML = `Next Payment Date: <strong>${nextPaymentDate.toDateString()}</strong>`;
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function openPaymentMethod() {
+      alert("Redirecting to Payment Method page...");
+      // window.location.href = 'payment-method.html';
+    }
+
+    function openHelp() {
+      alert("Redirecting to Help page...");
+      // window.location.href = 'help.html';
+    }
+  </script>
+
+</body>
+</html>

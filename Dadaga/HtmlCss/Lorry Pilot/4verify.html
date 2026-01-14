@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LorryPilot - Verify Your Phone Number</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2d2d2d;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo {
+            margin-top: 30px;
+            margin-bottom: 50px;
+            font-size: 32px;
+            font-weight: bold;
+            /* text-transform: uppercase; */
+            letter-spacing: 2px;
+        }
+
+        .logo .lorry {
+            color: white;
+        }
+
+        .logo .pilot {
+            color: #ff8c42;
+        }
+
+        .truck-icon {
+            display: inline-block;
+            margin-left: 5px;
+            color: #ff8c42;
+            font-size: 28px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #d0d0d0;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+
+        .verification-card {
+            background-color: #e8e8e8;
+            border-radius: 20px;
+            padding: 60px 35px 40px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 12px;
+            background: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+            border: 2px solid #ff8c42;
+        }
+
+        .resend-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .resend-text {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .resend-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .resend-link:hover {
+            color: #ff8c42;
+        }
+
+        .timer {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .resend-icon {
+            width: 20px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .resend-icon::after {
+            content: '↻';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-verify {
+            background: #ff8c42;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 70px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
+        }
+
+        .btn-verify:hover {
+            background: #ff7a28;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 66, 0.5);
+        }
+
+        .btn-verify:active {
+            transform: translateY(0);
+        }
+
+        .btn-verify:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .back-link {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .back-link a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #ff8c42;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 28px;
+                margin-bottom: 40px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 40px;
+            }
+
+            .verification-card {
+                padding: 50px 25px 35px;
+            }
+
+            .otp-input {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .btn-verify {
+                font-size: 18px;
+                padding: 14px 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 24px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .verification-card {
+                padding: 40px 20px 30px;
+            }
+
+            .otp-container {
+                gap: 8px;
+            }
+
+            .otp-input {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .resend-container {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+
+            .btn-verify {
+                font-size: 16px;
+                padding: 12px 50px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .page-title {
+            animation: fadeIn 0.8s ease-out 0.2s backwards;
+        }
+
+        .subtitle {
+            animation: fadeIn 0.8s ease-out 0.3s backwards;
+        }
+
+        .verification-card {
+            animation: fadeIn 0.8s ease-out 0.4s backwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <span class="lorry">LORRY</span> <span class="pilot">Pilot</span> 
+    </div>
+
+    <h1 class="page-title">Verify Your Phone Number</h1>
+    <p class="subtitle">Please enter 6 6-digit code sent to your number</p>
+
+    <div class="verification-card">
+        <div class="otp-container">
+            <input type="text" class="otp-input" maxlength="1" id="otp1">
+            <input type="text" class="otp-input" maxlength="1" id="otp2">
+            <input type="text" class="otp-input" maxlength="1" id="otp3">
+            <input type="text" class="otp-input" maxlength="1" id="otp4">
+            <input type="text" class="otp-input" maxlength="1" id="otp5">
+            <input type="text" class="otp-input" maxlength="1" id="otp6">
+        </div>
+
+        <div class="resend-container">
+            <span class="resend-text">Didn't receive code?</span>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="#" class="resend-link" onclick="handleResend(event)">
+                    <span class="resend-icon"></span>
+                    Resend
+                </a>
+                <span class="timer" id="timer">0:58</span>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn-verify" id="verifyBtn" onclick="handleVerify()">Verify</button>
+        </div>
+
+        <div class="back-link">
+            Incorrect number? <a href="#" onclick="handleGoBack(event)">Go back</a>
+        </div>
+    </div>
+
+    <script>
+        // OTP Input handling
+        const otpInputs = document.querySelectorAll('.otp-input');
+        
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                
+                // Only allow numbers
+                if (!/^\d*$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+                
+                // Move to next input
+                if (value && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                
+                // Enable/disable verify button
+                updateVerifyButton();
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                // Move to previous input on backspace
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+            
+            // Handle paste
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = e.clipboardData.getData('text').slice(0, 6);
+                
+                if (!/^\d+$/.test(pastedData)) return;
+                
+                pastedData.split('').forEach((char, i) => {
+                    if (otpInputs[i]) {
+                        otpInputs[i].value = char;
+                    }
+                });
+                
+                if (pastedData.length === 6) {
+                    otpInputs[5].focus();
+                }
+                
+                updateVerifyButton();
+            });
+        });
+
+        // Update verify button state
+        function updateVerifyButton() {
+            const otp = Array.from(otpInputs).map(input => input.value).join('');
+            const verifyBtn = document.getElementById('verifyBtn');
+            verifyBtn.disabled = otp.length !== 6;
+        }
+
+        // Timer countdown
+        let timeLeft = 58;
+        const timerElement = document.getElementById('timer');
+        
+        const countdown = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                timerElement.textContent = '0:00';
+            } else {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+
+        // Handle verify
+        function handleVerify() {
+            const otp = Array.from(otpInputs).map(input => input.value).join('');
+            
+            if (otp.length !== 6) {
+                alert('Please enter complete 6-digit code');
+                return;
+            }
+            
+            console.log('Verifying OTP:', otp);
+           // alert('Verification successful! Redirecting...');
+            // window.location.href = '/dashboard';
+             updateVerifyButton();
+             window.location.href = '5personal-info.html';
+        }
+
+        // Handle resend
+        function handleResend(e) {
+            e.preventDefault();
+            
+            if (timeLeft > 0) {
+                alert('Please wait for the timer to expire before resending');
+                return;
+            }
+            
+            console.log('Resending OTP');
+            alert('New code sent to your phone!');
+            
+            // Reset timer
+            timeLeft = 58;
+            clearInterval(countdown);
+            
+            // Clear inputs
+            otpInputs.forEach(input => input.value = '');
+            otpInputs[0].focus();
+            updateVerifyButton();
+        }
+
+        // Handle go back
+        function handleGoBack(e) {
+            e.preventDefault();
+           // console.log('Going back to registration');
+           // alert('Redirecting to registration page...');
+             window.location.href = '4verify.html';
+        }
+
+        // Focus first input on load
+        window.addEventListener('load', () => {
+            otpInputs[0].focus();
+        });
+
+        // Add ripple effect to button
+        document.querySelector('.btn-verify').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.4)';
+            ripple.style.width = ripple.style.height = '100px';
+            ripple.style.left = e.clientX - rect.left - 50 + 'px';
+            ripple.style.top = e.clientY - rect.top - 50 + 'px';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.animation = 'ripple-effect 0.6s ease-out';
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple-effect {
+                from {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

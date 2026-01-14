@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Personal Information</title>
+    <style>
+        body {
+            width: 500px;
+            margin: 0px auto;
+            border: 2px solid black;
+            background-color: black;
+            color: white;
+        }
+
+        h2 {
+            font-size: xx-large;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .diff {
+            margin: 5px 10px;
+        }
+
+        label {
+            width: 200px;
+            height: 20px;
+            margin: 5px;
+            padding: 5px;
+            font-size: medium;
+        }
+
+        input,
+        select {
+            width: 270px;
+            height: 30px;
+            display: block;
+            border: 2px solid whitesmoke;
+            border-radius: 25px;
+            background-color: white;
+            color: black;
+            margin: 15px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            margin: 15px;
+            display: inline;
+            vertical-align: middle;
+        }
+
+        button {
+            border: 2px solid whitesmoke;
+            border-radius: 20px;
+            background-color: white;
+            color: black;
+            text-align: center;
+            height: 35px;
+            width: 150px;
+            font-weight: bolder;
+            cursor: pointer;
+        }
+
+        #btnnext {
+            width: 140px;
+            height: 40px;
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            font-size: large;
+            margin: 50px auto;
+            border: 2px solid white;
+            border-radius: 0px;
+            margin-left: 60px;
+            cursor: pointer;
+        }
+
+        #btnnext a {
+            text-decoration: none;
+            color: black;
+        }
+
+        h3 {
+            font-size: large;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        span {
+            color: red;
+            margin: 5px;
+        }
+
+        img {
+            height: 50px;
+            width: 70px;
+            margin-left: 15px;
+        }
+
+        .single-vehicle-section {
+            display: block;
+        }
+
+        .multiple-vehicles-section {
+            display: none;
+        }
+
+        .highlighted-section {
+            border: 3px solid gray;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            /* background-color: rgba(255, 255, 0, 0.1); */
+            background-color: transparent;
+        }
+
+        .vehicle-block {
+            border: 2px solid white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .vehicle-header {
+            font-size: large;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .vehicle-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 20px 10px;
+            justify-content: center;
+        }
+
+        .btn-add-vehicle,
+        .btn-remove-vehicle {
+            border: 2px solid whitesmoke;
+            border-radius: 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            height: 40px;
+            width: 180px;
+            font-weight: bolder;
+            cursor: pointer;
+            font-size: medium;
+        }
+
+        .btn-remove-vehicle {
+            background-color: #f44336;
+        }
+
+        .btn-add-vehicle:hover {
+            background-color: #45a049;
+        }
+
+        .btn-remove-vehicle:hover {
+            background-color: #da190b;
+        }
+
+        .btn-add-vehicle:disabled,
+        .btn-remove-vehicle:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Personal information</h2>
+    <form action="backend.php">
+        <div class="first">
+            <div class="diff">
+                <label for="ufname"> First Name:<span>*</span> <input type="text" name="uname" id="ufname"
+                        placeholder="Joseph Maria"></label>
+            </div>
+
+            <div class="diff">
+                <label for="ulname"> Last Name:<span>*</span> <input type="text" name="uname" id="ulname"
+                        placeholder="Advin"></label>
+            </div>
+
+            <div class="diff">
+                <label for="ulang"> Language:<span>*</span> </label>
+                <select>
+                    <option>Gujarati</option>
+                    <option>Hindi</option>
+                    <option>English</option>
+                </select>
+            </div>
+
+            <div class="diff">
+                <label for="urefcode"> Refferal Code: <input type="text" name="uname" id="urefcode"></label>
+            </div>
+
+            <div class="diff">
+                <label for="uano"> Aadharcard No:<span>*</span> <input type="number" name="uname" id="uano"
+                        placeholder="1234 5678 9012"></label>
+            </div>
+
+            <div class="diff">
+                <label for="upcno"> PanCard No.:<span>*</span> <input type="number" name="uname" id="upcno"
+                        placeholder="ABCDE1234F"></label>
+            </div>
+
+            <h3>Profile Picture<span>*</span></h3>
+            <p>Upload your profile picture. This helps people to recognize you. Take a picture from the front, use a
+                clear
+                background and make sure your eyes and mouth are visible. Do not wear any sunglasses or hats.</p>
+            <button type="button" name="btn" id="btnpp">+ Upload File</button> <br>
+
+            <h3>Aadhar/Pan Card(front side) <span>*</span></h3>
+            <p> Take a photo of your Aadhar Card or Pan Card from the FRONT side. Make sure all the information is
+                readable, all
+                corners of the document are visible and the text and your photo is not blurry.</p>
+            <button type="button" name="btn" id="btnpp">+ Upload File</button> <br>
+
+            <h3>Aadhar/Pan Card(back side)<span>*</span></h3>
+            <p>Take a photo of your Aadhar Card or Pan Card from the BACK side.</p>
+            <button type="button" name="btn" id="btnpp">+ Upload File</button> <br>
+            <br><br>
+        </div>
+
+        <div class="diff">
+            <input type="checkbox" id="uans"><label for="uans"> Have multiple vehicles? </label><br>
+        </div>
+
+        <!-- Single Vehicle Section -->
+        <div class="single-vehicle-section" id="singleVehicleSection">
+            <div class="diff">
+                <label for="uvehicle">I have a vehicle that I will drive.</label><br><br><br>
+            </div>
+
+            <div class="diff">
+                <label for="udlno"> Driving License No.:<span>*</span> <input type="text" name="uname" id="udlno"
+                        placeholder="AB12 00003456789"></label>
+            </div>
+
+            <div class="diff">
+                <label for="uvrno"> Vehicle Registration No.:<span>*</span> <input type="text" name="uname" id="uvrno"
+                        placeholder="V1234567890"></label>
+            </div>
+
+            <div class="diff">
+                <label for="uvmm"> Vehicle manufacturer and model:<span>*</span>
+                    <select>
+                        <option>Tata,LPT 710</option>
+                        <option>Ashok Leyland,Models name</option>
+                        <option>Bharat Benz,Models</option>
+                        <option>Eicher,Models</option>
+                        <option>Force,models</option>
+                        <option>Mahindra,models</option>
+                        <option>Hindustan Motors,models</option>
+                        <option>vehicles,models</option>
+                        <option>L&T,models</option>
+                        <option>Bajaj,models</option>
+                        <option>Suzuki,models</option>
+                        <option>SML Isuzu,models</option>
+                        <option>Piaggio,models</option>
+                        <option>Volvo,models</option>
+                        <option>Bike Brands,models</option>
+                        <option>Toyota,models</option>
+                        <option>Mercedes,models</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="diff">
+                <label for="uvyear"> Vehicle year:<span>*</span> <input type="date" name="uname" id="uvyear"
+                        placeholder="2014"></label>
+            </div>
+
+            <div class="diff">
+                <label for="ulplate"> Vehicle plate No.:<span>*</span> <input type="text" name="uname" id="ulplate"
+                        placeholder="MH12 25366897345"></label>
+            </div>
+
+            <div class="diff">
+                <label for="uvcolor"> Vehicle Color:<span>*</span>
+                    <select>
+                        <option>red </option>
+                        <option>yellow</option>
+                        <option>Blue</option>
+                    </select>
+                </label>
+            </div>
+
+            <h3>Vehicle Photo<span>*</span></h3>
+            <p>Take a photo of your vehicle from the front of driver seat, Make sure all the information is visible
+                and your photo is not blurry. The following example is provided for your reference.</p>
+            <button type="button" name="btn" id="btnp">+ Upload File</button> <br>
+
+            <h3>RTO Card(front side)<span>*</span></h3>
+            <p>Take a photo of your RTO Card from the FRONT side. Make sure all the information is
+                readable, all corners of the document are visible and the text and your photo is not blurry.</p>
+            <button type="button" name="btn" id="btnpp">+ Upload File</button> <br>
+
+            <h3>RTO Card(Back side)<span>*</span></h3>
+            <p>Take a photo of your RTO Card from the BACK side. Make sure all the information is
+                readable, all corners of the document are visible and the text and your photo is not blurry.</p>
+            <button type="button" name="btn" id="btnpp">+ Upload File</button> <br>
+
+            <h3>Vehicle Insurance Photo</h3>
+            <p>Take a photo of your vehicle's Insurance, Make sure all the information is visible and your photo is
+                not blurry. The following example is provided for your reference.</p>
+            <button type="button" name="btn" id="btnp">+ Upload File</button> <br>
+        </div>
+
+        <!-- Multiple Vehicles Section -->
+        <div class="multiple-vehicles-section highlighted-section" id="multipleVehiclesSection">
+            <div class="diff">
+                <label for="uvehicleCount">How many vehicles do you have?:<span>*</span> 
+                    <input type="number" name="vehicleCount" id="uvehicleCount" placeholder="Enter number" min="1" max="20" readonly>
+                </label>
+            </div>
+
+            <div class="vehicle-buttons">
+                <button type="button" class="btn-add-vehicle" id="btnAddVehicle">+ Add Vehicle</button>
+                <button type="button" class="btn-remove-vehicle" id="btnRemoveVehicle">- Remove Vehicle</button>
+            </div>
+
+            <div id="vehiclesContainer"></div>
+
+            <div class="diff">
+                <label for="ucname">Company Name:<span>*</span> <input type="text" name="uname" id="ucname"
+                        placeholder="Bajaj Corporation Ltd."></label>
+            </div>
+
+            <div class="diff">
+                <label for="ugstno">GST No.:<span>*</span> <input type="text" name="uname" id="ugstno"
+                        placeholder="22 ABCDE0000A 1 Z 5"></label>
+            </div>
+
+            <div class="diff">
+                <label for="uclno">Company License No.:<span>*</span> <input type="text" name="uname" id="uclno"
+                        placeholder="22 ABCDE0000A 1 Z 5"></label>
+            </div>
+
+            <h3>Company License Photo<span>*</span></h3>
+            <p>Take a photo of your company license photo, Make sure all the information is visible and your photo
+                is not blurry. The following example is provided for your reference.</p>
+            <button type="button" name="btn" id="btnp">+ Upload File</button> <br>
+        </div>
+
+        <button type="button" id="btnnext" name="btnp"><a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\6payment-details.html" alt="Fill all the details">Next</a></button>
+
+    </form>
+
+    <script>
+        const checkbox = document.getElementById('uans');
+        const singleSection = document.getElementById('singleVehicleSection');
+        const multipleSection = document.getElementById('multipleVehiclesSection');
+        const vehicleCountInput = document.getElementById('uvehicleCount');
+        const vehiclesContainer = document.getElementById('vehiclesContainer');
+        const btnAddVehicle = document.getElementById('btnAddVehicle');
+        const btnRemoveVehicle = document.getElementById('btnRemoveVehicle');
+
+        let vehicleCount = 0;
+        const MAX_VEHICLES = 20;
+
+        // Toggle sections based on checkbox
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                singleSection.style.display = 'none';
+                multipleSection.style.display = 'block';
+            } else {
+                singleSection.style.display = 'block';
+                multipleSection.style.display = 'none';
+                vehiclesContainer.innerHTML = '';
+                vehicleCount = 0;
+                vehicleCountInput.value = '';
+                updateButtonStates();
+            }
+        });
+
+        // Add Vehicle Button
+        btnAddVehicle.addEventListener('click', function() {
+            if (vehicleCount < MAX_VEHICLES) {
+                vehicleCount++;
+                vehicleCountInput.value = vehicleCount;
+                const vehicleBlock = createVehicleBlock(vehicleCount);
+                vehiclesContainer.appendChild(vehicleBlock);
+                updateButtonStates();
+            }
+        });
+
+        // Remove Vehicle Button
+        btnRemoveVehicle.addEventListener('click', function() {
+            if (vehicleCount > 0) {
+                const lastVehicle = vehiclesContainer.lastElementChild;
+                if (lastVehicle) {
+                    vehiclesContainer.removeChild(lastVehicle);
+                    vehicleCount--;
+                    vehicleCountInput.value = vehicleCount || '';
+                    updateButtonStates();
+                }
+            }
+        });
+
+        // Update button states (enable/disable)
+        function updateButtonStates() {
+            btnRemoveVehicle.disabled = vehicleCount === 0;
+            btnAddVehicle.disabled = vehicleCount >= MAX_VEHICLES;
+        }
+
+        function createVehicleBlock(number) {
+            const block = document.createElement('div');
+            block.className = 'vehicle-block';
+            block.innerHTML = `
+                <div class="vehicle-header">Vehicle ${number}</div>
+                
+                <div class="diff">
+                    <label for="udlno${number}"> Driving License No.:<span>*</span> 
+                        <input type="text" name="dlno${number}" id="udlno${number}" placeholder="AB12 00003456789">
+                    </label>
+                </div>
+
+                <div class="diff">
+                    <label for="uvrno${number}"> Vehicle Registration No.:<span>*</span> 
+                        <input type="text" name="vrno${number}" id="uvrno${number}" placeholder="V1234567890">
+                    </label>
+                </div>
+
+                <div class="diff">
+                    <label for="uvmm${number}"> Vehicle manufacturer and model:<span>*</span>
+                        <select name="vmm${number}" id="uvmm${number}">
+                            <option>Tata,LPT 710</option>
+                            <option>Ashok Leyland,Models name</option>
+                            <option>Bharat Benz,Models</option>
+                            <option>Eicher,Models</option>
+                            <option>Force,models</option>
+                            <option>Mahindra,models</option>
+                            <option>Hindustan Motors,models</option>
+                            <option>vehicles,models</option>
+                            <option>L&T,models</option>
+                            <option>Bajaj,models</option>
+                            <option>Suzuki,models</option>
+                            <option>SML Isuzu,models</option>
+                            <option>Piaggio,models</option>
+                            <option>Volvo,models</option>
+                            <option>Bike Brands,models</option>
+                            <option>Toyota,models</option>
+                            <option>Mercedes,models</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="diff">
+                    <label for="uvyear${number}"> Vehicle year:<span>*</span> 
+                        <input type="date" name="vyear${number}" id="uvyear${number}" placeholder="2014">
+                    </label>
+                </div>
+
+                <div class="diff">
+                    <label for="ulplate${number}"> Vehicle plate No.:<span>*</span> 
+                        <input type="text" name="lplate${number}" id="ulplate${number}" placeholder="MH12 25366897345">
+                    </label>
+                </div>
+
+                <div class="diff">
+                    <label for="uvcolor${number}"> Vehicle Color:<span>*</span>
+                        <select name="vcolor${number}" id="uvcolor${number}">
+                            <option>red</option>
+                            <option>yellow</option>
+                            <option>Blue</option>
+                        </select>
+                    </label>
+                </div>
+
+                <h3>Vehicle Photo<span>*</span></h3>
+                <p>Take a photo of your vehicle from the front of driver seat, Make sure all the information is visible
+                    and your photo is not blurry.</p>
+                <button type="button" name="btn">+ Upload File</button> <br>
+
+                <h3>RTO Card(front side)<span>*</span></h3>
+                <p>Take a photo of your RTO Card from the FRONT side. Make sure all the information is readable.</p>
+                <button type="button" name="btn">+ Upload File</button> <br>
+
+                <h3>RTO Card(Back side)<span>*</span></h3>
+                <p>Take a photo of your RTO Card from the BACK side. Make sure all the information is readable.</p>
+                <button type="button" name="btn">+ Upload File</button> <br>
+
+                <h3>Vehicle Insurance Photo<span>*</span></h3>
+                <p>Take a photo of your vehicle's Insurance, Make sure all the information is visible.</p>
+                <button type="button" name="btn">+ Upload File</button> <br>
+            `;
+            return block;
+        }
+
+        // Initialize button states
+        updateButtonStates();
+    </script>
+</body>
+
+</html>

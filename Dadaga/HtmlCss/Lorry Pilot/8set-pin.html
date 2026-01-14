@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your 4-Digit PIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2d2d2d;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .back-arrow {
+            font-size: 32px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-arrow:hover {
+            transform: translateX(-5px);
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #d0d0d0;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+
+        .pin-card {
+            background-color: #e8e8e8;
+            border-radius: 20px;
+            padding: 50px 30px 60px;
+            width: 70%;
+            margin:0 auto;
+            box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .pin-section {
+            margin-bottom: 30px;
+        }
+
+        .section-label {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .pin-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .pin-input {
+            width: 70px;
+            height: 70px;
+            border: none;
+            border-radius: 12px;
+            background: white;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .pin-input:focus {
+            box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+            border: 2px solid #ff8c42;
+        }
+
+        .pin-input::placeholder {
+            color: #ddd;
+            font-size: 24px;
+        }
+
+        .btn-confirm {
+            width: 70%;
+            background: #ff8c42;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 18px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
+            margin: 0 auto;
+            display: block;
+        }
+
+        .btn-confirm:hover {
+            background: #ff7a28;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 66, 0.5);
+        }
+
+        .btn-confirm:active {
+            transform: translateY(0);
+        }
+
+        .btn-confirm:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 30px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 40px;
+            }
+
+            .pin-card {
+                padding: 40px 25px 50px;
+            }
+
+            .card-title {
+                font-size: 22px;
+            }
+
+            .pin-inputs {
+                gap: 12px;
+            }
+
+            .pin-input {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .btn-confirm {
+                font-size: 18px;
+                padding: 16px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 26px;
+            }
+
+            .pin-card {
+                padding: 35px 20px 45px;
+            }
+
+            .card-title {
+                font-size: 20px;
+                margin-bottom: 30px;
+            }
+
+            .pin-inputs {
+                gap: 10px;
+            }
+
+            .pin-input {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+
+            .btn-confirm {
+                font-size: 16px;
+                padding: 14px 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-arrow {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .page-title {
+            animation: fadeIn 0.8s ease-out 0.2s backwards;
+        }
+
+        .subtitle {
+            animation: fadeIn 0.8s ease-out 0.3s backwards;
+        }
+
+        .pin-card {
+            animation: slideUp 0.8s ease-out 0.4s backwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Password dots */
+        .pin-input[type="password"] {
+            letter-spacing: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-arrow" onclick="handleGoBack()">←</div>
+
+    <h1 class="page-title">Create Your 4-Digit PIN</h1>
+    <p class="subtitle">This will your your login PIN for future use</p>
+
+    <div class="pin-card">
+        <h2 class="card-title">Set Your New PIN</h2>
+
+        <div class="pin-section">
+            <div class="section-label">Enter PIN</div>
+            <div class="pin-inputs" id="pinInputs1">
+                <input type="password" class="pin-input" maxlength="1" data-index="0">
+                <input type="password" class="pin-input" maxlength="1" data-index="1">
+                <input type="password" class="pin-input" maxlength="1" data-index="2">
+                <input type="password" class="pin-input" maxlength="1" data-index="3">
+            </div>
+        </div>
+
+        <div class="pin-section">
+            <div class="section-label">Confirm PIN</div>
+            <div class="pin-inputs" id="pinInputs2">
+                <input type="password" class="pin-input" maxlength="1" data-index="0">
+                <input type="password" class="pin-input" maxlength="1" data-index="1">
+                <input type="password" class="pin-input" maxlength="1" data-index="2">
+                <input type="password" class="pin-input" maxlength="1" data-index="3">
+            </div>
+        </div>
+
+        <button class="btn-confirm" id="confirmBtn" onclick="handleConfirm()">Confirm PIN</button>
+    </div>
+
+    <script>
+        const pinInputs1 = document.querySelectorAll('#pinInputs1 .pin-input');
+        const pinInputs2 = document.querySelectorAll('#pinInputs2 .pin-input');
+        const confirmBtn = document.getElementById('confirmBtn');
+        
+        let pin1 = '';
+        let pin2 = '';
+
+        // Setup inputs for both PIN sections
+        function setupPinInputs(inputs, isFirstSet) {
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    
+                    // Only allow numbers
+                    if (!/^\d*$/.test(value)) {
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Store the value
+                    if (isFirstSet) {
+                        pin1 = Array.from(pinInputs1).map(inp => inp.value).join('');
+                    } else {
+                        pin2 = Array.from(pinInputs2).map(inp => inp.value).join('');
+                    }
+                    
+                    // Move to next input
+                    if (value && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    } else if (value && index === inputs.length - 1 && isFirstSet) {
+                        // Move to confirm PIN section
+                        pinInputs2[0].focus();
+                    }
+                    
+                    updateConfirmButton();
+                });
+                
+                input.addEventListener('keydown', (e) => {
+                    // Move to previous input on backspace
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+                
+                // Handle paste
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').slice(0, 4);
+                    
+                    if (!/^\d+$/.test(pastedData)) return;
+                    
+                    pastedData.split('').forEach((char, i) => {
+                        if (inputs[i]) {
+                            inputs[i].value = char;
+                        }
+                    });
+                    
+                    if (pastedData.length === 4) {
+                        inputs[3].focus();
+                    }
+                    
+                    if (isFirstSet) {
+                        pin1 = Array.from(pinInputs1).map(inp => inp.value).join('');
+                    } else {
+                        pin2 = Array.from(pinInputs2).map(inp => inp.value).join('');
+                    }
+                    
+                    updateConfirmButton();
+                });
+            });
+        }
+
+        // Initialize both PIN input sets
+        setupPinInputs(pinInputs1, true);
+        setupPinInputs(pinInputs2, false);
+
+        // Update confirm button state
+        function updateConfirmButton() {
+            pin1 = Array.from(pinInputs1).map(inp => inp.value).join('');
+            pin2 = Array.from(pinInputs2).map(inp => inp.value).join('');
+            confirmBtn.disabled = pin1.length !== 4 || pin2.length !== 4;
+        }
+
+        // Handle confirm
+        function handleConfirm() {
+            if (pin1.length !== 4 || pin2.length !== 4) {
+                alert('Please enter complete 4-digit PIN');
+                return;
+            }
+            
+            if (pin1 !== pin2) {
+                alert('PINs do not match. Please try again.');
+                pinInputs2.forEach(input => input.value = '');
+                pin2 = '';
+                pinInputs2[0].focus();
+                updateConfirmButton();
+                return;
+            }
+            
+            console.log('PIN Created:', pin1);
+           // alert('PIN created successfully! Redirecting...');
+             window.location.href = '9bio-set-pin.html';
+        }
+
+        // Handle go back
+        function handleGoBack() {
+            if (confirm('Are you sure you want to go back? Your progress will be lost.')) {
+                console.log('Going back');
+                // window.history.back();
+                alert('Redirecting back...');
+            }
+        }
+
+        // Focus first input on load
+        window.addEventListener('load', () => {
+            pinInputs1[0].focus();
+        });
+
+        // Add ripple effect to button
+        document.querySelector('.btn-confirm').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.4)';
+            ripple.style.width = ripple.style.height = '100px';
+            ripple.style.left = e.clientX - rect.left - 50 + 'px';
+            ripple.style.top = e.clientY - rect.top - 50 + 'px';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.animation = 'ripple-effect 0.6s ease-out';
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple-effect {
+                from {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

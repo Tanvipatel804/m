@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transporters</title>
+    <style>
+         * {
+            background-color: black;
+            height: auto;
+        }
+
+        label {
+            display: inline-block;
+            width: 210px;
+            margin-left: 2px;
+            margin-right: -50px;
+            margin-top: 40px;
+            color: white;
+            text-align: justify;
+        }
+
+        input {
+            display: inline-block;
+            margin:15px;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 50px;
+            background-color: white;
+            width: 500px;
+        }
+
+        fieldset {
+            border: none;
+            border: 2px solid black;
+            width: 800px;
+            margin: 0px auto;
+            border-radius: 10px;
+        }
+
+        form {
+            display: flex;
+            width: 100%;
+            color: white;
+            gap: 36px;
+            margin-top: -20px;
+        }
+
+        form label {
+            width: 250px;
+            margin-right: -15px;
+        }
+
+        form input {
+            width: 145px;
+            border: 2px solid black;
+            border-radius: 50px;
+            background-color: white;
+            margin: 15px;
+        }
+
+        img {
+            height: 70px;
+            width: 70px;
+            margin-bottom: -30px;
+            color: white;
+        }
+
+        #btnsubmit {
+            border: 5px solid rgb(22, 22, 22);
+            background-color: white;
+            width: 150px;
+            color: black;
+            text-align: center;
+            padding: 10px;
+            margin: 17px 318px;
+            cursor: pointer;
+        }
+        #btnapply {
+            color: rgb(6, 6, 6);
+            width: 80px;
+            height: 37px;
+            border: 5px solid rgb(22, 22, 22);
+            background-color: white;
+            text-align: center;
+        }
+
+        input[type="checkbox"] {
+            width: 35px;
+            margin: 30px;
+        }
+
+        #checkit {
+            margin: 5px;
+            text-align: left;
+            width: 500px;
+            font-weight: bold;
+            font-size: medium;
+        }
+
+        p {
+            color: white;
+            font-size: medium;
+            font-family: Arial, Helvetica, sans-serif;
+            margin-left: 10px;
+            padding: 10px;
+            border: 2px solid rgb(10, 10, 10);
+        } 
+    </style>
+</head>
+
+<body>
+    <fieldset>
+        <label for="txtfname">First Name: *</label><input type="text" name="txtfname">
+        <label for="txtlname">Last Name: *</label><input type="text" name="txtlname">
+        <label for="txtcname">Owner/Company Name: *</label><input type="text" name="txtcname">
+        <label for="txtdt">No. of Trucks available: *</label><input type="number" name="txtnt">
+        <label for="txtcno">Contact No.: *</label><input type="number" name="txtcno">
+        <label for="txtdt">Date of Birth: *</label><input type="date" name="txtdt">
+        <label for="txtad1">Address1: *</label><input type="text" name="txtad1">
+        <label for="txtad2">Address2: *</label><input type="text" name="txtad2">
+
+        <form action="#" class="form0">
+            <label for="txtstate">State: *<input type="text" name="txtstate"></label>
+            <label for="txtcity">City: *<input type="text" name="txtcity"></label>
+            <label for="txtarea">Area: *<input type="text" name="txtarea"></label>
+        </form>
+
+        <label for="txtpanno">Pancard No. *:</label><input type="text" name="txtcname"><img
+            src="C:\Users\DADAGA\Pictures\Saved Pictures\camera.png">
+        <label for="txtrc">Refferal Code *:</label><input type="text" name="txtrc"> <button type="submit" name="Apply"
+            id="btnapply">Apply</button>
+
+        <input type="checkbox" name="checkit">
+        <label for="checkit" id="checkit"> I accept terms and conditions and privacy policies.</label>
+
+
+        <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\LooryTS\5.1transporter.html" rel=""> <button type="submit" name="submit" id="btnsubmit">Create Account</button></a>
+                </fieldset>
+    <p>Note: The fields is shown * is mandatory to fill. </p>
+</body>
+
+</html>

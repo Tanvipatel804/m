@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Tracking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FF9D42, #FF7E29);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 250px;
+            background: #e8e8e8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-bg {
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(200,200,200,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(200,200,200,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .route-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, #4A90E2 0%, #4A90E2 100%);
+            transform: translateY(-50%);
+        }
+
+        .location-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #FF9D42;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .pickup-marker {
+            top: 50%;
+            left: 10%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        .dropoff-marker {
+            top: 50%;
+            right: 10%;
+            transform: translate(50%, -50%) rotate(-45deg);
+            background: #4CAF50;
+        }
+
+        .truck-icon {
+            position: absolute;
+            top: 50%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+        }
+
+        .status-banner {
+            background: #FF9D42;
+            color: white;
+            padding: 12px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .delay-reasons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .reason-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .reason-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .reason-card.selected {
+            border-color: #FF9D42;
+            background: #FFF8F0;
+        }
+
+        .reason-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .reason-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .reason-subtitle {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .delay-slider-container {
+            margin-bottom: 25px;
+        }
+
+        .delay-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: space-between;
+        }
+
+        .delay-option {
+            flex: 1;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            border: 2px solid #ddd;
+            transition: all 0.2s;
+        }
+
+        .delay-option.active {
+            background: #FF9D42;
+            color: white;
+            border-color: #FF9D42;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #4CAF50 0%, #FFC107 50%, #F44336 100%);
+            border-radius: 3px;
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .slider-thumb {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FF9D42;
+            border-radius: 50%;
+            top: 50%;
+            left: 33%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .toggle-container {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: #ccc;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(22px);
+        }
+
+        .input-container {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        #issueInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .call-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .call-btn {
+            background: white;
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .call-btn:hover {
+            background: #4CAF50;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .call-icon {
+            font-size: 28px;
+        }
+
+        .resume-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FF9D42, #FF7E29);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(255, 157, 66, 0.3);
+        }
+
+        .resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 157, 66, 0.4);
+        }
+
+        .resume-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        🚚 DELAYED - New ETA: 4:00 PM
+    </div>
+
+    <div class="map-container">
+        <div class="map-bg"></div>
+        <div class="route-line"></div>
+        <div class="location-marker pickup-marker"></div>
+        <div class="location-marker dropoff-marker"></div>
+        <div class="truck-icon">🚛</div>
+    </div>
+
+    <div class="status-banner">
+        ⏰ DELAYED
+    </div>
+
+    <div class="content">
+        <div class="section-title">Report Trip Delay</div>
+        
+        <div class="delay-reasons">
+            <div class="reason-card" onclick="toggleReason(this)">
+                <div class="reason-icon">🚗</div>
+                <div class="reason-title">Traffic Congestion</div>
+                <div class="reason-subtitle">Auto-calibrated delay</div>
+            </div>
+            <div class="reason-card" onclick="toggleReason(this)">
+                <div class="reason-icon">🌧️</div>
+                <div class="reason-title">Bad Weather</div>
+                <div class="reason-subtitle">Slow speeds required</div>
+            </div>
+            <div class="reason-card" onclick="toggleReason(this)">
+                <div class="reason-icon">🏭</div>
+                <div class="reason-title">Dock/Warehouse Wait</div>
+                <div class="reason-subtitle">Long queue at site</div>
+            </div>
+            <div class="reason-card" onclick="toggleReason(this)">
+                <div class="reason-icon">🚧</div>
+                <div class="reason-title">Road Closure</div>
+                <div class="reason-subtitle">Accident/Road Closure</div>
+            </div>
+        </div>
+
+        <div class="delay-slider-container">
+            <div class="section-title">Estimated Delay</div>
+            <div class="slider">
+                <div class="slider-thumb"></div>
+            </div>
+            <div class="delay-options">
+                <div class="delay-option" onclick="selectDelay(this, '15min')">+15 min</div>
+                <div class="delay-option active" onclick="selectDelay(this, '30min')">+30 min</div>
+                <div class="delay-option" onclick="selectDelay(this, '60min')">+60 min</div>
+                <div class="delay-option" onclick="selectDelay(this, '2hr')">+2 hours</div>
+            </div>
+        </div>
+
+        <div class="toggle-container">
+            <div class="toggle-label">
+                <span>💬</span>
+                <span>SMS Notify Customer</span>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSMS(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input type="text" id="issueInput" placeholder="Describe issue freely...">
+                <button class="icon-btn" onclick="clearInput()">⌨️</button>
+                <button class="icon-btn" onclick="startVoiceInput()">🎤</button>
+            </div>
+        </div>
+
+        <div class="call-buttons">
+            <button class="call-btn" onclick="callCustomer()">
+                <span class="call-icon">📞</span>
+                <span>Call Customer</span>
+            </button>
+            <button class="call-btn" onclick="callReceiver()">
+                <span class="call-icon">📞</span>
+                <span>Call Receiver</span>
+            </button>
+        </div>
+
+        <button class="resume-btn" onclick="clearAndResume()">
+            Clear Issues & Resume Trip<a href="16online-main.html"></a>
+        </button>
+    </div>
+
+    <script>
+        let smsEnabled = true;
+        let selectedReasons = [];
+
+        function toggleReason(card) {
+            card.classList.toggle('selected');
+        }
+
+        function selectDelay(option, delay) {
+            document.querySelectorAll('.delay-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            option.classList.add('active');
+
+            // Update slider position based on delay
+            const thumb = document.querySelector('.slider-thumb');
+            const positions = {
+                '15min': '15%',
+                '30min': '35%',
+                '60min': '60%',
+                '2hr': '85%'
+            };
+            thumb.style.left = positions[delay];
+        }
+
+        function toggleSMS(toggle) {
+            toggle.classList.toggle('active');
+            smsEnabled = !smsEnabled;
+            console.log('SMS notifications:', smsEnabled ? 'enabled' : 'disabled');
+        }
+
+        function clearInput() {
+            document.getElementById('issueInput').focus();
+        }
+
+        function startVoiceInput() {
+            const input = document.getElementById('issueInput');
+            
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                
+                recognition.lang = 'en-US';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onstart = function() {
+                    console.log('Voice recognition started. Speak now.');
+                    input.placeholder = 'Listening...';
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    input.value = transcript;
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    input.placeholder = 'Error - try again';
+                    setTimeout(() => {
+                        input.placeholder = 'Describe issue freely...';
+                    }, 2000);
+                };
+
+                recognition.onend = function() {
+                    input.placeholder = 'Describe issue freely...';
+                };
+
+                recognition.start();
+            } else {
+                alert('Voice recognition is not supported in your browser. Please type your message instead.');
+            }
+        }
+
+        function callCustomer() {
+            alert('📞 Calling customer...');
+            console.log('Initiating call to customer');
+        }
+
+        function callReceiver() {
+            alert('📞 Calling receiver...');
+            console.log('Initiating call to receiver');
+        }
+
+        function clearAndResume() {
+            const confirmed = confirm('Are you sure you want to clear all issues and resume the trip?');
+            if (confirmed) {
+                // Clear all selections
+                document.querySelectorAll('.reason-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                document.getElementById('issueInput').value = '';
+                
+                alert('✅ Issues cleared! Resuming trip...');
+                console.log('Trip resumed');
+            }
+            window.location.href = "16online-main.html";
+        }
+    </script>
+</body>
+</html>

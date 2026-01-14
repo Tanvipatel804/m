@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LorryPilot - Register Your Account</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2d2d2d;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo {
+            margin-top: 30px;
+            margin-bottom: 50px;
+            font-size: 32px;
+            font-weight: bold;
+            /* text-transform: uppercase; */
+            letter-spacing: 2px;
+        }
+
+        .logo .lorry {
+            color: white;
+        }
+
+        .logo .pilot {
+            color: #ff8c42;
+        }
+
+        .truck-icon {
+            display: inline-block;
+            margin-left: 5px;
+            color: #ff8c42;
+            font-size: 28px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+
+        .registration-card {
+            background-color: #e8e8e8;
+            border-radius: 20px;
+            padding: 40px 35px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .country-flag {
+            width: 35px;
+            height: 35px;
+            margin-right: 12px;
+            border-radius: 50%;
+            background: #ff8c42;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .country-code {
+            color: #666;
+            font-size: 18px;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .phone-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            color: #333;
+            background: transparent;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 16px 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            color: #333;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .text-input:focus {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-input::placeholder {
+            color: #999;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn-signup {
+            background: #ff8c42;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 60px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
+        }
+
+        .btn-signup:hover {
+            background: #ff7a28;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 66, 0.5);
+        }
+
+        .btn-signup:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #ff8c42;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 28px;
+                margin-bottom: 40px;
+            }
+
+            .page-title {
+                font-size: 28px;
+                margin-bottom: 40px;
+            }
+
+            .registration-card {
+                padding: 35px 25px;
+            }
+
+            .form-label {
+                font-size: 16px;
+            }
+
+            .phone-input, .text-input {
+                font-size: 16px;
+            }
+
+            .btn-signup {
+                font-size: 18px;
+                padding: 14px 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 24px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .registration-card {
+                padding: 30px 20px;
+            }
+
+            .btn-signup {
+                font-size: 16px;
+                padding: 12px 40px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .page-title {
+            animation: fadeIn 0.8s ease-out 0.2s backwards;
+        }
+
+        .registration-card {
+            animation: fadeIn 0.8s ease-out 0.4s backwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <span class="lorry">LORRY</span> <span class="pilot">Pilot</span> 
+    </div>
+
+    <h1 class="page-title">Register Your Account</h1>
+
+    <div class="registration-card">
+        <form id="registrationForm">
+            <div class="form-group">
+                <label class="form-label">Enter your phone number</label>
+                <div class="phone-input-container">
+                    <div class="country-flag">IND</div>
+                    <span class="country-code">+91</span>
+                    <input 
+                        type="tel" 
+                        class="phone-input" 
+                        id="phoneNumber"
+                        placeholder="3XX XXXXXXX"
+                        maxlength="10"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Referral ID</label>
+                <input 
+                    type="text" 
+                    class="text-input" 
+                    id="referralId"
+                    placeholder=""
+                    required
+                >
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" class="btn-signup" id="signUpBtn" onclick="handlesidnUp()">Sign up now</button>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const referralId = document.getElementById('referralId').value;
+            const signUpBtn = document.getElementById('signUpBtn');
+            
+            if (!phoneNumber) {
+                alert('Please enter your phone number');
+                return;
+            }
+
+            if (phoneNumber.length < 10) {
+                alert('Please enter a valid 10-digit phone number');
+                return;
+            }
+
+            console.log('Registration Data:', {
+                phone: '+91' + phoneNumber,
+                referral: referralId
+            });
+
+          
+        });
+function handlesidnUp(){
+    window.location.href = '4verify.html';
+}
+       
+
+        // Format phone number input
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value;
+        });
+
+        // Add ripple effect to button
+        document.querySelector('.btn-signup').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.4)';
+            ripple.style.width = ripple.style.height = '100px';
+            ripple.style.left = e.clientX - rect.left - 50 + 'px';
+            ripple.style.top = e.clientY - rect.top - 50 + 'px';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.animation = 'ripple-effect 0.6s ease-out';
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple-effect {
+                from {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

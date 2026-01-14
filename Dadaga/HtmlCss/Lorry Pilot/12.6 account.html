@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Left Toolbar with Navigation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: auto;
+      width: 100%;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #1e1e2f;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+    }
+
+    .sidebar button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .sidebar button:hover {
+      background-color: #343454;
+    }
+
+    .sidebar button .icon {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    #signout {
+      color: red;
+      border-top: 3px solid red;
+    }
+
+    .profile {
+      width: fit-content;
+      height: fit-content;
+      background-color: #1e1e2f;
+      padding: 10px;
+    }
+
+    .profile img {
+      height: 80px;
+      width: 80px;
+      border-radius: 50%;
+      object-fit: fill;
+      display: inline;
+    }
+    h4,
+    h5 {
+      color: white;
+      display: inline-block;
+      width: 130px;
+    }
+    h5 {
+      margin-left: 85px;
+      margin-top: 0;
+    }
+    #back-button{
+      font-size: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button onclick="goBack()" id="back-button">
+      <span class="icon">←</span>
+      Account
+    </button>
+
+    <!-- vehicle Details -->
+    <div class="profile">
+      <img src="C:\Users\DADAGA\Pictures\Saved Pictures\Lorry.png" alt="No Profile Photo">
+      <h4>vehicles</h4>
+      <h5>No Vehicle Selected</h5>
+    </div>
+
+      <button onclick="navigateTo('154A_workhub.html')">
+        <span class="icon">🚚</span>
+        Work Hub
+      </button>
+
+      <button onclick="navigateTo('documents.html')">
+        <span class="icon">📁</span>
+        Documents
+      </button>
+
+      <button onclick="navigateTo('154A_payment.html')">
+        <span class="icon">💳</span>
+        Payments
+      </button>
+
+      <button onclick="navigateTo('154A_taxinformation.html')">
+        <span class="icon">🧾</span>
+        Tax Info
+      </button>
+
+      <button onclick="navigateTo('154A_pluscard.html')">
+        <span class="icon">➕</span>
+        Plus Card
+      </button>
+
+      <button onclick="navigateTo('154A_editinfo.html')">
+        <span class="icon">ℹ️</span>
+        Edit Info
+      </button>
+
+      <button onclick="navigateTo('154A_starred.html')">
+        <span class="icon">★</span>
+        Starred Places
+      </button>
+
+      <button onclick="navigateTo('154A_beacon.html')">
+        <span class="icon">🕹️</span>
+        Beacon
+      </button>
+
+      <button onclick="navigateTo(' 154A_about.html')">
+        <span class="icon">ⓘ</span>
+        About
+      </button>
+
+      <button onclick="navigateTo('154A_insurance.html')">
+        <span class="icon">📤</span>
+        Insurance
+      </button>
+      <button onclick="navigateTo('154A_security.html')">
+        <span class="icon">🔐</span>
+        Security and Privacy
+      </button>
+
+      <button onclick="navigateTo('154A_appsetting.html')">
+        <span class="icon">⚙️</span>
+        App Settings
+      </button>
+
+      <button onclick="navigateTo('app.html')" id="signout">
+        <span class="icon">✖</span>
+        Sign Out
+      </button>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      function goBack() {
+        window.history.back(); // navigates to previous page in history
+      }
+
+      function navigateTo(page) {
+        window.location.href = page; // navigate to actual HTML file
+      }
+    </script>
+
+</body>
+
+</html>

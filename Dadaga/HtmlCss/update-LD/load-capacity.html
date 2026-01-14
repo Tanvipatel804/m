@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Future Trip - Load</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #4a4a4a;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 30px 25px 35px;
+        }
+
+        .main-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            line-height: 1.3;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .weight-section {
+            margin-bottom: 45px;
+        }
+
+        .weight-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .weight-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .weight-btn:hover {
+            border-color: #5cb85c;
+            transform: translateY(-2px);
+        }
+
+        .weight-btn.active {
+            background: #5cb85c;
+            color: white;
+            border-color: #5cb85c;
+        }
+
+        .weight-btn.active::after {
+            content: '✓';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+
+        .load-section {
+            margin-bottom: 35px;
+        }
+
+        .load-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .load-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .load-card:hover {
+            border-color: #5cb85c;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .load-card.active {
+            border-color: #5cb85c;
+            background: #f0f9f0;
+        }
+
+        .load-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .load-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .load-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .next-btn {
+            background: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .next-btn:hover {
+            background: #4a9d4a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(92, 184, 92, 0.3);
+        }
+
+        .next-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .load-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .weight-options {
+                flex-direction: column;
+            }
+
+            .weight-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="history.back()">‹</button>
+            <h1>Post Future Trip</h1>
+        </div>
+
+        <div class="content">
+            <h2 class="main-title">How Heavy & What Kind of Load?</h2>
+
+            <div class="weight-section">
+                <h3 class="section-title">Maximum Load Weight (KG)</h3>
+                <div class="weight-options">
+                    <button class="weight-btn" onclick="selectWeight(this)">< 5 500 KG</button>
+                    <button class="weight-btn active" onclick="selectWeight(this)">5000 - 10000 KG</button>
+                    <button class="weight-btn" onclick="selectWeight(this)">> 10000 KG</button>
+                </div>
+            </div>
+
+            <div class="load-section">
+                <h3 class="section-title">What Kind of Load?</h3>
+                <div class="load-grid">
+                    <div class="load-card" onclick="selectLoad(this)">
+                        <div class="load-icon">
+                            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
+                                <rect x="20" y="20" width="60" height="60" />
+                                <line x1="20" y1="50" x2="80" y2="50" />
+                                <line x1="50" y1="20" x2="50" y2="80" />
+                            </svg>
+                        </div>
+                        <div class="load-label">Boxes / Bags</div>
+                    </div>
+
+                    <div class="load-card" onclick="selectLoad(this)">
+                        <div class="load-icon">
+                            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <ellipse cx="50" cy="70" rx="35" ry="8" />
+                                <path d="M 25,40 Q 35,20 50,15 Q 65,20 75,40 L 75,70 Q 75,75 70,77 Q 60,80 50,80 Q 40,80 30,77 Q 25,75 25,70 Z" fill="none" />
+                                <circle cx="35" cy="45" r="2" fill="currentColor" />
+                                <circle cx="50" cy="40" r="2" fill="currentColor" />
+                                <circle cx="65" cy="45" r="2" fill="currentColor" />
+                                <circle cx="42" cy="55" r="1.5" fill="currentColor" />
+                                <circle cx="58" cy="55" r="1.5" fill="currentColor" />
+                            </svg>
+                        </div>
+                        <div class="load-label">Sand / Grain</div>
+                    </div>
+
+                    <div class="load-card" onclick="selectLoad(this)">
+                        <div class="load-icon">
+                            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
+                                <ellipse cx="50" cy="30" rx="25" ry="8" />
+                                <line x1="25" y1="30" x2="25" y2="70" />
+                                <line x1="75" y1="30" x2="75" y2="70" />
+                                <ellipse cx="50" cy="70" rx="25" ry="8" />
+                                <ellipse cx="50" cy="50" rx="25" ry="8" />
+                            </svg>
+                        </div>
+                        <div class="load-label">Liquid / Gas</div>
+                    </div>
+
+                    <div class="load-card" onclick="selectLoad(this)">
+                        <div class="load-icon">
+                            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M 50,20 L 50,35" />
+                                <path d="M 50,65 L 50,80" />
+                                <path d="M 20,50 L 35,50" />
+                                <path d="M 65,50 L 80,50" />
+                                <path d="M 30,30 L 40,40" />
+                                <path d="M 60,60 L 70,70" />
+                                <path d="M 70,30 L 60,40" />
+                                <path d="M 40,60 L 30,70" />
+                                <circle cx="50" cy="50" r="8" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="load-label">Cold / Food</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="next-btn" onclick="handleNext()">Next: Where & When</button>
+        </div>
+    </div>
+
+    <script>
+        function selectWeight(btn) {
+            const buttons = document.querySelectorAll('.weight-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function selectLoad(card) {
+            card.classList.toggle('active');
+        }
+
+        function handleNext() {
+            const selectedWeight = document.querySelector('.weight-btn.active');
+            const selectedLoads = document.querySelectorAll('.load-card.active');
+            
+            if (selectedWeight && selectedLoads.length > 0) {
+                const loadTypes = Array.from(selectedLoads).map(card => 
+                    card.querySelector('.load-label').textContent
+                );
+                console.log('Weight:', selectedWeight.textContent);
+                console.log('Load types:', loadTypes);
+                alert('Proceeding to next step...\nThis is a demo - form data would be submitted here.');
+            } else {
+                alert('Please select at least one load type.');
+            }
+        }
+    </script>
+</body>
+</html>

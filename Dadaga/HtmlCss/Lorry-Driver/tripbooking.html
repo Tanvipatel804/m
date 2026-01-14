@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Truck</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563EB, #1E40AF);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-number {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #14B8A6, #0D9488);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .tag {
+            padding: 12px 24px;
+            background: #14B8A6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tag:hover {
+            background: #0D9488;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
+        }
+
+        .tag.removable {
+            padding-right: 45px;
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .time-input-wrapper {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .time-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .time-input svg {
+            width: 24px;
+            height: 24px;
+            color: #14B8A6;
+        }
+
+        .time-input input {
+            border: 2px solid #e5e7eb;
+            background: white;
+            font-size: 16px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            flex: 1;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .time-input input:focus {
+            border-color: #14B8A6;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 32px;
+            background: #14B8A6;
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            right: 2px;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.off {
+            background: #d1d5db;
+        }
+
+        .toggle-switch.off::after {
+            right: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            background: white;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: #14B8A6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%236b7280' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+
+        .map-section {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .map-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+
+        .map-button:hover {
+            border-color: #14B8A6;
+            color: #14B8A6;
+        }
+
+        .map-button svg {
+            width: 24px;
+            height: 24px;
+            color: #14B8A6;
+        }
+
+        .select-map-btn {
+            padding: 14px 30px;
+            background: #14B8A6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .select-map-btn:hover {
+            background: #0D9488;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #14B8A6, #0D9488);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(20, 184, 166, 0.4);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .map-section {
+                flex-direction: column;
+            }
+
+            .select-map-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Request a Truck for Your Occasional Needs</h1>
+            <p>Complete the form below to schedule your truck delivery</p>
+        </div>
+
+        <div class="content">
+            <!-- Section 1: Trip Frequency -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-number">1</span>
+                    Trip Frequency
+                </div>
+                
+                <div class="label">Months (Multiple Select)</div>
+                <div class="tag-group">
+                    <button class="tag">January</button>
+                    <button class="tag">April</button>
+                    <button class="tag removable">
+                        July
+                        <span class="dropdown-icon">▼</span>
+                    </button>
+                </div>
+
+                <div class="label">Weekly Days (Multiple Select)</div>
+                <div class="tag-group">
+                    <button class="tag">Wednesday</button>
+                    <button class="tag">Thursday</button>
+                    <button class="tag removable">
+                        Friday
+                        <span class="dropdown-icon">▼</span>
+                    </button>
+                </div>
+
+                <div class="time-input-wrapper">
+                    <div class="time-input">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span style="font-size: 14px; color: #6b7280; font-weight: 500;">Preferred Time:</span>
+                        <input type="time" value="08:00">
+                    </div>
+                    <div class="toggle-container">
+                        <span style="font-size: 14px; color: #6b7280;">Enable Notifications</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+
+                <div class="toggle-container" style="margin-bottom: 15px;">
+                    <span style="font-size: 14px; color: #6b7280;">Type of Load</span> &nbsp; 
+                    <span style="font-size: 14px; color: #6b7280;">Preferred Time:</span>
+                    <span style="font-size: 15px; color: #1f2937; font-weight: 600;">08:00 AM</span>
+                </div>
+            </div>
+
+            <!-- Section 2: Load & Truck Details -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-number">2</span>
+                    Load & Truck Details
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Type of Load</label>
+                        <input type="text" class="form-input" value="Flatbed">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estimated Weight (Tons)</label>
+                        <input type="text" class="form-input" value="Box Truck">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Estimated Volume (CBM)</label>
+                        <input type="text" class="form-input" value="Box Truck">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Preferred Truck Type</label>
+                        <select class="form-select">
+                            <option>Refrigerated</option>
+                            <option>Flatbed</option>
+                            <option>Box Truck</option>
+                            <option>Dry Van</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Pick-up & Drop-off Location -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-number">3</span>
+                    Pick-up & Drop-off Location
+                </div>
+                
+                <label class="form-label">Pick-up Address</label>
+                <div class="map-section">
+                    <button class="map-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span>Select from Map</span>
+                    </button>
+                    <button class="select-map-btn">Select from Map</button>
+                </div>
+            </div>
+
+            <!-- Section 4: Additional Notes -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-number">4</span>
+                    Additional Notes
+                </div>
+                <textarea class="form-input" placeholder="Enter any additional information or special requirements..."></textarea>
+            </div>
+
+            <button class="submit-button">Submit Request</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle switch functionality
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('off');
+            });
+        });
+
+        // Submit button
+        document.querySelector('.submit-button').addEventListener('click', function() {
+            this.textContent = 'Submitting...';
+            this.style.background = '#0D9488';
+            
+            setTimeout(() => {
+                alert('Request submitted successfully!');
+                this.textContent = 'Submit Request';
+                this.style.background = 'linear-gradient(135deg, #14B8A6, #0D9488)';
+            }, 1000);
+        });
+
+        // Tag removal
+        document.querySelectorAll('.tag.removable').forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-icon') || e.target.closest('.dropdown-icon')) {
+                    this.style.transform = 'scale(0)';
+                    setTimeout(() => this.remove(), 300);
+                }
+            });
+        });
+
+        // Map buttons
+        document.querySelectorAll('.map-button, .select-map-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Map selection feature would open here');
+            });
+        });
+    </script>
+</body>
+</html>

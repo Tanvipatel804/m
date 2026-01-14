@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long-Term Contract Reservation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 560px;
+            background: #2d3748;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: #1a202c;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            background: #4a5568;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #1a202c;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 16px;
+            background: #4a5568;
+            color: #a0aec0;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border-right: 1px solid #2d3748;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            background: #3182ce;
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #5a6c7d;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #2d3748;
+            position: relative;
+        }
+
+        .input-field::placeholder {
+            color: #718096;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 16px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #2d3748;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .date-label {
+            color: #2d3748;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .date-placeholder {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .checkmark {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .counter-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #a0aec0;
+            border-radius: 12px;
+        }
+
+        .counter-label {
+            color: #2d3748;
+            font-size: 15px;
+        }
+
+        .counter-value {
+            background: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .section-subtitle {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 15px;
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #a0aec0;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .btn-option {
+            padding: 12px 20px;
+            background: #a0aec0;
+            border: none;
+            border-radius: 8px;
+            color: #2d3748;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-option:hover {
+            background: #cbd5e0;
+        }
+
+        .upload-btn {
+            width: 85%;
+            padding: 16px;
+            background: #3182ce;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        .upload-btn:hover {
+            background: #2c5aa0;
+        }
+
+        .dedicated-fleet {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .edit-icon {
+            color: white;
+            font-size: 20px;
+        }
+
+        .dedicated-fleet-text {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 16px;
+            background: #a0aec0;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn">←</button>
+            <h1 class="header-title">Long-Term Contract Reservation</h1>
+            <div class="profile-icon">👤</div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab" data-tab="company-info">Company Info</button>
+            <button class="nav-tab active" data-tab="contract-route">Contract & Route</button>
+            <button class="nav-tab" data-tab="cargo">Cargo</button>
+            <button class="nav-tab" data-tab="services">Services</button>
+            <button class="nav-tab" data-tab="submission">Submission</button>
+        </div>
+
+        <div class="content">
+            <h2 class="section-title">Contract & Route Details</h2>
+
+            <div class="form-group">
+                <input type="text" class="input-field" placeholder="Contract Duration (e. g. 6 Months, Year)">
+            </div>
+
+            <div class="form-group">
+                <div class="date-input-wrapper">
+                    <div class="date-input">
+                        <span class="date-label">Contract Start Date</span>
+                        <span class="date-placeholder">End Dar</span>
+                    </div>
+                    <span class="checkmark">✓</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="date-input-wrapper">
+                    <div class="date-input">
+                        <span class="date-label">Contract End Date</span>
+                        <span class="date-placeholder">End Dar</span>
+                    </div>
+                    <!-- <span class="counter-value">1</span> -->
+                    <span class="checkmark">1</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="counter-input">
+                    <span class="counter-label">Service Quantum</span>
+                    <div class="counter-value">3</div>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">Estimated Monthly Trips/Volume</h3>
+            <div class="form-group">
+                <input type="text" class="input-field" placeholder="Estimated Monthly Trips/Volume">
+            </div>
+
+            <h4 class="section-subtitle">Frequency of Trips</h4>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <div class="radio-circle"></div>
+                    <span>Weekly</span>
+                </div>
+                <div class="radio-option">
+                    <div class="radio-circle"></div>
+                    <span>Bi-weekly</span>
+                </div>
+                <div class="radio-option">
+                    <div class="radio-circle"></div>
+                    <span>On-Damand</span>
+                </div>
+            </div>
+
+             <h3 class="section-subtitle">Route Type</h3>
+            <div class="button-group">
+                <button class="btn-option">Daily</button>
+                <button class="btn-option">Ore-way Haulage</button>
+                <button class="btn-option">Round-trip</button>
+                <button class="btn-option">Multi-drop</button>
+            </div>
+
+            <button class="upload-btn">Upload Attachments (Draft Agreements)</button>
+
+            <div class="dedicated-fleet">
+                <span class="edit-icon">✏️</span>
+                <span class="dedicated-fleet-text">Dedicited Fleet Need (Yes/No)</span>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="text-input" placeholder="Yes or No">
+            </div>
+        </div>
+        <button class="upload-btn">Confirmed</button>
+    </div>
+
+    <script>
+        const navTabs = document.querySelectorAll('.nav-tab');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                navTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

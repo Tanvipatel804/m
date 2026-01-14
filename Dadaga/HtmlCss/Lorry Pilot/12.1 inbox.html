@@ -1,0 +1,127 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Truck Management Inbox</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      color: #f4f4f4;
+      background-color:black;
+      padding: 0 1rem;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 1rem 0;
+      background-color:#201f1f;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: none;
+      color: #f4f4f4;
+      border: none;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+
+    .inbox-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .inbox {
+      margin-top: 1rem;
+    }
+
+    .message {
+      background-color: #201f1f;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 5px #fff;
+      transition: background-color 0.2s;
+    }
+
+    .message:hover {
+      background: #646565;
+    }
+
+    .msg-title {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .msg-time {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 0.3rem;
+    }
+
+    @media (max-width: 600px) {
+      .message {
+        font-size: 0.95rem;
+      }
+
+      .msg-title {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="inbox-title">Inbox</div>
+  </div>
+
+  <div class="inbox">
+    <div class="message">
+      <div class="msg-title">New Delivery Assigned</div>
+      <div>Your truck has been assigned to a new route from Dubai to Abu Dhabi.</div>
+      <div class="msg-time">10 mins ago</div>
+    </div>
+    <div class="message">
+      <div class="msg-title">Maintenance Reminder</div>
+      <div>Truck #TX204 needs scheduled maintenance tomorrow.</div>
+      <div class="msg-time">1 hour ago</div>
+    </div>
+    <div class="message">
+      <div class="msg-title">Document Expiry Alert</div>
+      <div>Registration document for Truck #TX101 expires in 3 days.</div>
+      <div class="msg-time">3 hours ago</div>
+    </div>
+    <div class="message">
+      <div class="msg-title">Fuel Card Issued</div>
+      <div>Your new Plus Card is ready for use at approved fuel stations.</div>
+      <div class="msg-time">Yesterday</div>
+    </div>
+    <div class="message">
+      <div class="msg-title">Payment Processed</div>
+      <div>Payment for trip ID #8752 has been processed successfully.</div>
+      <div class="msg-time">2 days ago</div>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      history.back(); // Uncomment for real back navigation
+    }
+  </script>
+
+</body>
+</html>

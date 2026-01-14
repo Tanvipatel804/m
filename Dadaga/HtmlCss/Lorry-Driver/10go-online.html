@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truck Transport Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        #map-container {
+            width: 100%;
+            height: 450px;
+            padding: 10px;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid #e9ecef;
+            position: relative;
+            /* overflow: hidden; */
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+
+        .stat-card.distance::before {
+            background: linear-gradient(90deg, #ffc107, #fd7e14);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .stat-card.earnings .stat-icon {
+            color: #28a745;
+        }
+
+        .stat-card.distance .stat-icon {
+            color: #ffc107;
+        }
+
+        .stat-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-size: 1.2em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, #343a40 0%, #495057 100%);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-title {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .option-buttons {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .option-btn {
+            padding: 25px;
+            border: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+        }
+
+        .option-btn:last-child {
+            border-bottom: none;
+        }
+/* thissss */
+        .option-btn-icon {
+            font-size: 1.8em;
+            width: 50px;
+            text-align: center;
+        }
+
+        .option-btn-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .option-btn.ride {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .option-btn.opportunity {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+            color: white;
+        }
+
+        .option-btn.others {
+            background: linear-gradient(135deg, #6f42c1, #6610f2);
+            color: white;
+        }
+
+        .option-btn:hover {
+            transform: translateX(10px);
+            box-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-btn.active {
+            transform: translateX(15px);
+            box-shadow: inset -8px 0 20px rgba(0, 0, 0, 0.3);
+            border-right: 5px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 0;
+            background: #f8f9fa;
+        }
+
+        .messages-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-header {
+            padding: 25px;
+            background: white;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .messages-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin: 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .messages-title-icon {
+            font-size: 1.2em;
+        }
+
+        .messages-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .message-item {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #007bff;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.5s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .message-item:hover::before {
+            left: 100%;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .message-item.ride {
+            border-left-color: #28a745;
+        }
+
+        .message-item.opportunity {
+            border-left-color: #fd7e14;
+        }
+
+        .message-item.others {
+            border-left-color: #6f42c1;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .message-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.2em;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-time {
+            color: #6c757d;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        .message-content {
+            color: #495057;
+            line-height: 1.7;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .message-priority {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-high {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .priority-medium {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+        }
+
+        .priority-low {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .no-messages {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            font-size: 1.2em;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .no-messages-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+            opacity: 0.5;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0, 123, 255, .3);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .notification-badge {
+            position: absolute !important;
+            top: 10px !important;
+            right: 15px !important;
+            background: #dc3545 !important;
+            color: white !important;
+            border-radius: 50% !important;
+            width: 25px !important;
+            height: 25px !important;
+            font-size: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-weight: bold !important;
+            animation: pulse 2s infinite !important;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+
+            .option-buttons {
+                flex-direction: row;
+            }
+
+            .option-btn {
+                flex: 1;
+                padding: 20px 15px;
+                text-align: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .option-btn:hover,
+            .option-btn.active {
+                transform: none;
+            }
+
+            .option-btn:hover {
+                background-size: 110%;
+            }
+
+            .content-area {
+                order: 1;
+            }
+
+            .messages-content {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 5px;
+                border-radius: 15px;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+
+            .stats-container {
+                padding: 25px;
+                gap: 20px;
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 25px;
+            }
+
+            .stat-value {
+                font-size: 2.5em;
+            }
+
+            .sidebar-title {
+                padding: 20px;
+                font-size: 1.2em;
+            }
+
+            .option-btn {
+                padding: 15px 10px;
+                font-size: 0.9em;
+            }
+
+            .option-btn-icon {
+                font-size: 1.5em;
+            }
+
+            .messages-header {
+                padding: 20px;
+            }
+
+            .messages-title {
+                font-size: 1.5em;
+            }
+
+            .messages-content {
+                padding: 20px;
+                max-height: 350px;
+            }
+
+            .message-item {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .stats-container {
+                padding: 20px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-value {
+                font-size: 2.2em;
+            }
+
+            .stat-label {
+                font-size: 1em;
+            }
+
+            .option-btn {
+                padding: 12px 8px;
+                font-size: 0.8em;
+            }
+
+            .messages-content {
+                padding: 15px;
+            }
+
+            .message-item {
+                padding: 18px;
+            }
+
+            .message-title {
+                font-size: 1.1em;
+            }
+
+            .message-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        
+        <div id="map-container">
+             <iframe src="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry-Pilot\10practice.html" width="100%" height="450px" style="border:none;"></iframe>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card earnings">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="todaysEarnings">$342.75</div>
+                <div class="stat-label">Today's Earnings</div>
+            </div>
+            <div class="stat-card distance">
+                <div class="stat-icon">📏</div>
+                <div class="stat-value" id="totalDistance">487 km</div>
+                <div class="stat-label">Total Distance</div>
+            </div>
+
+            <div class="stat-card scores">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="totalScores">95%</div>
+                <div class="stat-label">Scores</div>
+            </div>
+
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+
+                <div class="option-buttons">
+                    <button class="option-btn ride active" onclick="showMessages('ride')">
+                        <div class="option-btn-icon">🚚</div>
+                        <div class="option-btn-text">Rides</div>
+                    </button>
+                    <button class="option-btn opportunity" onclick="showMessages('opportunity')">
+                        <div class="option-btn-icon">💼</div>
+                        <div class="option-btn-text">Opportunities</div>
+                    </button>
+                    <button class="option-btn others" onclick="showMessages('others')">
+                        <div class="option-btn-icon">⚙️</div>
+                        <div class="option-btn-text">Other Services</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="messages-container">
+                    <div class="messages-header">
+                        <h3 class="messages-title" id="messagesTitle">
+                            <span class="messages-title-icon">🚚</span>
+                            Ride Management Messages
+                        </h3>
+                    </div>
+                    <div class="messages-content" id="messagesContent">
+                        <!-- Messages will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced message data for different categories
+        const messagesData = {
+            ride: [
+                {
+                    title: "Urgent Pickup Request - Dubai Marina",
+                    content: "High-priority cargo delivery needed from Dubai Marina to Abu Dhabi International Airport. Cargo type: Medical supplies (1.8 tons). Time-sensitive delivery required within 3 hours. Premium rate: $280. Client has excellent rating history.",
+                    time: "8 minutes ago",
+                    priority: "high"
+                },
+                {
+                    title: "Active Ride Progress Update",
+                    content: "Current delivery to Sharjah Industrial Area is 85% complete. GPS shows clear traffic ahead. Estimated arrival: 18 minutes. Customer has been notified and is preparing for receipt. Fuel consumption optimal.",
+                    time: "22 minutes ago",
+                    priority: "medium"
+                },
+                {
+                    title: "Delivery Completed Successfully",
+                    content: "Furniture delivery to Al Ain residential complex completed successfully. Customer satisfaction: 5 stars. Payment received: $195 + $25 tip. Loading/unloading assistance was appreciated. Customer requests future bookings.",
+                    time: "1 hour ago",
+                    priority: "low"
+                },
+                {
+                    title: "Route Optimization Suggestion",
+                    content: "AI system suggests alternative route for next pickup via Sheikh Zayed Road instead of Emirates Road. This route saves 22 minutes in current traffic conditions and reduces fuel consumption by 18%. Accept optimization?",
+                    time: "1.5 hours ago",
+                    priority: "medium"
+                },
+                {
+                    title: "Weather Alert for Route",
+                    content: "Light sandstorm reported along Ras Al Khaimah highway. Visibility may be reduced. Consider alternative inland route or delay departure by 45 minutes. Safety protocols recommend reducing speed by 20% if proceeding.",
+                    time: "2 hours ago",
+                    priority: "high"
+                }
+            ],
+            opportunity: [
+                {
+                    title: "Premium Contract - Luxury Vehicle Transport",
+                    content: "Exclusive opportunity to transport luxury vehicles from Dubai Auto Mall to Qatar dealerships. Monthly contract worth $4,500. Special enclosed trailer required. Training provided. Background verification mandatory. Apply within 48 hours.",
+                    time: "12 minutes ago",
+                    priority: "high"
+                },
+                {
+                    title: "Express Delivery Network Expansion",
+                    content: "Join our express delivery network serving Northern Emirates. Same-day delivery guarantee with 75% bonus payments. Peak hours: 6AM-9AM and 5PM-8PM. Minimum 15 deliveries per week. Fuel card benefits included.",
+                    time: "35 minutes ago",
+                    priority: "high"
+                },
+                {
+                    title: "Construction Material Transport Contract",
+                    content: "Weekly contract available with major construction company. Regular deliveries every Monday, Wednesday, and Friday. Cement, steel, and building materials. Fixed route: Dubai to various Northern Emirates sites. Monthly earning potential: $3,200.",
+                    time: "1.2 hours ago",
+                    priority: "medium"
+                },
+                {
+                    title: "International Cross-Border Opportunities",
+                    content: "New partnership with Saudi Arabia logistics company. Cross-border deliveries to Riyadh and Jeddah. Special permits and documentation support provided. 48-hour turnaround trips. Earning potential: $800-1200 per trip.",
+                    time: "2.8 hours ago",
+                    priority: "medium"
+                },
+                {
+                    title: "E-commerce Peak Season Bonus",
+                    content: "Prepare for e-commerce peak season (October-December). 100% bonus rates for weekend deliveries. Special incentives for timely deliveries. Extended hours opportunities. Registration opens next week. Limited positions available.",
+                    time: "4 hours ago",
+                    priority: "low"
+                }
+            ],
+            others: [
+                {
+                    title: "Critical Vehicle Maintenance Due",
+                    content: "Your truck requires immediate attention: Engine oil change overdue by 2,000 km. Brake inspection due in 5 days. Tire rotation recommended. Estimated service time: 4 hours. Estimated cost: $520. Book appointment to avoid breakdowns.",
+                    time: "18 minutes ago",
+                    priority: "high"
+                },
+                {
+                    title: "Fuel Efficiency Program Update",
+                    content: "New ADNOC fuel stations added to your preferred network across UAE. Current month fuel savings: $180. Eco-driving tips available in app. 20% discount now available at 15 additional locations. Digital payment activated.",
+                    time: "50 minutes ago",
+                    priority: "low"
+                },
+                {
+                    title: "Commercial Insurance Renewal Notice",
+                    content: "Commercial vehicle insurance expires in 18 days. Renewal options: Standard Plan ($2,400/year) or Premium Plan ($3,100/year) with additional coverage. Safe driver discount: 15% applied. Online renewal available. Required documents ready.",
+                    time: "1.8 hours ago",
+                    priority: "medium"
+                },
+                {
+                    title: "Advanced Driving Certification Program",
+                    content: "Weekend intensive course: Advanced truck maneuvering, fuel-efficient driving, and safety protocols. Completion provides insurance discounts and priority job assignments. Course fee: $350 (company reimbursement available). Next session: Friday-Saturday.",
+                    time: "3.5 hours ago",
+                    priority: "low"
+                },
+                {
+                    title: "GPS and Fleet Management Update",
+                    content: "Major system upgrade completed: Real-time traffic analysis, predictive maintenance alerts, and fuel optimization routes now active. Driver behavior monitoring added. Performance dashboard updated. New features tutorial available in help section.",
+                    time: "5 hours ago",
+                    priority: "low"
+                },
+                {
+                    title: "Road Tax and Registration Renewal",
+                    content: "Vehicle registration renewal due next month. Road tax payment can be completed online. Required documents: Insurance certificate, Emirates ID, vehicle inspection certificate. Online service fee: $25. Avoid late penalties.",
+                    time: "6.2 hours ago",
+                    priority: "medium"
+                }
+            ]
+        };
+
+        const messageIcons = {
+            ride: '🚚',
+            opportunity: '💼',
+            others: '⚙️'
+        };
+
+        const messageTitles = {
+            ride: 'Rides',
+            opportunity: 'Opportunities',
+            others: 'Other Services & Updates'
+        };
+
+        // Function to show messages based on selected category
+        function showMessages(category) {
+            // Update active button
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.option-btn.${category}`).classList.add('active');
+
+            // Update messages title
+            const titleElement = document.getElementById('messagesTitle');
+            titleElement.innerHTML = `
+                <span class="messages-title-icon">${messageIcons[category]}</span>
+                ${messageTitles[category]}
+            `;
+
+            // Show loading state
+            const messagesContent = document.getElementById('messagesContent');
+            messagesContent.innerHTML = `
+                <div class="no-messages">
+                    <div class="loading"></div>
+                    Loading ${category} messages...
+                </div>
+            `;
+
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                displayMessages(category);
+            }, 800);
+        }
+
+        // Function to display messages
+        function displayMessages(category) {
+            const messagesContent = document.getElementById('messagesContent');
+            const messages = messagesData[category];
+
+            if (messages && messages.length > 0) {
+                messagesContent.innerHTML = messages.map((message, index) => `
+                    <div class="message-item ${category}" style="animation-delay: ${index * 0.15}s">
+                        <div class="message-header">
+                            <div class="message-title">${message.title}</div>
+                            <div class="message-meta">
+                                <span class="message-time">${message.time}</span>
+                                <span class="message-priority priority-${message.priority}">${message.priority}</span>
+                            </div>
+                        </div>
+                        <div class="message-content">${message.content}</div>
+                    </div>
+                `).join('');
+            } else {
+                messagesContent.innerHTML = `
+                    <div class="no-messages">
+                        <span class="no-messages-icon">${messageIcons[category]}</span>
+                        No messages available for this category.
+                    </div>
+                `;
+            }
+        }
+
+        // Function to update stats with smooth animation
+        function updateStats() {
+            const earnings = document.getElementById('todaysEarnings');
+            const distance = document.getElementById('totalDistance');
+
+            // Simulate earnings increase
+            const currentEarnings = parseFloat(earnings.textContent.replace('$', ''));
+            const earningsIncrease = Math.random() * 15 + 5; // Random increase between $5-20
+            const newEarnings = currentEarnings + earningsIncrease;
+
+            animateValue(earnings, currentEarnings, newEarnings, 2000, '$');
+
+            // Simulate distance increase
+            const currentDistance = parseFloat(distance.textContent.replace(' km', ''));
+            const distanceIncrease = Math.random() * 8 + 2; // Random increase between 2-10 km
+            const newDistance = currentDistance + distanceIncrease;
+
+            animateValue(distance, currentDistance, newDistance, 2000, ' km');
+        }
+
+        // Function to animate value changes
+        function animateValue(element, start, end, duration, suffix = '') {
+            const startTime = performance.now();
+            const difference = end - start;
+
+            function updateValue(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                const currentValue = start + (difference * easeOutQuad(progress));
+
+                if (suffix === '$') {
+                    element.textContent = suffix + currentValue.toFixed(2);
+                } else {
+                    element.textContent = Math.round(currentValue) + suffix;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateValue);
+                }
+            }
+
+            requestAnimationFrame(updateValue);
+        }
+
+        // Easing function for smooth animation
+        function easeOutQuad(t) {
+            return t * (2 - t);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show initial messages
+            showMessages('ride');
+
+            // Update stats every 45 seconds
+            setInterval(updateStats, 45000);
+
+            // Add click animation to stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('click', function () {
+                    this.style.transform = 'scale(0.98) translateY(-5px)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', function (e) {
+                if (e.key === '1' || e.key === 'r' || e.key === 'R') showMessages('ride');
+                if (e.key === '2' || e.key === 'o' || e.key === 'O') showMessages('opportunity');
+                if (e.key === '3' || e.key === 't' || e.key === 'T') showMessages('others');
+            });
+
+            // Add scroll to top functionality for messages
+            const messagesContent = document.getElementById('messagesContent');
+            messagesContent.addEventListener('scroll', function () {
+                if (this.scrollTop > 100) {
+                    if (!document.querySelector('.scroll-top-btn')) {
+                        const scrollBtn = document.createElement('button');
+                        scrollBtn.className = 'scroll-top-btn';
+                        scrollBtn.innerHTML = '↑';
+                        scrollBtn.style.cssText = `
+                            position: fixed;
+                            bottom: 30px;
+                            right: 30px;
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 50%;
+                            border: none;
+                            background: #007bff;
+                            color: white;
+                            font-size: 20px;
+                            cursor: pointer;
+                            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+                            z-index: 1000;
+                            transition: all 0.3s ease;
+                        `;
+                        scrollBtn.onclick = () => {
+                            messagesContent.scrollTo({ top: 0, behavior: 'smooth' });
+                        };
+                        document.body.appendChild(scrollBtn);
+                    }
+                } else {
+                    const scrollBtn = document.querySelector('.scroll-top-btn');
+                    if (scrollBtn) {
+                        scrollBtn.remove();
+                    }
+                }
+            });
+        });
+
+        // Advanced notification system
+        let notificationCount = 0;
+        const notificationCategories = ['ride', 'opportunity', 'others'];
+
+        function simulateNewNotification() {
+            notificationCount++;
+
+            // Select random category
+            const randomCategory = notificationCategories[Math.floor(Math.random() * notificationCategories.length)];
+            const targetButton = document.querySelector(`.option-btn.${randomCategory}`);
+
+            // Remove existing badge if present
+            const existingBadge = targetButton.querySelector('.notification-badge');
+            if (existingBadge) {
+                existingBadge.remove();
+            }
+
+            // Add new notification badge
+            const badge = document.createElement('span');
+            badge.className = 'notification-badge';
+            badge.textContent = '!';
+            targetButton.appendChild(badge);
+
+            // Show notification toast
+            showNotificationToast(`New ${randomCategory} notification received!`, randomCategory);
+
+            // Remove badge after 8 seconds
+            setTimeout(() => {
+                if (badge.parentNode) {
+                    badge.remove();
+                }
+            }, 8000);
+        }
+
+        // Toast notification system
+        function showNotificationToast(message, category) {
+            const toast = document.createElement('div');
+            toast.className = 'notification-toast';
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                z-index: 2000;
+                font-weight: bold;
+                max-width: 300px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+
+            if (category === 'opportunity') {
+                toast.style.background = 'linear-gradient(135deg, #fd7e14, #ffc107)';
+            } else if (category === 'others') {
+                toast.style.background = 'linear-gradient(135deg, #6f42c1, #6610f2)';
+            }
+
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Animate out and remove
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Simulate new notifications every 90 seconds
+        setInterval(simulateNewNotification, 90000);
+
+        // Add message search functionality
+        function addSearchFunctionality() {
+            const messagesHeader = document.querySelector('.messages-header');
+            const searchContainer = document.createElement('div');
+            searchContainer.style.cssText = `
+                margin-top: 15px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            `;
+
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = 'Search messages...';
+            searchInput.style.cssText = `
+                flex: 1;
+                padding: 10px;
+                border: 2px solid #e9ecef;
+                border-radius: 8px;
+                font-size: 14px;
+                transition: border-color 0.3s ease;
+            `;
+
+            const clearButton = document.createElement('button');
+            clearButton.textContent = 'Clear';
+            clearButton.style.cssText = `
+                padding: 10px 15px;
+                background: #6c757d;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background 0.3s ease;
+            `;
+
+            searchInput.addEventListener('focus', () => {
+                searchInput.style.borderColor = '#007bff';
+            });
+
+            searchInput.addEventListener('blur', () => {
+                searchInput.style.borderColor = '#e9ecef';
+            });
+
+            searchInput.addEventListener('input', (e) => {
+                filterMessages(e.target.value.toLowerCase());
+            });
+
+            clearButton.addEventListener('click', () => {
+                searchInput.value = '';
+                filterMessages('');
+            });
+
+            clearButton.addEventListener('mouseover', () => {
+                clearButton.style.background = '#5a6268';
+            });
+
+            clearButton.addEventListener('mouseout', () => {
+                clearButton.style.background = '#6c757d';
+            });
+
+            searchContainer.appendChild(searchInput);
+            searchContainer.appendChild(clearButton);
+            messagesHeader.appendChild(searchContainer);
+        }
+
+        // Filter messages based on search term
+        function filterMessages(searchTerm) {
+            const messageItems = document.querySelectorAll('.message-item');
+
+            messageItems.forEach(item => {
+                const title = item.querySelector('.message-title').textContent.toLowerCase();
+                const content = item.querySelector('.message-content').textContent.toLowerCase();
+
+                if (searchTerm === '' || title.includes(searchTerm) || content.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    item.style.opacity = '1';
+                } else {
+                    item.style.display = 'none';
+                    item.style.opacity = '0';
+                }
+            });
+
+            // Show "no results" message if needed
+            const visibleMessages = Array.from(messageItems).filter(item => item.style.display !== 'none');
+            const messagesContent = document.getElementById('messagesContent');
+
+            if (visibleMessages.length === 0 && searchTerm !== '') {
+                if (!document.querySelector('.no-search-results')) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-search-results';
+                    noResults.style.cssText = `
+                        text-align: center;
+                        color: #6c757d;
+                        font-style: italic;
+                        font-size: 1.1em;
+                        padding: 40px;
+                        background: white;
+                        border-radius: 15px;
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+                        margin-top: 20px;
+                    `;
+                    noResults.innerHTML = `
+                        <span style="font-size: 3em; display: block; margin-bottom: 15px;">🔍</span>
+                        No messages found matching "${searchTerm}"
+                    `;
+                    messagesContent.appendChild(noResults);
+                }
+            } else {
+                const noResults = document.querySelector('.no-search-results');
+                if (noResults) {
+                    noResults.remove();
+                }
+            }
+        }
+
+        // Add search functionality after page loads
+        setTimeout(() => {
+            addSearchFunctionality();
+        }, 1000);
+
+        // Performance monitoring
+        function monitorPerformance() {
+            const performanceData = {
+                loadTime: performance.now(),
+                memoryUsage: performance.memory ? performance.memory.usedJSHeapSize : 'N/A',
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('Dashboard Performance Metrics:', performanceData);
+        }
+
+        // Monitor performance every 5 minutes
+        setInterval(monitorPerformance, 300000);
+
+        // Add service worker for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Service worker registration would go here in a real app
+                console.log('Service worker support detected');
+            });
+        }
+
+        // Add export functionality for messages
+        function exportMessages(category) {
+            const messages = messagesData[category];
+            const csvContent = "data:text/csv;charset=utf-8," +
+                "Title,Content,Time,Priority\n" +
+                messages.map(msg =>
+                    `"${msg.title}","${msg.content}","${msg.time}","${msg.priority}"`
+                ).join("\n");
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `${category}_messages_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Add context menu for additional options
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('.message-item')) {
+                e.preventDefault();
+                // Custom context menu could be implemented here
+                console.log('Context menu for message item');
+            }
+        });
+
+        // Initialize performance monitoring
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(monitorPerformance, 2000);
+        });
+    </script>
+</body>
+
+</html>

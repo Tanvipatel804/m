@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+    <style>
+        .navigate {
+            background-color: rgb(8, 8, 8);
+            border: 2px solid rgb(13, 13, 13);
+            border-radius: 5px;
+            height: 100%;
+            display: block;
+        }
+
+        .navbar {
+            border: 2px solid rgb(70, 69, 69);
+            border-radius: 30px;
+            height: 60px;
+            color: white;
+            text-align: center;
+            font-size: 50px;
+        }
+
+        .navbar img {
+            height: 55px;
+            width: 45px;
+            float: left;
+            margin: 1px 18px;
+            padding: 0px;
+
+        }
+
+        .navbar div img {
+            height: 55px;
+            width: 45px;
+            float: right;
+            margin: 1px 18px;
+            padding: 0px;
+        }
+
+        .ad {
+            border: 2px solid rgb(70, 69, 69);
+            border-radius: 30px;
+            height: 100px;
+            margin-top: 10px;
+        }
+
+        .ad img {
+            height: 95px;
+            width: 100px;
+            float: right;
+            margin: 5px 35px;
+            padding: 0px;
+        }
+
+        #advertise {
+            width: 200px;
+        }
+
+        .sugglabel {
+            border: 2px solid rgba(51, 50, 50, 0.008);
+            border-radius: 30px;
+            height: 50px;
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .first {
+            text-align: left;
+            margin: 10px;
+            padding: 5px;
+            color: white;
+        }
+
+        .second {
+            text-align: right;
+            margin: -37px 15px;
+            padding: 5px;
+            color: white;
+        }
+
+        .container {
+            height: 150px;
+            width: auto;
+            border: 2px solid rgb(54, 53, 53);
+            margin-top: 15px;
+            padding: 10px;
+            color: black;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: medium;
+        }
+
+        .items {
+            height: 100px;
+            width: 270px;
+            float: left;
+            border: 2px solid rgb(70, 69, 69);
+            background-color: white;
+            border-radius: 95px;
+            margin-right: 15px;
+            padding: 20px;
+            flex-flow: row wrap;
+            /* flex-direction: row; & flex-wrap: wrap; both are mentioned in line by using flex-flow */
+        }
+
+        .items img {
+            height: 100px;
+            width: 55%;
+            float: right;
+        }
+
+        .viewfrom {
+            height: 100px;
+            display: block;
+            margin: 0px auto;
+            border: 2px solid rgb(70, 69, 69);
+            width: 100%;
+            position: sticky;
+        }
+
+        .viewfrom img {
+            margin: auto;
+            display: block;
+            width: 35px;
+            height: 35px;
+            padding-top: 20px;
+        }
+
+        .xyz {
+            float: left;
+            margin: auto;
+            padding: 10px 130px;
+        }
+
+        h3 {
+            color: white;
+            text-align: center;
+            margin: 0px;
+        }       
+    </style>
+</head>
+
+<body>
+    <header class="navigate">
+        <nav class="navbar">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\menuicon.png" alt="">
+            <div>Lorry
+                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\3dotoptions.png" alt="">
+            </div>
+        </nav>
+
+        <nav class="ad">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\pick-upad.jpg" alt="">
+
+            <ul class="sameul">
+                <li class="sameli">
+                    <input type="text" name="ad" id="advertise"
+                        placeholder="+  place your advertisement here[for Customer].">
+                </li>
+            </ul>
+        </nav>
+        <nav class="sugglabel">
+            <div class="first">Suggestions</div>
+            <div class="second">See All</div>
+        </nav>
+
+        <div class="container">
+            <div class="items" id="item1">Trip<img src="C:\Users\DADAGA\Pictures\Saved Pictures\1option.jpg"></div>
+            <div class="items" id="item2">Reserve<img src="C:\Users\DADAGA\Pictures\Saved Pictures\2option.jpg">
+                <!-- <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry customer\6newfinal.html"></a> -->
+            </div>
+            <div class="items" id="item3">allotment<img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg">
+                <!-- <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry customer\7allotment-quote.html"></a> -->
+            </div>
+            <div class="items" id="item4">Occational<img src="C:\Users\DADAGA\Pictures\Saved Pictures\4option.jpg">
+            </div>
+        </div>
+        <nav class="ad">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\pick-upad.jpg" alt="">
+
+            <ul class="sameul">
+                <li class="sameli">
+                    <input type="text" name="ad" id="advertise"
+                        placeholder="+  place your advertisement here[for Transporter].">
+                </li>
+            </ul>
+        </nav>
+        <nav class="sugglabel">
+            <div class="first">features</div>
+            <div class="second">See All</div>
+        </nav>
+        <div class="container">
+            <div class="items" id="feature1">Live Tracking<img
+                    src="C:\Users\DADAGA\Pictures\Saved Pictures\live tracking.jpg"></div>
+            <div class="items" id="feature2"><img
+                    src="C:\Users\DADAGA\Pictures\Saved Pictures\freightinsurance.jpg">Insurance</div>
+            <div class="items" id="feature3"><img
+                    src="C:\Users\DADAGA\Pictures\Saved Pictures\breakdown service.jpg">Recovery</div>
+            <div class="items" id="feature4"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\hotel.jpg">Hotel</div>
+        </div>
+
+        <div class="viewfrom">
+            <div class="xyz">
+                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\home.png" alt="">
+                <h3>Home</h3>
+            </div>
+            <div class="xyz">
+                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\service.jpg" alt="">
+                <h3>Services</h3>
+            </div>
+            <div class="xyz"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\activity.jpg" alt="">
+                <h3>Activity</h3>
+            </div>
+            <div class="xyz"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\account.png" alt="">
+                <h3>Account</h3>
+            </div>
+        </div>
+    </header>
+</body>
+
+</html>

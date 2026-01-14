@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Completion Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1f1f1f 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .summary-section {
+            background-color: #2d2d2d;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            flex-shrink: 0;
+        }
+
+        .progress-svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-bg {
+            fill: none;
+            stroke: #404040;
+            stroke-width: 12;
+        }
+
+        .progress-bar {
+            fill: none;
+            stroke: #10b981;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percentage {
+            font-size: 32px;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #404040;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .unified-section {
+            background-color: #2d2d2d;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .unified-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .chart-container {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .chart-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .line-chart {
+            height: 180px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding-top: 20px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #10b981, #34d399);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+        }
+
+        .issue-log {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .issue-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            font-size: 13px;
+            color: #d1d5db;
+        }
+
+        .issue-bullet {
+            width: 6px;
+            height: 6px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .performance-section {
+            background-color: #2d2d2d;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: #1a1a1a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #10b981;
+        }
+
+        .filter-btn {
+            padding: 12px 20px;
+            background-color: #1a1a1a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background-color: #252525;
+        }
+
+        .truck-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .truck-card:hover {
+            background-color: #252525;
+        }
+
+        .truck-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .truck-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .truck-info {
+            flex: 1;
+        }
+
+        .truck-id {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .truck-driver {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .truck-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .truck-stat {
+            text-align: center;
+        }
+
+        .truck-stat-label {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+
+        .truck-stat-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .reliability-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .reliability-label {
+            font-size: 12px;
+            color: #9ca3af;
+            width: 100px;
+        }
+
+        .reliability-track {
+            flex: 1;
+            height: 8px;
+            background-color: #404040;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .reliability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .reliability-fill.low {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .reliability-value {
+            font-size: 12px;
+            font-weight: 600;
+            width: 40px;
+            text-align: right;
+        }
+
+        .view-details-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #404040;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-details-btn:hover {
+            background-color: #505050;
+        }
+
+        .financial-section {
+            background-color: #2d2d2d;
+            padding: 24px;
+            border-radius: 12px;
+        }
+
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .financial-card {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .financial-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .financial-label {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .financial-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn.primary {
+            background-color: #10b981;
+            color: #ffffff;
+        }
+
+        .action-btn.primary:hover {
+            background-color: #059669;
+        }
+
+        .action-btn.secondary {
+            background-color: #404040;
+            color: #ffffff;
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #505050;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+            }
+
+            .unified-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .truck-stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .financial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Completed Contract: L-789012 (Dec 2023)</h1>
+            <p>Final Audit & Performance History</p>
+        </div>
+
+        <div class="summary-section">
+            <h2 class="section-title">Contract Summary</h2>
+            <div class="summary-grid">
+                <div class="progress-circle">
+                    <svg class="progress-svg" width="140" height="140">
+                        <circle class="progress-bg" cx="70" cy="70" r="60"></circle>
+                        <circle class="progress-bar" cx="70" cy="70" r="60" 
+                                stroke-dasharray="377" 
+                                stroke-dashoffset="38" 
+                                id="progressCircle"></circle>
+                    </svg>
+                    <div class="progress-text">
+                        <div class="progress-percentage">95%</div>
+                        <div class="progress-label">2,850 / 3,000<br>Trips Completed</div>
+                    </div>
+                </div>
+                <div class="summary-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Total Distance</span>
+                        <span class="stat-value">712,700 km</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Efficiency Score</span>
+                        <span class="stat-value">88%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="unified-section">
+            <h2 class="section-title">Unified Fleet History</h2>
+            <div class="unified-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Daily Trips</div>
+                    <div class="line-chart" id="tripChart"></div>
+                </div>
+                <div class="issue-log">
+                    <div class="chart-title">Global Issue Log</div>
+                    <div class="issue-item">
+                        <span class="issue-bullet"></span>
+                        <span>15 Delays (Traffic/Breakdown)</span>
+                    </div>
+                    <div class="issue-item">
+                        <span class="issue-bullet"></span>
+                        <span>5 Minor Accidents</span>
+                    </div>
+                    <div class="issue-item">
+                        <span class="issue-bullet"></span>
+                        <span>6 Maintenance Incidents</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="performance-section">
+            <h2 class="section-title">Individual Truck Performance</h2>
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search by Truck ID or Driver..." id="searchInput">
+                <button class="filter-btn" onclick="toggleSort()">Sort by Trips</button>
+            </div>
+            <div id="truckList"></div>
+        </div>
+
+        <div class="financial-section">
+            <h2 class="section-title">Financial & Audit</h2>
+            <div class="financial-grid">
+                <div class="financial-card">
+                    <div class="financial-icon">💰</div>
+                    <div class="financial-label">Total Billing</div>
+                    <div class="financial-value">8 Records (.zip)</div>
+                </div>
+                <div class="financial-card">
+                    <div class="financial-icon">📋</div>
+                    <div class="financial-label">Completion Status</div>
+                    <div class="financial-value">Certified</div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn secondary" onclick="downloadArchive()">
+                    📦 Download All Records
+                </button>
+                <button class="action-btn primary" onclick="viewCertificate()">
+                    ✓ View Completion Certificate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const trucksData = [
+            {
+                id: 'TRK-101',
+                driver: 'Rajesh Kumar',
+                assistant: 'Kumar',
+                trips: 298,
+                totalTrips: 280,
+                odometer: '44,800 km',
+                reliability: 90,
+                status: 'high'
+            },
+            {
+                id: 'TRK-102',
+                driver: 'Amit Singh',
+                assistant: 'N/A (Dedicated Spare)',
+                trips: 380,
+                totalTrips: 130,
+                odometer: '92,000 km',
+                reliability: 45,
+                status: 'low'
+            },
+            {
+                id: 'TRK-103',
+                driver: 'Priya Sharma',
+                assistant: 'Sharma',
+                trips: 295,
+                totalTrips: 290,
+                odometer: '68,500 km',
+                reliability: 92,
+                status: 'high'
+            },
+            {
+                id: 'TRK-104',
+                driver: 'Mohammed Ali',
+                assistant: 'Ali',
+                trips: 275,
+                totalTrips: 270,
+                odometer: '71,200 km',
+                reliability: 88,
+                status: 'high'
+            },
+            {
+                id: 'TRK-105',
+                driver: 'Sunita Patel',
+                assistant: 'Patel',
+                trips: 288,
+                totalTrips: 285,
+                odometer: '69,800 km',
+                reliability: 91,
+                status: 'high'
+            }
+        ];
+
+        function renderTrucks(trucks) {
+            const truckList = document.getElementById('truckList');
+            truckList.innerHTML = trucks.map(truck => `
+                <div class="truck-card">
+                    <div class="truck-header">
+                        <div class="truck-avatar">${truck.id.split('-')[1]}</div>
+                        <div class="truck-info">
+                            <div class="truck-id">${truck.id}</div>
+                            <div class="truck-driver">${truck.driver}</div>
+                            <div class="truck-driver" style="font-size: 11px;">Driver: ${truck.assistant}</div>
+                        </div>
+                    </div>
+                    <div class="truck-stats">
+                        <div class="truck-stat">
+                            <div class="truck-stat-label">Trips</div>
+                            <div class="truck-stat-value">${truck.trips}</div>
+                        </div>
+                        <div class="truck-stat">
+                            <div class="truck-stat-label">Trips</div>
+                            <div class="truck-stat-value">${truck.totalTrips}</div>
+                        </div>
+                        <div class="truck-stat">
+                            <div class="truck-stat-label">Odometer</div>
+                            <div class="truck-stat-value" style="font-size: 13px;">${truck.odometer}</div>
+                        </div>
+                    </div>
+                    <div class="reliability-bar">
+                        <span class="reliability-label">Reliability Index</span>
+                        <div class="reliability-track">
+                            <div class="reliability-fill ${truck.status}" style="width: ${truck.reliability}%"></div>
+                        </div>
+                        <span class="reliability-value">${truck.reliability}%</span>
+                    </div>
+                    <button class="view-details-btn" onclick="viewDetails('${truck.id}')">View Deep Dive</button>
+                </div>
+            `).join('');
+        }
+
+        function initChart() {
+            const chart = document.getElementById('tripChart');
+            const months = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb'];
+            const values = [65, 72, 78, 85, 92];
+            
+            chart.innerHTML = months.map((month, i) => `
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                    <div class="chart-bar" style="height: ${values[i]}%;"></div>
+                    <span style="font-size: 11px; color: #9ca3af;">${month}</span>
+                </div>
+            `).join('');
+        }
+
+        let sortAscending = false;
+        function toggleSort() {
+            sortAscending = !sortAscending;
+            const sorted = [...trucksData].sort((a, b) => 
+                sortAscending ? a.trips - b.trips : b.trips - a.trips
+            );
+            renderTrucks(sorted);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const search = e.target.value.toLowerCase();
+            const filtered = trucksData.filter(truck => 
+                truck.id.toLowerCase().includes(search) || 
+                truck.driver.toLowerCase().includes(search)
+            );
+            renderTrucks(filtered);
+        });
+
+        function viewDetails(truckId) {
+            alert(`Opening detailed daily logs for ${truckId}...`);
+        }
+
+        function downloadArchive() {
+            alert('Downloading complete archive of all contract records...');
+        }
+
+        function viewCertificate() {
+            alert('Opening Contract Completion Certificate...');
+        }
+
+        renderTrucks(trucksData);
+        initChart();
+    </script>
+</body>
+</html>

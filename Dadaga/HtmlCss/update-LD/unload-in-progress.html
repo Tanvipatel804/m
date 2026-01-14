@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unloading Progress</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #2a2a2a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            background: #3a3a3a;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 20px;
+            background: #3a3a3a;
+        }
+
+        .trip-id {
+            font-size: 16px;
+            color: #ccc;
+            font-weight: 400;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .main-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .status-label {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #555;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #76c043, #a8d574);
+            width: 50%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .current-status {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .timer {
+            font-size: 72px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: 16px;
+            color: #bbb;
+            margin-bottom: 50px;
+        }
+
+        .finish-button {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 20px;
+            padding: 20px;
+            background: #76c043;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .finish-button:hover {
+            background: #65a835;
+        }
+
+        .finish-button:active {
+            transform: scale(0.98);
+        }
+
+        .report-button {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 18px;
+            background: #ddd;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .report-button:hover {
+            background: #ccc;
+        }
+
+        .report-button:active {
+            transform: scale(0.98);
+        }
+
+        .bottom-nav {
+            background: #2a2a2a;
+            border-top: 1px solid #444;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex: 1;
+            color: #888;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #76c043;
+        }
+
+        .nav-icon {
+            font-size: 26px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #f44336;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .mobile-container {
+                min-height: 100vh;
+                border-radius: 0;
+            }
+
+            .timer {
+                font-size: 60px;
+            }
+
+            .main-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <div class="trip-id">TRIP ID: #TRP-2345</div>
+        </div>
+
+        <div class="content">
+            <h1 class="main-title">7. Unloading in Progress</h1>
+
+            <div class="progress-container">
+                <div class="status-label">At Drop-off</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="current-status">Unloading</div>
+
+            <div class="timer" id="timer">00:45-10</div>
+            <div class="timer-label">Countdown to finish unloading...</div>
+
+            <button class="finish-button" onclick="finishUnloading()">Finish Unloading</button>
+            <button class="report-button" onclick="reportIssue()">Report Issue</button>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="setActive(0)">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" onclick="setActive(1)">
+                <div class="nav-icon">📦</div>
+                <div class="nav-label">Order</div>
+            </div>
+            <div class="nav-item active" onclick="setActive(2)">
+                <div class="nav-icon">
+                    👤
+                    <span class="badge">1</span>
+                </div>
+                <div class="nav-label">Account</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Timer countdown functionality
+        let totalSeconds = 2710; // 45 minutes and 10 seconds
+
+        function updateTimer() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            const display = `00:${String(minutes).padStart(2, '0')}-${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timer').textContent = display;
+            
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+
+            // Update progress bar
+            const totalTime = 2710;
+            const elapsed = totalTime - totalSeconds;
+            const progressPercent = (elapsed / totalTime) * 100;
+            document.getElementById('progressFill').style.width = Math.min(progressPercent, 100) + '%';
+        }
+
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+
+        // Navigation functionality
+        function setActive(index) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Button functions
+        function finishUnloading() {
+            alert('Unloading completed successfully!');
+        }
+
+        function reportIssue() {
+            alert('Opening issue report form...');
+        }
+
+        // Initial progress
+        const initialProgress = 50;
+        document.getElementById('progressFill').style.width = initialProgress + '%';
+    </script>
+</body>
+</html>

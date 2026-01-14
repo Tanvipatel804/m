@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pool Member</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #fff;
+            /* padding: 10px 20px; */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pool {
+            display: flex;
+            align-items: center;
+            background-color: #000;
+            color: white;
+            padding: 12px 16px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            font-size: x-large;
+            font-weight: bolder;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-item.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .page-container {
+            padding: 20px;
+        }
+
+        /* Status Page Styling */
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #efef6e;
+            padding: 20px;
+            border-radius: 75px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card.icon {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            font-size: 2.5em;
+            opacity: 1.15;
+            color: #333;
+            /* Default icon color */
+        }
+
+        .icon {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 30px;
+        }
+
+        .card h2,
+        .card p {
+            margin: 0;
+            margin-top: 25px;
+            font-size: larger;
+            font-weight: bold;
+        }
+
+        .card-large {
+            grid-column: span 2;
+        }
+
+        /* Membership Page Styling */
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-switch-input {
+            display: none;
+        }
+
+        .toggle-switch-label {
+            background-color: #e0e0e0;
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch-label::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch-input:checked+.toggle-switch-label {
+            background-color: #4CAF50;
+        }
+
+        .toggle-switch-input:checked+.toggle-switch-label::after {
+            transform: translateX(30px);
+        }
+
+        .benefits,
+        .policy {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .benefits ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .policy-text {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-green {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-black {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Ride Detail Page Styling */
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: #000;
+            color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .map-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .map-section div {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .map-placeholder {
+            width: 100px;
+            height: 100px;
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .details {
+            margin: 15px 0;
+        }
+
+        .details p {
+            margin: 6px 0;
+        }
+
+        .divider {
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+        .material {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .material-info {
+            font-size: 16px;
+        }
+
+        .material img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 500px) {
+            .material {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .material img {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="pool">
+            <button class="back-button" onclick="goBack()">←</button>
+            <div class="title">Pool Member</div>
+        </div>
+        <div class="nav-bar">
+            <a href="#" class="nav-item" id="membership-link">Membership</a>
+            <a href="#" class="nav-item active" id="status-link">Status</a>
+            <a href="#" class="nav-item" id="rides-link">Rides</a>
+        </div>
+    </header>
+
+    <main id="content">
+    </main>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentDiv = document.getElementById('content');
+            const links = document.querySelectorAll('.nav-item');
+
+            // Function to load content based on the page name
+            function loadPage(pageName) {
+                let htmlContent = '';
+                switch (pageName) {
+                    case 'status':
+                        htmlContent = `
+                    <div class="page-container">
+                        <h2>Status</h2>
+                        <div class="status-grid">
+                            <div class="card" style="background-color: #ccc; color: white;">
+                                <p>Pool member number</p>
+                                <h2>128</h2>
+                                  <span class="icon">🚚</span>
+                            </div>
+                            <div class="card">
+                                <p>Number of pool ride completion</p>
+                                <h2>2,456</h2>
+                                  <span class="icon">🚚</span>
+                            </div>
+                            <div class="card" style="background-color: #5d6afe; color: white;">
+                                <p>Time saving</p>
+                                <h2>350 hrs</h2>
+                                 <span class="icon">&#128337;</span>
+                            </div>
+                            <div class="card" style="background-color: #4CAF50; color: white;">
+                                <p>CO2 protector</p>
+                                <h2>850 kg saved</h2>the world from emissions
+                                <span class="icon">&#127807;</span>
+                            </div>
+                            <div class="card card-large" style="background-color: #6ad991; color: white;">
+                                <p>Total pool income generate</p>
+                                <h2>$12,345</h2>
+                                  <span class="icon">&#127870;</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                        break;
+                    case 'membership':
+                        htmlContent = `
+                    <div class="page-container">
+                        <h2>Membership</h2>
+                        <div class="toggle-switch">
+                            <p>Apply for pool membership campaign</p>
+                            <input type="checkbox" id="toggle-switch" class="toggle-switch-input" checked>
+                            <label for="toggle-switch" class="toggle-switch-label"></label>
+                        </div>
+                        <div class="benefits">
+                            <h3>Benefits</h3>
+                            <ul>
+                                <li>Access to all pool facilities</li>
+                                <li>Discount on Ride Ratings</li>
+                                <li>Priority booking for Transportation</li>
+                            </ul>
+                            <button class="btn btn-green">Accept</button>
+                        </div>
+                        <div class="policy">
+                            <h3>Policy</h3>
+                            <div class="policy-text">
+                                <p>Wares to all pool facilities, membersing on the Membership eopwuset for eaking and all abes, par boents</p>
+                                <p>Secblle cerdcks fiorest the policy sur cereis of the terms all conditions</p>
+                            </div>
+                            <button class="btn btn-black">Accept</button>
+                            <button class="btn btn-black" style="margin-top: 10px;">Submit</button>
+                        </div>
+                    </div>
+                `;
+                        break;
+                    case 'rides':
+                        htmlContent = `
+                     <div class="page-container">
+                        <h2>Rides Details</h2>
+                <div class="container">
+  <div class="map-section">
+    <div>
+      <div class="map-placeholder"></div>
+      <p style="color: rgb(125, 149, 246);">Loading from<br>address</p>
+    </div>
+    <div>
+      <div class="map-placeholder"></div>
+      <p style="color: rgb(125, 149, 246);">Dentination<br>address</p>
+    </div>
+  </div>
+
+  <div class="details">
+    <p><strong>Traveling Range:</strong> 150 km</p>
+    <p><strong>Earned:</strong> $35.00</p>
+    <p><strong>Date/Time:</strong> 12/03/2024, 10:30 AM</p>
+    <p><strong>Duration:</strong> 2 hours 15 mins</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="material">
+    <div class="material-info">
+      <p><strong>Material name:</strong> Sand</p>
+      <p><strong>Load:</strong> 5 tons</p>
+    </div>
+    <img src="C:/Users/DADAGA/Pictures/Saved Pictures/sandpile.jpg" alt="Sand">
+  </div>
+
+<div class="divider"></div>
+<div class="divider"></div>
+  <!-- Return-Trip Detail -->
+  <h2>Return-Trip Detail</h2>
+    <div class="map-section">
+    <div>
+      <div class="map-placeholder"></div>
+      <p style="color: rgb(125, 149, 246);">Loading from<br>address</p>
+    </div>
+    <div>
+      <div class="map-placeholder"></div>
+      <p style="color: rgb(125, 149, 246);">Dentination<br>address</p>
+    </div>
+  </div>
+
+  <div class="details">
+    <p><strong>Traveling Range:</strong> 150 km</p>
+    <p><strong>Earned:</strong> $35.00</p>
+    <p><strong>Date/Time:</strong> 15/03/2024, 10:30 PM</p>
+    <p><strong>Duration:</strong> 2 hours 30 mins</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="material">
+    <div class="material-info">
+      <p><strong>Material name:</strong>Bricks</p>
+      <p><strong>Load:</strong> 15 tons</p>
+    </div>
+    <img src="C:/Users/DADAGA/Pictures/Saved Pictures/bricks.jpg" alt="Sand">
+</div>
+</div>
+                `;
+                        break;
+                }
+                contentDiv.innerHTML = htmlContent;
+            }
+
+            // Handle navigation clicks
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    const pageName = link.id.split('-')[0];
+                    loadPage(pageName);
+                });
+            });
+
+            // Load the initial page (Status)
+            loadPage('status');
+        });
+    </script>
+
+</body>
+
+</html>

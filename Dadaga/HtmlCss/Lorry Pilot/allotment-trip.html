@@ -1,0 +1,235 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truck Listings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #a8b5c0 0%, #c4cdd5 100%);
+            padding: 30px 15px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ececec;
+            border-radius: 18px;
+            padding: 18px 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            height: 135px;
+        }
+
+        .truck-section {
+            flex: 0 0 190px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .truck-image {
+            width: 170px;
+            height: auto;
+            margin-bottom: 6px;
+        }
+
+        .dimensions {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .details-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            justify-content: center;
+        }
+
+        .price {
+            font-size: 30px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .rupee {
+            font-family: Arial, sans-serif;
+        }
+
+        .trip-type {
+            font-size: 15px;
+            color: #5b8ac4;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .info-line {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.4;
+            margin-bottom: 1px;
+        }
+
+        .info-line strong {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .material-section {
+            flex: 0 0 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .material-image {
+            width: 130px;
+            height: 85px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 6px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .material-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1px;
+        }
+
+        .material-type {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Blue truck variant */
+        .blue-truck .truck-cabin {
+            fill: #4a7ba7 !important;
+        }
+
+        .blue-truck .truck-container {
+            fill: #5d8fb8 !important;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+                height: auto;
+                padding: 18px;
+            }
+
+            .truck-section,
+            .material-section {
+                flex: 0 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+         
+
+           
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="truck-section">
+                <svg class="truck-image" viewBox="0 0 180 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect class="truck-container" x="50" y="20" width="120" height="50" fill="#c44539" rx="3"/>
+                    <line x1="60" y1="25" x2="60" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="70" y1="25" x2="70" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="80" y1="25" x2="80" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="90" y1="25" x2="90" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="100" y1="25" x2="100" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="110" y1="25" x2="110" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="120" y1="25" x2="120" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="130" y1="25" x2="130" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="140" y1="25" x2="140" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="150" y1="25" x2="150" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <line x1="160" y1="25" x2="160" y2="65" stroke="#a03830" stroke-width="1.5"/>
+                    <path class="truck-cabin" d="M 15 40 L 15 72 L 50 72 L 50 30 L 38 30 L 32 40 Z" fill="#c44539"/>
+                    <rect x="18" y="43" width="13" height="16" fill="#4a5a6a" rx="1"/>
+                    <rect x="34" y="43" width="13" height="16" fill="#4a5a6a" rx="1"/>
+                    <circle cx="38" cy="75" r="10" fill="#2c3e50"/>
+                    <circle cx="38" cy="75" r="5" fill="#555"/>
+                    <circle cx="138" cy="75" r="10" fill="#2c3e50"/>
+                    <circle cx="138" cy="75" r="5" fill="#555"/>
+                    <circle cx="160" cy="75" r="10" fill="#2c3e50"/>
+                    <circle cx="160" cy="75" r="5" fill="#555"/>
+                    <rect x="20" y="62" width="5" height="8" fill="#ffd700" rx="1"/>
+                </svg>
+                <p class="dimensions">Dimensions: 15m x 2.5 x 4m</p>
+            </div>
+
+            <div class="details-section">
+                <div class="price"><span class="rupee">₹</span> 80,000</div>
+                <div class="trip-type">Single Trip</div>
+                <div class="info-line"><strong>Pickup:</strong> Surat, NCR (26-10-2024, 10:00am)</div>
+                <div class="info-line"><strong>Drop off:</strong> Delhi,DJ (26-10-2024, 08:00pm)</div>
+                <div class="info-line"><strong>Duration:</strong> 10 hrs • <strong>Range KM</strong> • <strong>Weight:</strong> 18,000 KG</div>
+            </div>
+
+            <div class="material-section">
+                <img class="material-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 90'%3E%3Cdefs%3E%3Cpattern id='wood2' patternUnits='userSpaceOnUse' width='10' height='10'%3E%3Crect width='10' height='10' fill='%23d4a574'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='140' height='90' fill='%2387ceeb'/%3E%3Crect x='85' y='8' width='28' height='28' fill='%23b8a58f'/%3E%3Crect x='108' y='18' width='22' height='18' fill='%23a89478'/%3E%3Cg%3E%3Crect x='52' y='18' width='33' height='30' fill='url(%23wood2)' stroke='%23a07850'/%3E%3Crect x='55' y='23' width='27' height='4' fill='%238b6f47'/%3E%3Crect x='55' y='35' width='27' height='4' fill='%238b6f47'/%3E%3C/g%3E%3Cg%3E%3Crect x='22' y='33' width='38' height='34' fill='url(%23wood2)' stroke='%23a07850'/%3E%3Crect x='25' y='39' width='32' height='5' fill='%238b6f47'/%3E%3Crect x='25' y='52' width='32' height='5' fill='%238b6f47'/%3E%3C/g%3E%3Cg%3E%3Crect x='67' y='48' width='36' height='32' fill='url(%23wood2)' stroke='%23a07850'/%3E%3Crect x='70' y='54' width='30' height='5' fill='%238b6f47'/%3E%3Crect x='70' y='67' width='30' height='5' fill='%238b6f47'/%3E%3C/g%3E%3C/svg%3E" alt="Pallets">
+                <div class="material-label">Material:</div>
+                <div class="material-type">General Cargo (Class 3)</div>
+            </div>
+        </div>
+
+        <!-- Card  - Blue Truck -->
+        <div class="card blue-truck">
+            <div class="truck-section">
+                <svg class="truck-image" viewBox="0 0 180 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect class="truck-container" x="50" y="20" width="120" height="50" fill="#5d8fb8" rx="3"/>
+                    <path class="truck-cabin" d="M 15 40 L 15 72 L 50 72 L 50 30 L 38 30 L 32 40 Z" fill="#4a7ba7"/>
+                    <rect x="18" y="43" width="13" height="16" fill="#3a4a5a" rx="1"/>
+                    <rect x="34" y="43" width="13" height="16" fill="#3a4a5a" rx="1"/>
+                    <circle cx="38" cy="75" r="10" fill="#2c3e50"/>
+                    <circle cx="38" cy="75" r="5" fill="#555"/>
+                    <circle cx="138" cy="75" r="10" fill="#2c3e50"/>
+                    <circle cx="138" cy="75" r="5" fill="#555"/>
+                    <circle cx="160" cy="75" r="10" fill="#2c3e50"/>
+                    <circle cx="160" cy="75" r="5" fill="#555"/>
+                    <rect x="20" y="62" width="5" height="8" fill="#ffd700" rx="1"/>
+                </svg>
+                <p class="dimensions">Dimensions: 15m x 2.5 x 4m</p>
+            </div>
+
+            <div class="details-section">
+                <div class="price"><span class="rupee">₹</span> 80,000</div>
+                <div class="trip-type">Allotment Trip</div>
+                <div class="info-line"><strong>Pickup:</strong> Delhi,NCR (26-10-2024, 10:00am)</div>
+                <div class="info-line"><strong>Drop off:</strong> Delhi,DJ (26-10-2024, 11:00pm)</div>
+                <div class="info-line"><strong>Duration:</strong> 10 hrs • <strong>Range KM</strong> • <strong>Weight:</strong> 18,000 KG</div>
+            </div>
+
+            <div class="material-section">
+                <img class="material-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 90'%3E%3Cdefs%3E%3Cpattern id='wood4' patternUnits='userSpaceOnUse' width='10' height='10'%3E%3Crect width='10' height='10' fill='%23c4a876'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='140' height='90' fill='%2390b8d8'/%3E%3Crect x='82' y='15' width='32' height='22' fill='%23a8988a'/%3E%3Crect x='110' y='22' width='24' height='15' fill='%23988878'/%3E%3Cg%3E%3Crect x='10' y='20' width='120' height='55' fill='url(%23wood4)' stroke='%23a07850' stroke-width='2.5'/%3E%3Cline x1='10' y1='35' x2='130' y2='35' stroke='%238b6f47' stroke-width='3'/%3E%3Cline x1='10' y1='50' x2='130' y2='50' stroke='%238b6f47' stroke-width='3'/%3E%3Cline x1='10' y1='65' x2='130' y2='65' stroke='%238b6f47' stroke-width='3'/%3E%3Cline x1='40' y1='20' x2='40' y2='75' stroke='%23a07850' stroke-width='2'/%3E%3Cline x1='70' y1='20' x2='70' y2='75' stroke='%23a07850' stroke-width='2'/%3E%3Cline x1='100' y1='20' x2='100' y2='75' stroke='%23a07850' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E" alt="Bamboo Bundle">
+                <div class="material-label">Material:</div>
+                <div class="material-type">General Cargo (Class 3)</div>
+            </div>
+        </div>
+
+        

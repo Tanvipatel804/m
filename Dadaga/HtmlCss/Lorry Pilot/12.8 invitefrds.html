@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invite Friends</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: auto;
+            padding: 0 16px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        .banner img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            background: #222;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            color: #ccc;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            color: #fff;
+            border-bottom: 3px solid white;
+        }
+
+        .tab-content {
+            background: #1c1c1c;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .offer {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .offer h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .offer p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .offer a {
+            color: #00aaff;
+            text-decoration: underline;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .link-btn,
+        .contact-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: #444;
+            color: #fff;
+            text-align: center;
+        }
+
+        .link-btn:hover,
+        .contact-btn:hover {
+            background: #555;
+        }
+
+        .tab-content {
+            background: #1c1c1c;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-heading {
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #2a2a2a;
+            padding: 12px;
+            border-radius: 8px;
+            width: 48%;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .referral-entry {
+            background: #2a2a2a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .offer h2 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <h1>Invite friends</h1>
+        </div>
+
+        <!-- Banner -->
+        <div class="banner">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\transAdvertisement.jpg" alt="Invite Banner" />
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('offers')">Offers</button>
+            <button class="tab" onclick="switchTab('status')">Status</button>
+        </div>
+
+        <!-- Offers Section -->
+        <div id="offers" class="tab-content">
+            <div class="offer">
+                <h2>$750 for a new user</h2>
+                <p>Make up to $750 for each new driver you invite who completes 200 trips in Los Angeles. <a
+                        href="#">Terms apply</a></p>
+            </div>
+
+            <div class="buttons-row">
+                <button class="link-btn" onclick="share('whatsapp')">📱 WhatsApp</button>
+                <button class="contact-btn" onclick="share('email')">📧 Email</button>
+                <button class="contact-btn" onclick="share('sms')">📨 SMS</button>
+            </div>
+
+            <div class="offer">
+                <h2>$200 for a returning user</h2>
+                <p>Invite a friend who did not drive or deliver since Dec 31, 2021, get up to $200 when they complete 70
+                    trips in Los Angeles in their first 30 days. <a href="#">Terms apply</a></p>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div id="status" class="tab-content">
+            <h2 class="status-heading">Completed</h2>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <p class="stat-label">GOALS COMPLETED</p>
+                    <p class="stat-value">3</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">YOU EARNED</p>
+                    <p class="stat-value">$450</p>
+                </div>
+            </div>
+
+            <div class="referral-entry">
+                <strong>Angela Crawford</strong> hit the goal<br />
+                You were paid <strong>$300</strong> on Sep 19, 2017
+            </div>
+
+            <div class="referral-entry">
+                <strong>Eduardo Herrera</strong> hit the goal<br />
+                You were paid <strong>$100</strong> on Feb 22, 2020
+            </div>
+
+            <div class="referral-entry">
+                <strong>Randolph Reeves</strong> hit the goal<br />
+                You were paid <strong>$50</strong> on Oct 11, 2017
+            </div>
+            <div class="referral-entry">
+                <strong>Manoj Vaghela</strong><br />
+                They are not qualified for the invite referral program.
+            </div>
+
+            <div class="referral-entry">
+                <strong>Errol Roberts</strong><br />
+                They are not qualified for the invite referral program.
+            </div>
+
+            <div class="referral-entry">
+                <strong>Gary Concepcion</strong><br />
+                They are not qualified for the invite referral program.
+            </div>
+             <!-- Placeholder Offers Tab -->
+            <div id="offers" class="tab-content hidden">
+                <p>Offers content goes here...</p>
+            </div>
+        </div>
+
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+
+            function switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                document.getElementById(tabId).classList.remove('hidden');
+
+                document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+                if (tabId === 'offers') {
+                    document.querySelector('.tab:nth-child(1)').classList.add('active');
+                } else {
+                    document.querySelector('.tab:nth-child(2)').classList.add('active');
+                }
+            }
+
+            function switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                document.getElementById(tabId).classList.remove('hidden');
+
+                document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+                if (tabId === 'offers') {
+                    document.querySelector('.tab:nth-child(1)').classList.add('active');
+                } else {
+                    document.querySelector('.tab:nth-child(2)').classList.add('active');
+                }
+            }
+
+            function share(method) {
+                const message = "Join me on the Truck App and earn rewards! Use my referral code: TRUCK123";
+
+                if (method === "whatsapp") {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+                } else if (method === "email") {
+                    window.location.href = `mailto:?subject=Truck App Referral&body=${encodeURIComponent(message)}`;
+                } else if (method === "sms") {
+                    window.location.href = `sms:?body=${encodeURIComponent(message)}`;
+                }
+            }
+
+        </script>
+</body>
+
+</html>

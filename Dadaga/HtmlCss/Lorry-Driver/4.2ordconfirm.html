@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h4 {
+            height: 50px;
+            font-size: 20px;
+            background-color: rgb(165, 218, 200);
+            text-align: center;
+            padding-top: 15px;
+        }
+
+        body {
+            height: auto;
+            background-color: rgb(6, 6, 6);
+            color: white;
+        }
+        .detail {
+            width: 100%;
+            height: auto;
+            margin: 10px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        #menubar {
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            margin-top: 27px;
+            background-color: azure;
+            transform: translateX(-250px);
+            transition: transform 250ms ease-in-out;
+        }
+        #menubar ul {
+            width: 200px;
+            height: 200px;
+            margin-left: -10px;
+        }
+
+        #menubar ul li {
+            list-style: none;
+            margin: 5px 10px;
+            padding: 5px;
+
+        }
+
+        #menubar ul li a {
+            color: rgb(67, 64, 64);
+            text-decoration: none;
+        }
+
+        #check {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            opacity: 0;
+        }
+
+        .checkbtn {
+            position: absolute;
+            top: 11px;
+            left: 10px;
+            color: white;
+            z-index: 1;
+            font-size: x-large;
+        }
+
+        #check:checked ~ #menubar {
+          transform: translateX(0);
+        }
+         
+        
+        .detail input,
+        #btncall {
+            margin-left: 20px;
+            display: inline-block;
+            height: 40px;
+            width: 300px;
+            vertical-align: middle;
+            border-radius: 30px;
+        }
+
+        .btn {
+            width: 200px;
+            height: 40px;
+            margin-left: 50px;
+            margin-top: 30px;
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            font-size: large;
+            cursor: pointer;
+        }
+        #btnconfirm {
+            margin-left: 220px;
+            margin-top: 50px;
+        }
+
+        #btnconfirm a {
+            text-decoration: none;
+            color: black;
+        }
+
+        #btncall :hover {
+            background-color: green;
+        }
+
+        #btnconfirm :hover {
+            background-color: blue;
+            /* show one msgbox that display "Your Order is Confirmed Successfully." */
+        }
+    </style>
+</head>
+
+<body>
+    <h4>Awaiting to Go....</h4>
+     <div class="detail">
+        <input type="checkbox" name="check" value="" id="check">
+        <label for="check" class="checkbtn"><i class="fa fa-bars"></i></label>
+        <div id="menubar">
+            <ul class="options">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Cancel Order</a></li>
+                <li><a href="#">Complaint for Order</a></li>
+                <li><a href="#">User unreachable</a></li>
+                <li><a href="#">Block User</a></li>
+            </ul>
+        </div>
+    </div>
+         
+        <div class="detail">
+            <label for="ccontactno" id="contact">Customer Mobile No.:</label><input type="number" name="ccontactno"
+                id="ccontactno" placeholder="xxxxxx9658">
+        </div>
+        <div class="detail">
+            <label for="dduration" id="orddt">Date/Time:</label> <input type="datetime" name="dduration" id="dduration" placeholder="23rd june 2024">
+        </div>
+        <div class="detail">
+            <label for="pulocation" id="from">Pick up location:</label><input type="text" name="pulocation"
+                id="pulocation">
+        </div>
+        <div class="detail">
+            <label for="dolocation" id="to">Drop-off location:</label><input type="text" name="dolocation"
+                id="dolocation">
+        </div>
+        <div class="detail">
+            <label for="dcharge" id="amount">Delivery Charge:</label> <input type="text" name="dcharge" id="dcharge" placeholder="₹50000">
+        </div>
+        <div class="detail">
+            <button type="submit" id="btncall" class="btn">Call to customer</button>
+            <button type="submit" id="btncall" class="btn">Message via whatsapp</button>
+        </div>
+        <button type="submit" id="btnconfirm" class="btn"><a
+                href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry-Driver\4.3navigate.html">Order confirm</a></button>
+    <!-- </nav> -->
+
+</body>
+
+</html>

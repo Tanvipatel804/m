@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rides</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0d1b2a;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 16px;
+      padding-bottom: 70px;
+    }
+
+    .ride-card {
+      background-color: #1b263b;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    .ride-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tag {
+      background: #2a9d8f;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .ride-info {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background-color: #415a77;
+      border-radius: 4px;
+      margin: 10px 0;
+      position: relative;
+    }
+
+    .progress {
+      height: 100%;
+      background-color: #2ecc71;
+      border-radius: 4px;
+    }
+
+    .map-thumbnail {
+      width: 70px;
+      height: 70px;
+      background-color: #ccc;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-left: 10px;
+    }
+
+    .map-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .view-details {
+      background-color: transparent;
+      color: #00bcd4;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .ride-card {
+        font-size: 13px;
+      }
+
+      .details-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .map-thumbnail {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container" id="rideContainer">
+    <!-- Rides inserted here -->
+  </div>
+
+  <script>
+    const rides = [
+      {
+        from: "Central Park, NYC",
+        to: "Times Square, NYC",
+        duration: "1h 30m",
+        returnTrip: true,
+        Range: "10 miles",
+        Load: "10 ton",
+        earned: "$25.50",
+        status: "Active",
+        completed: false,
+        progress: 40,
+        mapImage: "C:/Users/DADAGA/Pictures/Saved Pictures/cement.jpg"
+      },
+      {
+        from: "Location Name",
+        to: "Times Square, NYC",
+        duration: "1h 30m",
+        returnTrip: false,
+        Range: "10 miles",
+        Load: "10 ton",
+        earned: "$25.50",
+        status: "Active",
+        completed: true,
+        progress: 100,
+        mapImage: "C:/Users/DADAGA/Pictures/Saved Pictures/sandpile.jpg"
+      },
+      {
+        from: "Loctral Park, NYC",
+        to: "Location, NYC",
+        duration: "1h 30m",
+        returnTrip: true,
+        Range: "10 miles",
+        Load: "10 ton",
+        earned: "$25.50",
+        status: "Completed",
+        completed: true,
+        progress: 100,
+        mapImage: "C:/Users/DADAGA/Pictures/Saved Pictures/pvcpipe.jpg"
+      }
+    ];
+
+    const container = document.getElementById("rideContainer");
+
+    rides.forEach(ride => {
+      const card = document.createElement("div");
+      card.className = "ride-card";
+
+      const durationText = ride.returnTrip ? `${ride.duration} (trip : single)` : `${ride.duration} (trip : return)`;
+
+      const statusBadge = ride.completed
+        ? `<div class="tag" style="background:#aaa;">Completed</div>`
+        : `<div class="tag">${ride.status}</div>`;
+
+      card.innerHTML = `
+        <div class="ride-header">
+          <div><strong>Customer/Company Name:</strong></div>
+          <div class="tags">${statusBadge}</div>
+        </div>
+
+        <div class="ride-info">
+          From: [${ride.from}]<br>
+          Destination: [${ride.to}]<br>
+          Total Duration: [${durationText}]<br>
+          Range: [${ride.Range}] &nbsp;&nbsp; Load: [${ride.Load}]
+          <div class="progress-bar">
+            <div class="progress" style="width: ${ride.progress}%"></div>
+          </div>
+          Total earned: <strong>${ride.earned}</strong>
+        </div>
+
+        <div class="details-row">
+           <button class="view-details" onclick="alert('Viewing ride from ${ride.from}')">View Details →</button>
+
+          <div class="map-thumbnail">
+            <img src="${ride.mapImage}" alt="Map" />
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Map Toggle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 1000;
+        }
+
+        .top-bar button,
+        .top-bar i {
+            background: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .top-bar button.online {
+            background-color: rgb(18, 151, 60);
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .top-bar button.offline {
+            background-color: rgb(251, 160, 3);
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .bottom-left,
+        .bottom-right {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .bottom-left {
+            left: 15px;
+        }
+
+        .bottom-right {
+            right: 15px;
+        }
+
+        .map-type-btn,
+        .location-btn {
+            background: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-type-btn:hover,
+        .location-btn:hover,
+        .top-bar button:hover {
+            opacity: 0.8;
+        }
+
+        #leaflet-map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Responsive fix */
+        @media (max-width: 600px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .top-bar button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map">
+        <div id="leaflet-map"></div>
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <i class="fas fa-bars"></i>
+            <button class="offline" id="toggle-mode">Go Offline</button>
+            <i class="fas fa-shield-virus"></i>
+        </div>
+
+        <!-- Bottom Left -->
+        <div class="bottom-left">
+            <button class="map-type-btn" title="Change Map Type" id="map-type-btn">
+                <i class="fas fa-map"></i>
+            </button>
+        </div>
+
+        <!-- Bottom Right -->
+        <div class="bottom-right">
+            <button class="location-btn" title="Current Location" id="locate-btn">
+                <i class="fas fa-location-crosshairs"></i>
+            </button>
+            <button class="location-btn" title="Swap Locations">
+                <i class="fas fa-exchange-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        let map;
+        let marker;
+        let isOnline = true;
+
+        function initMap() {
+            map = L.map('leaflet-map').setView([0, 0], 2);
+
+            // Default to OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        function locateUser() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                map.setView([lat, lng], 15);
+
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup("You are here").openPopup();
+                }
+            }, () => {
+                alert('Unable to retrieve your location');
+            });
+        }
+
+        document.getElementById('toggle-mode').addEventListener('click', () => {
+            isOnline = !isOnline;
+            const btn = document.getElementById('toggle-mode');
+            if (isOnline) {
+                btn.textContent = 'Go Offline';
+                btn.classList.remove('online');
+                btn.classList.add('offline');
+                document.getElementById('leaflet-map').style.display = 'block';
+                locateUser();
+            } else {
+                btn.textContent = 'Go Online';
+                btn.classList.remove('offline');
+                btn.classList.add('online');
+                document.getElementById('leaflet-map').style.display = 'none';
+            }
+        });
+
+        document.getElementById('locate-btn').addEventListener('click', () => {
+            if (isOnline) {
+                locateUser();
+            } else {
+                alert("You are offline!");
+            }
+        });
+
+        document.getElementById('map-type-btn').addEventListener('click', () => {
+            alert("Map type switch not implemented yet.");
+        });
+
+        // Initialize
+        initMap();
+        locateUser();
+    </script>
+
+</body>
+
+</html>

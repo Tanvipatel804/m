@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Transit - Trip Tracking</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
+            --primary-orange: #ff8c00;
+            --success-green: #2ecc71;
+            --text-gray: #b0b0b0;
+            --text-white: #ffffff;
+            --border: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            margin: 0;
+            padding: 15px;
+            line-height: 1.5;
+        }
+
+        /* Back Button */
+        .back-button {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-white);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #2a2a2a;
+        }
+
+        /* Header & Live Pulse */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-info h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .header-info span {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .live-badge {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success-green);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 1.50rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--success-green);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { 
+                transform: scale(0.95); 
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); 
+            }
+            70% { 
+                transform: scale(1); 
+                box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); 
+            }
+            100% { 
+                transform: scale(0.95); 
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); 
+            }
+        }
+
+        /* Trip Type Toggle */
+        .trip-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 5px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        .toggle-btn:hover:not(.active) {
+            background: rgba(255, 140, 0, 0.1);
+        }
+
+        /* Map Section */
+        .map-box {
+            width: 100%;
+            height: 250px;
+            background: #252525;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            font-size: 2rem;
+        }
+
+        /* .map-placeholder span {
+            font-size: 0.9rem;
+            margin-top: 10px;
+        } */
+.map-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+}
+        /* Progress Card */
+        .status-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .trip-type-tag {
+            background: var(--primary-orange);
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .eta-info {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        /* Single Trip Progress Container */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #333;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 65%;
+            background: var(--primary-orange);
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.3s;
+        }
+
+        .truck-icon {
+            position: absolute;
+            right: -10px;
+            top: -20px;
+            font-size: 1.2rem;
+            transform: scaleX(-1);
+        }
+
+        .current-location {
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            color: var(--text-gray);
+        }
+
+        .current-location b {
+            color: var(--text-white);
+        }
+
+        /* Return Trip Layout */
+        .return-layout {
+            display: none;
+        }
+
+        .return-layout.active {
+            display: block;
+        }
+
+        /* Route Overview Section */
+        .route-map-mini {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .route-map-mini h3 {
+            margin: 0 0 20px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .route-visualization {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .route-point {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 2;
+            position: relative;
+        }
+
+        .route-point.orange {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        .route-point.blue {
+            background: #3498db;
+            color: white;
+        }
+
+        .route-point.green {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .route-line {
+            position: absolute;
+            height: 3px;
+            width: calc(50% - 40px);
+            z-index: 1;
+        }
+
+        .route-line.first {
+            background: linear-gradient(to right, var(--primary-orange), #3498db);
+            left: 40px;
+        }
+
+        .route-line.second {
+            background: linear-gradient(to right, #3498db, var(--success-green));
+            left: 50%;
+        }
+
+        .route-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin-top: 10px;
+        }
+
+        /* Next Stop Banner */
+        .next-stop-banner {
+            background: var(--primary-orange);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .next-stop-banner .icon {
+            font-size: 1.8rem;
+        }
+
+        .next-stop-banner .text h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .next-stop-banner .text p {
+            margin: 5px 0 0 0;
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        /* Progress Stepper */
+        .progress-stepper {
+            margin-top: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px 0;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .step-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 45px;
+            width: 3px;
+            height: calc(100% - 15px);
+            background: var(--primary-orange);
+        }
+
+        .step-item:last-child::before {
+            display: none;
+        }
+
+        .step-status {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .step-status.complete {
+            background: var(--success-green);
+            border-color: var(--success-green);
+            color: white;
+        }
+
+        .step-status.active {
+            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-number {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .step-location {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        /* Driver Info */
+        .driver-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .driver-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .driver-img {
+            width: 45px;
+            height: 45px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .driver-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .driver-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .driver-vehicle {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .otp-box {
+            background: #252525;
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .otp-label {
+            font-size: 0.65rem;
+            color: var(--text-gray);
+            display: block;
+        }
+
+        .otp-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--primary-orange);
+        }
+
+        /* Action Buttons */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-call {
+            background: #333;
+            color: white;
+            border: 1px solid #444;
+        }
+
+        .btn-call:hover {
+            background: #3a3a3a;
+        }
+
+        .btn-support {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        .btn-support:hover {
+            background: #e67e00;
+        }
+
+        /* Security Note */
+        .security-note {
+            margin-top: 20px;
+            background: rgba(255, 140, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed var(--primary-orange);
+        }
+
+        .security-note-title {
+            font-size: 0.8rem;
+            color: var(--primary-orange);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .security-note p {
+            font-size: 0.75rem;
+            margin: 5px 0 0 0;
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Back Button -->
+    <button class="back-button" onclick="history.back()">←</button>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-info">
+            <h2>Trip ID: #FRT-9921</h2>
+            <span>Cement Delivery</span><br>
+            <span>Load:15000 KG</span>
+        </div>
+        <div class="live-badge">
+            <div class="pulse"></div> LIVE
+        </div>
+    </div>
+
+    <!-- Trip Type Toggle -->
+    <div class="trip-toggle">
+        <button class="toggle-btn active" id="singleTripBtn" onclick="switchTrip('single')">
+            Single Trip
+        </button>
+        <button class="toggle-btn" id="returnTripBtn" onclick="switchTrip('return')">
+            Return Trip
+        </button>
+    </div>
+
+    <!-- ==================== SINGLE TRIP LAYOUT ==================== -->
+    <div id="singleTripLayout">
+        <!-- Map Container -->
+        <div class="map-box">
+            <div class="map-placeholder">
+                <!-- 📍
+                <span>Live Map View</span> --><img src="C:\Users\DADAGA\Pictures\Saved Pictures\5.1trip.png">
+            </div>
+        </div>
+
+        <!-- Status Card -->
+        <div class="status-card">
+            <div class="card-header">
+                <span class="trip-type-tag">Single Trip</span>
+                <span class="eta-info">ETA: 45 Mins</span>
+            </div>
+
+            <!-- Progress Container -->
+            <div class="progress-container">
+                <div class="progress-labels">
+                    <span>Mumbai</span>
+                    <span>Pune</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-fill" dir="rtl">
+                        <span class="truck-icon">🚚</span>
+                    </div>
+                </div>
+                <p class="current-location">
+                    Currently near <b>Lonavala Toll Plaza</b>
+                </p>
+            </div>
+
+            <!-- Driver Section -->
+            <div class="driver-section">
+                <div class="driver-meta">
+                    <div class="driver-img">👤</div>
+                    <div class="driver-info">
+                        <span class="driver-name">Rajesh Kumar</span>
+                        <span class="driver-vehicle">MH-12-AS-4590</span>
+                    </div>
+                </div>
+                <div class="otp-box">
+                    <span class="otp-label">END OTP</span>
+                    <span class="otp-value">4829</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-grid">
+                <button class="btn btn-call" onclick="window.location.href='tel:9099123456'">
+                    📞 Call Driver
+                </button>
+                <button class="btn btn-support" onclick="alert('Connecting to Support...')">
+                    💬 Live Chat
+                </button>
+            </div>
+        </div>
+
+        <!-- Security Note -->
+        <div class="security-note">
+            <div class="security-note-title">⚠️ Security Note:</div>
+            <p>Do not share the END OTP until the goods are safely unloaded at the destination.</p>
+        </div>
+    </div>
+
+    <!-- ==================== RETURN TRIP LAYOUT ==================== -->
+    <div id="returnTripLayout" class="return-layout">
+        <!-- Map Container -->
+        <div class="map-box">
+            <div class="map-placeholder">
+                <!-- 📍
+                <span>Live Map View</span> --><img src="C:\Users\DADAGA\Pictures\Saved Pictures\location3.jpg">
+            </div>
+        </div>
+
+        <!-- Route Overview -->
+        <div class="route-map-mini">
+            <h3>Route Overview</h3>
+            <div class="route-visualization">
+                <div class="route-point orange">A</div>
+                <div class="route-line first"></div>
+                <div class="route-point blue">B</div>
+                <div class="route-line second"></div>
+                <div class="route-point green">C</div>
+            </div>
+            <div class="route-labels">
+                <span>Mumbai</span>
+                <span>Pune</span>
+                <span>Warehouse 48</span>
+            </div>
+        </div>
+
+        <!-- Status Card -->
+        <div class="status-card">
+            <!-- Next Stop Banner -->
+            <div class="next-stop-banner">
+                <div class="icon"> ⛟ </div>
+                <div class="text">
+                    <h3>Next Stop: Reloading at Warehouse 48</h3>
+                    <p>ETA: 30 Mins • 12 KM from Unload</p>
+                </div>
+            </div>
+
+            <!-- Progress Stepper -->
+            <div class="progress-stepper">
+                <div class="step-item">
+                    <div class="step-status complete">✓</div>
+                    <div class="step-content">
+                        <span class="step-number">1. Pickup (Mumbai)</span>
+                        <div class="step-location">Lamphieston</div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-status complete">✓</div>
+                    <div class="step-content">
+                        <span class="step-number">2. Destination (Pune)</span>
+                        <div class="step-location">Unload</div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-status active">🚚</div>
+                    <div class="step-content">
+                        <span class="step-number">3. Reload (Mumbai)</span>
+                        <div class="step-location">In Progress</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Driver Section -->
+            <div class="driver-section">
+                <div class="driver-meta">
+                    <div class="driver-img">👤</div>
+                    <div class="driver-info">
+                        <span class="driver-name">Rajesh Kumar</span>
+                        <span class="driver-vehicle">MH-12-AS-4590</span>
+                    </div>
+                </div>
+                <div class="otp-box">
+                    <span class="otp-label">RELOAD OTP</span>
+                    <span class="otp-value">8821</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-grid">
+                <button class="btn btn-call" onclick="window.location.href='tel:9099123456'">
+                    📞 Call Driver
+                </button>
+                <button class="btn btn-support" onclick="alert('Connecting to Support...')">
+                    💬 Live Chat
+                </button>
+            </div>
+        </div>
+
+        <!-- Security Note -->
+        <div class="security-note">
+            <div class="security-note-title">⚠️ Security Note:</div>
+            <p>Verify the RELOAD OTP before loading goods at the warehouse.</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTrip(type) {
+            const singleLayout = document.getElementById('singleTripLayout');
+            const returnLayout = document.getElementById('returnTripLayout');
+            const singleBtn = document.getElementById('singleTripBtn');
+            const returnBtn = document.getElementById('returnTripBtn');
+
+            if (type === 'single') {
+                singleLayout.classList.remove('hidden');
+                returnLayout.classList.remove('active');
+                singleBtn.classList.add('active');
+                returnBtn.classList.remove('active');
+            } else {
+                singleLayout.classList.add('hidden');
+                returnLayout.classList.add('active');
+                singleBtn.classList.remove('active');
+                returnBtn.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>
