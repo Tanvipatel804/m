@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -93,7 +94,7 @@
             border-radius: 20px;
             padding: 32px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             margin-bottom: 24px;
         }
 
@@ -147,7 +148,7 @@
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .section-title {
@@ -325,7 +326,7 @@
             padding: 16px 20px;
             display: flex;
             gap: 12px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
             z-index: 100;
         }
 
@@ -378,7 +379,7 @@
 
 <body>
     <!-- Header -->
-     <header class="app-header">
+    <header class="app-header">
         <button class="icon-btn back-btn" aria-label="Go Back" onclick="goBack()">
             <ion-icon name="arrow-back-outline"></ion-icon>
         </button>
@@ -389,9 +390,9 @@
         <button class="icon-btn more-btn" aria-label="Options" onclick="showOptions()">
             <ion-icon name="ellipsis-vertical"></ion-icon>
         </button>
-    </header> 
+    </header>
 
-    <main class="content-container">   
+    <main class="content-container">
         <!-- Hero Section: Earnings -->
         <section class="earnings-card">
             <div class="earnings-label">Estimated Earnings</div>
@@ -407,6 +408,37 @@
                 </div>
             </div>
         </section>
+
+<!-- start -->
+        <section class="section-container">
+            <h2 class="section-title" style="margin-bottom: 15px;">Customer & Payment Details</h2>
+
+                <div class="detail-card" style="margin-bottom: 20px;">
+                    <div class="card-icon"><ion-icon name="person"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Customer Name</span>
+                        <span class="value">Mr.Iyer</span>
+                    </div>
+                </div>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="cash"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Payment Method</span>
+                        <span class="value">Cash</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="card-icon"><ion-icon name="cash"></ion-icon></div>
+                    <div class="card-data">
+                        <span class="label">Payment By</span>
+                        <span class="value">Reciever</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end -->
 
         <!-- Route Timeline -->
         <section class="section-container">
@@ -474,7 +506,7 @@
                         <span class="value">(48" * 40" * 42")</span>
                     </div>
                 </div>
-               
+
                 <div class="detail-card">
                     <div class="card-icon"><ion-icon name="logo-dropbox"></ion-icon></div>
                     <div class="card-data">
@@ -485,48 +517,27 @@
             </div>
         </section>
 
-<!-- start -->
-<section class="section-container">
-             <div class="detail-card">
-                    <div class="card-icon"><ion-icon name="bus"></ion-icon></div>
-                    <div class="card-data">
-                        <span class="label">Payment Method</span>
-                        <span class="value">Cash</span>
-                    </div>
-                </div> 
+        <!-- Vehicle & Material Photos -->
+        <section class="section-container">
 
-                   <div class="detail-card">
-                    <div class="card-icon"><ion-icon name="bus"></ion-icon></div>
-                    <div class="card-data">
-                        <span class="label">Payment By</span>
-                        <span class="value">Reciever</span>
-                    </div>
-                </div> 
-        </section> 
-<section class="section-container">
-           
-                <h2 class="section-title"style="margin-bottom: 15px;">Vehicle & Material Photos</h2>
+            <h2 class="section-title" style="margin-bottom: 15px;">Vehicle & Material Photos</h2>
             <div class="details-grid">
-                <!-- <div class="detail-card">
-                    <div class="card-icon"><ion-icon name="bus"></ion-icon></div>
-                    <div class="card-data">
-                        <span class="label">Vehicle</span>
-                        <span class="value">Box-Flatted Truck</span>
-                    </div>
-                </div> --><div class="items" id="9item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\open box truck.jpg">
-                <li>Open Box Truck</li>
-            </div>
-               
-                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;"></div>
-                <button class="icon-btn" onclick="attachPhoto()" style="background: #667eea; color: white;" title="Attach Vehicle Photo">
-                    <!-- <ion-icon name="camera-outline"></ion-icon> -->
-                     <img src="C:\Users\DADAGA\Pictures\Saved Pictures\box.jpg" alt="Attach Vehicle Photo" style="width: 240px; height: 124px;">
+                <div class="items" id="9item"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\open box truck.jpg">
+                    <li>Open Box Truck</li>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                </div>
+                <button class="icon-btn" onclick="attachPhoto()" style="background: #667eea; color: white;"
+                    title="Attach Vehicle Photo">
+
+                    <img src="C:\Users\DADAGA\Pictures\Saved Pictures\box.jpg" alt="Attach Vehicle Photo"
+                        style="width: 240px; height: 124px;">
                 </button>
-                 </div>
+            </div>
             </div>
         </section>
 
-<!-- end -->
         <!-- Requirements / Equipment -->
         <section class="section-container">
             <h2 class="section-title">Requirements</h2>
@@ -566,4 +577,5 @@
         }
     </script>
 </body>
-</html> 
+
+</html>
