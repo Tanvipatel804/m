@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transporter TMS – Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --primary: #1a56ff;
+  --primary-light: #eef2ff;
+  --primary-dark: #0f3acc;
+  --bg: #f0f4ff;
+  --surface: #ffffff;
+  --border: #e4e9f7;
+  --text: #0f172a;
+  --text2: #475569;
+  --text3: #94a3b8;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --green-border: #bbf7d0;
+  --red: #dc2626;
+  --orange: #ea580c;
+  --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+  --shadow: 0 4px 16px rgba(15,23,42,0.08), 0 1px 4px rgba(15,23,42,0.04);
+  --shadow-lg: 0 12px 40px rgba(15,23,42,0.12);
+  --radius: 20px;
+  --radius-sm: 14px;
+  --radius-xs: 8px;
+}
+
+body {
+  background: #dde5f8;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 48px;
+}
+
+.page-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1e2a5e;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-size: 12px;
+  color: #7c8db8;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* ── Multi-view layout ── */
+.screens-row {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  align-items: center;
+}
+
+@media (min-width: 780px) {
+  .screens-row { flex-direction: row; align-items: flex-start; justify-content: center; }
+}
+
+/* ── Phone frame ── */
+.phone-wrap { width: 100%; max-width: 360px; }
+
+.phone-label {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7c8db8;
+  margin-bottom: 10px;
+}
+
+.phone {
+  background: #fff;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(15,23,42,0.2), 0 0 0 1px rgba(255,255,255,0.5) inset;
+}
+
+/* Status bar */
+.status-bar {
+  background: var(--primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+/* ── Screen ── */
+.screen-inner {
+  background: var(--bg);
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── App header ── */
+.app-header {
+  background: var(--primary);
+  padding: 14px 18px 28px;
+  position: relative;
+}
+
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: -24px; left: 0; right: 0;
+  height: 36px;
+  background: var(--bg);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.hdr-back {
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: white;
+  border: none; cursor: pointer; flex-shrink: 0;
+}
+
+.hdr-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: white; flex: 1; text-align: center;
+}
+
+.hdr-placeholder { width: 34px; }
+
+.hdr-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.prog-track {
+  height: 5px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: white;
+  border-radius: 100px;
+  transition: width 0.4s ease;
+}
+
+/* ── Body ── */
+.screen-body {
+  flex: 1;
+  padding: 28px 14px 16px;
+  overflow-y: auto;
+}
+
+/* ── Hero (home screen) ── */
+.hero-block {
+  background: var(--primary);
+  padding: 28px 20px 52px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-block::before {
+  content: '';
+  position: absolute;
+  top: -50px; right: -30px;
+  width: 180px; height: 180px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+
+.hero-block::after {
+  content: '';
+  position: absolute;
+  bottom: -32px; left: 0; right: 0;
+  height: 40px;
+  background: var(--bg);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+
+.hero-emoji {
+  width: 64px; height: 64px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  margin: 0 auto 14px;
+  position: relative; z-index: 1;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+}
+
+.hero-h {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: white; line-height: 1.2;
+  position: relative; z-index: 1;
+  margin-bottom: 6px;
+}
+
+.hero-p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.72);
+  position: relative; z-index: 1;
+}
+
+/* Stats row */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: -22px 14px 18px;
+  position: relative; z-index: 2;
+}
+
+.stat-box {
+  background: white;
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.stat-n {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.stat-l {
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 500;
+  margin-top: 3px;
+}
+
+/* Phase nav cards */
+.phase-card {
+  background: white;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 8px;
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.18s;
+}
+
+.phase-card:active { transform: scale(0.98); }
+.phase-card.done-phase { background: var(--green-bg); border-color: var(--green-border); }
+.phase-card.in-prog { background: #eff6ff; border-color: rgba(26,86,255,0.25); }
+
+.ph-icon {
+  width: 44px; height: 44px;
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+
+.ph1c { background: #eff6ff; }
+.ph2c { background: #f0fdf4; }
+.ph3c { background: #fff7ed; }
+.ph4c { background: #fdf4ff; }
+
+.ph-info { flex: 1; }
+.ph-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.ph-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+.ph-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.mini-bar-bg {
+  width: 52px; height: 5px;
+  background: var(--border); border-radius: 100px; overflow: hidden;
+}
+
+.mini-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 100px;
+  transition: width 0.4s;
+}
+
+.done-phase .mini-bar-fill { background: var(--green); }
+
+.ph-pct { font-size: 10px; font-weight: 700; color: var(--text2); }
+
+/* ── Task cards ── */
+.task-card {
+  background: white;
+  border-radius: 12px;
+  padding: 13px 12px;
+  margin-bottom: 7px;
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+
+.task-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+
+.task-card.t-req::before { background: var(--primary); }
+.task-card.t-doc::before { background: #0ea5e9; }
+.task-card.t-tip::before { background: var(--orange); }
+.task-card.t-done { background: var(--green-bg); border-color: var(--green-border); }
+.task-card.t-done::before { background: var(--green); }
+
+.task-card:active { transform: scale(0.98); }
+
+.check-circle {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+  background: white;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.t-done .check-circle {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.task-body { flex: 1; }
+
+.task-ttl {
+  font-size: 13px; font-weight: 600;
+  color: var(--text); line-height: 1.35;
+  transition: all 0.2s;
+}
+
+.t-done .task-ttl {
+  color: var(--text3);
+  text-decoration: line-through;
+  text-decoration-color: #86efac;
+}
+
+.task-dsc {
+  font-size: 11px; color: var(--text3);
+  margin-top: 3px; line-height: 1.5;
+}
+
+.t-done .task-dsc { color: #d1d5db; }
+
+.task-badge {
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 6px;
+  flex-shrink: 0; align-self: center;
+}
+
+.b-req { background: #eff6ff; color: var(--primary); }
+.b-doc { background: #f0f9ff; color: #0369a1; }
+.b-tip { background: #fff7ed; color: var(--orange); }
+.b-done { background: var(--green-bg); color: var(--green); }
+
+/* Section group header */
+.section-hdr {
+  display: flex; align-items: center; gap: 8px;
+  margin: 4px 0 10px;
+}
+
+.section-hdr-line { flex: 1; height: 1px; background: var(--border); }
+.section-hdr-text {
+  font-size: 10px; font-weight: 700; color: var(--text3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── CTA ── */
+.cta-area {
+  padding: 10px 14px 16px;
+  background: white;
+  border-top: 1px solid var(--border);
+}
+
+.cta-btn {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(26,86,255,0.35);
+  transition: all 0.18s;
+}
+
+.cta-btn:active { transform: scale(0.97); }
+.cta-btn.green-btn { background: var(--green); box-shadow: 0 4px 18px rgba(22,163,74,0.35); }
+.cta-btn:disabled { background: #94a3b8; box-shadow: none; cursor: default; }
+
+.cta-hint {
+  text-align: center; font-size: 10.5px;
+  color: var(--text3); margin-top: 7px;
+}
+
+/* ── Bottom nav ── */
+.bnav {
+  background: white;
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 8px 6px 14px;
+}
+
+.bnav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  cursor: pointer; padding: 5px 3px;
+  border-radius: 10px;
+}
+
+.bnav-item .ni { font-size: 20px; }
+.bnav-item .nl { font-size: 9.5px; font-weight: 600; color: var(--text3); }
+.bnav-item.active .nl { color: var(--primary); }
+
+/* ── Success screen ── */
+.success-body {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px 20px;
+  text-align: center;
+  background: linear-gradient(160deg, #f0fff8 0%, #eff6ff 100%);
+}
+
+.success-icon {
+  width: 90px; height: 90px;
+  background: white;
+  border-radius: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px;
+  box-shadow: 0 12px 40px rgba(22,163,74,0.18);
+  margin-bottom: 20px;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.success-h {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px; font-weight: 800;
+  color: var(--text); margin-bottom: 8px;
+}
+
+.success-p {
+  font-size: 13px; color: var(--text2);
+  line-height: 1.6; margin-bottom: 24px;
+}
+
+.result-badge {
+  background: white;
+  border: 1.5px solid var(--green-border);
+  border-radius: 14px;
+  padding: 13px 16px;
+  width: 100%;
+  display: flex; align-items: center; gap: 11px;
+  text-align: left; margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.rb-icon { font-size: 22px; }
+.rb-title { font-size: 12px; font-weight: 700; color: var(--text); }
+.rb-sub { font-size: 10.5px; color: var(--text3); margin-top: 1px; }
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── Animate screens ── */
+.screen-inner { animation: fadeSlide 0.3s ease both; }
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<p class="page-title">TMS Onboarding — App Design</p>
+<p class="page-sub">Tap phase cards to open • Tap tasks to check off • Interactive prototype</p>
+
+<div class="screens-row">
+
+<!-- ═══ PHONE 1 — HOME ═══════════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">① Home Screen</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display:flex;gap:4px;align-items:center;font-size:11px;">
+        <span>●●●</span><span>WiFi</span><span>🔋</span>
+      </div>
+    </div>
+
+    <div class="screen-inner" id="home-si">
+      <div class="hero-block">
+        <div class="hero-emoji">🚛</div>
+        <div class="hero-h">Add Your First<br>Driver & Truck</div>
+        <div class="hero-p">4 phases · 20 tasks · ~25 mins</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-n" id="h-done">0</div>
+          <div class="stat-l">Done</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" id="h-left">20</div>
+          <div class="stat-l">Left</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" id="h-pct">0%</div>
+          <div class="stat-l">Complete</div>
+        </div>
+      </div>
+
+      <div style="padding: 0 14px 16px;">
+        <div class="phase-card" id="pnav-1" onclick="showPhase(1, this)">
+          <div class="ph-icon ph1c">🏢</div>
+          <div class="ph-info">
+            <div class="ph-name">Account Setup</div>
+            <div class="ph-sub">Authority · Insurance · Payment</div>
+          </div>
+          <div class="ph-right">
+            <div class="mini-bar-bg"><div class="mini-bar-fill" id="mb1" style="width:0%"></div></div>
+            <span class="ph-pct" id="mb1t">0 / 4</span>
+          </div>
+        </div>
+
+        <div class="phase-card" id="pnav-2" onclick="showPhase(2, this)">
+          <div class="ph-icon ph2c">👤</div>
+          <div class="ph-info">
+            <div class="ph-name">Add First Driver</div>
+            <div class="ph-sub">CDL · Medical · App Invite</div>
+          </div>
+          <div class="ph-right">
+            <div class="mini-bar-bg"><div class="mini-bar-fill" id="mb2" style="width:0%"></div></div>
+            <span class="ph-pct" id="mb2t">0 / 6</span>
+          </div>
+        </div>
+
+        <div class="phase-card" id="pnav-3" onclick="showPhase(3, this)">
+          <div class="ph-icon ph3c">🚚</div>
+          <div class="ph-info">
+            <div class="ph-name">Add First Truck</div>
+            <div class="ph-sub">VIN · ELD · Registration</div>
+          </div>
+          <div class="ph-right">
+            <div class="mini-bar-bg"><div class="mini-bar-fill" id="mb3" style="width:0%"></div></div>
+            <span class="ph-pct" id="mb3t">0 / 6</span>
+          </div>
+        </div>
+
+        <div class="phase-card" id="pnav-4" onclick="showPhase(4, this)">
+          <div class="ph-icon ph4c">✅</div>
+          <div class="ph-info">
+            <div class="ph-name">Assign & Verify</div>
+            <div class="ph-sub">Pair · Compliance · Go Live</div>
+          </div>
+          <div class="ph-right">
+            <div class="mini-bar-bg"><div class="mini-bar-fill" id="mb4" style="width:0%"></div></div>
+            <span class="ph-pct" id="mb4t">0 / 4</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-area">
+        <button class="cta-btn" onclick="showPhase(1, null)">Start Onboarding →</button>
+        <div class="cta-hint">Tap any phase to jump directly</div>
+      </div>
+
+      <div class="bnav">
+        <div class="bnav-item active"><span class="ni">🏠</span><span class="nl">Home</span></div>
+        <div class="bnav-item" onclick="showPhase(1,null)"><span class="ni">📋</span><span class="nl">Tasks</span></div>
+        <div class="bnav-item"><span class="ni">📄</span><span class="nl">Docs</span></div>
+        <div class="bnav-item"><span class="ni">⚙️</span><span class="nl">Settings</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHONE 2 — PHASE DETAIL ═══════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">② Phase Detail — Tasks</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display:flex;gap:4px;align-items:center;font-size:11px;">
+        <span>●●●</span><span>WiFi</span><span>🔋</span>
+      </div>
+    </div>
+
+    <div class="screen-inner" id="detail-si">
+      <div class="app-header">
+        <div class="header-row">
+          <button class="hdr-back" onclick="resetDetail()">←</button>
+          <div class="hdr-title" id="detail-title">Account Setup</div>
+          <div class="hdr-placeholder"></div>
+        </div>
+        <div class="hdr-sub" id="detail-sub">0 of 4 tasks complete</div>
+        <div class="prog-track">
+          <div class="prog-fill" id="detail-prog" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="screen-body" id="detail-body" style="padding-top: 24px;">
+        <!-- tasks rendered by JS -->
+      </div>
+
+      <div class="cta-area">
+        <button class="cta-btn" id="detail-cta" onclick="goNextPhase()">Next Phase →</button>
+        <div class="cta-hint" id="detail-hint">Complete all tasks to continue</div>
+      </div>
+
+      <div class="bnav">
+        <div class="bnav-item" onclick="resetDetail()"><span class="ni">🏠</span><span class="nl">Home</span></div>
+        <div class="bnav-item active"><span class="ni">📋</span><span class="nl">Tasks</span></div>
+        <div class="bnav-item"><span class="ni">📄</span><span class="nl">Docs</span></div>
+        <div class="bnav-item"><span class="ni">⚙️</span><span class="nl">Settings</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHONE 3 — ALL DONE ════════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">③ Completion Screen</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display:flex;gap:4px;align-items:center;font-size:11px;">
+        <span>●●●</span><span>WiFi</span><span>🔋</span>
+      </div>
+    </div>
+
+    <div class="screen-inner">
+      <div class="success-body">
+        <div class="success-icon">🚛</div>
+        <div class="success-h">Dispatch‑Ready!</div>
+        <div class="success-p">Your first driver and truck are onboarded and compliance‑verified. You can now accept loads.</div>
+
+        <div class="result-badge">
+          <div class="rb-icon">👤</div>
+          <div>
+            <div class="rb-title">Driver Onboarded</div>
+            <div class="rb-sub">CDL verified · ELD paired · App active</div>
+          </div>
+        </div>
+
+        <div class="result-badge">
+          <div class="rb-icon">🚚</div>
+          <div>
+            <div class="rb-title">Truck Registered</div>
+            <div class="rb-sub">DOT verified · IFTA active · GPS live</div>
+          </div>
+        </div>
+
+        <div class="result-badge">
+          <div class="rb-icon">✅</div>
+          <div>
+            <div class="rb-title">Compliance Clear</div>
+            <div class="rb-sub">All docs valid · No red flags</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-area">
+        <button class="cta-btn green-btn">Go to Load Board 🎯</button>
+        <div class="cta-hint">Add more drivers & trucks anytime from Fleet</div>
+      </div>
+
+      <div class="bnav">
+        <div class="bnav-item"><span class="ni">🏠</span><span class="nl">Home</span></div>
+        <div class="bnav-item"><span class="ni">📋</span><span class="nl">Tasks</span></div>
+        <div class="bnav-item"><span class="ni">📄</span><span class="nl">Docs</span></div>
+        <div class="bnav-item active"><span class="ni">⚙️</span><span class="nl">Settings</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /screens-row -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────
+const phases = [
+  {
+    id:1, title:'Account Setup', sub:'4 tasks',
+    tasks:[
+      {t:'Complete your Transporter profile', d:'Company name, DOT/MC#, EIN, business address, primary contact', tag:'req'},
+      {t:'Upload Operating Authority certificate', d:'FMCSA-issued MC authority — auto-validated before dispatch is enabled', tag:'doc'},
+      {t:'Add & verify ACH / bank details', d:'Routing + account number. Micro-deposit verification takes 1–2 business days', tag:'req'},
+      {t:'Upload Certificate of Insurance (COI)', d:'General liability + cargo. Minimum limits shown in your Requirements tab', tag:'doc'},
+    ]
+  },
+  {
+    id:2, title:'Add First Driver', sub:'6 tasks',
+    tasks:[
+      {t:'Open Fleet → Drivers → Add New Driver', d:'Enter full legal name, DOB, home terminal, employment type (company / O-O)', tag:'req'},
+      {t:'Enter CDL number, class & endorsements', d:'Class A/B/C plus H, N, T, X endorsements — auto-matched to load requirements', tag:'req'},
+      {t:'Upload CDL front & back', d:'JPG/PNG/PDF accepted. Expiry auto-parsed; 60-day renewal alert configured', tag:'doc'},
+      {t:"Upload Medical Examiner's Certificate", d:'Must be current (≤24 months). FMCSA Registry number auto-verified', tag:'doc'},
+      {t:'Confirm drug & alcohol testing enrollment', d:'Enter consortium/C&TPA or enroll via TMS partner program for pre-employment test', tag:'req'},
+      {t:'Send driver mobile app invite', d:'Driver gets SMS/email link, sets PIN to activate ELD + in-app messaging', tag:'tip'},
+    ]
+  },
+  {
+    id:3, title:'Add First Truck', sub:'6 tasks',
+    tasks:[
+      {t:'Open Fleet → Assets → Add New Vehicle', d:'Select type (Dry Van, Reefer, Flatbed, Tanker…) then enter VIN, make, model, year', tag:'req'},
+      {t:'Enter USDOT number & license plate', d:'Plate, state, expiry. Add trailer unit # if applicable. DOT auto-checked via FMCSA', tag:'req'},
+      {t:'Upload registration & IFTA credentials', d:'Current cab card + IFTA license for interstate fuel tax auto-reporting', tag:'doc'},
+      {t:'Link ELD device to truck record', d:'Enter ELD provider + device serial. Supports Samsara, Motive, Omnitracs via API', tag:'req'},
+      {t:'Set payload capacity & temp range', d:'Max gross weight, usable payload (lbs), interior dims. Reefer: enter min/max °F', tag:'tip'},
+      {t:'Upload most recent DOT annual inspection', d:'TMS flags loads if inspection expired or within 30 days of expiry', tag:'doc'},
+    ]
+  },
+  {
+    id:4, title:'Assign & Verify', sub:'4 tasks',
+    tasks:[
+      {t:'Assign the driver to the truck', d:'Fleet → Driver record → Assign Asset. Creates the pair for dispatch & HOS tracking', tag:'req'},
+      {t:'Run Compliance Readiness Check', d:'Compliance → Readiness Report. Resolve any red flags before accepting a load', tag:'req'},
+      {t:'Confirm ELD telemetry is live', d:'Check Dispatch map for live GPS ping. If offline, see Help → ELD Pairing guide', tag:'tip'},
+      {t:'Accept first load or post capacity', d:'Pair is dispatch-eligible. BOL auto-populated with driver & truck details', tag:'tip'},
+    ]
+  }
+];
+
+const state = {}; // "phaseId-taskIdx" → true
+let curPhase = 1;
+
+// ── OPEN A PHASE ──────────────────────────────────────
+function showPhase(id, triggerEl) {
+  curPhase = id;
+  renderDetail(id);
+}
+
+// ── RENDER DETAIL PANEL ───────────────────────────────
+function renderDetail(id) {
+  const ph = phases.find(p => p.id === id);
+  const doneCt = ph.tasks.filter((_,i) => state[`${id}-${i}`]).length;
+  const pct = Math.round(doneCt / ph.tasks.length * 100);
+
+  document.getElementById('detail-title').textContent = ph.title;
+  document.getElementById('detail-sub').textContent = `${doneCt} of ${ph.tasks.length} tasks complete`;
+  document.getElementById('detail-prog').style.width = pct + '%';
+
+  const body = document.getElementById('detail-body');
+  body.innerHTML = '';
+
+  const tagLabel = {req:'Required', doc:'Document', tip:'Tip'};
+  const tagClass = {req:'b-req', doc:'b-doc', tip:'b-tip'};
+
+  ph.tasks.forEach((task, i) => {
+    const key = `${id}-${i}`;
+    const done = !!state[key];
+
+    const card = document.createElement('div');
+    card.className = `task-card t-${done ? 'done' : task.tag}`;
+    card.innerHTML = `
+      <div class="check-circle">${done ? '✓' : ''}</div>
+      <div class="task-body">
+        <div class="task-ttl">${task.t}</div>
+        <div class="task-dsc">${task.d}</div>
+      </div>
+      <span class="task-badge ${done ? 'b-done' : tagClass[task.tag]}">${done ? '✓' : tagLabel[task.tag]}</span>
+    `;
+    card.onclick = () => {
+      if (state[key]) { delete state[key]; } else { state[key] = true; }
+      renderDetail(id);
+      updateHome();
+    };
+    body.appendChild(card);
+  });
+
+  // CTA state
+  const allDone = doneCt === ph.tasks.length;
+  const cta = document.getElementById('detail-cta');
+  const hint = document.getElementById('detail-hint');
+
+  if (allDone && id === 4) {
+    cta.textContent = '🎉 All Done! View Summary';
+    cta.className = 'cta-btn green-btn';
+    hint.textContent = 'Full onboarding complete — dispatch-ready!';
+  } else if (allDone) {
+    cta.textContent = `Continue to Phase ${id + 1} →`;
+    cta.className = 'cta-btn';
+    hint.textContent = `Phase ${id} complete! Tap to continue.`;
+  } else {
+    cta.textContent = id < 4 ? `Next Phase →` : 'Finish Onboarding';
+    cta.className = 'cta-btn';
+    hint.textContent = `${ph.tasks.length - doneCt} task${ph.tasks.length - doneCt !== 1 ? 's' : ''} remaining`;
+  }
+}
+
+// ── UPDATE HOME STATS ─────────────────────────────────
+function updateHome() {
+  const total = phases.reduce((s, p) => s + p.tasks.length, 0);
+  const done = Object.keys(state).length;
+  document.getElementById('h-done').textContent = done;
+  document.getElementById('h-left').textContent = total - done;
+  document.getElementById('h-pct').textContent = Math.round(done / total * 100) + '%';
+
+  phases.forEach(p => {
+    const d = p.tasks.filter((_,i) => state[`${p.id}-${i}`]).length;
+    const pct = Math.round(d / p.tasks.length * 100);
+    const bar = document.getElementById(`mb${p.id}`);
+    const lbl = document.getElementById(`mb${p.id}t`);
+    if (bar) bar.style.width = pct + '%';
+    if (lbl) lbl.textContent = `${d} / ${p.tasks.length}`;
+    const card = document.getElementById(`pnav-${p.id}`);
+    if (card) {
+      card.classList.remove('done-phase', 'in-prog');
+      if (d === p.tasks.length) card.classList.add('done-phase');
+      else if (d > 0) card.classList.add('in-prog');
+    }
+  });
+}
+
+function goNextPhase() {
+  if (curPhase < 4) { curPhase++; renderDetail(curPhase); }
+}
+
+function resetDetail() { renderDetail(curPhase); }
+
+// Init
+renderDetail(1);
+updateHome();
+</script>
+</body>
+</html>
