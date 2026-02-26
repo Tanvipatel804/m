@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Request Response - Driver Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .notification-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            animation: pulse 2s infinite;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d3561 0%, #1f2544 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #4ecca3;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #ff9500;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #2d3561 0%, #1f2544 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            color: #4ecca3;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #4ecca3;
+            padding-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #a0a0a0;
+            font-size: 13px;
+        }
+
+        .info-value {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .highlight-value {
+            color: #4ecca3;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .response-section {
+            background: linear-gradient(135deg, #2d3561 0%, #1f2544 100%);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #4ecca3 0%, #3ba676 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+
+        .btn-accept:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 204, 163, 0.4);
+        }
+
+        .btn-counter {
+            background: linear-gradient(135deg, #ff9500 0%, #ff7b00 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
+        }
+
+        .btn-counter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 149, 0, 0.4);
+        }
+
+        .btn-decline {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-decline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #a0a0a0;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #4ecca3;
+            box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-group:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            flex: 1;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2d3561 0%, #1f2544 100%);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            font-size: 22px;
+            color: #4ecca3;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            color: #ffffff;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .vehicle-info-card {
+            background: rgba(78, 204, 163, 0.1);
+            border: 2px solid #4ecca3;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .vehicle-info-card h3 {
+            color: #4ecca3;
+            margin-bottom: 15px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: rgba(255, 149, 0, 0.1);
+            border-left: 4px solid #ff9500;
+            color: #ffb84d;
+        }
+
+        .alert-info {
+            background: rgba(78, 204, 163, 0.1);
+            border-left: 4px solid #4ecca3;
+            color: #4ecca3;
+        }
+
+        .timeline {
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .timeline-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-label {
+            color: #a0a0a0;
+            font-size: 12px;
+        }
+
+        .timeline-value {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-badge" onclick="scrollToResponse()">
+        📬 New Trip Request
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🚛 New Trip Request Available</h1>
+            <p>Review the details below and submit your response</p>
+            <span class="status-badge">⏰ Response Required</span>
+        </div>
+
+        <div class="main-grid">
+            <!-- Customer Details Card -->
+            <div class="card">
+                <h2 class="card-title">👤 Customer Details</h2>
+                <div class="info-row">
+                    <span class="info-label">Supplier Name</span>
+                    <span class="info-value">Global Industry Pvt. Ltd.</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Contact Number</span>
+                    <span class="info-value">+91 9099 123 456</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">glo@global.com</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Receiver</span>
+                    <span class="info-value">Skyline Trading Ltd.</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Receiver Contact</span>
+                    <span class="info-value">+91 9712 345 678</span>
+                </div>
+            </div>
+
+            <!-- Trip Overview Card -->
+            <div class="card">
+                <h2 class="card-title">📋 Trip Overview</h2>
+                <div class="info-row">
+                    <span class="info-label">Trip Type</span>
+                    <span class="info-value">Single Trip</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Priority</span>
+                    <span class="info-value">⚡ Normal</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Vehicle Required</span>
+                    <span class="info-value">🚛 Flatbed Truck</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Distance</span>
+                    <span class="info-value">250 KM</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Duration</span>
+                    <span class="info-value">38 Hours</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Customer Offer</span>
+                    <span class="highlight-value">₹ 12,500</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Route & Schedule Card -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h2 class="card-title">🗺️ Route & Schedule</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-icon">📍</span>
+                    <div class="timeline-content">
+                        <div class="timeline-label">Pickup Location</div>
+                        <div class="timeline-value">Mumbai Terminal 1</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <span class="timeline-icon">📅</span>
+                    <div class="timeline-content">
+                        <div class="timeline-label">Pickup Date & Time</div>
+                        <div class="timeline-value">26 Dec 2025, 10:00 AM</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-icon">📍</span>
+                    <div class="timeline-content">
+                        <div class="timeline-label">Drop-off Location</div>
+                        <div class="timeline-value">Pune Logistics Hub</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-icon">📅</span>
+                    <div class="timeline-content">
+                        <div class="timeline-label">Drop-off Date & Time</div>
+                        <div class="timeline-value">27 Dec 2025, 11:30 PM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cargo Details Card -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h2 class="card-title">📦 Cargo Details</h2>
+            <div class="info-row">
+                <span class="info-label">Cargo Name</span>
+                <span class="info-value">Cement 50kg Packages</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Weight</span>
+                <span class="info-value">15,000 KG</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Type</span>
+                <span class="info-value">Packaged Goods</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Special Notes</span>
+                <span class="info-value">Handle with care - Fragile packaging</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Loading/Unloading</span>
+                <span class="info-value">✅ Facilities Available</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Additional Requirements</span>
+                <span class="info-value">Delivery required by noon</span>
+            </div>
+        </div>
+
+        <!-- Driver Response Section -->
+        <div class="response-section" id="responseSection">
+            <div class="section-header">
+                <h2 class="card-title" style="margin: 0;">✍️ Your Response</h2>
+                <div class="action-buttons">
+                    <button class="btn btn-accept" onclick="showAcceptModal()">✓ Accept</button>
+                    <button class="btn btn-counter" onclick="showCounterModal()">💰 Counter Offer</button>
+                    <button class="btn btn-decline" onclick="showDeclineModal()">✗ Decline</button>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                💡 <strong>Tip:</strong> Respond within 2 hours to increase your chances of getting this trip. Customer is actively reviewing proposals.
+            </div>
+
+            <!-- Vehicle Information -->
+            <div class="vehicle-info-card">
+                <h3>🚛 Your Vehicle Information</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Vehicle Number</label>
+                        <input type="text" id="vehicleNumber" placeholder="e.g., MH-01-AB-1234" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Type</label>
+                        <select id="vehicleType" required>
+                            <option value="">Select Type</option>
+                            <option value="flatbed">Flatbed Truck</option>
+                            <option value="isolated">Flatbed Isolated</option>
+                            <option value="openbox">Open Box Truck</option>
+                            <option value="closebox">Close Box Truck</option>
+                            <option value="reefer">Reefer Truck</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Capacity (KG)</label>
+                        <input type="number" id="vehicleCapacity" placeholder="e.g., 20000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Age (Years)</label>
+                        <input type="number" id="vehicleAge" placeholder="e.g., 5" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Driver Details -->
+            <div class="form-group">
+                <label>Driver Name</label>
+                <input type="text" id="driverName" placeholder="Enter driver's full name" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Driver License Number</label>
+                    <input type="text" id="licenseNumber" placeholder="e.g., MH01 20230012345" required>
+                </div>
+                <div class="form-group">
+                    <label>Years of Experience</label>
+                    <input type="number" id="experience" placeholder="e.g., 10" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="tel" id="driverContact" placeholder="+91 XXXXX XXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label>Alternate Contact</label>
+                    <input type="tel" id="alternateContact" placeholder="+91 XXXXX XXXXX">
+                </div>
+            </div>
+
+            <!-- Your Price Offer -->
+            <div class="form-group">
+                <label>Your Price Offer (₹)</label>
+                <input type="number" id="offerPrice" placeholder="Enter your price" value="12500" required>
+                <small style="color: #a0a0a0; display: block; margin-top: 5px;">
+                    Customer's budget: ₹12,500 | Recommended range: ₹11,000 - ₹14,000
+                </small>
+            </div>
+
+            <!-- Estimated Time -->
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Estimated Arrival at Pickup (Hours)</label>
+                    <input type="number" id="arrivalTime" placeholder="e.g., 2" required>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Delivery Time (Hours)</label>
+                    <input type="number" id="deliveryTime" placeholder="e.g., 36" required>
+                </div>
+            </div>
+
+            <!-- Additional Services -->
+            <div class="form-group">
+                <label>Additional Services You Provide</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="service1">
+                    <label for="service1">Real-time GPS Tracking</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="service2">
+                    <label for="service2">Loading/Unloading Assistance</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="service3">
+                    <label for="service3">Insurance Coverage Included</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="service4">
+                    <label for="service4">24/7 Customer Support</label>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="form-group">
+                <label>Additional Notes / Special Conditions</label>
+                <textarea id="additionalNotes" placeholder="Mention any special conditions, route preferences, or additional information..."></textarea>
+            </div>
+
+            <!-- Terms Agreement -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreeTerms" required>
+                <label for="agreeTerms">
+                    I confirm that all information provided is accurate and I agree to the platform's terms and conditions
+                </label>
+            </div>
+
+            <div class="alert alert-warning">
+                ⚠️ <strong>Important:</strong> Once submitted, you'll be committed to this trip if accepted by the customer. Cancellations may affect your rating.
+            </div>
+
+            <button class="btn btn-accept" style="width: 100%; margin-top: 20px; padding: 16px;" onclick="submitResponse()">
+                🚀 Submit Response
+            </button>
+        </div>
+    </div>
+
+    <!-- Accept Modal -->
+    <div class="modal" id="acceptModal">
+        <div class="modal-content">
+            <h2 class="modal-header">✅ Accept Trip Request</h2>
+            <div class="modal-body">
+                <p>You are about to accept this trip at the customer's offered price of <strong>₹12,500</strong>.</p>
+                <p style="margin-top: 15px;">Please ensure:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Your vehicle meets all requirements</li>
+                    <li>You can arrive at pickup location on time</li>
+                    <li>All certifications are up to date</li>
+                </ul>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn" style="background: #555;" onclick="closeModal('acceptModal')">Cancel</button>
+                <button class="btn btn-accept" onclick="acceptTrip()">Confirm Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Counter Offer Modal -->
+    <div class="modal" id="counterModal">
+        <div class="modal-content">
+            <h2 class="modal-header">💰 Submit Counter Offer</h2>
+            <div class="modal-body">
+                <p>Current customer offer: <strong>₹12,500</strong></p>
+                <p style="margin-top: 10px; color: #a0a0a0; font-size: 13px;">
+                    Enter your counter offer with justification. Be competitive to increase acceptance chances.
+                </p>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Your Counter Offer (₹)</label>
+                    <input type="number" id="counterAmount" placeholder="Enter amount" value="13000">
+                </div>
+                <div class="form-group">
+                    <label>Reason for Counter Offer</label>
+                    <textarea id="counterReason" placeholder="Explain why you're offering a different price..." rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn" style="background: #555;" onclick="closeModal('counterModal')">Cancel</button>
+                <button class="btn btn-counter" onclick="submitCounter()">Submit Counter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decline Modal -->
+    <div class="modal" id="declineModal">
+        <div class="modal-content">
+            <h2 class="modal-header">❌ Decline Trip Request</h2>
+            <div class="modal-body">
+                <p>Are you sure you want to decline this trip request?</p>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Reason for Declining (Optional)</label>
+                    <select id="declineReason">
+                        <option value="">Select a reason</option>
+                        <option value="vehicle">Vehicle not available</option>
+                        <option value="schedule">Schedule conflict</option>
+                        <option value="price">Price too low</option>
+                        <option value="route">Route not feasible</option>
+                        <option value="capacity">Cannot handle cargo weight</option>
+                        <option value="other">Other reason</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Additional Comments</label>
+                    <textarea id="declineComments" placeholder="Provide additional details..." rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn" style="background: #555;" onclick="closeModal('declineModal')">Cancel</button>
+                <button class="btn btn-decline" onclick="confirmDecline()">Confirm Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scroll to response section
+        function scrollToResponse() {
+            document.getElementById('responseSection').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Modal functions
+        function showAcceptModal() {
+            document.getElementById('acceptModal').classList.add('active');
+        }
+
+        function showCounterModal() {
+            document.getElementById('counterModal').classList.add('active');
+        }
+
+        function showDeclineModal() {
+            document.getElementById('declineModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Accept trip
+        function acceptTrip() {
+            if (!validateForm()) {
+                closeModal('acceptModal');
+                alert('⚠️ Please fill in all required fields before accepting!');
+                return;
+            }
+
+            const responseData = collectFormData();
+            responseData.status = 'accepted';
+            responseData.offeredPrice = 12500;
+
+            console.log('Trip Accepted:', responseData);
+            
+            closeModal('acceptModal');
+            showSuccessMessage('✅ Trip Accepted!', 'Your acceptance has been sent to the customer. You will be notified once they confirm.');
+        }
+
+        // Submit counter offer
+        function submitCounter() {
+            const counterAmount = document.getElementById('counterAmount').value;
+            const counterReason = document.getElementById('counterReason').value;
+
+            if (!counterAmount || !counterReason) {
+                alert('⚠️ Please enter both counter amount and reason!');
+                return;
+            }
+
+            if (!validateForm()) {
+                closeModal('counterModal');
+                alert('⚠️ Please fill in all required fields in the response section!');
+                return;
+            }
+
+            const responseData = collectFormData();
+            responseData.status = 'counter_offer';
+            responseData.offeredPrice = counterAmount;
+            responseData.counterReason = counterReason;
+
+            console.log('Counter Offer Submitted:', responseData);
+            
+            closeModal('counterModal');
+            showSuccessMessage('💰 Counter Offer Sent!', `Your counter offer of ₹${counterAmount} has been sent to the customer.`);
+        }
+
+        // Decline trip
+        function confirmDecline() {
+            const reason = document.getElementById('declineReason').value;
+            const comments = document.getElementById('declineComments').value;
+
+            const declineData = {
+                status: 'declined',
+                reason: reason,
+                comments: comments,
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('Trip Declined:', declineData);
+            
+            closeModal('declineModal');
+            showSuccessMessage('❌ Trip Declined', 'The customer has been notified of your decision.');
+        }
+
+        // Submit main response
+        function submitResponse() {
+            if (!validateForm()) {
+                alert('⚠️ Please fill in all required fields!');
+                return;
+            }
+
+            if (!document.getElementById('agreeTerms').checked) {
+                alert('⚠️ Please agree to terms and conditions!');
+                return;
+            }
+
+            const responseData = collectFormData();
+            responseData.status = 'submitted';
+
+            console.log('Response Submitted:', responseData);
+            
+            showSuccessMessage(
+                '🎉 Response Submitted Successfully!', 
+                'Your proposal has been sent to the customer. You will receive a notification once they review it. Average response time: 2-4 hours.'
+            );
+        }
+
+        // Validate form
+        function validateForm() {
+            const requiredFields = [
+                'vehicleNumber',
+                'vehicleType',
+                'vehicleCapacity',
+                'vehicleAge',
+                'driverName',
+                'licenseNumber',
+                'experience',
+                'driverContact',
+                'offerPrice',
+                'arrivalTime',
+                'deliveryTime'
+            ];
+
+            for (let fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field.value || field.value.trim() === '') {
+                    field.style.borderColor = '#e74c3c';
+                    field.focus();
+                    return false;
+                }
+                field.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            }
+
+            return true;
+        }
+
+        // Collect form data
+        function collectFormData() {
+            return {
+                tripId: 'TRP-' + Date.now(),
+                vehicleInfo: {
+                    number: document.getElementById('vehicleNumber').value,
+                    type: document.getElementById('vehicleType').value,
+                    capacity: document.getElementById('vehicleCapacity').value,
+                    age: document.getElementById('vehicleAge').value
+                },
+                driverInfo: {
+                    name: document.getElementById('driverName').value,
+                    license: document.getElementById('licenseNumber').value,
+                    experience: document.getElementById('experience').value,
+                    contact: document.getElementById('driverContact').value,
+                    alternateContact: document.getElementById('alternateContact').value
+                },
+                pricing: {
+                    offeredPrice: document.getElementById('offerPrice').value,
+                    customerBudget: 12500
+                },
+                timing: {
+                    arrivalTime: document.getElementById('arrivalTime').value,
+                    deliveryTime: document.getElementById('deliveryTime').value
+                },
+                additionalServices: {
+                    gpsTracking: document.getElementById('service1').checked,
+                    loadingAssistance: document.getElementById('service2').checked,
+                    insurance: document.getElementById('service3').checked,
+                    support24x7: document.getElementById('service4').checked
+                },
+                notes: document.getElementById('additionalNotes').value,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // Show success message
+        function showSuccessMessage(title, message) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="text-align: center;">
+                    <h2 class="modal-header">${title}</h2>
+                    <div class="modal-body">
+                        <p style="font-size: 16px; line-height: 1.8;">${message}</p>
+                        <div style="margin-top: 25px;">
+                            <button class="btn btn-accept" onclick="this.closest('.modal').remove(); location.reload();">
+                                Got It!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Close modal on background click
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Auto-calculate suggested price based on distance
+        document.addEventListener('DOMContentLoaded', function() {
+            // Price suggestion logic
+            const distance = 250; // KM
+            const suggestedPrice = Math.round(distance * 50); // ₹50 per KM base rate
+            
+            // Update placeholder
+            const offerPriceInput = document.getElementById('offerPrice');
+            offerPriceInput.placeholder = `Suggested: ₹${suggestedPrice}`;
+
+            // Add input validation for price
+            offerPriceInput.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                const customerBudget = 12500;
+                
+                if (value > customerBudget * 1.2) {
+                    this.style.borderColor = '#ff9500';
+                } else if (value < customerBudget * 0.8) {
+                    this.style.borderColor = '#4ecca3';
+                } else {
+                    this.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                }
+            });
+
+            // Real-time field validation
+            const inputs = document.querySelectorAll('input[required], select[required]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value.trim() === '') {
+                        this.style.borderColor = '#e74c3c';
+                    } else {
+                        this.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    }
+                });
+            });
+
+            // Phone number formatting
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+            phoneInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9+\s-]/g, '');
+                });
+            });
+
+            // Vehicle number formatting (uppercase)
+            const vehicleNumberInput = document.getElementById('vehicleNumber');
+            vehicleNumberInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+
+            // License number formatting (uppercase)
+            const licenseInput = document.getElementById('licenseNumber');
+            licenseInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // ESC to close modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+            
+            // Ctrl/Cmd + Enter to submit (when form is filled)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                if (document.getElementById('agreeTerms').checked) {
+                    submitResponse();
+                }
+            }
+        });
+
+        // Save draft functionality (localStorage)
+        function saveDraft() {
+            const draftData = {
+                vehicleNumber: document.getElementById('vehicleNumber').value,
+                vehicleType: document.getElementById('vehicleType').value,
+                vehicleCapacity: document.getElementById('vehicleCapacity').value,
+                vehicleAge: document.getElementById('vehicleAge').value,
+                driverName: document.getElementById('driverName').value,
+                licenseNumber: document.getElementById('licenseNumber').value,
+                experience: document.getElementById('experience').value,
+                driverContact: document.getElementById('driverContact').value,
+                alternateContact: document.getElementById('alternateContact').value,
+                offerPrice: document.getElementById('offerPrice').value,
+                arrivalTime: document.getElementById('arrivalTime').value,
+                deliveryTime: document.getElementById('deliveryTime').value,
+                additionalNotes: document.getElementById('additionalNotes').value,
+                service1: document.getElementById('service1').checked,
+                service2: document.getElementById('service2').checked,
+                service3: document.getElementById('service3').checked,
+                service4: document.getElementById('service4').checked
+            };
+            
+            // Note: localStorage is not available in artifacts, but this shows the pattern
+            console.log('Draft saved:', draftData);
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(saveDraft, 30000);
+
+        // Warning before leaving page
+        window.addEventListener('beforeunload', function(e) {
+            const hasContent = document.getElementById('vehicleNumber').value || 
+                              document.getElementById('driverName').value;
+            
+            if (hasContent && !document.getElementById('agreeTerms').dataset.submitted) {
+                e.preventDefault();
+                e.returnValue = '';
+                return 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        });
+
+        // Notification animation
+        setInterval(function() {
+            const badge = document.querySelector('.notification-badge');
+            badge.style.animation = 'none';
+            setTimeout(() => {
+                badge.style.animation = 'pulse 2s infinite';
+            }, 10);
+        }, 10000);
+    </script>
+</body>
+</html>

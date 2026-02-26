@@ -1234,24 +1234,28 @@
                         <button class="edit-btn" onclick="goToPage('page5')">Edit</button>
                     </div>
                     <div class="grid-2">
-                        <div><span class="label">Insurance Requirement</span><span class="value" id="reviewinsurancereq">Yes</span></div>
-                                 
+                        <div><span class="label">Insurance Requirement</span><span class="value"
+                                id="reviewinsurancereq">Yes</span></div>
+
                         <div style="text-align: right;"><span class="label">API Integration</span><span class="value"
                                 id="reviewAPI">yes</span></div>
-                        <div><span class="label">Performance Penalties(SLA)</span><span class="value" id="reviewperformancepenalties">Yes</span></div>
-                        <div style="text-align: right;"><span class="label">HSE Site Compliance</span><span class="value"
-                                id="reviewHSE">Yes</span></div>
+                        <div><span class="label">Performance Penalties(SLA)</span><span class="value"
+                                id="reviewperformancepenalties">Yes</span></div>
+                        <div style="text-align: right;"><span class="label">HSE Site Compliance</span><span
+                                class="value" id="reviewHSE">Yes</span></div>
 
-                        <div><span class="label">Booking cut-off Times</span><span class="value" id="reviewbookingoftime">Yes</span></div>
+                        <div><span class="label">Booking cut-off Times</span><span class="value"
+                                id="reviewbookingoftime">Yes</span></div>
 
-                        <div style="text-align: right;"><span class="label">Substitution Policy</span><span class="value"
-                                id="reviewsubstitutionpolicy">Yes</span></div>
-                         
-                        <div><span class="label">Cargo Cleanliness(Return Trip)</span><span class="value" id="reviewcargocleanliness">Yes</span></div>
+                        <div style="text-align: right;"><span class="label">Substitution Policy</span><span
+                                class="value" id="reviewsubstitutionpolicy">Yes</span></div>
+
+                        <div><span class="label">Cargo Cleanliness(Return Trip)</span><span class="value"
+                                id="reviewcargocleanliness">Yes</span></div>
 
                         <div style="text-align: right;"><span class="label">Equipment Standard</span><span class="value"
                                 id="reviewequipmentstandard">Yes</span></div>
-                                 
+
                     </div>
                 </div>
                 <!-- End -->
@@ -1282,8 +1286,9 @@
                         <div>
                             <span class="label">Supplier Name</span>
                             <span class="value" id="reviewSupplier">Global Industry Pvt.</span><br>
-                            <span class="value" style="font-size: 0.8rem;"
-                                id="reviewSupplieremail">Glo@global.com</span><br>
+                            <span class="value" style="font-size: 0.8rem;" id="reviewSupplieremail"><a
+                                    href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                    data-cfemail="3572595a7552595a5754591b565a58">[email&#160;protected]</a></span><br>
                             <span class="value" style="font-size: 0.8rem;" id="reviewSupplierPhone">9099123456</span>
                         </div>
                         <div style="text-align: right;">
@@ -1294,8 +1299,8 @@
 
                     </div>
                 </div>
-               
- <div style="margin-top: 15px; font-size: 0.8rem; display: flex; align-items: center; gap: 2px;">
+
+                <div style="margin-top: 15px; font-size: 0.8rem; display: flex; align-items: center; gap: 2px;">
                     <input type="checkbox" id="finalTerms" style="width: 40px;" checked disabled>
                     <label for="finalTerms" style=" font-size: large;">I agree to the
                         Cancellation Policy & T&C</label>
@@ -1309,6 +1314,7 @@
         </div>
     </div>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
         // Global data storage
         const bookingData = {
@@ -1510,55 +1516,120 @@
             document.getElementById('reviewSupplierPhone').textContent = bookingData.supplier.phone || '';
             document.getElementById('reviewReceiver').textContent = bookingData.receiver.name || 'Not provided';
             document.getElementById('reviewReceiverPhone').textContent = bookingData.receiver.phone || '';
+
+            // Update Services and Compliances - Show only checked items
+            updateComplianceReview();
         }
 
-        // Final form submission
-        function submitFinalForm() {
-            const finalData = {
-                supplier: bookingData.supplier,
-                receiver: bookingData.receiver,
-                route: {
-                    pickup: document.getElementById('pickupLocation').value,
-                    dropoff: document.getElementById('dropoffLocation').value,
-                    pickupDate: document.getElementById('pickupDate').value,
-                    pickupTime: document.getElementById('pickupTime').value,
-                    dropoffDate: document.getElementById('dropoffDate').value,
-                    dropoffTime: document.getElementById('dropoffTime').value,
-                    range: document.getElementById('range').value,
-                    duration: document.getElementById('duration').value
-                },
-                trip: {
-                    type: document.querySelector('#tripTypeToggle .toggle-option.active')?.getAttribute('data-value'),
-                    bookingWay: document.querySelector('#bookingWayToggle .toggle-option.active')?.getAttribute('data-value'),
-                    vehicle: selectedVehicle
-                },
-                cargo: {
-                    weight: document.getElementById('weightOfGood').value,
-                    name: document.getElementById('nameOfGood').value,
-                    type: document.getElementById('typeOfGood').value,
-                    specialNotes: document.getElementById('specialNotes').value,
-                    loadingFacility: document.getElementById('loadingUnloading').checked,
-                    additionalComments: document.getElementById('additionalComments').value
-                },
-                payment: {
-                    method: document.querySelector('#paymentMethodToggle .toggle-option.active')?.getAttribute('data-value'),
-                    paidBy: document.querySelector('#paymentByToggle .toggle-option.active')?.getAttribute('data-value'),
-                    amount: 12500
-                }
-            };
+        // Function to dynamically update compliance review section - ONLY show checked items
+        function updateComplianceReview() {
+            // Define all compliance checkboxes with their IDs and display names
+            const complianceItems = [
+                { id: 'insurance-requirements', label: 'Insurance Requirement', reviewId: 'reviewinsurancereq' },
+                { id: 'api-tracking', label: 'API Integration', reviewId: 'reviewAPI' },
+                { id: 'Performance-penalties', label: 'Performance Penalties(SLA)', reviewId: 'reviewperformancepenalties' },
+                { id: 'HSE-site-compliance', label: 'HSE Site Compliance', reviewId: 'reviewHSE' },
+                { id: 'booking-time', label: 'Booking cut-off Times', reviewId: 'reviewbookingoftime' },
+                { id: 'substitution-policy', label: 'Substitution Policy', reviewId: 'reviewsubstitutionpolicy' },
+                { id: 'cargo-cleanliness', label: 'Cargo Cleanliness(Return Trip)', reviewId: 'reviewcargocleanliness' },
+                { id: 'equipment-standard', label: 'Equipment Standard', reviewId: 'reviewequipmentstandard' },
+                { id: 'certification-permits', label: 'Required certification & Permits', reviewId: 'reviewcertificationpermits' }
+            ];
 
-            console.log('Final Booking Data:', finalData);
-            alert('🎉 Trip Request Submitted Successfully!\n\nYour booking has been confirmed. You will receive a confirmation email shortly.');
+            // Get the parent container for compliance section
+            const complianceGrid = document.querySelector('.section-block .section-header .section-title-review');
+            let complianceSection = null;
+
+            // Find the compliance section block
+            if (complianceGrid && complianceGrid.textContent === 'Services and Compliances') {
+                complianceSection = complianceGrid.closest('.section-block');
+            }
+
+            if (complianceSection) {
+                // Find or create the grid container
+                let gridContainer = complianceSection.querySelector('.grid-2');
+
+                if (gridContainer) {
+                    // Clear existing content
+                    gridContainer.innerHTML = '';
+
+                    // Track if any items are checked
+                    let hasCheckedItems = false;
+
+                    // Loop through all compliance items and add only checked ones
+                    complianceItems.forEach((item, index) => {
+                        const checkbox = document.getElementById(item.id);
+
+                        if (checkbox && checkbox.checked) {
+                            hasCheckedItems = true;
+
+                            // Create the div element
+                            const itemDiv = document.createElement('div');
+
+                            // Add right align for odd-indexed items (1, 3, 5, 7...)
+                            if (index % 2 === 1) {
+                                itemDiv.style.textAlign = 'right';
+                            }
+
+                            // Set the content
+                            itemDiv.innerHTML = `<span class="label">${item.label}</span><span class="value" id="${item.reviewId}">Yes</span>`;
+
+                            // Append to grid
+                            gridContainer.appendChild(itemDiv);
+                        }
+                    });
+
+                    // If no items are checked, show a message or hide the section
+                    if (!hasCheckedItems) {
+                        gridContainer.innerHTML = '<div style="grid-column: span 2; text-align: center; color: #888; padding: 20px;">No compliance services selected</div>';
+                    }
+                }
+            }
+
+            // Final form submission
+            function submitFinalForm() {
+                const finalData = {
+                    supplier: bookingData.supplier,
+                    receiver: bookingData.receiver,
+                    route: {
+                        pickup: document.getElementById('pickupLocation').value,
+                        dropoff: document.getElementById('dropoffLocation').value,
+                        pickupDate: document.getElementById('pickupDate').value,
+                        pickupTime: document.getElementById('pickupTime').value,
+                        dropoffDate: document.getElementById('dropoffDate').value,
+                        dropoffTime: document.getElementById('dropoffTime').value,
+                        range: document.getElementById('range').value,
+                        duration: document.getElementById('duration').value
+                    },
+                    trip: {
+                        type: document.querySelector('#tripTypeToggle .toggle-option.active')?.getAttribute('data-value'),
+                        bookingWay: document.querySelector('#bookingWayToggle .toggle-option.active')?.getAttribute('data-value'),
+                        vehicle: selectedVehicle
+                    },
+                    cargo: {
+                        weight: document.getElementById('weightOfGood').value,
+                        name: document.getElementById('nameOfGood').value,
+                        type: document.getElementById('typeOfGood').value,
+                        specialNotes: document.getElementById('specialNotes').value,
+                        loadingFacility: document.getElementById('loadingUnloading').checked,
+                        additionalComments: document.getElementById('additionalComments').value
+                    },
+                    payment: {
+                        method: document.querySelector('#paymentMethodToggle .toggle-option.active')?.getAttribute('data-value'),
+                        paidBy: document.querySelector('#paymentByToggle .toggle-option.active')?.getAttribute('data-value'),
+                        amount: 12500
+                    }
+                };
+
+                console.log('Final Booking Data:', finalData);
+                alert('🎉 Trip Request Submitted Successfully!\n\nYour booking has been confirmed. You will receive a confirmation email shortly.');
+            }
 
             // Optional: Reset form or redirect
-            // window.location.reload();
+            window.addEventListener('load', function () {
+                goToPage('page1');
+            });
         }
-
-        // Initialize first page
-        window.addEventListener('load', function () {
-            goToPage('page1');
-        });
     </script>
 </body>
-
 </html>

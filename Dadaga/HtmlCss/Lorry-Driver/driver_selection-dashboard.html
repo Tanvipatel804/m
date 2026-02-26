@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Selection Dashboard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-card: #131825;
+            --bg-card-hover: #1a2030;
+            --accent-green: #00ff88;
+            --accent-green-dark: #00cc6a;
+            --accent-blue: #3b82f6;
+            --accent-orange: #ff6b35;
+            --text-primary: #ffffff;
+            --text-secondary: #8b92a7;
+            --text-muted: #5a6171;
+            --border: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --gold: #fbbf24;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: all 0.2s;
+            border-radius: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .header-info h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .route {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .route-arrow {
+            color: var(--accent-green);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.75rem;
+            background: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .filter-tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .filter-tab:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .filter-tab.active {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+        }
+
+        .filter-tab.active.best-match {
+            background: var(--accent-green);
+        }
+
+        .filter-tab.active.top-rated {
+            background: var(--gold);
+        }
+
+        .filter-tab.active.lowest-rate {
+            background: var(--accent-blue);
+        }
+
+        .filter-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: var(--bg-card);
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .acceptance-count {
+            color: var(--accent-green);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .view-btn:hover,
+        .view-btn.active {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            border-color: var(--accent-green);
+        }
+
+        /* Driver Cards */
+        .drivers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .driver-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: cardSlideUp 0.6s ease-out both;
+        }
+
+        @keyframes cardSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .driver-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-green);
+            box-shadow: 0 20px 40px var(--shadow);
+            background: var(--bg-card-hover);
+        }
+
+        .match-score-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-dark) 100%);
+            color: var(--bg-dark);
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            box-shadow: 0 8px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .match-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.9;
+        }
+
+        .driver-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .driver-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 1rem;
+            object-fit: cover;
+            border: 2px solid var(--border);
+        }
+
+        .driver-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .driver-info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pro-badge {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: var(--bg-dark);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.4rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .driver-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge.verified {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .driver-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .stars {
+            color: var(--gold);
+            font-size: 1rem;
+        }
+
+        .rating-number {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .trip-count {
+            color: var(--text-secondary);
+        }
+
+        /* Driver Stats */
+        .driver-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .price-type {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .price-type.premium {
+            color: var(--gold);
+        }
+
+        /* Truck Display */
+        .truck-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .truck-image {
+            width: 30%;
+            height: 30%;
+            object-fit: fill;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .truck-plate {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.35rem;
+            border: 1px solid var(--border);
+            letter-spacing: 0.1em;
+        }
+
+        /* Equipment List */
+        .equipment-list {
+            display: grid;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .equipment-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .equipment-item.unavailable {
+            opacity: 0.5;
+        }
+
+        .equipment-icon {
+            font-size: 1rem;
+            font-weight: 700;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .equipment-icon.available {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+        }
+
+        .equipment-icon.unavailable {
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .equipment-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Expiration Timer */
+        .expiration-timer {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .timer-icon {
+            font-size: 1.1rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-dark) 100%);
+            color: var(--bg-dark);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.875rem 1rem;
+            font-size: 1.2rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-green);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .drivers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-tabs {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .filter-tabs {
+                flex-direction: column;
+            }
+
+            .filter-tab {
+                width: 100%;
+                text-align: center;
+            }
+
+            .driver-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .match-score-badge {
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <button class="back-btn" onclick="history.back()">←</button>
+            <div class="header-info">
+                <h1>Select Driver for Load #LT2485</h1>
+                <div class="route">
+                    <span>Mandvi, CFs</span>
+                    <span class="route-arrow">→</span>
+                    <span>Mundra, MSCIT</span>
+                    <span style="color: var(--text-muted);">• 380 km • 5h 45m</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-tabs">
+                <button class="filter-tab active best-match" data-filter="best-match">
+                    🎯 Best Match
+                </button>
+                <button class="filter-tab top-rated" data-filter="top-rated">
+                    ⭐ Top Rated
+                </button>
+                <button class="filter-tab lowest-rate" data-filter="lowest-rate">
+                    💰 Lowest Rate
+                </button>
+            </div>
+
+            <div class="filter-info">
+                <span class="acceptance-count">3 drivers accepted</span>
+                <div class="view-toggle">
+                    <button class="view-btn active">⊞</button>
+                    <button class="view-btn">☰</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver Cards Grid -->
+        <div class="drivers-grid">
+            <!-- Driver 1: John Smith (Premium) -->
+            <div class="driver-card" data-rating="4.9" data-price="1350">
+                <div class="match-score-badge">
+                    92%
+                </div>
+
+                <div class="driver-header">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="John Smith" class="driver-avatar">
+                    <div class="driver-info">
+                        <h3>
+                            Driver John Smith
+                            <span class="pro-badge">PRO</span>
+                        </h3>
+                        <div class="driver-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-number">4.9</span>
+                            <span class="trip-count">• 120 Trips</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="driver-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Rate</div>
+                        <div class="stat-value">
+                            $1,350
+                            <span class="price-type premium">(Premium)</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <!-- <div class="stat-label">Vehicle : ABC-1234</div> -->
+                        <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.25rem;">
+                            <div class="truck-display">
+                                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg" alt="Truck"
+                                    class="truck-image">
+                                <div class="truck-plate">Open Box Truck[50*40*35]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="equipment-list">
+                    <div class="equipment-item">
+                        <span class="equipment-icon available">✓</span>
+                        <span class="equipment-text">Load Cover Facilities</span>
+                    </div>
+                    <div class="equipment-item">
+                        <span class="equipment-icon available">✓</span>
+                        <span class="equipment-text">Liftgate Available</span>
+                    </div>
+                    <div class="equipment-item">
+                        <span class="equipment-icon available">✓</span>
+                        <span class="equipment-text">PPE Compliant</span>
+                    </div>
+                </div>
+
+                <div class="expiration-timer">
+                    <span class="timer-icon">⏰</span>
+                    <span>Offer expires in 14m</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="assignLoad('John Smith')">
+                        ✓ Assign Load
+                    </button>
+                    <button class="btn btn-secondary" onclick="callDriver('John Smith')">
+                        📞
+                    </button>
+                    <button class="btn btn-secondary" onclick="messageDriver('John Smith')">
+                        💬
+                    </button>
+                </div>
+            </div>
+
+            <!-- Driver 2: Sarah Chen (Normal) -->
+            <div class="driver-card" data-rating="4.8" data-price="1200">
+                <div class="match-score-badge" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                    88%
+                </div>
+
+                <div class="driver-header">
+                    <img src="https://i.pravatar.cc/150?img=47" alt="Sarah Chen" class="driver-avatar">
+                    <div class="driver-info">
+                        <h3>Driver Sarah Chen<span class="pro-badge">Pool Member</span></h3>
+                        <div class="driver-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-number">4.8</span>
+                            <span class="trip-count">• 95 Trips</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="driver-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Rate</div>
+                        <div class="stat-value">
+                            $1,200
+                            <span class="price-type">(Normal)</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <!-- <div class="stat-label">Vehicle : XYZ-5678</div> -->
+                        <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.25rem;">
+                            <div class="truck-display">
+                                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\1option.jpg" alt="Truck"
+                                    class="truck-image">
+                                <div class="truck-plate">Close-Box Truck[65*45*30]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="stat-box" style="margin-bottom: 1.5rem;">
+                    <div class="stat-label">Vehicle Type</div>
+                    <div class="stat-value" style="font-size: 1rem;">
+                        (55×40×35)' Open Box
+                    </div>
+                </div> -->
+
+                <div class="equipment-list">
+                    <div class="equipment-item unavailable">
+                        <span class="equipment-icon unavailable">✗</span>
+                        <span class="equipment-text">Load Cover Facilities</span>
+                    </div>
+                    <div class="equipment-item unavailable">
+                        <span class="equipment-icon unavailable">✗</span>
+                        <span class="equipment-text">Liftgate Available</span>
+                    </div>
+                    <div class="equipment-item unavailable">
+                        <span class="equipment-icon unavailable">✗</span>
+                        <span class="equipment-text">PPE Compliant</span>
+                    </div>
+                </div>
+
+                <div class="expiration-timer">
+                    <span class="timer-icon">⏰</span>
+                    <span>Offer expires in 14m</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="assignLoad('Sarah Chen')">
+                        ✓ Assign Load
+                    </button>
+                    <button class="btn btn-secondary" onclick="callDriver('Sarah Chen')">
+                        📞
+                    </button>
+                    <button class="btn btn-secondary" onclick="messageDriver('Sarah Chen')">
+                        💬
+                    </button>
+                </div>
+            </div>
+
+            <!-- Driver 3: Mike Johnson (Normal) -->
+            <div class="driver-card" data-rating="4.8" data-price="1200">
+                <div class="match-score-badge" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    85%
+                </div>
+
+                <div class="driver-header">
+                    <img src="https://i.pravatar.cc/150?img=33" alt="Mike Johnson" class="driver-avatar">
+                    <div class="driver-info">
+                        <h3>Driver Mike Johnson</h3>
+                        <div class="driver-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-number">4.8</span>
+                            <span class="trip-count">• 90 Trips</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="driver-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Rate</div>
+                        <div class="stat-value">
+                            $1,200
+                            <span class="price-type">(Normal)</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <!-- <div class="stat-label">Vehicle : DEF-9012</div> -->
+                        <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.25rem;">
+                            <div class="truck-display">
+                                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\refepl.jpg" alt="Truck"
+                                    class="truck-image">
+                                <div class="truck-plate">Reefer Truck[40*30*50]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="equipment-list">
+                    <div class="equipment-item unavailable">
+                        <span class="equipment-icon unavailable">✗</span>
+                        <span class="equipment-text">Load Cover Facilities</span>
+                    </div>
+                    <div class="equipment-item unavailable">
+                        <span class="equipment-icon unavailable">✗</span>
+                        <span class="equipment-text">Liftgate Available</span>
+                    </div>
+                    <div class="equipment-item unavailable">
+                        <span class="equipment-icon unavailable">✗</span>
+                        <span class="equipment-text">PPE Compliant</span>
+                    </div>
+                </div>
+
+                <div class="expiration-timer">
+                    <span class="timer-icon">⏰</span>
+                    <span>Offer expires in 14m</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="assignLoad('Mike Johnson')">
+                        ✓ Assign Load
+                    </button>
+                    <button class="btn btn-secondary" onclick="callDriver('Mike Johnson')">
+                        📞
+                    </button>
+                    <button class="btn btn-secondary" onclick="messageDriver('Mike Johnson')">
+                        💬
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const driverCards = document.querySelectorAll('.driver-card');
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const filter = tab.dataset.filter;
+
+                // Sort and display cards based on filter
+                const cardsArray = Array.from(driverCards);
+
+                if (filter === 'top-rated') {
+                    cardsArray.sort((a, b) => {
+                        return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+                    });
+                } else if (filter === 'lowest-rate') {
+                    cardsArray.sort((a, b) => {
+                        return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                    });
+                } else {
+                    // Best match - keep original order
+                }
+
+                // Reorder DOM elements with animation
+                const grid = document.querySelector('.drivers-grid');
+                cardsArray.forEach((card, index) => {
+                    card.style.animation = 'none';
+                    setTimeout(() => {
+                        card.style.animation = `cardSlideUp 0.5s ease-out ${index * 0.1}s both`;
+                    }, 10);
+                    grid.appendChild(card);
+                });
+            });
+        });
+
+        // View toggle functionality
+        const viewBtns = document.querySelectorAll('.view-btn');
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                viewBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Add list view implementation here
+            });
+        });
+
+        // Action functions
+        function assignLoad(driverName) {
+            // Add confirmation modal or direct assignment logic
+            const confirmed = confirm(`Assign load to ${driverName}?`);
+            if (confirmed) {
+                alert(`Load assigned to ${driverName}! Confirmation email sent.`);
+                // Add actual assignment logic here
+            }
+        }
+
+        function callDriver(driverName) {
+            alert(`Calling ${driverName}...`);
+            // Add calling functionality here
+            // In a real app, this would initiate a phone call
+        }
+
+        function messageDriver(driverName) {
+            alert(`Opening chat with ${driverName}...`);
+            // Add messaging functionality here
+        }
+
+        // Timer countdown simulation
+        function startTimers() {
+            const timers = document.querySelectorAll('.expiration-timer span:last-child');
+            timers.forEach(timer => {
+                let minutes = 14;
+                setInterval(() => {
+                    if (minutes > 0) {
+                        minutes--;
+                        timer.textContent = `Offer expires in ${minutes}m`;
+                    } else {
+                        timer.textContent = 'Offer expired';
+                        timer.style.color = 'var(--accent-orange)';
+                    }
+                }, 60000); // Update every minute
+            });
+        }
+
+        startTimers();
+    </script>
+</body>
+
+</html>
