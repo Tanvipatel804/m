@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transporter Onboarding Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --border: #1f2433;
+    --accent: #f0b429;
+    --accent2: #3b82f6;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(240,180,41,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,180,41,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 48px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 10px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  h1 span {
+    color: var(--accent);
+  }
+
+  .subtitle {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .progress-header strong {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .progress-track {
+    height: 6px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #f59e0b);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+    position: relative;
+  }
+
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+
+  .progress-fill.active::after { opacity: 1; }
+
+  /* Phase blocks */
+  .phase {
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .phase:nth-child(1) { animation-delay: 0.15s; }
+  .phase:nth-child(2) { animation-delay: 0.25s; }
+  .phase:nth-child(3) { animation-delay: 0.35s; }
+  .phase:nth-child(4) { animation-delay: 0.45s; }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .phase-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(240,180,41,0.1);
+    border: 1px solid rgba(240,180,41,0.3);
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  .phase-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .phase-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Checklist items */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .item {
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    user-select: none;
+  }
+
+  .item:hover {
+    border-color: rgba(240,180,41,0.3);
+    background: #161921;
+  }
+
+  .item.checked {
+    background: rgba(34,197,94,0.04);
+    border-color: rgba(34,197,94,0.2);
+  }
+
+  .item.checked .item-label {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: rgba(107,114,128,0.5);
+  }
+
+  .item.checked .item-detail { color: #374151; }
+
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+    background: transparent;
+  }
+
+  .item.checked .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .checkmark {
+    display: none;
+    color: #000;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .item.checked .checkmark { display: block; }
+
+  .item-content {
+    min-width: 0;
+  }
+
+  .item-label {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+
+  .item-detail {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+    transition: color 0.2s;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    font-weight: 500;
+    align-self: center;
+  }
+
+  .tag-req {
+    color: var(--red);
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+
+  .tag-doc {
+    color: var(--accent2);
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.2);
+  }
+
+  .tag-tip {
+    color: #a78bfa;
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.2);
+  }
+
+  /* Complete state */
+  .complete-banner {
+    display: none;
+    text-align: center;
+    padding: 40px 24px;
+    background: rgba(34,197,94,0.06);
+    border: 1px solid rgba(34,197,94,0.25);
+    margin-top: 16px;
+    animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .complete-banner.visible { display: block; }
+
+  .complete-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .complete-banner h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+
+  .complete-banner p {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Reset button */
+  .reset-btn {
+    margin-top: 24px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 10px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Footer note */
+  .footer-note {
+    margin-top: 40px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--accent);
+    background: rgba(240,180,41,0.04);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .footer-note strong { color: var(--accent); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">Freight / Logistics TMS</div>
+    <h1>Add Your First<br><span>Driver & Truck</span></h1>
+    <p class="subtitle">Step-by-step onboarding checklist for Transporters.<br>Click each item to mark it complete.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-header">
+      <span>Overall Progress</span>
+      <strong id="pct">0%</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="pbar"></div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted);">
+      <span id="done-count">0</span> of <span id="total-count">0</span> tasks complete
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-num">Phase 01</span>
+      <span class="phase-title">Account Setup</span>
+      <div class="phase-line"></div>
+    </div>
+    <div class="checklist">
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Log in and complete your Transporter profile</div>
+          <div class="item-detail">Fill in company name, DOT/MC number, business address, tax ID (EIN), and primary contact info.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Upload your Operating Authority certificate</div>
+          <div class="item-detail">FMCSA-issued MC authority letter. The TMS will validate active status before allowing dispatch.</div>
+        </div>
+        <span class="tag tag-doc">Document</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Add and verify your payment / ACH details</div>
+          <div class="item-detail">Navigate to Settings → Payments. Enter bank routing and account number; a micro-deposit verification takes 1–2 business days.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Upload Certificate of Insurance (COI)</div>
+          <div class="item-detail">General liability + cargo coverage. Minimum limits vary by lane — check the Requirements tab on your profile for thresholds.</div>
+        </div>
+        <span class="tag tag-doc">Document</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-num">Phase 02</span>
+      <span class="phase-title">Add Your First Driver</span>
+      <div class="phase-line"></div>
+    </div>
+    <div class="checklist">
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Navigate to Fleet → Drivers → Add New Driver</div>
+          <div class="item-detail">Enter full legal name, date of birth, home terminal location, and employment type (company driver vs. owner-operator).</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Enter CDL number, class, and endorsements</div>
+          <div class="item-detail">Class A/B/C, plus endorsements (H, N, T, X, etc.). The TMS cross-checks endorsements against load requirements automatically.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Upload CDL front and back</div>
+          <div class="item-detail">Accepted formats: JPG, PNG, PDF. The system will parse expiry date and alert you 60 days before renewal.</div>
+        </div>
+        <span class="tag tag-doc">Document</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Upload Medical Examiner's Certificate (MEC)</div>
+          <div class="item-detail">Required for interstate commerce. Must be current (valid date within last 24 months). FMCSA National Registry number is auto-verified.</div>
+        </div>
+        <span class="tag tag-doc">Document</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Confirm drug & alcohol testing enrollment</div>
+          <div class="item-detail">Indicate the driver's testing consortium/C&TPA. If enrolling through the TMS partner program, click "Enroll Now" to initiate a pre-employment test order.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Send driver a mobile app invite</div>
+          <div class="item-detail">Driver receives an SMS/email link to download the Driver App. They set a PIN to activate ELD and messaging features.</div>
+        </div>
+        <span class="tag tag-tip">Setup Tip</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-num">Phase 03</span>
+      <span class="phase-title">Add Your First Truck</span>
+      <div class="phase-line"></div>
+    </div>
+    <div class="checklist">
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Navigate to Fleet → Assets → Add New Vehicle</div>
+          <div class="item-detail">Select vehicle type (Dry Van, Reefer, Flatbed, Tanker, etc.) and enter VIN, make, model, and year.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Enter USDOT number and license plate details</div>
+          <div class="item-detail">Plate number, state of registration, and expiry date. Add trailer unit number if applicable. The TMS validates the USDOT against FMCSA records.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Upload vehicle registration and IFTA credentials</div>
+          <div class="item-detail">Current cab card (registration), plus IFTA license for interstate fuel tax reporting. The TMS uses this for auto-generated fuel tax summaries.</div>
+        </div>
+        <span class="tag tag-doc">Document</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Link ELD device to the truck record</div>
+          <div class="item-detail">Enter the ELD provider and device serial number. The TMS supports Samsara, KeepTruckin/Motive, Omnitracs, and others via API. HOS data syncs automatically once paired.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Set payload capacity and temperature range (if reefer)</div>
+          <div class="item-detail">Max gross weight, usable payload (lbs), and interior dimensions. Reefer units: enter min/max temperature capability. Used for automatic load matching.</div>
+        </div>
+        <span class="tag tag-tip">Setup Tip</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Schedule or confirm last annual inspection (DOT)</div>
+          <div class="item-detail">Upload the most recent annual inspection report. The TMS will flag loads where inspection is expired or within 30 days of expiry.</div>
+        </div>
+        <span class="tag tag-doc">Document</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-num">Phase 04</span>
+      <span class="phase-title">Assign & Verify</span>
+      <div class="phase-line"></div>
+    </div>
+    <div class="checklist">
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Assign the driver to the truck</div>
+          <div class="item-detail">In Fleet → Driver record, use the "Assign Asset" dropdown to link the truck. This creates the Driver–Truck pairing used for dispatch and HOS tracking.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Run a compliance readiness check</div>
+          <div class="item-detail">Go to Compliance → Readiness Report and run a check on the new driver–truck pair. Resolve any red-flag items (expired docs, missing fields) before accepting a load.</div>
+        </div>
+        <span class="tag tag-req">Required</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Confirm ELD telemetry is live</div>
+          <div class="item-detail">In the Dispatch map view, verify the truck shows a live GPS ping. If offline, follow the ELD troubleshooting guide under Help → ELD Pairing.</div>
+        </div>
+        <span class="tag tag-tip">Setup Tip</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Accept your first load or post available capacity</div>
+          <div class="item-detail">Your driver–truck pair is now eligible for dispatch. Browse the Load Board or accept a tendered load. The system will auto-populate driver and truck details on the BOL.</div>
+        </div>
+        <span class="tag tag-tip">You're Ready</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Banner -->
+  <div class="complete-banner" id="complete-banner">
+    <div class="complete-icon">🚛</div>
+    <h2>You're All Set!</h2>
+    <p>Your first driver and truck are onboarded and compliance-ready.<br>Head to the Load Board to start dispatching.</p>
+    <br>
+    <button class="reset-btn" onclick="resetAll()">↺ Reset Checklist</button>
+  </div>
+
+  <div class="footer-note" id="footer-note">
+    <strong>Note:</strong> Items tagged <span style="color:#ef4444;">Required</span> must be complete before the TMS will allow this driver–truck pair to be assigned to a load. <span style="color:#3b82f6;">Document</span> uploads are stored and version-controlled — re-upload when documents renew. <span style="color:#a78bfa;">Setup Tips</span> are optional but strongly recommended for full system functionality.
+  </div>
+
+</div>
+
+<script>
+  function getItems() {
+    return document.querySelectorAll('.item');
+  }
+
+  function updateProgress() {
+    const items = getItems();
+    const total = items.length;
+    const done = document.querySelectorAll('.item.checked').length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+
+    document.getElementById('pct').textContent = pct + '%';
+    document.getElementById('done-count').textContent = done;
+    document.getElementById('total-count').textContent = total;
+
+    const bar = document.getElementById('pbar');
+    bar.style.width = pct + '%';
+    if (done > 0) bar.classList.add('active'); else bar.classList.remove('active');
+
+    const banner = document.getElementById('complete-banner');
+    const footer = document.getElementById('footer-note');
+    if (done === total && total > 0) {
+      banner.classList.add('visible');
+      footer.style.display = 'none';
+    } else {
+      banner.classList.remove('visible');
+      footer.style.display = 'block';
+    }
+  }
+
+  function toggle(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.item.checked').forEach(el => el.classList.remove('checked'));
+    updateProgress();
+  }
+
+  // Init count
+  document.addEventListener('DOMContentLoaded', updateProgress);
+  updateProgress();
+</script>
+</body>
+</html>
