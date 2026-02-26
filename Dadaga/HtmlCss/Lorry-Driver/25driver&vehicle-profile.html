@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver & Vehicle Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            color: #e0e0e0;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .section {
+            background-color: #1e1e1e;
+            margin: 12px 16px;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #e0e0e0;
+        }
+
+        .trust-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .driver-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .driver-details h2 {
+            font-size: 20px;
+            margin-bottom: 4px;
+            color: #e0e0e0;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #b0b0b0;
+        }
+
+        .star {
+            color: #4caf50;
+        }
+
+        .verified-badge {
+            width: 48px;
+            height: 48px;
+            background-color: #4caf50;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .metrics {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .metric {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .metric.ontime {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .metric.cancellation {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .vehicle-images {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .vehicle-img {
+            width: 120px;
+            height: 90px;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            flex-shrink: 0;
+        }
+
+        .specs-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spec-label {
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        .spec-value {
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .inspection-badge {
+            display: inline-block;
+            background-color: #4caf50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .compliance-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .doc-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .compliance-text {
+            flex: 1;
+        }
+
+        .compliance-text h4 {
+            font-size: 14px;
+            margin-bottom: 2px;
+            color: #e0e0e0;
+        }
+
+        .compliance-text p {
+            font-size: 13px;
+            color: #b0b0b0;
+        }
+
+        .doc-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .doc-link {
+            color: #2196f3;
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .review-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .review-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            flex-shrink: 0;
+        }
+
+        .review-content h4 {
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #e0e0e0;
+        }
+
+        .review-content p {
+            font-size: 13px;
+            color: #b0b0b0;
+            line-height: 1.4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            position: sticky;
+            bottom: 0;
+            background-color: #121212;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+        .btn-secondary {
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #3a3a3a;
+        }
+
+        .btn-secondary:hover {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="back-btn">←</span>
+        <h1 class="header-title">Driver & Vehicle Profile</h1>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Trust Header</h3>
+        <div class="trust-header">
+            <div class="driver-info">
+                <div class="avatar"></div>
+                <div class="driver-details">
+                    <h2>John Doe</h2>
+                    <div class="rating">
+                        <span class="star">★</span>
+                        <span>4.9 Rating (325 Trips)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="verified-badge">✓</div>
+        </div>
+        <div class="metrics">
+            <div class="metric ontime">98% On-Time</div>
+            <div class="metric cancellation">2% Cancelation Rate</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Vehicle Bleeprint</h3>
+        <div class="vehicle-images">
+            <div class="vehicle-img"></div>
+            <div class="vehicle-img"></div>
+            <div class="vehicle-img"></div>
+        </div>
+        
+        <h4 style="margin-bottom: 12px; font-size: 15px;">Technical Specs</h4>
+        <div class="specs-grid">
+            <div class="spec-row">
+                <span class="spec-label">Trailer Type:</span>
+                <span class="spec-value">45' 4,000 lbs</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Max Paylod:</span>
+                <span class="spec-value">Air-Ride Suspension, E-Track System</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Special Features</span>
+                <span class="inspection-badge">Last Inspection: Oct 1, 2024</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Compliance & Insurance</h3>
+        <div class="compliance-item">
+            <div class="doc-icon">📄</div>
+            <div class="compliance-text">
+                <h4>Insurance Certificate</h4>
+                <p>$100,000 Cargo Coverage</p>
+            </div>
+        </div>
+        <div class="doc-links">
+            <a href="#" class="doc-link">DOT # 1334567</a>
+            <a href="#" class="doc-link">MC # 987554</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Recent Reviews</h3>
+        <div class="review-item">
+            <div class="review-avatar"></div>
+            <div class="review-content">
+                <h4>Great communication!</h4>
+                <p>Handled fragile load well</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-primary">Hire This Driver</button>
+        <button class="btn btn-secondary">Ask a Question</button>
+    </div>
+
+    <script>
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            console.log('Back button clicked');
+        });
+
+        document.querySelector('.btn-primary').addEventListener('click', () => {
+            alert('Hire This Driver clicked!');
+        });
+
+        document.querySelector('.btn-secondary').addEventListener('click', () => {
+            alert('Ask a Question clicked!');
+        });
+    </script>
+</body>
+</html>

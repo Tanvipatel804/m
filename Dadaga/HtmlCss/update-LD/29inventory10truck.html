@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Truck Inventory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #2a2a2a;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .date-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #1a1a1a;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .date-selector input[type="date"] {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .date-selector input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #27ae60;
+        }
+
+        .btn-secondary {
+            background: #1a1a1a;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .btn-secondary:hover {
+            background: #2a2a2a;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #333;
+        }
+
+        .summary-card-title {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .summary-card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .summary-card-subtitle {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .summary-card.active .summary-card-value {
+            color: #2ecc71;
+        }
+
+        .summary-card.maintenance .summary-card-value {
+            color: #f39c12;
+        }
+
+        .summary-card.idle .summary-card-value {
+            color: #888;
+        }
+
+        .inventory-table-container {
+            background: #1a1a1a;
+            border-radius: 15px;
+            border: 1px solid #333;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table-header {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #0f0f0f;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #1f1f1f;
+        }
+
+        .truck-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .truck-icon-cell {
+            font-size: 1.3rem;
+        }
+
+        .truck-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .truck-id {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .truck-type {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .status-completed {
+            background: #3498db;
+            color: white;
+        }
+
+        .status-maintenance {
+            background: #f39c12;
+            color: white;
+        }
+
+        .status-idle {
+            background: #555;
+            color: white;
+        }
+
+        .route-cell {
+            font-size: 0.85rem;
+        }
+
+        .route-text {
+            color: #ccc;
+        }
+
+        .progress-mini {
+            width: 80px;
+            height: 6px;
+            background: #0a0a0a;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-mini-fill {
+            height: 100%;
+            background: #2ecc71;
+            border-radius: 3px;
+        }
+
+        .time-cell {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background: transparent;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-small:hover {
+            background: #2a2a2a;
+            border-color: #666;
+        }
+
+        .input-field {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #2ecc71;
+        }
+
+        .notes-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notes-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid #333;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        textarea {
+            width: 100%;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #2ecc71;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .summary-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .table-wrapper {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+
+            .actions-cell {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <button class="back-button" onclick="history.back()">←</button>
+
+        <div class="header">
+            <div class="header-top">
+                <h1>📋 Daily Truck Inventory</h1>
+                <div class="header-actions">
+                    <div class="date-selector">
+                        <span>📅</span>
+                        <input type="date" id="inventoryDate" value="">
+                    </div>
+                    <button class="btn btn-secondary" onclick="exportData()">
+                        📤 Export
+                    </button>
+                    <button class="btn btn-primary" onclick="saveInventory()">
+                        💾 Save Record
+                    </button>
+                </div>
+            </div>
+
+            <div class="summary-cards">
+                <div class="summary-card active">
+                    <div class="summary-card-title">Active Trips</div>
+                    <div class="summary-card-value" id="activeCount">6</div>
+                    <div class="summary-card-subtitle">On route now</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card-title">Completed Today</div>
+                    <div class="summary-card-value" id="completedCount">2</div>
+                    <div class="summary-card-subtitle">Trips finished</div>
+                </div>
+                <div class="summary-card maintenance">
+                    <div class="summary-card-title">Maintenance</div>
+                    <div class="summary-card-value" id="maintenanceCount">1</div>
+                    <div class="summary-card-subtitle">Under service</div>
+                </div>
+                <div class="summary-card idle">
+                    <div class="summary-card-title">Idle/Available</div>
+                    <div class="summary-card-value" id="idleCount">1</div>
+                    <div class="summary-card-subtitle">Ready to deploy</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inventory-table-container">
+            <div class="table-header">
+                <div class="table-title">Today's Fleet Status</div>
+                <span style="color: #888; font-size: 0.85rem;">Total Trucks: 10</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Truck Details</th>
+                            <th>Driver</th>
+                            <th>Status</th>
+                            <th>Route</th>
+                            <th>Start Time</th>
+                            <th>Est. Completion</th>
+                            <th>Progress</th>
+                            <th>Distance (km)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryBody">
+                        <!-- Rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Modal -->
+    <div class="notes-modal" id="notesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add Notes</div>
+                <button class="close-btn" onclick="closeNotesModal()">×</button>
+            </div>
+            <textarea id="notesText" placeholder="Enter notes, issues, or remarks for this truck..."></textarea>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeNotesModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveNotes()">Save Notes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date
+        document.getElementById('inventoryDate').valueAsDate = new Date();
+
+        // Sample inventory data
+        const inventoryData = [
+            {
+                id: 'MH-12-AS-4590',
+                type: '32ft Container',
+                driver: 'Rajesh Kumar',
+                status: 'active',
+                route: 'Mumbai → Delhi',
+                startTime: 'oct 24, 06:00 AM',
+                estCompletion: 'oct 25, 06:00 PM',
+                progress: 45,
+                distance: 112,
+                notes: ''
+            },
+            {
+                id: 'MH-11-SA-4590',
+                type: 'Reefer Truck',
+                driver: 'Amit Singh',
+                status: 'active',
+                route: 'Bangalore → Chennai',
+                startTime: 'oct 24, 05:30 AM',
+                estCompletion: 'oct 26, 05:30 PM',
+                progress: 75,
+                distance: 187,
+                notes: ''
+            },
+            {
+                id: 'DL-09-BH-3421',
+                type: '20ft Container',
+                driver: 'Suresh Patel',
+                status: 'active',
+                route: 'Delhi → Jaipur',
+                startTime: 'oct 29, 07:00 AM',
+                estCompletion: 'oct 31, 07:00 PM',
+                progress: 60,
+                distance: 150,
+                notes: ''
+            },
+            {
+                id: 'MH-14-CD-7812',
+                type: 'Flatbed Truck',
+                driver: 'Vikram Rao',
+                status: 'completed',
+                route: 'Pune → Mumbai',
+                startTime: 'Nov 24, 05:00 AM',
+                estCompletion: 'Nov 24, 05:00 PM',
+                progress: 100,
+                distance: 250,
+                notes: 'Completed on time'
+            },
+            {
+                id: 'KA-05-EF-2134',
+                type: '32ft Container',
+                driver: 'Ramesh Reddy',
+                status: 'active',
+                route: 'Hyderabad → Bangalore',
+                startTime: 'Nov 24, 06:30 AM',
+                estCompletion: 'Nov 26, 06:30 PM',
+                progress: 35,
+                distance: 87,
+                notes: ''
+            },
+            {
+                id: 'TN-07-GH-4567',
+                type: 'Reefer Truck',
+                driver: 'Arun Kumar',
+                status: 'completed',
+                route: 'Chennai → Coimbatore',
+                startTime: 'Nov 27, 04:30 AM',
+                estCompletion: 'Nov 28, 04:30 PM',
+                progress: 100,
+                distance: 250,
+                notes: 'Early completion'
+            },
+            {
+                id: 'GJ-01-IJ-8901',
+                type: '20ft Container',
+                driver: 'Prakash Shah',
+                status: 'active',
+                route: 'Ahmedabad → Rajkot',
+                startTime: 'Dec 06, 06:00 AM',
+                estCompletion: 'Dec 07, 06:00 PM',
+                progress: 50,
+                distance: 125,
+                notes: ''
+            },
+            {
+                id: 'RJ-14-KL-2345',
+                type: 'Flatbed Truck',
+                driver: 'Mohan Sharma',
+                status: 'active',
+                route: 'Jaipur → Udaipur',
+                startTime: 'Dec 10, 07:30 AM',
+                estCompletion: 'Dec 11, 07:30 PM',
+                progress: 40,
+                distance: 100,
+                notes: ''
+            },
+            {
+                id: 'UP-16-MN-6789',
+                type: '32ft Container',
+                driver: 'Ravi Verma',
+                status: 'maintenance',
+                route: '-',
+                startTime: '-',
+                estCompletion: '-',
+                progress: 0,
+                distance: 0,
+                notes: 'Engine service scheduled'
+            },
+            {
+                id: 'WB-20-OP-3456',
+                type: 'Reefer Truck',
+                driver: 'Sanjay Das',
+                status: 'idle',
+                route: '-',
+                startTime: '-',
+                estCompletion: '-',
+                progress: 0,
+                distance: 0,
+                notes: 'Available for assignment'
+            }
+        ];
+
+        let currentNotesTruck = null;
+
+        function renderInventory() {
+            const tbody = document.getElementById('inventoryBody');
+            tbody.innerHTML = '';
+
+            let activeCount = 0;
+            let completedCount = 0;
+            let maintenanceCount = 0;
+            let idleCount = 0;
+
+            inventoryData.forEach((truck, index) => {
+                // Count statuses
+                if (truck.status === 'active') activeCount++;
+                else if (truck.status === 'completed') completedCount++;
+                else if (truck.status === 'maintenance') maintenanceCount++;
+                else if (truck.status === 'idle') idleCount++;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="truck-cell">
+                            <span class="truck-icon-cell">🚚</span>
+                            <div class="truck-details">
+                                <div class="truck-id">${truck.id}</div>
+                                <div class="truck-type">${truck.type}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${truck.driver}</td>
+                    <td>
+                        <span class="status-badge status-${truck.status}">
+                            ${truck.status.charAt(0).toUpperCase() + truck.status.slice(1)}
+                        </span>
+                    </td>
+                    <td class="route-cell">
+                        <span class="route-text">${truck.route}</span>
+                    </td>
+                    <td class="time-cell">${truck.startTime}</td>
+                    <td class="time-cell">${truck.estCompletion}</td>
+                    <td>
+                        ${truck.progress > 0 ? `
+                            <div class="progress-mini">
+                                <div class="progress-mini-fill" style="width: ${truck.progress}%"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">${truck.progress}%</div>
+                        ` : '-'}
+                    </td>
+                    <td>
+                        <input type="number" class="input-field" value="${truck.distance}" 
+                               style="width: 80px;" onchange="updateDistance(${index}, this.value)">
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn-small" onclick="openNotesModal(${index})">
+                                📝 Notes
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Update summary cards
+            document.getElementById('activeCount').textContent = activeCount;
+            document.getElementById('completedCount').textContent = completedCount;
+            document.getElementById('maintenanceCount').textContent = maintenanceCount;
+            document.getElementById('idleCount').textContent = idleCount;
+        }
+
+        function updateDistance(index, value) {
+            inventoryData[index].distance = parseInt(value) || 0;
+        }
+
+        function openNotesModal(index) {
+            currentNotesTruck = index;
+            document.getElementById('notesText').value = inventoryData[index].notes;
+            document.getElementById('notesModal').classList.add('active');
+        }
+
+        function closeNotesModal() {
+            document.getElementById('notesModal').classList.remove('active');
+            currentNotesTruck = null;
+        }
+
+        function saveNotes() {
+            if (currentNotesTruck !== null) {
+                inventoryData[currentNotesTruck].notes = document.getElementById('notesText').value;
+                closeNotesModal();
+                alert('Notes saved successfully!');
+            }
+        }
+
+        function saveInventory() {
+            const date = document.getElementById('inventoryDate').value;
+            const data = {
+                date: date,
+                inventory: inventoryData
+            };
+
+            // In a real app, this would save to a database
+            localStorage.setItem(`inventory_${date}`, JSON.stringify(data));
+            alert(`Inventory record saved for ${date}!`);
+        }
+
+        function exportData() {
+            const date = document.getElementById('inventoryDate').value;
+            
+            // Create CSV content
+            let csv = 'Truck ID,Type,Driver,Status,Route,Start Time,Est. Completion,Progress %,Distance (km),Notes\n';
+            
+            inventoryData.forEach(truck => {
+                csv += `"${truck.id}","${truck.type}","${truck.driver}","${truck.status}","${truck.route}","${truck.startTime}","${truck.estCompletion}",${truck.progress},${truck.distance},"${truck.notes}"\n`;
+            });
+
+            // Create download
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `truck_inventory_${date}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize
+        renderInventory();
+
+        // Auto-save every 5 minutes
+        setInterval(() => {
+            const date = document.getElementById('inventoryDate').value;
+            const data = {
+                date: date,
+                inventory: inventoryData
+            };
+            localStorage.setItem(`inventory_${date}`, JSON.stringify(data));
+            console.log('Auto-saved inventory data');
+        }, 300000); // 5 minutes
+    </script>
+
+</body>
+
+</html>

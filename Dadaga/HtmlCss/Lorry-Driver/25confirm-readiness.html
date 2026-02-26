@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Secured</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .secured-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .check-icon {
+            background: #4ade80;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .driver-info {
+            font-size: 14px;
+            color: #d1d5db;
+            margin-bottom: 4px;
+        }
+
+        .eta {
+            font-size: 14px;
+            color: #d1d5db;
+        }
+
+        .track-btn {
+            background: #4ade80;
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .track-btn:hover {
+            background: #22c55e;
+        }
+
+        .details-card {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .check-circle {
+            background: #4ade80;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 14px;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #e5e7eb;
+            margin-bottom: 12px;
+        }
+
+        .notes {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #e5e7eb;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .status-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .phone-btn {
+            background: #374151;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #4ade80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .phone-btn:hover {
+            background: #4b5563;
+        }
+
+        .confirm-btn {
+            background: #4ade80;
+            color: #000;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .confirm-btn:hover {
+            background: #22c55e;
+        }
+
+        .bottom-bar {
+            height: 4px;
+            background: #4b5563;
+            border-radius: 2px;
+            margin-top: 20px;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="secured-badge">
+                <div class="check-icon">✓</div>
+                [Trip Secured]
+            </div>
+            <div class="driver-info">Driver Sarah K. is 25 min away for pickup.</div>
+            <div class="eta">ETA: 10:15 AM</div>
+            <button class="track-btn">
+                <span>🚛</span>
+                Live Track Load
+            </button>
+        </div>
+
+        <div class="details-card">
+            <div class="section-title">Trip Details</div>
+            <div class="price">$850.00 (Flat)</div>
+            
+            <div class="detail-row">
+                <div class="check-circle">✓</div>
+                <div class="detail-content">
+                    <div class="detail-label">
+                        <span>Trip Type</span>
+                        <span>Single Trip</span>
+                    </div>
+                    <div class="detail-value">Pay00.00 (Flat)</div>
+                </div>
+            </div>
+
+            <div class="info-label">Driver:</div>
+            <div class="info-value">$850.00 <span class="stars">⭐⭐⭐ 4.9</span></div>
+
+            <div class="info-label">Truck Info:</div>
+            <div class="info-value">2023 Kenkwrth T680 (53' Reefer)</div>
+
+            <div class="info-label">Plate:</div>
+            <div class="info-value">CA 7789012</div>
+        </div>
+
+        <div class="details-card">
+            <div class="section-title">Pickup</div>
+            
+            <div class="info-label">Facility</div>
+            <div class="info-value">Sarah K. (Ratrage<br>(53' Reefers)</div>
+
+            <div class="info-label">Facility</div>
+            <div class="info-value">Acme Cold Storage</div>
+
+            <div class="info-label">Address</div>
+            <div class="info-value">123 Industrial Rd,</div>
+
+            <div class="info-label">Notes:</div>
+            <div class="notes">Use Gate B, Dock 7</div>
+
+            <div class="status-row">
+                <div class="status-info">
+                    <div class="info-label">Status:</div>
+                    <div class="info-value">En Route</div>
+                    <div class="info-label">Distance</div>
+                    <div class="info-value">ETA: 10:15 AM</div>
+                </div>
+                <button class="phone-btn">📞</button>
+            </div>
+        </div>
+
+        <button class="confirm-btn">Confirm Readiness</button>
+
+    </div>
+
+    <script>
+        document.querySelector('.track-btn').addEventListener('click', function() {
+            alert('Opening live tracking...');
+        });
+
+        document.querySelector('.phone-btn').addEventListener('click', function() {
+            alert('Calling driver...');
+        });
+
+        document.querySelector('.confirm-btn').addEventListener('click', function() {
+            alert('Readiness confirmed!');
+        });
+    </script>
+</body>
+</html>

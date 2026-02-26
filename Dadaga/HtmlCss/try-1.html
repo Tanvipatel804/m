@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FleetCore — Transporter Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --bg2: #0f1218;
+    --bg3: #161b24;
+    --border: #1e2535;
+    --accent: #f4a91e;
+    --accent2: #e8610a;
+    --green: #1adb7a;
+    --red: #ff4757;
+    --yellow: #ffd32a;
+    --blue: #4fc3f7;
+    --text: #e8eaf0;
+    --muted: #5a6478;
+    --muted2: #3a4255;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 72px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    gap: 8px;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+  .logo {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 16px;
+    color: #000;
+    margin-bottom: 20px;
+  }
+  .nav-item {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    color: var(--muted);
+    font-size: 20px;
+  }
+  .nav-item:hover, .nav-item.active {
+    background: var(--bg3);
+    color: var(--accent);
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    width: 3px; height: 24px;
+    background: var(--accent);
+    border-radius: 0 3px 3px 0;
+  }
+  .nav-badge {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    border: 2px solid var(--bg2);
+  }
+  .sidebar-bottom { margin-top: auto; }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    height: 60px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .topbar h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .topbar-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .date-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-primary:hover { background: #ffba3a; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+  .avatar {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* CONTENT */
+  .content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    gap: 0;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-card {
+    background: var(--bg2);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .stat-card:hover::after { transform: scaleX(1); }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .stat-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* CENTER PANEL */
+  .center-panel {
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .center-panel::-webkit-scrollbar { width: 4px; }
+  .center-panel::-webkit-scrollbar-track { background: transparent; }
+  .center-panel::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 2px; }
+
+  /* MAP SECTION */
+  .map-section {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    height: 260px;
+    position: relative;
+  }
+  .map-header {
+    position: absolute;
+    top: 12px; left: 12px; right: 12px;
+    display: flex; align-items: center; gap: 8px;
+    z-index: 2;
+  }
+  .map-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    background: rgba(10,12,16,0.85);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+  .live-badge {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(10,12,16,0.85);
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--green);
+  }
+  .live-dot {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .map-bg {
+    width: 100%; height: 100%;
+    background:
+      linear-gradient(rgba(15,18,24,0.6) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,18,24,0.6) 1px, transparent 1px),
+      radial-gradient(ellipse at 30% 60%, rgba(244,169,30,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 30%, rgba(79,195,247,0.06) 0%, transparent 50%),
+      #0d1520;
+    background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+    position: relative;
+  }
+  /* Road lines */
+  .map-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(45deg, transparent 40%, rgba(30,37,53,0.8) 40%, rgba(30,37,53,0.8) 41%, transparent 41%),
+      linear-gradient(-30deg, transparent 30%, rgba(30,37,53,0.8) 30%, rgba(30,37,53,0.8) 31%, transparent 31%),
+      linear-gradient(20deg, transparent 60%, rgba(30,37,53,0.8) 60%, rgba(30,37,53,0.8) 61.5%, transparent 61.5%);
+  }
+  .truck-pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .truck-pin:hover { transform: translate(-50%, -50%) scale(1.15); }
+  .pin-body {
+    width: 36px; height: 36px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .pin-icon { transform: rotate(45deg); font-size: 15px; }
+  .pin-label {
+    position: absolute;
+    bottom: -18px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    white-space: nowrap;
+    background: rgba(10,12,16,0.9);
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: var(--text);
+  }
+
+  /* FLEET TABLE */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .view-all {
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .fleet-table {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .table-header {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
+    padding: 10px 16px;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  .table-row:last-child { border-bottom: none; }
+  .table-row:hover { background: rgba(255,255,255,0.02); }
+  .truck-info { display: flex; align-items: center; gap: 10px; }
+  .truck-icon-box {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .truck-name { font-size: 13px; font-weight: 500; }
+  .truck-plate {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .driver-info { display: flex; align-items: center; gap: 8px; }
+  .mini-avatar {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .driver-name { font-size: 12px; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .status-active { background: rgba(26,219,122,0.12); color: var(--green); }
+  .status-idle { background: rgba(255,211,42,0.12); color: var(--yellow); }
+  .status-maintenance { background: rgba(255,71,87,0.12); color: var(--red); }
+  .status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .cell-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .cell-text { font-size: 12px; color: var(--muted); }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    border-left: 1px solid var(--border);
+    background: var(--bg2);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .right-panel::-webkit-scrollbar { width: 4px; }
+  .right-panel::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 2px; }
+
+  .rp-section {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .rp-section:last-child { border-bottom: none; }
+
+  /* ASSIGNMENT CARD */
+  .assignment-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .assignment-card:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+  }
+  .assignment-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--green);
+  }
+  .assignment-card.idle::before { background: var(--yellow); }
+  .ac-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .ac-truck {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .ac-driver {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .ac-route {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .route-arrow { color: var(--accent); font-size: 10px; }
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.5s;
+  }
+
+  /* DRIVER LIST */
+  .driver-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .driver-row:last-child { border-bottom: none; }
+  .driver-row:hover .driver-row-name { color: var(--accent); }
+  .dr-avatar {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .driver-row-name { font-size: 13px; font-weight: 500; }
+  .driver-row-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .driver-row-right { margin-left: auto; text-align: right; }
+  .hos-bar {
+    width: 60px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-left: auto;
+    margin-top: 4px;
+  }
+  .hos-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  /* ALERTS */
+  .alert-item {
+    display: flex; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .alert-item:last-child { border-bottom: none; }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert-title { font-weight: 500; margin-bottom: 2px; }
+  .alert-time { font-size: 10px; color: var(--muted); }
+
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stat-card { animation: fadeInUp 0.4s ease both; }
+  .stat-card:nth-child(1) { animation-delay: 0.05s; }
+  .stat-card:nth-child(2) { animation-delay: 0.1s; }
+  .stat-card:nth-child(3) { animation-delay: 0.15s; }
+  .stat-card:nth-child(4) { animation-delay: 0.2s; }
+  .stat-card:nth-child(5) { animation-delay: 0.25s; }
+  .map-section { animation: fadeInUp 0.4s 0.3s ease both; }
+  .fleet-table { animation: fadeInUp 0.4s 0.4s ease both; }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+  .tag-blue { background: rgba(79,195,247,0.12); color: var(--blue); }
+  .tag-orange { background: rgba(244,169,30,0.15); color: var(--accent); }
+  .tag-green { background: rgba(26,219,122,0.12); color: var(--green); }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+
+  /* INVITE BUTTON */
+  .invite-btn {
+    width: 100%;
+    padding: 10px;
+    background: rgba(244,169,30,0.08);
+    border: 1px dashed rgba(244,169,30,0.3);
+    border-radius: 10px;
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .invite-btn:hover {
+    background: rgba(244,169,30,0.14);
+    border-color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">FC</div>
+  <div class="nav-item active" title="Dashboard">🏠</div>
+  <div class="nav-item" title="Fleet">🚚</div>
+  <div class="nav-item" title="Drivers">👤</div>
+  <div class="nav-item" title="Load Board" style="position:relative">📦<span class="nav-badge"></span></div>
+  <div class="nav-item" title="Documents">📄</div>
+  <div class="nav-item" title="Reports">📊</div>
+  <div class="sidebar-bottom">
+    <div class="nav-item" title="Messages" style="position:relative">💬<span class="nav-badge"></span></div>
+    <div class="nav-item" title="Settings">⚙️</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <h1>Fleet Dashboard</h1>
+    <div class="tag tag-orange">Sharma Transport Co.</div>
+    <div class="topbar-right">
+      <div class="date-chip">Wed, 25 Feb 2026 — 14:32 IST</div>
+      <button class="btn btn-ghost">+ Add Truck</button>
+      <button class="btn btn-primary">+ Dispatch Load</button>
+      <div class="avatar">ST</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Trucks</div>
+        <div class="stat-value" style="color: var(--accent)">12</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:var(--green)"></span>8 active today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">On Trip</div>
+        <div class="stat-value" style="color: var(--green)">7</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:var(--green)"></span>Moving now</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Idle / Parked</div>
+        <div class="stat-value" style="color: var(--yellow)">3</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:var(--yellow)"></span>Engine off</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Maintenance</div>
+        <div class="stat-value" style="color: var(--red)">2</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:var(--red)"></span>Unavailable</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Today's Revenue</div>
+        <div class="stat-value" style="color: var(--blue)">₹84K</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:var(--blue)"></span>↑ 12% vs yesterday</div>
+      </div>
+    </div>
+
+    <!-- CENTER PANEL -->
+    <div class="center-panel">
+
+      <!-- LIVE MAP -->
+      <div class="map-section">
+        <div class="map-bg">
+          <!-- Truck pins -->
+          <div class="truck-pin" style="top:42%;left:28%">
+            <div class="pin-body" style="background: linear-gradient(135deg,#1adb7a,#0a8a4a)">
+              <span class="pin-icon">🚛</span>
+            </div>
+            <div class="pin-label">TN-01 · 62km/h</div>
+          </div>
+          <div class="truck-pin" style="top:35%;left:52%">
+            <div class="pin-body" style="background: linear-gradient(135deg,#1adb7a,#0a8a4a)">
+              <span class="pin-icon">🚚</span>
+            </div>
+            <div class="pin-label">TN-03 · 48km/h</div>
+          </div>
+          <div class="truck-pin" style="top:60%;left:65%">
+            <div class="pin-body" style="background: linear-gradient(135deg,#1adb7a,#0a8a4a)">
+              <span class="pin-icon">🚛</span>
+            </div>
+            <div class="pin-label">TN-05 · 71km/h</div>
+          </div>
+          <div class="truck-pin" style="top:25%;left:72%">
+            <div class="pin-body" style="background: linear-gradient(135deg,#ffd32a,#d4a00a)">
+              <span class="pin-icon">🚚</span>
+            </div>
+            <div class="pin-label">TN-07 · Idle</div>
+          </div>
+          <div class="truck-pin" style="top:70%;left:38%">
+            <div class="pin-body" style="background: linear-gradient(135deg,#1adb7a,#0a8a4a)">
+              <span class="pin-icon">🚛</span>
+            </div>
+            <div class="pin-label">TN-09 · 55km/h</div>
+          </div>
+          <div class="truck-pin" style="top:50%;left:80%">
+            <div class="pin-body" style="background: linear-gradient(135deg,#ff4757,#c0392b)">
+              <span class="pin-icon">🔧</span>
+            </div>
+            <div class="pin-label">TN-11 · Service</div>
+          </div>
+        </div>
+        <div class="map-header">
+          <div class="map-title">Live Fleet Map</div>
+          <div class="live-badge"><div class="live-dot"></div>LIVE · 12 vehicles tracked</div>
+        </div>
+      </div>
+
+      <!-- FLEET TABLE -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">Fleet Overview</div>
+          <a class="view-all">View All →</a>
+        </div>
+        <div class="fleet-table">
+          <div class="table-header">
+            <div>Truck / Plate</div>
+            <div>Assigned Driver</div>
+            <div>Status</div>
+            <div>Load</div>
+            <div>ETA</div>
+          </div>
+          <div class="table-row">
+            <div class="truck-info">
+              <div class="truck-icon-box" style="background:rgba(26,219,122,0.1)">🚛</div>
+              <div>
+                <div class="truck-name">Tata Prima 5530.S</div>
+                <div class="truck-plate">TN-01-AB-1234</div>
+              </div>
+            </div>
+            <div class="driver-info">
+              <div class="mini-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2)">RK</div>
+              <div class="driver-name">Rajesh Kumar</div>
+            </div>
+            <div><span class="status-pill status-active"><span class="status-dot"></span>Moving</span></div>
+            <div><span class="tag tag-blue">Steel Coils</span></div>
+            <div class="cell-mono">16:45</div>
+          </div>
+          <div class="table-row">
+            <div class="truck-info">
+              <div class="truck-icon-box" style="background:rgba(26,219,122,0.1)">🚚</div>
+              <div>
+                <div class="truck-name">Ashok Leyland 4825</div>
+                <div class="truck-plate">TN-02-CD-5678</div>
+              </div>
+            </div>
+            <div class="driver-info">
+              <div class="mini-avatar" style="background:linear-gradient(135deg,#f093fb,#f5576c)">MS</div>
+              <div class="driver-name">Mohan Singh</div>
+            </div>
+            <div><span class="status-pill status-active"><span class="status-dot"></span>Moving</span></div>
+            <div><span class="tag tag-orange">Cement Bags</span></div>
+            <div class="cell-mono">18:20</div>
+          </div>
+          <div class="table-row">
+            <div class="truck-info">
+              <div class="truck-icon-box" style="background:rgba(255,211,42,0.1)">🚛</div>
+              <div>
+                <div class="truck-name">Mahindra Blazo X 35</div>
+                <div class="truck-plate">TN-07-GH-9012</div>
+              </div>
+            </div>
+            <div class="driver-info">
+              <div class="mini-avatar" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">VP</div>
+              <div class="driver-name">Vijay Patel</div>
+            </div>
+            <div><span class="status-pill status-idle"><span class="status-dot"></span>Idle</span></div>
+            <div><span class="cell-text">Unassigned</span></div>
+            <div class="cell-mono">—</div>
+          </div>
+          <div class="table-row">
+            <div class="truck-info">
+              <div class="truck-icon-box" style="background:rgba(255,71,87,0.1)">🔧</div>
+              <div>
+                <div class="truck-name">Eicher Pro 6049</div>
+                <div class="truck-plate">TN-11-KL-3456</div>
+              </div>
+            </div>
+            <div class="driver-info">
+              <div class="mini-avatar" style="background:rgba(90,100,120,0.4)">—</div>
+              <div class="driver-name" style="color:var(--muted)">Unassigned</div>
+            </div>
+            <div><span class="status-pill status-maintenance"><span class="status-dot"></span>Service</span></div>
+            <div><span class="cell-text">In garage</span></div>
+            <div class="cell-mono">—</div>
+          </div>
+          <div class="table-row">
+            <div class="truck-info">
+              <div class="truck-icon-box" style="background:rgba(26,219,122,0.1)">🚛</div>
+              <div>
+                <div class="truck-name">BharatBenz 3523R</div>
+                <div class="truck-plate">TN-05-EF-7890</div>
+              </div>
+            </div>
+            <div class="driver-info">
+              <div class="mini-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">AS</div>
+              <div class="driver-name">Arjun Sharma</div>
+            </div>
+            <div><span class="status-pill status-active"><span class="status-dot"></span>Moving</span></div>
+            <div><span class="tag tag-green">FMCG Goods</span></div>
+            <div class="cell-mono">15:55</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /center-panel -->
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- ACTIVE ASSIGNMENTS -->
+      <div class="rp-section">
+        <div class="section-header">
+          <div class="section-title">Active Assignments</div>
+          <span class="tag tag-green">7 Live</span>
+        </div>
+
+        <div class="assignment-card">
+          <div class="ac-top">
+            <div class="ac-truck">TN-01 — Rajesh K.</div>
+            <span class="tag tag-blue">On Time</span>
+          </div>
+          <div class="ac-route">
+            <span>Chennai</span>
+            <span class="route-arrow">→</span>
+            <span>Bengaluru</span>
+          </div>
+          <div class="ac-driver">🚛 Tata Prima · Steel Coils · 18T</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+        </div>
+
+        <div class="assignment-card">
+          <div class="ac-top">
+            <div class="ac-truck">TN-02 — Mohan S.</div>
+            <span class="tag tag-orange">Delayed</span>
+          </div>
+          <div class="ac-route">
+            <span>Coimbatore</span>
+            <span class="route-arrow">→</span>
+            <span>Hyderabad</span>
+          </div>
+          <div class="ac-driver">🚚 Ashok Leyland · Cement · 22T</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:31%"></div></div>
+        </div>
+
+        <div class="assignment-card">
+          <div class="ac-top">
+            <div class="ac-truck">TN-05 — Arjun S.</div>
+            <span class="tag tag-green">On Time</span>
+          </div>
+          <div class="ac-route">
+            <span>Mumbai</span>
+            <span class="route-arrow">→</span>
+            <span>Pune</span>
+          </div>
+          <div class="ac-driver">🚛 BharatBenz · FMCG · 14T</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+        </div>
+
+        <div class="assignment-card idle">
+          <div class="ac-top">
+            <div class="ac-truck">TN-07 — Vijay P.</div>
+            <span class="tag tag-orange">Awaiting Load</span>
+          </div>
+          <div class="ac-route" style="color:var(--muted)">Parked · Madurai Depot</div>
+          <div class="ac-driver">🚚 Mahindra Blazo · Empty</div>
+        </div>
+      </div>
+
+      <!-- DRIVERS ON DUTY -->
+      <div class="rp-section">
+        <div class="section-header">
+          <div class="section-title">Drivers On Duty</div>
+          <a class="view-all">All →</a>
+        </div>
+
+        <div class="driver-row">
+          <div class="dr-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2)">RK</div>
+          <div>
+            <div class="driver-row-name">Rajesh Kumar</div>
+            <div class="driver-row-sub">HOS: 4h 20m driven</div>
+          </div>
+          <div class="driver-row-right">
+            <span class="status-pill status-active" style="font-size:10px"><span class="status-dot"></span>Active</span>
+            <div class="hos-bar"><div class="hos-fill" style="width:54%;background:var(--green)"></div></div>
+          </div>
+        </div>
+
+        <div class="driver-row">
+          <div class="dr-avatar" style="background:linear-gradient(135deg,#f093fb,#f5576c)">MS</div>
+          <div>
+            <div class="driver-row-name">Mohan Singh</div>
+            <div class="driver-row-sub">HOS: 7h 10m driven</div>
+          </div>
+          <div class="driver-row-right">
+            <span class="status-pill status-idle" style="font-size:10px"><span class="status-dot"></span>Near Limit</span>
+            <div class="hos-bar"><div class="hos-fill" style="width:89%;background:var(--red)"></div></div>
+          </div>
+        </div>
+
+        <div class="driver-row">
+          <div class="dr-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">AS</div>
+          <div>
+            <div class="driver-row-name">Arjun Sharma</div>
+            <div class="driver-row-sub">HOS: 2h 45m driven</div>
+          </div>
+          <div class="driver-row-right">
+            <span class="status-pill status-active" style="font-size:10px"><span class="status-dot"></span>Active</span>
+            <div class="hos-bar"><div class="hos-fill" style="width:34%;background:var(--green)"></div></div>
+          </div>
+        </div>
+
+        <div class="driver-row">
+          <div class="dr-avatar" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">VP</div>
+          <div>
+            <div class="driver-row-name">Vijay Patel</div>
+            <div class="driver-row-sub">HOS: 0h — Waiting</div>
+          </div>
+          <div class="driver-row-right">
+            <span class="status-pill status-idle" style="font-size:10px"><span class="status-dot"></span>Idle</span>
+            <div class="hos-bar"><div class="hos-fill" style="width:0%;background:var(--yellow)"></div></div>
+          </div>
+        </div>
+
+        <button class="invite-btn">＋ Invite New Driver</button>
+      </div>
+
+      <!-- ALERTS -->
+      <div class="rp-section">
+        <div class="section-header">
+          <div class="section-title">Alerts</div>
+          <span class="tag" style="background:rgba(255,71,87,0.12);color:var(--red)">3 urgent</span>
+        </div>
+
+        <div class="alert-item">
+          <div class="alert-icon">⚠️</div>
+          <div>
+            <div class="alert-title" style="color:var(--red)">Insurance Expiring</div>
+            <div style="color:var(--muted);font-size:11px">TN-07 — expires in 3 days</div>
+            <div class="alert-time">Renew now →</div>
+          </div>
+        </div>
+
+        <div class="alert-item">
+          <div class="alert-icon">🕐</div>
+          <div>
+            <div class="alert-title" style="color:var(--yellow)">HOS Warning</div>
+            <div style="color:var(--muted);font-size:11px">Mohan Singh — 7h10m of 8h limit</div>
+            <div class="alert-time">Plan rest stop</div>
+          </div>
+        </div>
+
+        <div class="alert-item">
+          <div class="alert-icon">📍</div>
+          <div>
+            <div class="alert-title">Geofence Exit</div>
+            <div style="color:var(--muted);font-size:11px">TN-03 left approved zone</div>
+            <div class="alert-time">2 minutes ago</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /right-panel -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+</body>
+</html>

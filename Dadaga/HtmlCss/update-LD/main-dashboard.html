@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hauler Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c1520;
+    --surface: #0f1923;
+    --surface2: #1a2a3a;
+    --border: #1e3a4a;
+    --muted: #0c1520;
+    --amber: #f59e0b;
+    --amber2: #fbbf24;
+    --blue: #3b82f6;
+    --green: #22c55e;
+    --purple: #8b5cf6;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --text4: #475569;
+    --nav-h: 64px;
+    --topbar-h: 60px;
+    --tab-h: 44px;
+  }
+
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; overflow: hidden; }
+
+  /* ── FULL PAGE LAYOUT ── */
+  #layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: var(--topbar-h) var(--tab-h) 1fr;
+    grid-template-areas: "sidebar topbar" "sidebar tabs" "sidebar content";
+    height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    grid-area: sidebar;
+    background: #080f18;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 10;
+  }
+  .sidebar-logo {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #0f1923, #080f18);
+    flex-shrink: 0;
+  }
+  .sidebar-logo-text { color: var(--amber); font-family: 'Oswald', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: 2px; }
+  .sidebar-logo-sub  { color: var(--text3); font-size: 9px; font-family: monospace; letter-spacing: 1px; margin-top: 1px; }
+  .sidebar-eld {
+    padding: 9px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #22c55e08;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .eld-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); flex-shrink: 0; }
+  .eld-text { color: var(--text3); font-size: 10px; font-family: monospace; letter-spacing: 1px; }
+  .sidebar-nav { flex: 1; padding: 10px 8px; display: flex; flex-direction: column; gap: 3px; overflow-y: auto; scrollbar-width: none; }
+  .sidebar-nav::-webkit-scrollbar { display: none; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-radius: 10px;
+    cursor: pointer; transition: all 0.2s;
+    border: 1px solid transparent;
+    background: transparent; width: 100%; text-align: left;
+  }
+  .nav-item:hover:not(.active) { background: var(--surface2); }
+  .nav-item.active { background: var(--amber); }
+  .nav-item.active .nav-label { color: #0f1923; }
+  .nav-item.active .nav-sub   { color: #0f192388; }
+  .nav-icon  { font-size: 20px; flex-shrink: 0; }
+  .nav-label { color: var(--text2); font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 1px; line-height: 1.2; }
+  .nav-sub   { color: var(--text4); font-size: 10px; font-family: monospace; line-height: 1.2; }
+  .nav-badge { margin-left: auto; background: var(--red); color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: monospace; flex-shrink: 0; }
+  .nav-dot   { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); flex-shrink: 0; }
+  .sidebar-footer {
+    padding: 14px 20px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+  .driver-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--amber), #d97706); display: flex; align-items: center; justify-content: center; color: #0f1923; font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+  .driver-name { color: var(--text); font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 1px; }
+  .driver-id   { color: var(--text3); font-size: 10px; font-family: monospace; }
+
+  /* ── TOPBAR ── */
+  #topbar {
+    grid-area: topbar;
+    background: linear-gradient(135deg, var(--surface), var(--surface2));
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #hamburger { display: none; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px; cursor: pointer; color: var(--text2); align-items: center; justify-content: center; }
+  .topbar-screen-title { color: var(--text); font-family: 'Oswald', sans-serif; font-size: 21px; letter-spacing: 2px; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .topbar-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 13px; display: flex; align-items: center; gap: 6px; color: var(--text2); font-size: 12px; font-family: monospace; white-space: nowrap; }
+
+  /* ── TABS ── */
+  #tabs-bar {
+    grid-area: tabs;
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-pill {
+    background: transparent; color: var(--text3); border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 16px;
+    font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 1px;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .tab-pill.active { color: var(--amber); border-bottom-color: var(--amber); }
+  .tab-pill:hover:not(.active) { color: var(--text2); }
+
+  /* ── CONTENT ── */
+  #content { grid-area: content; overflow-y: auto; background: var(--bg); scrollbar-width: thin; scrollbar-color: var(--border) var(--bg); }
+  #content::-webkit-scrollbar { width: 5px; }
+  #content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  #screen-inner { max-width: 860px; margin: 0 auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* ── BOTTOM NAV (mobile) ── */
+  #bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h); background: #080f18; border-top: 1px solid var(--border); z-index: 100; padding: 0 4px; align-items: center; justify-content: space-around; }
+  .bnav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 7px 10px; border-radius: 8px; background: none; border: none; position: relative; }
+  .bnav-icon  { font-size: 22px; }
+  .bnav-label { color: var(--text4); font-size: 9px; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+  .bnav-btn.active .bnav-label { color: var(--amber); }
+  .bnav-badge { position: absolute; top: 4px; right: 4px; width: 15px; height: 15px; border-radius: 50%; background: var(--red); color: white; font-size: 9px; font-weight: 700; font-family: monospace; display: flex; align-items: center; justify-content: center; }
+
+  /* ── MOBILE DRAWER ── */
+  #drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; }
+  #drawer { position: fixed; top: 0; left: -270px; width: 260px; height: 100vh; background: #080f18; border-right: 1px solid var(--border); z-index: 201; transition: left 0.3s ease; display: flex; flex-direction: column; }
+  #drawer.open { left: 0; }
+
+  /* ── CARDS ── */
+  .card { background: linear-gradient(135deg, var(--surface2), var(--surface)); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+  .card-amber { border-color: #f59e0b44; }
+  .card-green { background: linear-gradient(135deg, #0a1f0a, var(--muted)); border-color: #22c55e44; }
+  .card-blue  { border-color: #3b82f644; }
+
+  /* ── UTILITY ── */
+  .section-title { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--text); }
+  .label { color: var(--text2); font-size: 11px; font-family: monospace; letter-spacing: 1px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .flex-col { display: flex; flex-direction: column; gap: 8px; }
+  .toggle-wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .toggle { width: 50px; height: 28px; border-radius: 14px; background: var(--border); position: relative; cursor: pointer; transition: background 0.3s; flex-shrink: 0; }
+  .toggle.on-green { background: var(--green); }
+  .toggle.on-blue  { background: var(--blue); }
+  .toggle.on-red   { background: var(--red); }
+  .toggle-knob { width: 22px; height: 22px; border-radius: 50%; background: white; position: absolute; top: 3px; left: 3px; transition: left 0.3s; }
+  .toggle.on-green .toggle-knob, .toggle.on-blue .toggle-knob, .toggle.on-red .toggle-knob { left: 25px; }
+  .prog-track { height: 7px; background: var(--border); border-radius: 4px; }
+  .prog-fill  { height: 100%; background: linear-gradient(90deg, var(--amber), var(--amber2)); border-radius: 4px; }
+  .btn-green { width: 100%; background: linear-gradient(135deg, var(--green), #16a34a); border: none; color: #0a1f0a; padding: 13px; border-radius: 10px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; cursor: pointer; }
+  .btn-amber { width: 100%; background: linear-gradient(135deg, var(--amber), #d97706); border: none; color: #0f1923; padding: 16px; border-radius: 12px; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 2px; cursor: pointer; }
+  input[type=range] { width: 100%; accent-color: var(--amber); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    #layout { grid-template-columns: 1fr; grid-template-rows: var(--topbar-h) var(--tab-h) 1fr; grid-template-areas: "topbar" "tabs" "content"; }
+    #sidebar { display: none; }
+    #hamburger { display: flex !important; }
+    #bottom-nav { display: flex; }
+    #content { padding-bottom: var(--nav-h); }
+    #screen-inner { padding: 14px; }
+  }
+  @media (max-width: 540px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .topbar-pill.hide-sm { display: none; }
+    #screen-inner { padding: 10px; gap: 12px; }
+    .card { padding: 14px; }
+    .section-title { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sidebar-logo">
+      <svg width="30" height="30" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="6" fill="#f59e0b"/>
+        <path d="M4 16h14v4H4zM18 10l6 6v4h-6V10z" fill="#0f1923"/>
+        <circle cx="8" cy="21" r="2" fill="#0f1923"/>
+        <circle cx="20" cy="21" r="2" fill="#0f1923"/>
+      </svg>
+      <div><div class="sidebar-logo-text">HAULER PRO</div><div class="sidebar-logo-sub">COMMERCIAL DRIVER PLATFORM</div></div>
+    </div>
+    <div class="sidebar-eld"><div class="eld-dot"></div><span class="eld-text">ELD CONNECTED · TRK-4421</span></div>
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="driver-avatar">JR</div>
+      <div><div class="driver-name">JAMES RILEY</div><div class="driver-id">CDL #OH-4421-R · On Duty</div></div>
+    </div>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <button id="hamburger" onclick="openDrawer()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+        <rect y="2" width="18" height="2" rx="1"/><rect y="8" width="18" height="2" rx="1"/><rect y="14" width="18" height="2" rx="1"/>
+      </svg>
+    </button>
+    <span class="topbar-screen-title" id="topbar-title">DASHBOARD</span>
+    <div class="topbar-right">
+      <div class="topbar-pill hide-sm"><span>⏱</span> 3.5h Drive Left</div>
+      <div class="topbar-pill"><span>📍</span> En Route · I-70</div>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <div id="tabs-bar"></div>
+
+  <!-- CONTENT -->
+  <main id="content"><div id="screen-inner"></div></main>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav"></nav>
+
+<!-- DRAWER OVERLAY -->
+<div id="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="drawer">
+  <div class="sidebar-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="6" fill="#f59e0b"/>
+      <path d="M4 16h14v4H4zM18 10l6 6v4h-6V10z" fill="#0f1923"/>
+      <circle cx="8" cy="21" r="2" fill="#0f1923"/><circle cx="20" cy="21" r="2" fill="#0f1923"/>
+    </svg>
+    <div><div class="sidebar-logo-text">HAULER PRO</div><div class="sidebar-logo-sub">COMMERCIAL DRIVER</div></div>
+  </div>
+  <div class="sidebar-eld"><div class="eld-dot"></div><span class="eld-text">ELD CONNECTED</span></div>
+  <nav class="sidebar-nav" id="drawer-nav"></nav>
+  <div class="sidebar-footer">
+    <div class="driver-avatar">JR</div>
+    <div><div class="driver-name">JAMES RILEY</div><div class="driver-id">CDL #OH-4421-R</div></div>
+  </div>
+</div>
+
+<script>
+const SCREENS = [
+  { id:"Dashboard",     icon:"🏠", sub:"Overview",       badge:null, dot:false },
+  { id:"Duty & Rig",   icon:"🚛", sub:"ELD & Equipment", badge:null, dot:false },
+  { id:"Manifest",     icon:"📋", sub:"3 Stops",          badge:"3",  dot:false },
+  { id:"Find Reload",  icon:"🔁", sub:"Backhaul Search",  badge:null, dot:true  },
+  { id:"Smart Filters",icon:"🎛", sub:"Filter Loads",     badge:null, dot:false },
+];
+
+let current = "Dashboard";
+const state = {
+  duty:"On Duty", trailer:"Dry Van", noLoads:false,
+  activeStop:0, selectedLoad:null,
+  radius:50, hosGuard:true, reloadWindow:"4:00 PM",
+  trailerFilter:"Dry Van", direction:"Any", autoReload:true,
+};
+const statusColors = {"On Duty":"#22c55e","Off Duty":"#ef4444","Sleeper Berth":"#3b82f6","Driving":"#f59e0b"};
+
+function openDrawer()  { document.getElementById("drawer").classList.add("open"); document.getElementById("drawer-overlay").style.display="block"; }
+function closeDrawer() { document.getElementById("drawer").classList.remove("open"); document.getElementById("drawer-overlay").style.display="none"; }
+
+function navItemHTML(s, drawer=false) {
+  const a = current===s.id;
+  return `<button class="nav-item${a?' active':''}" onclick="${drawer?'closeDrawer();':''}switchScreen('${s.id}')">
+    <span class="nav-icon">${s.icon}</span>
+    <div><div class="nav-label">${s.id.toUpperCase()}</div><div class="nav-sub">${s.sub}</div></div>
+    ${s.badge?`<div class="nav-badge">${s.badge}</div>`:s.dot?`<div class="nav-dot"></div>`:''}
+  </button>`;
+}
+
+function renderNav() {
+  document.getElementById("sidebar-nav").innerHTML = SCREENS.map(s=>navItemHTML(s,false)).join("");
+  document.getElementById("drawer-nav").innerHTML  = SCREENS.map(s=>navItemHTML(s,true)).join("");
+  document.getElementById("bottom-nav").innerHTML  = SCREENS.map(s=>`
+    <button class="bnav-btn${current===s.id?' active':''}" onclick="switchScreen('${s.id}')">
+      ${s.badge?`<div class="bnav-badge">${s.badge}</div>`:''}
+      <span class="bnav-icon">${s.icon}</span>
+      <span class="bnav-label">${s.id.split(' ')[0].toUpperCase()}</span>
+    </button>`).join("");
+  document.getElementById("tabs-bar").innerHTML = SCREENS.map(s=>`
+    <button class="tab-pill${current===s.id?' active':''}" onclick="switchScreen('${s.id}')">${s.id.toUpperCase()}</button>`).join("");
+  document.getElementById("topbar-title").textContent = current.toUpperCase();
+}
+
+function switchScreen(s) {
+  current = s; renderNav(); renderScreen();
+  document.getElementById("content").scrollTo(0,0);
+}
+
+function renderScreen() {
+  const el = document.getElementById("screen-inner");
+  if(current==="Dashboard")     el.innerHTML = dashboardHTML();
+  else if(current==="Duty & Rig")   el.innerHTML = dutyHTML();
+  else if(current==="Manifest")     el.innerHTML = manifestHTML();
+  else if(current==="Find Reload")  el.innerHTML = findReloadHTML();
+  else if(current==="Smart Filters")el.innerHTML = smartFiltersHTML();
+}
+
+/* ════════════════════ DASHBOARD ════════════════════ */
+function dashboardHTML() {
+  const clocks = [
+    {label:"DRIVE",   used:7.5,  total:11, color:"#f59e0b"},
+    {label:"ON DUTY", used:10.5, total:14, color:"#3b82f6"},
+    {label:"CYCLE",   used:52,   total:70, color:"#8b5cf6"},
+  ];
+  const clockSVGs = clocks.map(({label,used,total,color}) => {
+    const r=26, C=2*Math.PI*r, pct=used/total, rem=(total-used).toFixed(1);
+    return `<div style="text-align:center">
+      <svg width="70" height="70" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="${r}" fill="none" stroke="#1e3a4a" stroke-width="6"/>
+        <circle cx="32" cy="32" r="${r}" fill="none" stroke="${color}" stroke-width="6"
+          stroke-dasharray="${C*pct} ${C*(1-pct)}" stroke-dashoffset="${C*.25}" stroke-linecap="round"/>
+        <text x="32" y="36" text-anchor="middle" fill="${color}" font-size="13" font-weight="700" font-family="monospace">${rem}</text>
+      </svg>
+      <div style="color:#64748b;font-size:9px;font-family:monospace;letter-spacing:1px;margin-top:2px">${label}</div>
+      <div style="color:#94a3b8;font-size:9px;font-family:monospace">${rem}h left</div>
+    </div>`;
+  }).join("");
+
+  const stats=[{icon:"⏱",label:"ETA",value:"2:45 PM"},{icon:"💰",label:"RATE",value:"$1,240"},{icon:"🏋",label:"WEIGHT",value:"38,400 lbs"}];
+  const statCards=stats.map(({icon,label,value})=>`
+    <div style="background:#0c1520;border-radius:10px;padding:10px 6px;text-align:center">
+      <div style="font-size:18px">${icon}</div>
+      <div style="color:#64748b;font-size:8px;font-family:monospace;letter-spacing:1px">${label}</div>
+      <div style="color:#e2e8f0;font-size:12px;font-family:monospace;font-weight:700">${value}</div>
+    </div>`).join("");
+
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div>
+      <div class="section-title">DASHBOARD</div>
+      <div style="color:#64748b;font-size:12px;font-family:monospace;margin-top:2px">Saturday, Feb 21 · 10:24 AM</div>
+    </div>
+    <div style="background:#f59e0b22;border:1px solid #f59e0b44;border-radius:10px;padding:8px 14px">
+      <div style="color:#f59e0b;font-size:10px;font-family:monospace;letter-spacing:1px">CURRENT STATUS</div>
+      <div style="color:${statusColors[state.duty]};font-family:'Oswald',sans-serif;font-size:14px;font-weight:700">● ${state.duty.toUpperCase()}</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span class="label">HOURS OF SERVICE</span>
+      <span style="color:#64748b;font-size:10px;font-family:monospace">11h DAILY LIMIT</span>
+    </div>
+    <div class="grid-3">${clockSVGs}</div>
+  </div>
+
+  <div class="card card-amber">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="color:#f59e0b;font-size:13px;font-family:'Oswald',sans-serif;letter-spacing:1px">ACTIVE LOAD</span>
+      <span style="color:#22c55e;font-size:11px;font-family:monospace;background:#22c55e18;padding:3px 10px;border-radius:20px">● EN ROUTE</span>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:12px;align-items:center">
+      <div style="flex:1">
+        <div style="color:#64748b;font-size:9px;font-family:monospace;letter-spacing:1px">ORIGIN</div>
+        <div style="color:#e2e8f0;font-size:14px;font-family:'Oswald',sans-serif">Chicago, IL</div>
+        <div style="color:#64748b;font-size:10px">Distribution Center</div>
+      </div>
+      <div style="color:#f59e0b;font-size:22px;flex-shrink:0">→</div>
+      <div style="flex:1;text-align:right">
+        <div style="color:#64748b;font-size:9px;font-family:monospace;letter-spacing:1px">DESTINATION</div>
+        <div style="color:#e2e8f0;font-size:14px;font-family:'Oswald',sans-serif">Columbus, OH</div>
+        <div style="color:#64748b;font-size:10px">Warehouse Gate 4</div>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <span style="color:#64748b;font-size:10px;font-family:monospace">PROGRESS</span>
+        <span style="color:#f59e0b;font-size:10px;font-family:monospace">68% · 112 mi left</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" style="width:68%"></div></div>
+    </div>
+    <div class="grid-3">${statCards}</div>
+  </div>
+
+  <div class="grid-2">
+    <button onclick="switchScreen('Duty &amp; Rig')" style="background:linear-gradient(135deg,#1a2a3a,#0f1923);border:1px solid #1e3a4a;border-radius:14px;padding:22px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;transition:border-color 0.2s" onmouseover="this.style.borderColor='#f59e0b'" onmouseout="this.style.borderColor='#1e3a4a'">
+      <svg width="52" height="52" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="10" fill="#f59e0b22"/><path d="M8 28h20v6H8z" fill="#f59e0b"/><path d="M28 16l12 12v6H28V16z" fill="#fbbf24"/><circle cx="14" cy="36" r="4" fill="#0f1923" stroke="#f59e0b" stroke-width="2"/><circle cx="32" cy="36" r="4" fill="#0f1923" stroke="#f59e0b" stroke-width="2"/><circle cx="24" cy="22" r="5" fill="#f59e0b"/><line x1="24" y1="19" x2="24" y2="25" stroke="#0f1923" stroke-width="1.5"/><line x1="21" y1="22" x2="27" y2="22" stroke="#0f1923" stroke-width="1.5"/></svg>
+      <div><div style="color:#f59e0b;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:1px;text-align:center">DUTY &amp; RIG</div><div style="color:#64748b;font-size:11px;font-family:monospace;text-align:center;margin-top:2px">Status &amp; Profile</div></div>
+    </button>
+    <button onclick="switchScreen('Manifest')" style="background:linear-gradient(135deg,#1a2a3a,#0f1923);border:1px solid #1e3a4a;border-radius:14px;padding:22px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;position:relative;transition:border-color 0.2s" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#1e3a4a'">
+      <div style="position:absolute;top:12px;right:12px;background:#ef4444;color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:monospace">3</div>
+      <svg width="52" height="52" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="10" fill="#3b82f622"/><rect x="12" y="8" width="24" height="32" rx="3" fill="#3b82f6"/><rect x="16" y="14" width="16" height="2" rx="1" fill="#0f1923"/><rect x="16" y="19" width="16" height="2" rx="1" fill="#0f1923"/><rect x="16" y="24" width="10" height="2" rx="1" fill="#0f1923"/><rect x="16" y="29" width="12" height="2" rx="1" fill="#0f1923"/><circle cx="30" cy="28" r="8" fill="#f59e0b"/><path d="M27 28l2 2 4-4" stroke="#0f1923" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><div style="color:#3b82f6;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:1px;text-align:center">MANIFEST</div><div style="color:#64748b;font-size:11px;font-family:monospace;text-align:center;margin-top:2px">3 Stops Remaining</div></div>
+    </button>
+  </div>
+
+  <div class="card card-green" style="display:flex;align-items:center;gap:14px">
+    <div style="width:12px;height:12px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 10px #22c55e"></div>
+    <div style="flex:1">
+      <div style="color:#22c55e;font-size:12px;font-family:'Oswald',sans-serif;letter-spacing:1px">RELOAD FOUND</div>
+      <div style="color:#94a3b8;font-size:11px;font-family:monospace;margin-top:2px">12 mi from destination · $850 · Fits 4h remaining</div>
+    </div>
+    <button onclick="switchScreen('Find Reload')" style="background:#22c55e;color:#0a1f0a;border:none;padding:8px 14px;border-radius:8px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">VIEW →</button>
+  </div>`;
+}
+
+/* ════════════════════ DUTY & RIG ════════════════════ */
+function dutyHTML() {
+  const statusBtns = Object.entries(statusColors).map(([s,c])=>`
+    <button onclick="setDuty('${s}')" style="background:${state.duty===s?c+'22':'#0c1520'};border:1px solid ${state.duty===s?c:'#1e3a4a'};border-radius:10px;padding:13px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;width:100%">
+      <div style="width:13px;height:13px;border-radius:50%;background:${state.duty===s?c:'#334155'};box-shadow:${state.duty===s?`0 0 8px ${c}`:'none'};flex-shrink:0"></div>
+      <span style="color:${state.duty===s?c:'#64748b'};font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:1px">${s.toUpperCase()}</span>
+      ${state.duty===s?`<span style="margin-left:auto;color:${c};font-size:11px;font-family:monospace">● ACTIVE</span>`:''}
+    </button>`).join("");
+
+  const trailers=[{name:"Dry Van",icon:"📦",desc:"Standard"},{name:"Reefer",icon:"❄️",desc:"Refrigerated"},{name:"Flatbed",icon:"🔲",desc:"Open Deck"}];
+  const trailerBtns=trailers.map(({name,icon,desc})=>`
+    <button onclick="setTrailer('${name}')" style="background:${state.trailer===name?'#f59e0b22':'#0c1520'};border:1px solid ${state.trailer===name?'#f59e0b':'#1e3a4a'};border-radius:10px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;width:100%">
+      <span style="font-size:26px">${icon}</span>
+      <span style="color:${state.trailer===name?'#f59e0b':'#64748b'};font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:1px">${name.toUpperCase()}</span>
+      <span style="color:#475569;font-size:9px;font-family:monospace">${desc}</span>
+    </button>`).join("");
+
+  const vStats=[{label:"HEIGHT",value:"13'6\"",icon:"📐"},{label:"WEIGHT",value:"79,000 lbs",icon:"⚖️"},{label:"UNIT #",value:"TRK-4421",icon:"🚛"},{label:"TRAILER #",value:"TRL-8872",icon:"🔧"}];
+  const vStatCards=vStats.map(({label,value,icon})=>`
+    <div style="background:#0c1520;border-radius:10px;padding:12px">
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px"><span>${icon}</span><span style="color:#475569;font-size:9px;font-family:monospace;letter-spacing:1px">${label}</span></div>
+      <div style="color:#e2e8f0;font-family:monospace;font-size:15px;font-weight:700">${value}</div>
+    </div>`).join("");
+
+  return `
+  <div class="section-title">DUTY &amp; RIG SETTINGS</div>
+  <div class="card"><div class="label" style="margin-bottom:14px">ELD DUTY STATUS</div><div class="flex-col">${statusBtns}</div></div>
+  <div class="card"><div class="label" style="margin-bottom:14px">TRAILER TYPE &amp; EQUIPMENT</div><div class="grid-3">${trailerBtns}</div></div>
+  <div class="card"><div class="label" style="margin-bottom:14px">VEHICLE PROFILE</div><div class="grid-2">${vStatCards}</div></div>
+  <div style="background:${state.noLoads?'#ef444422':'#1a2a3a'};border:1px solid ${state.noLoads?'#ef4444':'#1e3a4a'};border-radius:14px;padding:18px" class="toggle-wrap">
+    <div>
+      <div style="color:${state.noLoads?'#ef4444':'#e2e8f0'};font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:1px">NO MORE LOADS</div>
+      <div style="color:#64748b;font-size:11px;font-family:monospace;margin-top:3px">Head to maintenance / terminal</div>
+    </div>
+    <div class="toggle${state.noLoads?' on-red':''}" onclick="toggleNoLoads()"><div class="toggle-knob"></div></div>
+  </div>`;
+}
+
+/* ════════════════════ MANIFEST ════════════════════ */
+function manifestHTML() {
+  const stops=[
+    {id:"A",type:"PICKUP", name:"Amazon Fulfillment",  addr:"123 Warehouse Blvd, Chicago IL",  time:"6:00 AM", status:"complete",gate:"Gate 7 · Door 42",          bol:"BOL-2024-8821"},
+    {id:"B",type:"DROPOFF",name:"Target Distribution", addr:"850 Commerce Dr, Indianapolis IN",time:"11:30 AM",status:"active",  gate:"Enter Gate 4 · Use Intercom",bol:"BOL-2024-8822"},
+    {id:"C",type:"FUEL",   name:"Pilot Travel Center", addr:"I-70 Exit 104, Indianapolis IN",  time:"12:15 PM",status:"pending", gate:"Truck parking Row C",         bol:"—"},
+    {id:"D",type:"DROPOFF",name:"Home Depot Warehouse",addr:"500 Industrial Pkwy, Columbus OH",time:"3:45 PM", status:"pending", gate:"Gate 2 · Appt Required",      bol:"BOL-2024-8823"},
+  ];
+  const ss={complete:{color:"#22c55e",bg:"#22c55e22"},active:{color:"#f59e0b",bg:"#f59e0b22"},pending:{color:"#475569",bg:"#0c1520"}};
+  const tc={PICKUP:"#3b82f6",DROPOFF:"#f59e0b",FUEL:"#8b5cf6"};
+  const ti={PICKUP:"📥",DROPOFF:"📤",FUEL:"⛽"};
+  const timeline=stops.map((s,i)=>`
+    <div onclick="setActiveStop(${i})" style="width:34px;height:34px;border-radius:50%;background:${s.status==="complete"?"#22c55e":s.status==="active"?"#f59e0b":"#1e3a4a"};display:flex;align-items:center;justify-content:center;color:${s.status==="pending"?"#475569":"#0f1923"};font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;${s.status==="active"?"box-shadow:0 0 14px #f59e0b;":""}">${s.id}</div>
+    ${i<stops.length-1?`<div style="flex:1;height:2px;background:${i<1?'#22c55e':'#1e3a4a'}"></div>`:''}`).join("");
+  const cards=stops.map((s,i)=>{
+    const a=state.activeStop===i;
+    const extra=a?`<div style="margin-top:14px;background:#0c1520;border-radius:10px;padding:12px">
+      <div style="color:#94a3b8;font-size:10px;font-family:monospace;letter-spacing:1px;margin-bottom:6px">GATE INSTRUCTIONS</div>
+      <div style="color:#f59e0b;font-size:12px;font-family:monospace">📍 ${s.gate}</div>
+      ${s.bol!=="—"?`<button style="margin-top:10px;background:#3b82f622;border:1px solid #3b82f6;color:#3b82f6;padding:7px 14px;border-radius:8px;font-family:monospace;font-size:11px;cursor:pointer">📄 View BOL: ${s.bol}</button>`:''}
+    </div>`:'';
+    return `<div onclick="setActiveStop(${i})" style="background:${a?tc[s.type]+'11':'#1a2a3a'};border:1px solid ${a?tc[s.type]:'#1e3a4a'};border-radius:14px;padding:16px;cursor:pointer;transition:all 0.2s">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="width:40px;height:40px;border-radius:10px;flex-shrink:0;background:${tc[s.type]}22;display:flex;align-items:center;justify-content:center;font-size:20px">${ti[s.type]}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
+            <span style="color:${tc[s.type]};font-size:10px;font-family:monospace;letter-spacing:1px">${s.type}</span>
+            <span style="color:${ss[s.status].color};font-size:10px;font-family:monospace;background:${ss[s.status].bg};padding:3px 8px;border-radius:20px">${s.status.toUpperCase()}</span>
+          </div>
+          <div style="color:#e2e8f0;font-family:'Oswald',sans-serif;font-size:15px;margin-top:3px">${s.name}</div>
+          <div style="color:#64748b;font-size:11px;font-family:monospace;margin-top:2px;word-break:break-word">${s.addr}</div>
+          <div style="color:#64748b;font-size:10px;font-family:monospace;margin-top:5px">${s.time} · ${s.bol}</div>
+        </div>
+      </div>${extra}
+    </div>`;}).join("");
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div class="section-title">LOAD MANIFEST</div>
+    <div style="color:#f59e0b;font-family:monospace;font-size:12px;background:#f59e0b18;padding:5px 12px;border-radius:20px">4 STOPS · 1 DONE</div>
+  </div>
+  <div style="display:flex;align-items:center">${timeline}</div>
+  ${cards}`;
+}
+
+/* ════════════════════ FIND RELOAD ════════════════════ */
+function findReloadHTML() {
+  const loads=[
+    {id:1,origin:"Columbus, OH",    dest:"Pittsburgh, PA",deadhead:"12 mi",rate:"$850",  hours:3.5,type:"Dry Van",weight:"32,000 lbs",pickup:"4:00 PM",alert:false},
+    {id:2,origin:"Columbus, OH",    dest:"Cleveland, OH", deadhead:"8 mi", rate:"$620",  hours:2.8,type:"Dry Van",weight:"28,500 lbs",pickup:"3:30 PM",alert:false},
+    {id:3,origin:"Reynoldsburg, OH",dest:"Detroit, MI",   deadhead:"22 mi",rate:"$1,100",hours:5.2,type:"Reefer", weight:"40,000 lbs",pickup:"6:00 PM",alert:true},
+  ];
+  const cards=loads.map(l=>{
+    const sel=state.selectedLoad===l.id;
+    const extra=sel?`<div style="margin-top:14px;border-top:1px solid #1e3a4a;padding-top:14px">
+      ${l.alert?`<div style="background:#f59e0b11;border:1px solid #f59e0b44;border-radius:10px;padding:12px;margin-bottom:10px"><div style="color:#f59e0b;font-size:11px;font-family:monospace">⚠ Warning: This load requires 8h sleeper berth rest before pickup.</div></div>`:''}
+      <button class="btn-green">ACCEPT &amp; ADD TO ROUTE →</button>
+    </div>`:'';
+    return `<div onclick="setSelectedLoad(${l.id})" style="background:${sel?'#f59e0b11':'#1a2a3a'};border:1px solid ${sel?'#f59e0b':'#1e3a4a'};border-radius:14px;padding:16px;cursor:pointer;transition:all 0.2s;position:relative">
+      ${l.alert?`<div style="position:absolute;top:14px;right:14px;background:#f59e0b22;border:1px solid #f59e0b;color:#f59e0b;font-size:9px;font-family:monospace;padding:3px 7px;border-radius:5px">⚠ NEEDS REST</div>`:''}
+      <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start">
+        <div>
+          <div style="color:#22c55e;font-family:monospace;font-size:10px;margin-bottom:5px">↑ ${l.deadhead} deadhead</div>
+          <div style="color:#e2e8f0;font-family:'Oswald',sans-serif;font-size:15px">${l.origin}</div>
+          <div style="color:#64748b;font-size:11px;font-family:monospace;margin-top:2px">→ ${l.dest}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+            <span style="color:#64748b;font-size:10px;font-family:monospace">📦 ${l.type}</span>
+            <span style="color:#64748b;font-size:10px;font-family:monospace">⚖ ${l.weight}</span>
+            <span style="color:#64748b;font-size:10px;font-family:monospace">🕒 ${l.hours}h</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="color:#22c55e;font-family:'Oswald',sans-serif;font-size:24px;font-weight:700">${l.rate}</div>
+          <div style="color:#64748b;font-size:10px;font-family:monospace;margin-top:3px">Pickup ${l.pickup}</div>
+        </div>
+      </div>${extra}
+    </div>`;}).join("");
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div class="section-title">FIND RELOAD</div>
+    <div style="color:#22c55e;font-family:monospace;font-size:11px;background:#22c55e22;padding:5px 12px;border-radius:20px">3 MATCHES FOUND</div>
+  </div>
+  <div class="card card-blue">
+    <div style="color:#3b82f6;font-size:11px;font-family:monospace;letter-spacing:1px;margin-bottom:6px">SEARCHING NEAR DESTINATION</div>
+    <div style="color:#e2e8f0;font-family:'Oswald',sans-serif;font-size:17px">Columbus, OH &nbsp;±50 mi</div>
+    <div style="color:#64748b;font-size:11px;font-family:monospace;margin-top:5px">4.0h drive time remaining · Dry Van profile active</div>
+  </div>${cards}`;
+}
+
+/* ════════════════════ SMART FILTERS ════════════════════ */
+function smartFiltersHTML() {
+  const times=["2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","Tomorrow AM"];
+  const dirs=["Any","Home Base","Chicago, IL","Nashville, TN"];
+  const tOpts=[{name:"Dry Van",icon:"📦"},{name:"Reefer",icon:"❄️"},{name:"Flatbed",icon:"🔲"},{name:"Any",icon:"🔀"}];
+  const timeBtns=times.map(t=>`<button onclick="setReloadWindow('${t}')" style="background:${state.reloadWindow===t?'#8b5cf622':'#0c1520'};border:1px solid ${state.reloadWindow===t?'#8b5cf6':'#1e3a4a'};color:${state.reloadWindow===t?'#8b5cf6':'#475569'};border-radius:8px;padding:8px 12px;font-family:monospace;font-size:11px;cursor:pointer">${t}</button>`).join("");
+  const dirBtns=dirs.map(d=>`<button onclick="setDirection('${d}')" style="background:${state.direction===d?'#3b82f622':'#0c1520'};border:1px solid ${state.direction===d?'#3b82f6':'#1e3a4a'};color:${state.direction===d?'#3b82f6':'#475569'};border-radius:8px;padding:8px 12px;font-family:monospace;font-size:11px;cursor:pointer">${d}</button>`).join("");
+  const trailerBtns=tOpts.map(({name,icon})=>`<button onclick="setTrailerFilter('${name}')" style="flex:1;background:${state.trailerFilter===name?'#f59e0b22':'#0c1520'};border:1px solid ${state.trailerFilter===name?'#f59e0b':'#1e3a4a'};border-radius:10px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer"><span style="font-size:22px">${icon}</span><span style="color:${state.trailerFilter===name?'#f59e0b':'#475569'};font-size:9px;font-family:monospace">${name.toUpperCase()}</span></button>`).join("");
+  return `
+  <div class="section-title">SMART FILTERS</div>
+  <div style="background:${state.autoReload?'#22c55e11':'#1a2a3a'};border:1px solid ${state.autoReload?'#22c55e':'#1e3a4a'};border-radius:14px;padding:18px" class="toggle-wrap">
+    <div><div style="color:${state.autoReload?'#22c55e':'#e2e8f0'};font-family:'Oswald',sans-serif;font-size:17px;letter-spacing:1px">AUTO-RELOAD</div><div style="color:#64748b;font-size:11px;font-family:monospace;margin-top:3px">Notify when a match is found near destination</div></div>
+    <div class="toggle${state.autoReload?' on-green':''}" onclick="toggleAutoReload()"><div class="toggle-knob"></div></div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="label">DESTINATION BUFFER</div>
+      <div id="radius-display" style="color:#f59e0b;font-family:monospace;font-size:15px;font-weight:700">${state.radius} mi</div>
+    </div>
+    <input type="range" min="0" max="100" value="${state.radius}" oninput="setRadius(this.value)"/>
+    <div style="display:flex;justify-content:space-between;margin-top:5px">
+      <span style="color:#475569;font-size:10px;font-family:monospace">0 mi</span>
+      <span style="color:#475569;font-size:10px;font-family:monospace">100 mi</span>
+    </div>
+  </div>
+  <div class="card toggle-wrap">
+    <div><div style="color:#e2e8f0;font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:1px">CLOCK GUARD (HOS)</div><div style="color:#64748b;font-size:11px;font-family:monospace;margin-top:3px">Only show loads that fit remaining drive time</div></div>
+    <div class="toggle${state.hosGuard?' on-blue':''}" onclick="toggleHOS()"><div class="toggle-knob"></div></div>
+  </div>
+  <div class="card"><div class="label" style="margin-bottom:12px">LOAD TYPE (TRAILER MATCH)</div><div style="display:flex;gap:8px">${trailerBtns}</div></div>
+  <div class="card"><div class="label" style="margin-bottom:12px">RELOAD WINDOW (EARLIEST PICKUP)</div><div style="display:flex;gap:8px;flex-wrap:wrap">${timeBtns}</div></div>
+  <div class="card"><div class="label" style="margin-bottom:12px">BACK-TO-BASE DIRECTION</div><div style="display:flex;gap:8px;flex-wrap:wrap">${dirBtns}</div></div>
+  <button class="btn-amber">APPLY FILTERS &amp; SEARCH</button>
+  <div style="height:8px"></div>`;
+}
+
+/* ════════════════════ STATE SETTERS ════════════════════ */
+function setDuty(s)          { state.duty=s;                        renderScreen(); }
+function setTrailer(s)       { state.trailer=s;                     renderScreen(); }
+function toggleNoLoads()     { state.noLoads=!state.noLoads;        renderScreen(); }
+function setActiveStop(i)    { state.activeStop=state.activeStop===i?-1:i; renderScreen(); }
+function setSelectedLoad(id) { state.selectedLoad=state.selectedLoad===id?null:id; renderScreen(); }
+function toggleHOS()         { state.hosGuard=!state.hosGuard;      renderScreen(); }
+function setReloadWindow(t)  { state.reloadWindow=t;                renderScreen(); }
+function setTrailerFilter(t) { state.trailerFilter=t;               renderScreen(); }
+function setDirection(d)     { state.direction=d;                   renderScreen(); }
+function toggleAutoReload()  { state.autoReload=!state.autoReload;  renderScreen(); }
+function setRadius(v) {
+  state.radius=+v;
+  const el=document.getElementById("radius-display");
+  if(el) el.textContent=v+" mi";
+}
+
+renderNav();
+renderScreen();
+</script>
+</body>
+</html>

@@ -1,0 +1,1230 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Reconciliation System - Dark Theme</title>
+    <style>
+        /* ===================================
+           RESET & BASE STYLES
+           =================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2d3561 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e4e7eb;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===================================
+           MAIN CONTAINER
+           =================================== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===================================
+           PAGE HEADER
+           =================================== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            /* -webkit-text-fill-color: transparent; */
+            background-clip: text;
+            text-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .contract-info {
+            font-size: 18px;
+            color: #a8b2d1;
+            background: rgba(102, 126, 234, 0.15);
+            padding: 14px 35px;
+            border-radius: 30px;
+            display: inline-block;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===================================
+           CONTENT WRAPPER
+           =================================== */
+        .content-wrapper {
+            background: rgba(26, 31, 58, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 45px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ===================================
+           SECTION TITLES
+           =================================== */
+        .section-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #e4e7eb;
+            margin-bottom: 30px;
+            padding-bottom: 18px;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%) 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 8px rgba(102, 126, 234, 0.5));
+        }
+
+        /* ===================================
+           COMPARISON GRID
+           =================================== */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 35px;
+            margin-bottom: 50px;
+        }
+
+        /* ===================================
+           RECORD CARDS
+           =================================== */
+        .record-card {
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.2) 0%, 
+                rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 20px;
+            padding: 35px;
+            color: #e4e7eb;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Gradient overlay effect */
+        .record-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        .record-card:hover::before {
+            left: 100%;
+        }
+
+        .record-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 50px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .record-card.client-card {
+            background: linear-gradient(135deg, 
+                rgba(240, 147, 251, 0.2) 0%, 
+                rgba(245, 87, 108, 0.2) 100%);
+            border-color: rgba(240, 147, 251, 0.3);
+        }
+
+        .record-card.client-card:hover {
+            box-shadow: 
+                0 20px 50px rgba(240, 147, 251, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(240, 147, 251, 0.5);
+        }
+
+        /* ===================================
+           CARD COMPONENTS
+           =================================== */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .card-title-section {
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            background: rgba(0, 200, 83, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 2px solid rgba(0, 200, 83, 0.4);
+            color: #00e676;
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.2);
+        }
+
+        /* ===================================
+           CARD CONTENT SECTIONS
+           =================================== */
+        .card-content {
+            display: grid;
+            gap: 22px;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 22px;
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .info-section:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .info-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .info-value {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.7;
+            color: #fff;
+        }
+
+        /* ===================================
+           DETAILS GRID
+           =================================== */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .detail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .detail-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ===================================
+           DISCREPANCY ALERT
+           =================================== */
+        .discrepancy-alert {
+            background: rgba(255, 107, 107, 0.15);
+            border: 2px solid rgba(255, 107, 107, 0.4);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+            }
+        }
+
+        .alert-icon {
+            font-size: 28px;
+            animation: shake 0.5s ease infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #ff6b6b;
+        }
+
+        .alert-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ===================================
+           SUMMARY SECTION
+           =================================== */
+        .summary-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        /* ===================================
+           SUMMARY CARDS
+           =================================== */
+        .summary-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .summary-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .summary-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .summary-card-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .summary-card-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .match-indicator {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4);
+        }
+
+        .amount-positive {
+            color: #00e676;
+            text-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+        }
+
+        .amount-negative {
+            color: #ff6b6b;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+
+        /* ===================================
+           ACTION BUTTONS
+           =================================== */
+        .action-section {
+            display: flex;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            flex: 1;
+            min-width: 280px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .action-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .action-button:active {
+            transform: translateY(-1px);
+        }
+
+        .action-button.secondary {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-button.secondary:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.15) 0%, 
+                rgba(255, 255, 255, 0.08) 100%);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .button-icon {
+            font-size: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===================================
+           MODAL STYLES
+           =================================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 100%);
+            border-radius: 24px;
+            padding: 45px;
+            max-width: 550px;
+            width: 90%;
+            color: #e4e7eb;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #667eea;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 45px;
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(0, 200, 83, 0.5);
+            animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.9;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .modal-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            padding: 16px 35px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+        }
+
+        /* ===================================
+           LOADING STATE
+           =================================== */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===================================
+           SCROLLBAR STYLING
+           =================================== */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #653a8f 100%);
+        }
+
+        /* ===================================
+           RESPONSIVE DESIGN
+           =================================== */
+        @media (max-width: 1200px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 25px 15px;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .contract-info {
+                font-size: 16px;
+                padding: 12px 25px;
+            }
+
+            .content-wrapper {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .comparison-grid {
+                gap: 25px;
+            }
+
+            .record-card {
+                padding: 25px 20px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-section {
+                flex-direction: column;
+            }
+
+            .action-button {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 35px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .contract-info {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .card-title {
+                font-size: 20px;
+            }
+
+            .summary-card-value {
+                font-size: 30px;
+            }
+
+            .modal-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1>📊 Trip Reconciliation System</h1>
+            <div class="contract-info">Contract L-789012</div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- RECORD COMPARISON SECTION -->
+            <div class="section-title">
+                <span class="section-icon">🔍</span>
+                Record Comparison
+            </div>
+
+            <div class="comparison-grid">
+                <!-- CONTRACTOR'S DAILY LOGS CARD -->
+                <div class="record-card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-title">Your Daily Logs</div>
+                            <div class="card-subtitle">TBK-101 • Contractor Records</div>
+                        </div>
+                        <div class="status-badge">✓ Active</div>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="info-section">
+                            <div class="info-label">Route Information</div>
+                            <div class="info-value">
+                                Mumbai → Delhi<br>
+                                Location: Dehali, DN
+                            </div>
+                        </div>
+
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Start Odometer</div>
+                                <div class="detail-value">45,200 km</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">End Odometer</div>
+                                <div class="detail-value">45,480 km</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Total Distance</div>
+                                <div class="detail-value">280 km</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Duration</div>
+                                <div class="detail-value">13-14 hrs</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CLIENT'S RECORD CARD -->
+                <div class="record-card client-card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-title">Client's Record</div>
+                            <div class="card-subtitle">INV-2023-01 • Invoice Data</div>
+                        </div>
+                        <div class="status-badge">✓ Active</div>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="info-section">
+                            <div class="info-label">Route Information</div>
+                            <div class="info-value">
+                                Mumbai → Delhi → Chennai<br>
+                                Location: Chennai, DL
+                            </div>
+                        </div>
+
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Recorded Distance</div>
+                                <div class="detail-value">310 km</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Recorded Duration</div>
+                                <div class="detail-value">15-16 hrs</div>
+                            </div>
+                        </div>
+
+                        <div class="discrepancy-alert">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Discrepancy Detected</div>
+                                <div class="alert-text">+30 km distance • +2 hours duration</div>
+                            </div>
+                        </div>
+
+                        <div class="info-section" style="margin-top: 15px;">
+                            <div class="info-label">Approval Status</div>
+                            <div class="info-value">🕐 Pending Approval</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECONCILIATION SUMMARY SECTION -->
+            <div class="section-title">
+                <span class="section-icon">📋</span>
+                Reconciliation Summary
+            </div>
+
+            <div class="summary-section">
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-card-header">
+                            <div class="summary-icon">🚚</div>
+                            <div class="summary-card-label">Total Trips</div>
+                        </div>
+                        <div class="summary-card-value">
+                            2850/2850
+                            <span class="match-indicator">✓</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-card-header">
+                            <div class="summary-icon">⏱️</div>
+                            <div class="summary-card-label">Waiting Time Fees</div>
+                        </div>
+                        <div class="summary-card-value">₹4,500</div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-card-header">
+                            <div class="summary-icon">💰</div>
+                            <div class="summary-card-label">Final Adjustment</div>
+                        </div>
+                        <div class="summary-card-value amount-positive">+₹6,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS SECTION -->
+            <div class="section-title">
+                <span class="section-icon">⚡</span>
+                Actions
+            </div>
+
+            <div class="action-section">
+                <button class="action-button secondary" onclick="exportReport()">
+                    <span class="button-icon">📄</span>
+                    Export Report
+                </button>
+                <button class="action-button" onclick="finalizeAndApprove()">
+                    <span class="button-icon">✓</span>
+                    Finalize & Approve Billing
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Success!</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="success-icon">✓</div>
+                <div class="modal-text">
+                    Billing has been finalized and approved successfully.<br><br>
+                    <strong>Contract L-789012</strong> is now ready for invoicing.<br>
+                    Total amount: <strong>₹10,500</strong>
+                </div>
+                <button class="modal-button" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===================================
+        // DATA STRUCTURE
+        // ===================================
+        const tripReconciliationData = {
+            contractId: "L-789012",
+            contractor: {
+                id: "TBK-101",
+                status: "Active",
+                route: {
+                    from: "Mumbai",
+                    to: "Delhi",
+                    location: "Dehali, DN"
+                },
+                odometer: {
+                    start: 45200,
+                    end: 45480,
+                    distance: 280
+                },
+                duration: {
+                    min: 13,
+                    max: 14,
+                    unit: "hours"
+                },
+                totalTrips: 2850
+            },
+            client: {
+                invoiceId: "INV-2023-01",
+                status: "Active",
+                route: {
+                    from: "Mumbai",
+                    to: "Delhi",
+                    via: "Chennai",
+                    location: "Chennai, DL"
+                },
+                recordedDistance: 310,
+                recordedDuration: {
+                    min: 15,
+                    max: 16,
+                    unit: "hours"
+                },
+                totalTrips: 2850,
+                approvalStatus: "Pending"
+            },
+            discrepancy: {
+                distance: 30,
+                duration: 2,
+                unit: "km/hours"
+            },
+            financial: {
+                waitingTimeFees: 4500,
+                finalAdjustment: 6000,
+                totalAmount: 10500,
+                currency: "INR"
+            },
+            reconciliationDate: new Date().toISOString()
+        };
+
+        // ===================================
+        // UTILITY FUNCTIONS
+        // ===================================
+        
+        // Format currency with Indian Rupee symbol
+        function formatCurrency(amount) {
+            return `₹${amount.toLocaleString('en-IN')}`;
+        }
+
+        // Calculate distance between two odometer readings
+        function calculateDistance(start, end) {
+            return end - start;
+        }
+
+        // Calculate discrepancy percentage
+        function calculateDiscrepancyPercentage(contractor, client) {
+            return ((Math.abs(client - contractor) / contractor) * 100).toFixed(2);
+        }
+
+        // ===================================
+        // ACTION HANDLERS
+        // ===================================
+        
+        // Finalize and approve billing
+        function finalizeAndApprove() {
+            const button = event.target;
+            const originalHTML = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<span class="spinner"></span> Processing...';
+            button.classList.add('loading');
+
+            // Simulate API call
+            setTimeout(() => {
+                // Show success modal
+                document.getElementById('successModal').classList.add('active');
+                
+                // Reset button
+                button.innerHTML = originalHTML;
+                button.classList.remove('loading');
+
+                // Log data
+                console.log('✅ Billing Approved:', tripReconciliationData);
+                console.log('📊 Total Amount:', formatCurrency(tripReconciliationData.financial.totalAmount));
+            }, 2000);
+        }
+
+        // Export report as JSON
+        function exportReport() {
+            const button = event.target;
+            const originalHTML = button.innerHTML;
+            
+            button.innerHTML = '<span class="spinner"></span> Generating...';
+            button.classList.add('loading');
+
+            setTimeout(() => {
+                const report = {
+                    ...tripReconciliationData,
+                    exportDate: new Date().toISOString(),
+                    calculations: {
+                        distance: calculateDistance(
+                            tripReconciliationData.contractor.odometer.start,
+                            tripReconciliationData.contractor.odometer.end
+                        ),
+                        discrepancyPercentage: calculateDiscrepancyPercentage(
+                            tripReconciliationData.contractor.odometer.distance,
+                            tripReconciliationData.client.recordedDistance
+                        )
+                    }
+                };
+
+                console.log('📄 Exporting Report:', report);
+                
+                // Create downloadable JSON file
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(report, null, 2));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `reconciliation_report_${tripReconciliationData.contractId}.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+
+                button.innerHTML = originalHTML;
+                button.classList.remove('loading');
+
+                alert('✅ Report exported successfully!');
+            }, 1500);
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        // ===================================
+        // INITIALIZATION
+        // ===================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Trip Reconciliation System Initialized');
+            console.log('📝 Contract ID:', tripReconciliationData.contractId);
+            console.log('🔍 Discrepancy:', {
+                distance: tripReconciliationData.discrepancy.distance + ' km',
+                duration: tripReconciliationData.discrepancy.duration + ' hours'
+            });
+            
+            // Display summary in console
+            console.table({
+                'Contractor Distance': tripReconciliationData.contractor.odometer.distance + ' km',
+                'Client Distance': tripReconciliationData.client.recordedDistance + ' km',
+                'Discrepancy': tripReconciliationData.discrepancy.distance + ' km',
+                'Waiting Fees': formatCurrency(tripReconciliationData.financial.waitingTimeFees),
+                'Adjustment': formatCurrency(tripReconciliationData.financial.finalAdjustment),
+                'Total': formatCurrency(tripReconciliationData.financial.totalAmount)
+            });
+        });
+
+        // ===================================
+        // EVENT LISTENERS
+        // ===================================
+        
+        // Close modal when clicking outside
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // ESC to close modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            // Ctrl+E to export
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                exportReport();
+            }
+        });
+
+        // ===================================
+        // ADDITIONAL FUNCTIONS
+        // ===================================
+        
+        // Add new reconciliation entry (placeholder for future use)
+        function addReconciliationEntry(newData) {
+            console.log('➕ Adding new reconciliation entry:', newData);
+            // This can be extended to add entries to a database
+        }
+
+        // Check reconciliation status
+        function checkReconciliationStatus() {
+            const status = {
+                tripsMatched: tripReconciliationData.contractor.totalTrips === tripReconciliationData.client.totalTrips,
+                hasDiscrepancy: tripReconciliationData.discrepancy.distance > 0 || tripReconciliationData.discrepancy.duration > 0,
+                pendingApproval: tripReconciliationData.client.approvalStatus === 'Pending',
+                totalAmount: tripReconciliationData.financial.totalAmount
+            };
+            
+            console.log('📊 Reconciliation Status:', status);
+            return status;
+        }
+    </script>
+</body>
+</html>

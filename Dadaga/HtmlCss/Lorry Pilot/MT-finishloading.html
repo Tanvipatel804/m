@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Tracking Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            padding-bottom: 80px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+
+        .status-text {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 26px;
+            background: white;
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+
+        .toggle-slider {
+            width: 22px;
+            height: 22px;
+            background: #4CAF50;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding: 10px 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .status-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .status-tabs::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .status-tabs::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .tab {
+            min-width: fit-content;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 15px;
+            text-align: center;
+            transition: 0.3s;
+            color: #333;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .tab .tab-icon {
+            font-size: 20px;
+        }
+
+        .tab .tab-text {
+            font-size: 17px;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .tab.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        /* Main content */
+        .main-content {
+            position: relative;
+            height: calc(100vh - 210px);
+            min-height: 500px;
+            background-color: #f9fafb;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+        }
+
+        .title-header {
+            font: bold 25px arial, sans-serif;
+            padding: 10px 20px;
+            text-decoration: underline;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .timer-section {
+            text-align: center;
+            margin: 32px 0;
+        }
+
+        .timer {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            color: #4a6cf7;
+            margin-bottom: 30px;/
+        }
+
+        .info-cards {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 30px
+        }
+
+        .card {
+            background: #eef2f6;
+            padding: 20px;
+            border-radius: 10px;
+            width: 40%;
+        }
+
+        .btns {
+            background: #eef2f6;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: #888;
+            margin: 0;
+        }
+
+        .card h3 {
+            margin: 5px 0 0;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .start-btn:hover {
+            background: #27ae60;
+        }
+
+        .call-btn {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            border: 2px solid #4a6cf7;
+            color: #4a6cf7;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .call-btn:hover {
+            background: #4a6cf7;
+            color: white;
+        }
+
+        /* Fixed Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 1000;
+        }
+
+        #startLoadingBtn, #digiBtn {
+            width: 100%;
+            padding: 15px;
+            margin: -10px 20px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            order: -1;
+        }
+
+        #startLoadingBtn:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+        }
+
+        #startLoadingBtn i {
+            font-size: 24px;
+        }
+
+        .nav-items-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px 20px;
+            transition: 0.3s;
+            flex: 1;
+            border: none;
+            background: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .nav-item.active {
+            color: #4CAF50;
+        }
+
+        .nav-item i {
+            font-size: 24px;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Ride Card - Draggable Bottom Sheet */
+        .ride-card {
+            position: fixed;
+            bottom: 65px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.2);
+            height: 200px;
+            transition: height 0.3s ease;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .ride-card.expanded {
+            height: 650px;
+            overflow-y: auto;
+        }
+
+        .ride-card.dragging {
+            transition: none;
+        }
+
+        /* Drag Handle */
+        .drag-handle {
+            width: 100%;
+            padding: 10px 0;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .drag-bar {
+            width: 50px;
+            height: 5px;
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        /* Preview Section - Visible when collapsed */
+        .preview-section {
+            padding: 0 20px 10px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .ride-card.expanded .preview-section {
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .preview-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .preview-left-btn,
+        .preview-right-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #F3F4F6;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .preview-left-btn:hover,
+        .preview-right-btn:hover {
+            background: #E5E7EB;
+            transform: scale(1.05);
+        }
+
+        .preview-left-btn i,
+        .preview-right-btn i {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .preview-center-text {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            /* color: #666; */
+            color: rgb(95, 95, 249);
+            font-weight: 500;
+        }
+
+        .preview-center-text span {
+            border: 2px solid darkgoldenrod;
+            border-radius: 85%;
+            font-weight: bolder;
+            padding: 0 5px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 10px 0;
+        }
+
+        .preview-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .preview-name {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .preview-call-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #4CAF50;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .preview-call-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .preview-call-btn i {
+            font-size: 18px;
+            color: white;
+        }
+
+        .preview-profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+
+        .preview-profile-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .preview-profile-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .start-uberx-btn {
+            width: 100%;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .start-uberx-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        .start-uberx-btn:active {
+            transform: translateY(0);
+        }
+
+        .ride-card.expanded .start-uberx-btn {
+            display: none;
+        }
+
+        /* Ride Card Content */
+        .ride-content {
+            padding: 0 20px 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            height: 760px;
+        }
+
+        .ride-card.expanded .ride-content {
+            opacity: 1;
+        }
+
+        /* Trip Header with Supplier Info */
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .supplier-info {
+            flex: 1;
+        }
+
+        .supplier-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .supplier-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #FFA500;
+        }
+
+        .supplier-rating i {
+            font-size: 14px;
+        }
+
+        .supplier-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        .action-icon.call {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .action-icon.profile {
+            background: #E5E7EB;
+            overflow: hidden;
+        }
+
+        .action-icon.profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .action-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Destination Section */
+        .destination-section {
+            background: #F9FAFB;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .destination-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .destination-icon {
+            font-size: 24px;
+            color: #e74c3c;
+        }
+
+        .destination-info {
+            flex: 1;
+        }
+
+        .destination-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .destination-eta {
+            font-size: 14px;
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        .destination-address {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* Receiver & Load Section */
+
+        .load-info {
+            text-align: right;
+        }
+
+        .load-weight {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .load-type {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Payment Section */
+        .payment-section {
+            background: #F9FAFB;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* .payment-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+        } */
+
+        .payment-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .payment-item {
+            text-align: center;
+        }
+
+        .payment-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .payment-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Note Section */
+        .note-section {
+            margin-bottom: 20px;
+        }
+
+        .note-section textarea {
+            width: 100%;
+            height: 80px;
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .note-section textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        /* Report Buttons */
+        .report-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .report-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .report-btn.breakdown {
+            background: #fee;
+            color: #c33;
+        }
+
+        .report-btn.issue {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Trip Map (simple visual) */
+        .trip-map {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(to bottom, #e3f2fd, #f5f5f5);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .route-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: repeating-linear-gradient(to right,
+                    #4CAF50 0px,
+                    #4CAF50 10px,
+                    transparent 10px,
+                    transparent 20px);
+            transform: translateY(-50%);
+        }
+
+        .marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #4CAF50;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .marker:hover {
+            transform: rotate(-45deg) scale(1.2);
+        }
+
+        .marker.start {
+            top: 50%;
+            left: 10%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            background: #2196F3;
+        }
+
+        .marker.end {
+            top: 50%;
+            right: 10%;
+            transform: translate(50%, -50%) rotate(-45deg);
+            background: #f44336;
+        }
+
+        .marker::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .truck-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            animation: moveTruck 3s ease-in-out infinite;
+        }
+
+        @keyframes moveTruck {
+
+            0%,
+            100% {
+                left: 30%;
+            }
+
+            50% {
+                left: 70%;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 15px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .tab {
+                font-size: 13px;
+                padding: 8px 15px;
+            }
+
+            .tab .tab-icon {
+                font-size: 16px;
+            }
+
+            .tab .tab-text {
+                font-size: 14px;
+            }
+
+            .ride-card.expanded {
+                height: 600px;
+            }
+
+            .payment-details {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .info-cards {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .card {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .status-toggle {
+                padding: 6px 12px;
+            }
+
+            .status-text {
+                font-size: 12px;
+            }
+
+            .supplier-name {
+                font-size: 18px;
+            }
+
+            .destination-name {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="menu-icon">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="logo">📦Trip ID: TRPS#0001</div>
+            </div>
+            <div class="header-right">
+                <div class="status-toggle">
+                    <span class="status-text">ONLINE</span>
+                    <div class="toggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-tabs">
+            <div class="tab">
+                <span class="tab-icon">📋</span>
+                <span class="tab-text">To pick up</span>
+            </div>
+            <div class="tab">
+                <span class="tab-icon">⏳</span>
+                <span class="tab-text">Wait to load</span>
+            </div>
+            <div class="tab active">
+                <span class="tab-icon">⌛</span>
+                <span class="tab-text">Finish loading</span>
+            </div>
+            <div class="tab">
+                <span class="tab-icon">🔄</span>
+                <span class="tab-text">In Transit</span>
+            </div>
+            <div class="tab">
+                <span class="tab-icon">⏳</span>
+                <span class="tab-text">Wait to Unload</span>
+            </div>
+            <div class="tab">
+                <span class="tab-icon">⌛</span>
+                <span class="tab-text">Finish Unloading</span>
+            </div>
+            <div class="tab">
+                <span class="tab-icon">✅</span>
+                <span class="tab-text">Delivery Completed</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- <div class="title-header">Loading in Progress</div> -->
+            <div class="timer-section">
+                <div class="timer">00:00:00</div>
+                <p class="status">⏱️ Running Time for Loading</p>
+            </div>
+            <div class="info-cards">
+                <div class="card">
+                     <p class="label">AFTER LOADING</p>
+                    <img src="C:\Users\DADAGA\Pictures\Saved Pictures\2option.jpg" style="width: 150px; height: 90px;">
+                    <!-- <div class="icon">📋</div>
+                    <p class="label">AFTER LOADING</p>
+                    <h3>Attach Image</h3> -->
+                </div>
+
+                <div class="card">
+                    <p class="label">WEIGHT SLIP</p>
+                      <img src="C:\Users\DADAGA\Pictures\Saved Pictures\weight-slip.png" style="width: 150px; height: 90px;">
+                    <!-- <div class="icon">⚖️</div>
+                    <p class="label">WEIGHT SLIP</p>
+                    <h3>Attach Image</h3> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Draggable Ride Card -->
+    <div class="ride-card" id="rideCard">
+        <div class="drag-handle" id="dragHandle">
+            <div class="drag-bar"></div>
+        </div>
+
+        <!-- Preview Section (visible when collapsed) -->
+        <div class="preview-section">
+            <!-- First Row: Rider notified with side buttons -->
+            <div class="preview-row">
+                <button class="preview-left-btn">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
+                <div class="preview-center-text">Loading in Progress<br><span>02:30</span></div>
+                <button class="preview-right-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="divider"></div>
+            <!-- Second Row: Joely with call and profile buttons -->
+            <div class="preview-name-row">
+               <button class="preview-profile-btn">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E"
+                        alt="Profile">
+                </button>
+
+                <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9
+                        (200loads)</span></div>
+               
+                <button class="preview-call-btn">
+                    <i class="fas fa-phone"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="ride-content">
+            <!-- start -->
+              <div class="preview-row">
+                <button class="preview-left-btn">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
+                <div class="preview-center-text">Loading in Progress<br><span>02:30</span></div>
+                <button class="preview-right-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="divider"></div> 
+            <div class="preview-name-row" style="background-color: #F9FAFB; border-radius: 10px;padding: 15px;">
+                 <button class="preview-profile-btn">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E"
+                        alt="Profile">
+                </button>
+
+                <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9
+                        (200loads)</span></div>
+
+               <button class="preview-call-btn">
+                    <i class="fas fa-phone"></i>
+                </button>
+            </div>
+             <!-- end -->
+            <!-- Destination Section -->
+            <div class="destination-section">
+                <div class="destination-header">
+                    <i class="fas fa-map-marker-alt destination-icon"></i>
+                    <div class="destination-info">
+                        <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                        <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                        <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001
+                        </div>
+                    </div>
+                    <div class="supplier-actions">
+                        <button class="action-icon call">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <div class="action-icon profile">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E"
+                                alt="Profile">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="destination-section">
+                <div class="destination-header">
+                    <i class="fas fa-clock"></i>
+                    <div class="destination-info">
+                        <div class="destination-name">Schedule Time</div>
+                        <div class="destination-eta"> ETA: 12:00pm</div>
+                        <div class="destination-address">Duration 2:30 hrs •󠁏 Distance: 21.5 Miles</div>
+                    </div>
+                    <div class="load-info">
+                        <div class="load-weight">5000 KG</div>
+                        <div class="load-type">Cement (Packaged)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="payment-section">
+                <!-- <div class="payment-header">Payment</div> -->
+                <div class="payment-details">
+                    <div class="payment-item">
+                        <div class="payment-label">Amount</div>
+                        <div class="payment-value">₹20,000</div>
+                    </div>
+                    <div class="payment-item">
+                        <div class="payment-label">Method</div>
+                        <div class="payment-value">CASH</div>
+                    </div>
+                    <div class="payment-item">
+                        <div class="payment-label">By</div>
+                        <div class="payment-value">Receiver</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note Textarea -->
+            <div class="note-section">
+                <textarea id="txtnote" placeholder="Note here...">Please...submit proof photo copy.</textarea>
+            </div>
+
+            <!-- Report Buttons -->
+            <div class="report-buttons">
+                <button class="report-btn breakdown">
+                    🚨 REPORT BREAKDOWN
+                </button>
+                <button class="report-btn issue">
+                    ⚠️ REPORT ISSUE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item" id="startLoadingBtn"> FINISH LOADING </button>            
+         <button class="nav-item" id="digiBtn" style="background: #b3adad;"><a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\update-LD\MT-pickup-BOL.html" style="text-decoration: none;color:white ;">Digital BOL</a></button>
+        <div class="nav-items-row">
+            <button class="nav-item">
+                <i class="fas fa-message"></i>
+                <span>Message</span>
+            </button>
+            <button class="nav-item">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet</span>
+            </button>
+            <button class="nav-item active">
+                <i class="fas fa-route"></i>
+                <span>Trip</span>
+            </button>
+            <button class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+        </div>
+    </div> 
+
+    <script>
+        // Timer functionality
+        let timerInterval = null;
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+        let isTimerRunning = false;
+
+        function updateTimerDisplay() {
+            const timerElement = document.querySelector('.timer');
+            const formattedHours = String(hours).padStart(2, '0');
+            const formattedMinutes = String(minutes).padStart(2, '0');
+            const formattedSeconds = String(seconds).padStart(2, '0');
+            timerElement.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+        }
+
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    if (seconds === 60) {
+                        seconds = 0;
+                        minutes++;
+                        if (minutes === 60) {
+                            minutes = 0;
+                            hours++;
+                        }
+                    }
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+            }
+        }
+
+        // Auto-start timer when page loads (simulating loading already started)
+        window.addEventListener('load', function () {
+            startTimer();
+        });
+
+        // Attach finish loading button functionality
+        document.getElementById('startLoadingBtn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            stopTimer();
+            const finalTime = document.querySelector('.timer').textContent;
+            if (confirm(`Finish loading?\nTotal time: ${finalTime}`)) {
+                alert(`Loading completed!\nTotal duration: ${finalTime}`);
+            } else {
+                // Resume timer if user cancels
+                startTimer();
+            }
+        });
+
+
+        // Toggle functionality
+        const toggle = document.querySelector('.toggle');
+        const slider = document.querySelector('.toggle-slider');
+        const statusText = document.querySelector('.status-text');
+
+        toggle.addEventListener('click', () => {
+            if (slider.style.right === '2px' || !slider.style.right) {
+                slider.style.right = 'calc(100% - 28px)';
+                slider.style.background = '#e74c3c';
+                statusText.textContent = 'OFFLINE';
+            } else {
+                slider.style.right = '2px';
+                slider.style.background = '#4CAF50';
+                statusText.textContent = 'ONLINE';
+            }
+        });
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Bottom Navigation
+        const navItems = document.querySelectorAll('.nav-item:not(#startLoadingBtn)');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // RIDE CARD DRAG FUNCTIONALITY
+        const rideCard = document.getElementById('rideCard');
+        const dragHandle = document.getElementById('dragHandle');
+
+        let isDragging = false;
+        let startY = 0;
+        let currentCardHeight = 170;
+        const minHeight = 170;
+        const maxHeight = 650;
+        const expandThreshold = 250;
+
+        // Mouse events
+        dragHandle.addEventListener('mousedown', startDrag);
+        rideCard.addEventListener('mousedown', function (e) {
+            if (!rideCard.classList.contains('expanded')) {
+                startDrag(e);
+            }
+        });
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', stopDrag);
+
+        // Touch events
+        dragHandle.addEventListener('touchstart', startDrag, { passive: false });
+        rideCard.addEventListener('touchstart', function (e) {
+            if (!rideCard.classList.contains('expanded')) {
+                startDrag(e);
+            }
+        }, { passive: false });
+        document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('touchend', stopDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            currentCardHeight = rideCard.offsetHeight;
+
+            rideCard.classList.add('dragging');
+            rideCard.style.transition = 'none';
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function onDrag(e) {
+            if (!isDragging) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            const deltaY = startY - currentY; // Positive when dragging up
+            let newHeight = currentCardHeight + deltaY;
+
+            // Constrain height between min and max
+            newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+
+            // Apply new height
+            rideCard.style.height = newHeight + 'px';
+
+            // Update expanded class based on height
+            if (newHeight > expandThreshold) {
+                rideCard.classList.add('expanded');
+            } else {
+                rideCard.classList.remove('expanded');
+            }
+        }
+
+        function stopDrag() {
+            if (!isDragging) return;
+
+            isDragging = false;
+            rideCard.classList.remove('dragging');
+
+            const currentHeight = rideCard.offsetHeight;
+
+            // Enable transition for smooth snapping
+            rideCard.style.transition = 'height 0.3s ease';
+
+            // Snap to min or max based on current height
+            if (currentHeight < (minHeight + maxHeight) / 2) {
+                // Snap to minimum (collapsed)
+                rideCard.style.height = minHeight + 'px';
+                rideCard.classList.remove('expanded');
+            } else {
+                // Snap to maximum (expanded)
+                rideCard.style.height = maxHeight + 'px';
+                rideCard.classList.add('expanded');
+            }
+        }
+
+        // Click on drag handle to toggle
+        dragHandle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            rideCard.style.transition = 'height 0.3s ease';
+            rideCard.classList.toggle('expanded');
+
+            if (rideCard.classList.contains('expanded')) {
+                rideCard.style.height = maxHeight + 'px';
+            } else {
+                rideCard.style.height = minHeight + 'px';
+            }
+        });
+
+        // Preview Section Buttons
+        document.querySelector('.preview-left-btn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            alert('Opening preferences...');
+        });
+
+        document.querySelector('.preview-right-btn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            alert('Opening trip sequence...');
+        });
+
+        document.querySelector('.preview-call-btn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            alert('Calling Joely...');
+        });
+
+        document.querySelector('.preview-profile-btn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            alert('Viewing Joely\'s profile...');
+        });
+
+        // Call and Profile Actions
+        document.querySelector('.action-icon.call').addEventListener('click', function () {
+            alert('Calling supplier...');
+        });
+
+        document.querySelector('.action-icon.profile').addEventListener('click', function () {
+            alert('Viewing supplier profile...');
+        });
+
+        // Report buttons
+        document.querySelector('.report-btn.breakdown').addEventListener('click', () => {
+            if (confirm('Are you sure you want to report a truck breakdown?')) {
+                alert('Breakdown report submitted. Support team has been notified.');
+            }
+        });
+
+        document.querySelector('.report-btn.issue').addEventListener('click', () => {
+            if (confirm('Do you want to report an issue with this delivery?')) {
+                alert('Issue report submitted. Our team will contact you shortly.');
+            }
+        });
+
+        // Marker interactions
+        document.querySelectorAll('.marker').forEach(marker => {
+            marker.addEventListener('click', () => {
+                const isStart = marker.classList.contains('start');
+                alert(isStart ? 'Pickup Location' : 'Drop-off Location');
+            });
+        });
+    </script>
+</body>
+
+</html>

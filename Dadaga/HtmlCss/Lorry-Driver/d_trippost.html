@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Post #9482 - Driver View</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-color: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .app-header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Main Content */
+        .content-scroll {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .status-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .status-pill {
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .trip-number {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        h3 {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Driver Info Card */
+        .driver-info-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .driver-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .driver-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .driver-info {
+            flex: 1;
+        }
+
+        .driver-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .driver-id, .driver-rating {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .driver-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .driver-detail-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .driver-detail-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .driver-detail-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Earnings Card */
+        .earnings-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            text-align: center;
+        }
+
+        .earnings-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .earnings-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .trip-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item i {
+            color: var(--accent-primary);
+        }
+
+        /* Customer Info */
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .customer-details {
+            flex: 1;
+        }
+
+        .customer-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .payment-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Route Timeline */
+        .route-timeline {
+            position: relative;
+        }
+
+        .route-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            position: relative;
+        }
+
+        .route-point .dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--success);
+            border-radius: 50%;
+            margin-top: 6px;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            flex-shrink: 0;
+        }
+
+        .route-point.delivery .dot {
+            background-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        .route-content {
+            flex: 1;
+        }
+
+        .route-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .location-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .location-address {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .time-window {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .time-window i {
+            color: var(--accent-primary);
+        }
+
+        .route-connector {
+            margin-left: 5px;
+            padding: 16px 0;
+            border-left: 2px dashed var(--border-color);
+            margin-top: -6px;
+            margin-bottom: -6px;
+        }
+
+        /* Detail Grid */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .detail-item .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .detail-item .value {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Cargo Container */
+        .cargo-container {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .vehicle-photo-section {
+            flex-shrink: 0;
+            width: 140px;
+        }
+
+        .vehicle-photo-section .photo-item {
+            width: 100%;
+            aspect-ratio: 1;
+        }
+
+        .cargo-container .detail-grid {
+            flex: 1;
+        }
+
+        /* Photo Gallery */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            background: rgba(255, 255, 255, 0.03);
+            aspect-ratio: 1;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.02);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Upload Container */
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .upload-card {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .upload-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--success);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .upload-content {
+            flex: 1;
+        }
+
+        .upload-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .uploaded-file {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Requirements List */
+        .requirements-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .requirements-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.9rem;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .requirements-list li i {
+            color: var(--success);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .requirement-content h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .requirement-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Action Footer */
+        .action-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            padding: 16px 20px 24px 20px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid var(--border-color);
+            max-width: 480px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Modal */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .image-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .image-modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .modal-image {
+            max-width: 400px;
+            max-height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .modal-label {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 400px) {
+            .earnings-amount {
+                font-size: 2rem;
+            }
+
+            .trip-meta {
+                gap: 16px;
+            }
+
+            .driver-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <button class="icon-btn back-btn" aria-label="Go back" onclick="goBack()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h1>Trip Post #9482</h1>
+            <button class="icon-btn" aria-label="Options" onclick="showOptions()">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content-scroll">
+            <!-- Status -->
+            <div class="status-container">
+                <span class="status-pill">Driver Accepted</span>
+                <span class="trip-number">Trip #9482</span>
+            </div>
+
+            <!-- Driver Information Card -->
+            <section class="card driver-info-card">
+                <div class="driver-header">
+                    <div class="driver-avatar">RK</div>
+                    <div class="driver-info">
+                        <div class="driver-name">Rajesh Kumar</div>
+                        <div class="driver-id">Driver ID: DRV-2847</div>
+                        <div class="driver-rating">Rating: *****</div>
+                    </div>
+                </div>
+                <div class="driver-details">
+                    <div class="driver-detail-item">
+                        <div class="driver-detail-label">Contact Number</div>
+                        <div class="driver-detail-value">+91 98765 43210</div>
+                    </div>
+                    <div class="driver-detail-item">
+                        <div class="driver-detail-label">Email</div>
+                        <div class="driver-detail-value">rajesh.k@transport.com</div>
+                    </div>
+                    <div class="driver-detail-item">
+                        <div class="driver-detail-label">Vehicle Number</div>
+                        <div class="driver-detail-value">MH-12-AB-1234</div>
+                    </div>
+                    <div class="driver-detail-item">
+                        <div class="driver-detail-label">Experience</div>
+                        <div class="driver-detail-value">8 Years</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Earnings Card -->
+            <section class="card earnings-card">
+                <div class="earnings-label">Total Fare</div>
+                <div class="earnings-amount">₹20,450</div>
+                <div class="trip-meta">
+                    <div class="meta-item">
+                        <i class="fa-solid fa-road"></i>
+                        <span>840 mi</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>48 hours</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer & Payment -->
+            <section class="card">
+                <h3>Customer & Payment</h3>
+                <div class="customer-info">
+                    <div class="avatar-placeholder">MI</div>
+                    <div class="customer-details">
+                        <div class="customer-name">Mr. Iyer</div>
+                        <div class="payment-info">Cash • Paid by Receiver</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Route Timeline -->
+            <section class="card">
+                <h3>Route Details</h3>
+                <div class="route-timeline">
+                    <div class="route-point pickup">
+                        <div class="dot"></div>
+                        <div class="route-content">
+                            <div class="route-label">Pickup</div>
+                            <div class="location-name">Dallas Distribution Center</div>
+                            <div class="location-address">2500 S Cockrell Hill Rd, Dallas, TX 75211</div>
+                            <div class="time-window">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Today, 08:00 AM - 12:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="route-connector"></div>
+                    <div class="route-point delivery">
+                        <div class="dot"></div>
+                        <div class="route-content">
+                            <div class="route-label">Delivery</div>
+                            <div class="location-name">Chicago Hub</div>
+                            <div class="location-address">3800 W 73rd St, Chicago, IL 60629</div>
+                            <div class="time-window">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Tomorrow, 10:00 AM - 02:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cargo Details -->
+            <section class="card">
+                <h3>Cargo Details</h3>
+                <div class="cargo-container">
+                    <div class="vehicle-photo-section">
+                        <div class="photo-item" onclick="openImageModal('Vehicle Type', 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=400&h=300&fit=crop')">
+                            <div class="photo-placeholder">
+                                <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=400&h=300&fit=crop" alt="Open Box Truck">
+                            </div>
+                            <div class="photo-label">Open Box Truck</div>
+                        </div>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Commodity</span>
+                            <span class="value">Auto Parts</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Quantity</span>
+                            <span class="value">24 Pallets</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Dimensions (L×W×H)</span>
+                            <span class="value">48" × 40" × 42"</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Loading Facility</span>
+                            <span class="value">Available</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Driver Submitted Documents -->
+            <section class="card">
+                <h3>Driver Submitted Documents</h3>
+                <div class="photo-gallery" style="margin-bottom: 16px;">
+                    <div class="photo-item" onclick="openImageModal('Cargo Material', 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop')">
+                        <div class="photo-placeholder">
+                            <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop" alt="Cargo Material">
+                        </div>
+                        <div class="photo-label">Cargo Material</div>
+                    </div>
+                </div>
+                <div class="upload-container">
+                    <div class="upload-card">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-check-circle"></i>
+                        </div>
+                        <div class="upload-content">
+                            <div class="upload-title">Driver's License</div>
+                            <div class="uploaded-file">DL_RajeshKumar_2024.pdf</div>
+                        </div>
+                        <button class="view-btn" onclick="viewDocument('license')">View</button>
+                    </div>
+                    <div class="upload-card">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-check-circle"></i>
+                        </div>
+                        <div class="upload-content">
+                            <div class="upload-title">Insurance Certificate</div>
+                            <div class="uploaded-file">Insurance_Vehicle_2024.pdf</div>
+                        </div>
+                        <button class="view-btn" onclick="viewDocument('insurance')">View</button>
+                    </div>
+                    <div class="upload-card">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-check-circle"></i>
+                        </div>
+                        <div class="upload-content">
+                            <div class="upload-title">Vehicle Registration</div>
+                            <div class="uploaded-file">RC_MH12AB1234.pdf</div>
+                        </div>
+                        <button class="view-btn" onclick="viewDocument('registration')">View</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services & Compliances -->
+            <section class="card">
+                <h3>Services & Compliances</h3>
+                <ul class="requirements-list">
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>Insurance Included</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>API Tracking Integration</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>Loading/Unloading Facility Available</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Requirements & Notes -->
+            <section class="card">
+                <h3>Requirements & Special Notes</h3>
+                <ul class="requirements-list">
+                    <li>
+                        <i class="fa-solid fa-file-lines"></i>
+                        <div class="requirement-content">
+                            <h4>Customer Notes</h4>
+                            <p>Driver background checks required. Contact warehouse 24 hours prior to pickup.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div class="requirement-content">
+                            <h4>Background Check</h4>
+                            <p>✓ Verified and Approved - Background check completed on Jan 20, 2026</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </main>
+
+        <!-- Action Footer -->
+        <footer class="action-footer">
+            <button class="btn btn-secondary" onclick="contactCustomer()">
+                <i class="fa-solid fa-phone"></i>
+                Contact
+            </button>
+            <button class="btn btn-primary" onclick="startTrip()">
+            <ion-icon name="navigate-outline" style="margin-right: 8px; vertical-align: middle;"></ion-icon>
+            Start Trip
+        </button>
+    </footer>
+
+    <!-- Image Zoom Modal -->
+    <div class="image-modal" id="imageModal" onclick="closeImageModal(event)">
+        <div class="image-modal-content">
+            <button class="modal-close" onclick="closeImageModal(event)">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+            <img id="modalImage" src="" alt="Zoomed image">
+            <div class="modal-label" id="modalLabel"></div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            alert('Going back to trip list...');
+            // window.history.back();
+        }
+
+        function showOptions() {
+            alert('Options menu');
+        }
+
+        function contactCustomer() {
+            const phone = '+91 98765 43210';
+            if (confirm(`Call customer at ${phone}?`)) {
+                window.location.href = `tel:${phone}`;
+            }
+        }
+
+        function startTrip() {
+            if (confirm('Are you ready to start this trip?')) {
+                alert('Trip started! GPS tracking enabled. Drive safely!');
+                // Here you would typically:
+                // 1. Update trip status to "In Progress"
+                // 2. Enable GPS tracking
+                // 3. Navigate to active trip view
+            }
+        }
+
+        function viewDocument(docType) {
+            const docNames = {
+                'license': 'DL_RajeshKumar_2024.pdf',
+                'insurance': 'Insurance_Vehicle_2024.pdf',
+                'registration': 'RC_MH12AB1234.pdf'
+            };
+            
+            alert(`Opening ${docNames[docType]}...\n\nIn a real app, this would open the PDF viewer.`);
+            // In production, this would open a PDF viewer or download the document
+        }
+
+        function openImageModal(element) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalLabel = document.getElementById('modalLabel');
+            const img = element.querySelector('img');
+            const labelElement = element.querySelector('.value');
+
+            modalImage.src = img.src;
+            modalLabel.textContent = labelElement ? labelElement.textContent : 'Cargo Material';
+
+            document.body.classList.add('modal-open');
+            modal.classList.add('active');
+        }
+
+        function closeImageModal(event) {
+            if (event.target.classList.contains('image-modal') ||
+                event.target.classList.contains('modal-close') ||
+                event.target.closest('.modal-close')) {
+                const modal = document.getElementById('imageModal');
+                document.body.classList.remove('modal-open');
+                modal.classList.remove('active');
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('imageModal');
+                if (modal.classList.contains('active')) {
+                    document.body.classList.remove('modal-open');
+                    modal.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long-Term Contract Request - Driver</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .notification-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Section */
+        .notification-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .contract-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 10px;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .request-time {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Quick Info Cards */
+        .quick-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            background: #252525;
+        }
+
+        .info-card {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #3a3a3a;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 25px;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .content-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Contract Duration Display */
+        .contract-duration {
+            background: #2d2d2d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .duration-row {
+            display: grid;
+            /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px;
+        }
+
+        .duration-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .duration-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .duration-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .duration-highlight {
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        /* Route Display */
+        .route-display {
+            background: #2d2d2d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .route-point {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .route-point:last-child {
+            margin-bottom: 0;
+        }
+
+        .route-point::after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea 0%, #666 100%);
+        }
+
+        .route-point:last-child::after {
+            display: none;
+        }
+
+        .route-marker {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .route-marker.destination {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+
+        .route-details {
+            flex: 1;
+        }
+
+        .route-location {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .route-info {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .route-stats {
+            display: flex;
+            gap: 20px;
+            padding: 15px;
+            background: #252525;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-icon {
+            font-size: 18px;
+        }
+
+        .stat-text {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #fff;
+            margin-left: 4px;
+        }
+
+        /* Detail Grid */
+        .detail-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .detail-grid-two-col {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .detail-value.highlight {
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Frequency Display */
+        .frequency-display {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .day-badge {
+            padding: 6px 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Compliance List */
+        .compliance-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .compliance-item {
+            background: #2d2d2d;
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid #4caf50;
+        }
+
+        .compliance-icon {
+            color: #4caf50;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Company Info Card */
+        .company-card {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #3a3a3a;
+        }
+
+        .company-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .company-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .company-type {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .company-details {
+            display: grid;
+            gap: 12px;
+        }
+
+        .company-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .detail-icon {
+            width: 36px;
+            height: 36px;
+            background: #3a3a3a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .pricing-card {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            text-align: center;
+        }
+
+        .pricing-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .pricing-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .pricing-period {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            padding: 25px;
+            background: #252525;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .action-button {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .accept-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .accept-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .decline-btn {
+            background: #3a3a3a;
+            color: #fff;
+            border: 2px solid #555;
+        }
+
+        .decline-btn:hover {
+            background: #4a4a4a;
+            border-color: #666;
+        }
+
+        /* Toggle Switch */
+        .toggle-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: #3a3a3a;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        }
+
+        .toggle-slider {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+        /* Policy Item */
+        .policy-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #1e293b;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin-top: 25px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #334155;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .policy-text {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .policy-text span {
+            color: #3b82f6;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .route-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .detail-grid-two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .duration-row {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Notification Animation */
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="notification-container">
+        <!-- Header -->
+        <div class="notification-header">
+            <div class="status-badge pulse-animation">🔔 NEW CONTRACT REQUEST</div>
+            <h1 class="header-title">
+                Long-Term Contract #LTC-2025-001
+                <span class="contract-badge">6 Months</span>
+            </h1>
+            <p class="request-time">Received: Today at 10:30 AM</p>
+        </div>
+
+        <!-- Quick Info Cards -->
+        <div class="quick-info">
+            <div class="info-card">
+                <div class="info-label">Duration</div>
+                <div class="info-value">180 Days</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Trucks Needed</div>
+                <div class="info-value">3 Units</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Est. Trips</div>
+                <div class="info-value">120/month</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Total Value</div>
+                <div class="info-value">₹18.5L</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Route Type</div>
+                <div class="info-value">Point-to-Point</div>
+            </div>
+        </div>
+
+        <!-- Contract Duration -->
+        <div class="content-section">
+            <div class="section-header">
+                <div class="section-icon">📅</div>
+                <h2 class="section-title">Contract Duration</h2>
+            </div>
+            <div class="contract-duration">
+                <div class="duration-row">
+                    <div class="duration-item">
+                        <div class="duration-label">Start Date</div>
+                        <div class="duration-value">February 1, 2026</div>
+                    </div>
+                    <div class="duration-item">
+                        <div class="duration-label">End Date</div>
+                        <div class="duration-value">July 31, 2026</div>
+                    </div>
+                    <div class="duration-item">
+                        <div class="duration-label">Operating Hours</div>
+                        <div class="duration-value duration-highlight">06:00 AM - 08:00 PM</div>
+                    </div>
+                    <div class="duration-item">
+                        <div class="duration-label">Total Duration</div>
+                        <div class="duration-value">180 Days (6 Months)</div>
+                    </div>
+                </div>
+                <div class="duration-row">
+                    <!-- <div class="duration-item">
+                        <div class="duration-label">Total Duration</div>
+                        <div class="duration-value">180 Days (6 Months)</div>
+                    </div> -->
+                    <div class="duration-item">
+                        <div class="duration-label">Frequency</div>
+                        <div class="duration-value">Daily</div>
+                        <div class="frequency-display">
+                            <span class="day-badge">Mon</span>
+                            <span class="day-badge">Tue</span>
+                            <span class="day-badge">Wed</span>
+                            <span class="day-badge">Thu</span>
+                            <span class="day-badge">Fri</span>
+                            <span class="day-badge">Sat</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Route Information -->
+        <div class="content-section">
+            <div class="section-header">
+                <div class="section-icon">📍</div>
+                <h2 class="section-title">Route Details</h2>
+            </div>
+            <div class="route-display">
+                <div class="route-point">
+                    <div class="route-marker">A</div>
+                    <div class="route-details">
+                        <div class="route-location">Manufacturing Plant, MIDC Industrial Area, Pune</div>
+                        <div class="route-info">📍 Primary Pickup Location</div>
+                    </div>
+                </div>
+                <div class="route-point">
+                    <div class="route-marker destination">B</div>
+                    <div class="route-details">
+                        <div class="route-location">Distribution Hub, Vashi, Navi Mumbai</div>
+                        <div class="route-info">📍 Primary Destination</div>
+                    </div>
+                </div>
+                <div class="route-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">📏</span>
+                        <span class="stat-text">Avg Distance:<span class="stat-value">145 KM</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🚛</span>
+                        <span class="stat-text">Est. Trips:<span class="stat-value">120/month</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🔄</span>
+                        <span class="stat-text">Route Type:<span class="stat-value">Point-to-Point</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle & Cargo Requirements -->
+        <div class="content-section">
+            <div class="section-header">
+                <div class="section-icon">🚛</div>
+                <h2 class="section-title">Vehicle & Cargo Requirements</h2>
+            </div>
+            <div class="detail-grid-two-col">
+                <div class="detail-item">
+                    <div class="detail-label">Number of Trucks</div>
+                    <div class="detail-value highlight">3 Vehicles Required</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Driver Required</div>
+                    <div class="detail-value">
+                        <div class="toggle-display">
+                            <div class="toggle-switch active">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <span>Yes (With Driver)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Truck Photo</div>
+                    <div class="detail-value"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg"
+                            alt="Photo of Truck"
+                            style="width: 60px; height: 60px; object-fit: fill; border-radius: 10px;"><br>Open-Box Truck
+                        (30*40*50)</div>
+                    <!-- 20 Feet Container Truck (5T-7T) -->
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Truck Capacity</div>
+                    <div class="detail-value highlight">16000 kg capacity</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Goods Type & Name</div>
+                    <div class="detail-value">Electronics & Components(Consumer Electronics & Parts)</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Loading/Unloading Facility</div>
+                    <div class="detail-value">
+                        <div class="toggle-display">
+                            <div class="toggle-switch active">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <span>Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-item full-width">
+                    <div class="detail-label">Special Instructions</div>
+                    <div class="detail-value">Temperature-controlled environment required. Handle with extreme care -
+                        fragile electronic components. GPS tracking mandatory. Ensure covered transport during monsoon
+                        season.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service & Compliance -->
+        <div class="content-section">
+            <div class="section-header">
+                <div class="section-icon">✓</div>
+                <h2 class="section-title">Service & Compliance Requirements</h2>
+            </div>
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-icon">✓</span>
+                    <span>Valid Commercial Vehicle Registration</span>
+                </div>
+                <div class="compliance-item">
+                    <span class="compliance-icon">✓</span>
+                    <span>Comprehensive Insurance Coverage</span>
+                </div>
+                <div class="compliance-item">
+                    <span class="compliance-icon">✓</span>
+                    <span>GPS Tracking System Installation</span>
+                </div>
+                <div class="compliance-item">
+                    <span class="compliance-icon">✓</span>
+                    <span>Driver License Verification & Background Check</span>
+                </div>
+                <div class="compliance-item">
+                    <span class="compliance-icon">✓</span>
+                    <span>Regular Vehicle Maintenance Records</span>
+                </div>
+                <div class="compliance-item">
+                    <span class="compliance-icon">✓</span>
+                    <span>Safety Equipment & First Aid Kit</span>
+                </div>
+            </div>
+             <div style="margin: 30px 15px;">
+            <span class="compliance-icon">✓</span> 
+            <span style="text-decoration: underline; color: #3b82f6;">Terms & conditions and cancellation policy</span><span> accepted by Customer</span>
+        </div>
+        </div>
+       
+
+        <!-- Pricing Details -->
+        <div class="content-section">
+            <div class="section-header">
+                <div class="section-icon">💰</div>
+                <h2 class="section-title">Pricing & Payment Terms</h2>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-label">Total Contract Amount</div>
+                    <div class="pricing-amount">₹18,50,000</div>
+                    <div class="pricing-period">For 6 Months</div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-label">Monthly Cycle Amount</div>
+                    <div class="pricing-amount">₹3,08,333</div>
+                    <div class="pricing-period">Per Month</div>
+                </div>
+            </div>
+            <div class="detail-grid" style="margin-top: 20px;">
+                <div class="detail-item">
+                    <div class="detail-label">Payment Terms</div>
+                    <div class="detail-value">Net 30 days</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Other Expenses</div>
+                    <div class="detail-value">Fuel, toll charges, and driver accommodation included in contract amount
+                    </div>
+                </div>
+                <div class="detail-item full-width">
+                    <div class="detail-label">Additional Comments</div>
+                    <div class="detail-value">Performance bonus of ₹50,000 will be awarded for maintaining 100% on-time
+                        delivery throughout the contract period. Penalty clause applies for delays exceeding 2 hours
+                        without valid reason.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Information -->
+        <div class="content-section">
+            <div class="section-header">
+                <div class="section-icon">🏢</div>
+                <h2 class="section-title">Client Information</h2>
+            </div>
+            <div class="company-card">
+                <div class="company-header">
+                    <div class="company-logo">TE</div>
+                    <div class="company-info">
+                        <h3>TechElectronics Pvt. Ltd.</h3>
+                        <div class="company-type">Electronics Manufacturing Company</div>
+                    </div>
+                  <div class="policy-item" style="margin-left: 295px; font-size: 15px;border-radius: 50px; width: 200px;
+    justify-content: center; color: #3b82f6;">agreement File</div>
+                </div>
+                <div class="company-details">
+                    <div class="company-detail">
+                        <div class="detail-icon">👤</div>
+                        <div>
+                            <div style="font-size: 12px; color: #999;">Contact Person</div>
+                            <div style="font-weight: 600;">Mr. Anil Deshmukh</div>
+                        </div>
+                    </div>
+                    <div class="company-detail">
+                        <div class="detail-icon">☎️</div>
+                        <div>
+                            <div style="font-size: 12px; color: #999;">Office Number</div>
+                            <div style="font-weight: 600;">+91 20 2345 6789</div>
+                        </div>
+                    </div>
+                    <div class="company-detail">
+                        <div class="detail-icon">📧</div>
+                        <div>
+                            <div style="font-size: 12px; color: #999;">Email Address</div>
+                            <div style="font-weight: 600;">anil.deshmukh@techelectronics.com</div>
+                        </div>
+                    </div>
+                    <div class="company-detail">
+                        <div class="detail-icon">📍</div>
+                        <div>
+                            <div style="font-size: 12px; color: #999;">Company Address</div>
+                            <div style="font-weight: 600;">Plot No. 45, MIDC Industrial Area, Bhosari, Pune - 411026,
+                                Maharashtra</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="policy-item">
+                    <div class="checkbox" id="tnc"></div>
+                    <div class="policy-text">I agreed to the <span>Terms & Conditions and Cancellation Policy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-button accept-btn" onclick="acceptContract()">
+                ✓ Accept Contract
+            </button>
+            <button class="action-button decline-btn" onclick="declineContract()">
+                ✕ Decline
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Sample contract data
+        const contractData = {
+            contractId: 'LTC-2025-001',
+            timestamp: new Date(),
+            duration: {
+                startDate: 'February 1, 2026',
+                endDate: 'July 31, 2026',
+                totalDays: 180,
+                workingHours: '06:00 AM - 08:00 PM',
+                frequency: 'Daily',
+                workingDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            },
+            route: {
+                pickup: 'Manufacturing Plant, MIDC Industrial Area, Pune',
+                destination: 'Distribution Hub, Vashi, Navi Mumbai',
+                distance: '145 KM',
+                estimatedTrips: '120/month',
+                routeType: 'Point-to-Point'
+            },
+            vehicle: {
+                numberOfTrucks: 3,
+                driverRequired: true,
+                truckType: '20 Feet Container Truck (5T-7T)',
+                capacity: '6000 kg',
+                goodsType: 'Electronics & Components',
+                goodsName: 'Consumer Electronics & Parts',
+                loadingFacility: true,
+                specialInstructions: 'Temperature-controlled environment required. Handle with extreme care - fragile electronic components. GPS tracking mandatory. Ensure covered transport during monsoon season.'
+            },
+            compliance: [
+                'Valid Commercial Vehicle Registration',
+                'Comprehensive Insurance Coverage',
+                'GPS Tracking System Installation',
+                'Driver License Verification & Background Check',
+                'Regular Vehicle Maintenance Records',
+                'Safety Equipment & First Aid Kit'
+            ],
+            pricing: {
+                totalAmount: 1850000,
+                monthlyAmount: 308333,
+                paymentTerms: 'Net 30 days',
+                otherExpenses: 'Fuel, toll charges, and driver accommodation included',
+                additionalComments: 'Performance bonus of ₹50,000 for 100% on-time delivery. Penalty for delays exceeding 2 hours.'
+            },
+            client: {
+                companyName: 'TechElectronics Pvt. Ltd.',
+                contactPerson: 'Mr. Anil Deshmukh',
+                phone: '+91 98765 12345',
+                officePhone: '+91 20 2345 6789',
+                email: 'anil.deshmukh@techelectronics.com',
+                address: 'Plot No. 45, MIDC Industrial Area, Bhosari, Pune - 411026, Maharashtra'
+            }
+        };
+
+        // Accept contract function
+        function acceptContract() {
+            const confirmed = confirm(
+                `Are you sure you want to accept this long-term contract?\n\n` +
+                `Contract ID: ${contractData.contractId}\n` +
+                `Duration: ${contractData.duration.totalDays} days (${contractData.duration.startDate} to ${contractData.duration.endDate})\n` +
+                `Trucks Required: ${contractData.vehicle.numberOfTrucks}\n` +
+                `Total Contract Value: ₹${contractData.pricing.totalAmount.toLocaleString()}\n\n` +
+                `This is a commitment for 6 months.`
+            );
+
+            if (confirmed) {
+                console.log('Contract Accepted:', contractData);
+                alert(
+                    '✅ Contract Accepted Successfully!\n\n' +
+                    'Next Steps:\n' +
+                    '1. You will receive the contract documents via email\n' +
+                    '2. Please review and sign the agreement\n' +
+                    '3. Submit required compliance documents\n' +
+                    '4. Vehicle inspection will be scheduled\n' +
+                    '5. Contract begins on ' + contractData.duration.startDate
+                );
+                // In real app, redirect to contract management page
+                window.location.href="C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/15 MT-maintrip.html";
+            }
+        }
+
+        // Decline contract function
+        function declineContract() {
+            const reason = prompt('Please provide a reason for declining this contract (optional):');
+
+            console.log('Contract Declined:', {
+                contractId: contractData.contractId,
+                reason: reason || 'No reason provided'
+            });
+
+            alert('Contract declined. This opportunity will be offered to other drivers.');
+
+            // In real app, redirect back to notifications
+            // window.location.href = '/driver/notifications';
+        }
+
+        // Auto-update received time
+        function updateTimestamp() {
+            const now = new Date();
+            const received = contractData.timestamp;
+            const diff = Math.floor((now - received) / 60000);
+
+            const timeElement = document.querySelector('.request-time');
+            if (diff < 1) {
+                timeElement.textContent = 'Received: Just now';
+            } else if (diff < 60) {
+                timeElement.textContent = `Received: ${diff} minute${diff > 1 ? 's' : ''} ago`;
+            } else {
+                const hours = Math.floor(diff / 60);
+                timeElement.textContent = `Received: ${hours} hour${hours > 1 ? 's' : ''} ago`;
+            }
+        }
+
+        // Update every minute
+        setInterval(updateTimestamp, 60000);
+
+        // Call contact
+        function callContact(phone) {
+            window.location.href = `tel:${phone}`;
+        }
+
+        // Send email
+        function emailContact(email) {
+            window.location.href = `mailto:${email}`;
+        }
+
+        // Add click handlers to contact details
+        document.querySelectorAll('.company-detail').forEach(detail => {
+            detail.style.cursor = 'pointer';
+            detail.addEventListener('click', function () {
+                const text = this.textContent;
+                if (text.includes('@')) {
+                    const email = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+                    if (email) emailContact(email[0]);
+                } else if (text.includes('+91')) {
+                    const phone = text.match(/\+91\s*\d+\s*\d+\s*\d+/);
+                    if (phone) callContact(phone[0].replace(/\s/g, ''));
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

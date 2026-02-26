@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Future Trip</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8e8e8;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: #3d3d3d;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+        }
+
+        h1 {
+            font-size: 25px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            width: 40px;
+            height: 40px;
+            /* background-color: #7cb342;  */
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            color: #000;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .option-btn {
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            position: relative;
+        }
+
+        .option-btn.selected {
+            background: #7cb342;
+            color: white;
+            border-color: #7cb342;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            background: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #7cb342;
+            font-size: 16px;
+        }
+
+        .option-btn.selected .checkmark {
+            display: flex;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #7cb342;
+        }
+
+        .input-with-icon {
+            position: relative;
+            flex: 1;
+        }
+
+        .input-with-icon .icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #7cb342;
+        }
+
+        .input-with-icon input {
+            padding-left: 50px;
+            width: 100%;
+        }
+
+        textarea.input-field {
+            min-height: 100px;
+            width: 100%;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: #7cb342;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #689f38;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 179, 66, 0.4);
+        }
+
+        .date-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .date-btn {
+            flex: 1;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-btn.selected {
+            background: #7cb342;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">‹</button>
+        <h1>Schedule Trip</h1> 
+    </div>
+
+    <!-- <div class="container"> --> 
+    <div class="section">
+        <h2 class="section-title">What is Your Truck Type?</h2>
+        <div class="grid">
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Flatbed</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Flatbed Isolated</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div class="icon">Open Box</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Close Box</div>
+            </button>
+            <button class="option-btn selected" onclick="selectOption(this, 'truck-type')">
+                <div>Stack</div>
+                <span class="checkmark">✓</span>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Reefer</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div class="icon">Dump</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Concrete Transport</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Fly Ash Transport</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Tanker </div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Car Transport</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Fixed Crane</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
+                <div>Special...</div>
+            </button>
+        </div> 
+
+        <!-- Section 2: Load Details --> 
+        <h2 class="section-title">How Heavy & What Kind of Load?</h2>
+
+        <h3 class="subtitle">Maximum Load Weight (KG)</h3>
+        <div class="grid">
+            <button class="option-btn" onclick="selectOption(this, 'weight')">
+                < 1000 KG </button>
+                    <button class="option-btn selected" onclick="selectOption(this, 'weight')">
+                        1000 - 3000 KG
+                        <span class="checkmark">✓</span>
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'weight')">
+                        3000 - 6000 KG
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'weight')">
+                        6000 - 10000 KG
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'weight')">
+                        10000 - 15000 KG
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'weight')">
+                        15000 - 20000 KG
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'weight')">
+                        20000 - 30000 KG
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'weight')">
+                        30000 - 40000 KG
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'weight')">
+                        > 40000 KG
+                    </button>
+        </div>
+
+        <h3 class="subtitle">What Kind of Load?</h3>
+        <div class="grid">
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">📦</div>
+                <div>Packaged / Bags</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">⛰️</div>
+                <div>Powdered / Grain</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🛢️</div>
+                <div>Liquid / Gas</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">❄️</div>
+                <div>Frozen / Food</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🧱</div>
+                <div>Solid</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🧻</div>
+                <div>Bulky</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🍽️</div>
+                <div>Fragile</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🚪🛏️</div>
+                <div>Furniture</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">⚒️</div>
+                <div>fragmented / Scrap</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">⚛︎ 🧬 🧫 🧪</div>
+                <div>Hazardous</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🖥️</div>
+                <div>Electrical</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🏗️</div>
+                <div>Equipments</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🚢</div>
+                <div>Containers</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">💉</div>
+                <div>Medical</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🎻</div>
+                <div>Instrument</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🐘🦏🦒🦁🦓</div>
+                <div>Living Beings</div>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+                <div class="icon">🌱🌱</div>
+                <div>Others</div>
+            </button>
+        </div> 
+
+        <!-- Section 3: Availability & Money -->
+        <h2 class="section-title">When Are You Available 📅🗺️📍</h2>
+
+        <h3 class="subtitle">Available Dates</h3>
+        <div class="input-row">
+            <div class="input-with-icon">
+                <span class="icon">📅</span>
+                <input type="text" class="input-field" placeholder="Start Date">
+            </div>
+            <button class="option-btn" style="flex: 0.4;">Anytime</button>
+        </div>
+
+        <!-- Section 4: Location -->
+        <h2 class="section-title">Where & When Are You Available? 📍</h2>
+
+        <div class="input-row">
+            <div class="input-with-icon">
+                <span class="icon">📍</span>
+                <input type="text" class="input-field" placeholder="Current City, State">
+            </div>
+            <button class="option-btn" style="flex: 0.4;">Anywhere</button>
+        </div>
+
+        <h3 class="subtitle">Your Location<br><br>Where You Want To Go?</h3>
+        <div class="input-row">
+            <div class="input-with-icon">
+                <span class="icon">🌐</span>
+                <input type="text" class="input-field" placeholder="Destination City, State">
+            </div>
+            <button class="option-btn" style="flex: 0.4;">Anywhere</button>
+        </div>
+
+        <h3 class="subtitle">Trip Details</h3>
+        <div class="subtitle" style="font-size: 16px; margin-top: 15px;">Distance Range (KM)</div>
+        <div class="grid">
+            <button class="option-btn" onclick="selectOption(this, 'distance')">
+                < 200 KM </button>
+                    <button class="option-btn" onclick="selectOption(this, 'distance')">
+                        200 - 500 KM
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'distance')">
+                        500-1000 KM
+                    </button>
+                    <button class="option-btn" onclick="selectOption(this, 'distance')">
+                        > 1000 KM
+                    </button>
+        </div>
+
+        <div class="subtitle" style="font-size: 16px; margin-top: 15px;">Trip-type</div>
+        <div class="grid">
+            <button class="option-btn" onclick="selectOption(this, 'trip-type')">
+                Single Trip
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'trip-type')">
+                Return Trip
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'trip-type')">
+                Allotment Trip
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'trip-type')">
+                Long-Term Trip
+            </button>
+        </div> 
+
+        <!-- Section 5: Delivery & Pay --> 
+        <h2 class="section-title">⭐ Delivery, Pay & Ratings</h2>
+
+        <h3 class="subtitle">Delivery Mode</h3>
+        <div class="grid">
+            <button class="option-btn selected" onclick="selectOption(this, 'delivery')">
+                ✓ Regular
+                <span class="checkmark">✓</span>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'delivery')">
+                ⚡ Express
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'delivery')">
+                ⚡ Both
+            </button>
+        </div>
+
+        <h3 class="subtitle">Payment Preffered</h3>
+        
+        <div class="grid grid-2">
+            <button class="option-btn selected" onclick="selectOption(this, 'payment-final')">
+                Cash Preferred
+                <span class="checkmark">✓</span>
+            </button>
+            <button class="option-btn" onclick="selectOption(this, 'payment-final')">
+                Digital Pay
+            </button>
+        </div> 
+
+        <!-- Section 6: Order Time & Final Notes -->
+ 
+        <h2 class="section-title">Order Time & Final Notes ⏰📝</h2>
+
+        <h3 class="subtitle">When Can You Confirm?</h3>
+        <div class="input-row">
+            <button class="date-btn selected">Confirm Order Time</button>
+            <button class="date-btn">Flexible Time</button>
+        </div>
+
+        <h3 class="subtitle">Additional Comments</h3>
+        <textarea class="input-field" id="textspace" placeholder="Write any extra details here..."></textarea>
+
+        <button class="submit-btn" onclick="submitForm()">Post My Trip!</button>
+    </div> 
+
+    <script>
+        function selectOption(btn, group) {
+            const section = btn.closest('.section');
+            const buttons = section.querySelectorAll(`.option-btn[onclick*="${group}"]`);
+            buttons.forEach(b => {
+                b.classList.remove('selected');
+                const check = b.querySelector('.checkmark');
+                if (check) check.style.display = 'none';
+            });
+            btn.classList.add('selected');
+            const checkmark = btn.querySelector('.checkmark');
+            if (checkmark) checkmark.style.display = 'flex';
+        }
+
+        function goBack() {
+            if (confirm('Are you sure you want to go back? Your progress will be lost.')) {
+                window.history.back();
+            }
+        }
+
+        function submitForm() {
+            const formData = {
+                truckType: document.querySelector('.option-btn.selected[onclick*="truck-type"]')?.textContent.trim(),
+                weight: document.querySelector('.option-btn.selected[onclick*="weight"]')?.textContent.trim(),
+                loadType: document.querySelector('.option-btn.selected[onclick*="load-type"]')?.textContent.trim(),
+            };
+
+            console.log('Form submitted:', formData);
+            alert('Trip posted successfully! 🎉');
+        }
+
+        // Smooth scroll behavior
+        document.querySelector('body').style.scrollBehavior = 'smooth';
+    </script>
+</body>
+
+</html>

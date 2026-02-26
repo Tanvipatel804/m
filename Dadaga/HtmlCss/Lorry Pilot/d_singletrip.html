@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Trip Allotment Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-color: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .app-header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        /* Content */
+        .content-scroll {
+            padding: 16px;
+            padding-bottom: 120px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        h3 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        /* 1. Customer & Payment Section */
+        .customer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .call-btn,
+        .msg-btn {
+            width: 42px;
+            height: 42px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(22, 16, 185, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .call-btn:active,
+        .msg-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Route Styling */
+        .hero-route {
+            position: relative;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            margin-bottom: 16px;
+        }
+
+        .route-line-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .route-point {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            padding: 12px 0;
+        }
+
+        .route-point .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            border: 3px solid var(--card-bg);
+            box-shadow: 0 0 0 2px var(--accent-primary);
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .route-point.origin .dot {
+            background: var(--success);
+            box-shadow: 0 0 0 2px var(--success);
+        }
+
+        .route-point.destination .dot {
+            background: var(--danger);
+            box-shadow: 0 0 0 2px var(--danger);
+        }
+
+        .route-point.waypoint .dot {
+            background: var(--warning);
+            box-shadow: 0 0 0 2px var(--warning);
+        }
+
+        .route-point .city {
+            flex: 1;
+            padding: 0 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .route-point .time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .route-connector {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: 7px;
+            padding-left: 9px;
+        }
+
+        .route-connector .line {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg,
+                    var(--accent-primary) 0%,
+                    var(--accent-primary) 50%,
+                    transparent 50%,
+                    transparent 100%);
+            background-size: 2px 8px;
+        }
+
+        .route-connector .details {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0 12px 24px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .route-connector .details span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .route-connector .details i {
+            font-size: 0.75rem;
+            color: var(--accent-primary);
+        }
+
+        /* Route Labels */
+        .route-label {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+
+        .route-label.onward {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        /* Vehicle & Cargo Details */
+        .cargo-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cargo-top-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .truck-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .truck-img-box {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .truck-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        .truck-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .truck-dims {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .cargo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+
+        .data-box {
+            background: var(--bg-color);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .data-box .label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .data-box .value {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Photos Section */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .photo-item {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .photo-item:active {
+            transform: scale(0.95);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .photo-placeholder i {
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .photo-label {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .attach-proof-item .photo-placeholder {
+            border: 2px dashed var(--border-color);
+            background: transparent;
+        }
+
+        /* Requirements & Notes */
+        .requirements-list {
+            list-style: none;
+        }
+
+        .requirements-list li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .requirement-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Services & Compliances */
+        .service-item,
+        .terms-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .checkmark::after {
+            content: "✓";
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .service-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .service-text span {
+            color: var(--accent-primary);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Policy Item */
+        .policy-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .policy-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .policy-text span {
+            color: var(--accent-primary);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Driver Rating */
+        .driver-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .stars {
+            color: var(--warning);
+        }
+
+        .rating-number {
+            color: var(--text-secondary);
+        }
+
+        .trip-count {
+            color: var(--text-secondary);
+        }
+
+        /* Action Footer */
+        .action-footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 480px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid var(--border-color);
+            z-index: 100;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:active {
+            background: var(--border-color);
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .value {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <button class="icon-btn" onclick="javascript:alert('Back')"><i class="fa-solid fa-arrow-left"></i></button>
+            <h1 style="text-align: center;">Single Trip Details<br><span
+                    style="font-size: 0.75rem; color: var(--text-secondary);">Trip ID: #9428</span></h1>
+            <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        </header>
+
+        <main class="content-scroll">
+
+            <section class="card" style="text-align: center; border-color: rgba(59, 130, 246, 0.4);">
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">ESTIMATED EARNINGS
+                </div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-primary);">₹38,900</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">• Cash • Paid by
+                    Receiver
+                </div>
+            </section>
+
+            <!-- Trip Type Section -->
+            <section class="card">
+                <div class="grid-2">
+                    <div><span class="label">Trip Type</span><br><span class="value" id="reviewTripType"
+                            style="font-size: smaller; color:#94a3b8">Single Trip</span>
+                    </div>
+                    <div style="text-align: right;"><span class="label">Booking Way</span><br><span class="value"
+                            id="reviewBookingWay" style="font-size: smaller; color:#94a3b8">Normal</span></div>
+                </div>
+            </section>
+
+            <!-- Customer & Payment -->
+            <section class="card">
+                <h3>Customer & Payment</h3>
+                <div class="customer-row">
+                    <div class="customer-info">
+                        <div class="avatar">MI</div>
+                        <div>
+                            <div style="font-weight: 700;">Mr. Iyer</div>
+                            <div class="driver-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-number">4.8</span>
+                                <span class="trip-count">• 95 loads served</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="tel:+911234567890" class="call-btn" id="callCustomer">
+                        <i class="fa-solid fa-phone"></i>
+                    </a>
+                    <a href="text here" class="msg-btn" id="msgCustomer">
+                        <i class="fa-solid fa-message"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- SINGLE TRIP ROUTE -->
+            <section class="card hero-route">
+                <h3>Trip Route</h3>
+                <div class="route-line-container">
+
+                    <!-- PICKUP -->
+                    <div class="route-point origin">
+                        <div class="dot"></div>
+                        <div class="city">
+                            <span class="route-label onward">Pickup</span><br>
+                            Mundra, CFS<br>
+                            <div class="city" style="font-size: small; color: #5a6171;">All cargo, block-5, gate
+                                12, 370-465</div>
+                        </div>
+                        <div class="time">Oct 24, 8:00 AM</div>
+                    </div>
+
+                    <div class="route-connector">
+                        <div class="line"></div>
+                        <div class="details">
+                            <span class="distance"><i class="fa-solid fa-road"></i> 340 mi</span>
+                            <span class="duration"><i class="fa-solid fa-clock"></i> 5h 30m</span>
+                        </div>
+                    </div>
+
+                    <!-- DELIVERY -->
+                    <div class="route-point waypoint">
+                        <div class="dot"></div>
+                        <div class="city">
+                            <span class="route-label onward">Delivery</span><br>
+                            Mandvi, GMDC<br>
+                            <div class="city" style="font-size:small; color: #5a6171;">Tirupati oil inds, block-2, gate
+                                3, 370-435</div>
+                        </div>
+                        <div class="time">Oct 24, 2:00 PM</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Vehicle & Cargo Details -->
+            <section class="card">
+                <h3>Vehicle & Cargo Details</h3>
+                <div class="cargo-wrapper">
+                    <div class="cargo-top-row">
+                        <div class="truck-container">
+                            <div class="truck-img-box">
+                                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\open box truck.jpg" alt="Truck">
+                            </div>
+                            <div class="truck-label">
+                                Open Box Truck<br>
+                                <span class="truck-dims">48" × 40" × 42"</span>
+                            </div>
+                        </div>
+                        <div class="cargo-grid">
+                            <div class="data-box" style="width: 125px;"><span class="label">Material</span><span
+                                    class="value">Packaged</span>
+                            </div>
+                            <div class="data-box" style="width: 125px;"><span class="label">Commodity</span><span
+                                    class="value">Auto Parts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cargo-grid">
+                        <div class="data-box"><span class="label">Unit</span><span class="value">Pallets</span>
+                        </div>
+                        <div class="data-box"><span class="label">Quantity</span><span class="value">24 Nos</span>
+                        </div>
+                        <div class="data-box"><span class="label">Weight</span><span class="value">2400 Kg</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Material Photos and Proofs -->
+            <section class="card">
+                <h3>Material Photos and Proofs</h3>
+                <div class="photo-gallery">
+                    <div class="photo-item" onclick="openImageModal('Cargo Material', 'Auto Parts')">
+                        <div class="photo-placeholder">
+                            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\box.jpg" alt="Cargo"
+                                style="width:100%; height:100%;object-fit: contain;">
+                        </div>
+                        <div class="photo-label">Cargo Material</div>
+                    </div>
+                    <div class="photo-item attach-proof-item" onclick="handleAttachProof()">
+                        <div class="photo-placeholder">
+                            <i class="fa-solid fa-paperclip"></i>
+                        </div>
+                        <div class="photo-label">Attach Proof</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Requirements & Special Notes -->
+            <section class="card">
+                <h3>Requirements & Special Notes</h3>
+                <ul class="requirements-list">
+                    <li>
+                        <div class="requirement-content">
+                            <p>Driver background checks required. Contact warehouse 24 hours prior to pickup.</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Services & Compliances -->
+            <section class="card">
+                <h3>Services & Compliances</h3>
+                <div class="service-item">
+                    <div class="checkmark"></div>
+                    <div class="service-text">Insurance Included</div>
+                </div>
+
+                <div class="service-item">
+                    <div class="checkmark"></div>
+                    <div class="service-text">API Tracking Integration</div>
+                </div>
+
+                <div class="service-item">
+                    <div class="checkmark"></div>
+                    <div class="service-text">Loading/Unloading Facility Available</div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="terms-item">
+                    <div class="checkmark"></div>
+                    <div class="service-text"><span>Terms & conditions and cancellation policy </span>accepted by
+                        Customer</div>
+                </div>
+            </section>
+
+            <div class="policy-item">
+                <div class="checkbox" id="tnc"></div>
+                <div class="policy-text">I agreed to the <span>Terms & Conditions and Cancellation Policy</span></div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="action-footer">
+        <button class="btn btn-secondary" onclick="handleDecline()">Decline</button>
+        <button class="btn btn-primary" onclick="handleAccept()">Accept Load</button>
+    </footer>
+
+    <script>
+        function handleDecline() {
+            if (confirm("Are you sure you want to decline this load?")) {
+                alert("Load declined.");
+            }
+        }
+
+        function handleAccept() {
+            const tnc = document.getElementById('tnc');
+            const isChecked = tnc.style.background === 'rgb(16, 185, 129)';
+
+            if (!isChecked) {
+                alert("Please agree to the Terms & Conditions first.");
+                return;
+            }
+            //alert("Load accepted! Redirecting to manifest...");
+            window.location.href="C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/15 MT-maintrip.html";
+        }
+
+        // Toggle checkbox
+        document.getElementById('tnc').addEventListener('click', function () {
+            if (this.style.background === 'rgb(16, 185, 129)') {
+                this.style.background = '';
+                this.innerHTML = '';
+            } else {
+                this.style.background = '#10b981';
+                this.innerHTML = '<span style="color: white; font-size: 0.75rem; font-weight: 700;">✓</span>';
+            }
+        });
+
+        // Add visual feedback to call button
+        document.getElementById('callCustomer').addEventListener('click', function () {
+            console.log("Initiating call to Mr. Iyer...");
+        });
+
+        function openImageModal(title, description) {
+            alert(`Opening ${title}: ${description}`);
+        }
+
+        function handleAttachProof() {
+            alert("Opening file upload dialog...");
+        }
+    </script>
+</body>
+
+</html>

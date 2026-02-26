@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorry - Transporter Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a0a0a;
+            color: white;
+        }
+
+        .navigate {
+            background-color: #080808;
+            border: 2px solid #0d0d0d;
+            border-radius: 5px;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        /* Navbar */
+        .navbar {
+            border: 2px solid #464545;
+            border-radius: 30px;
+            height: 60px;
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-icon, .options-icon {
+            width: 45px;
+            height: 45px;
+            background-color: #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu-icon:hover, .options-icon:hover {
+            background-color: #444;
+        }
+
+        .menu-icon svg, .options-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        /* Advertisement Section */
+        .ad {
+            border: 2px solid #464545;
+            border-radius: 30px;
+            height: 100px;
+            margin-top: 15px;
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 20px;
+        }
+
+        .ad-image {
+            width: 100px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .ad-input {
+            flex: 1;
+        }
+
+        .ad-input input {
+            width: 100%;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 20px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .ad-input input::placeholder {
+            color: #888;
+        }
+
+        .ad-input input:focus {
+            border-color: #667eea;
+        }
+
+        /* Suggestions Label */
+        .sugglabel {
+            height: 50px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        .sugglabel .first {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sugglabel .second {
+            color: #667eea;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .sugglabel .second:hover {
+            color: #764ba2;
+        }
+
+        /* Container for Items */
+        .container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 10px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #464545 #1a1a1a;
+        }
+
+        .container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #464545;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Items/Cards */
+        .items {
+            min-width: 270px;
+            height: 140px;
+            background-color: white;
+            border: 2px solid #464545;
+            border-radius: 25px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .items:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .items-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .items-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .items-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        /* Bottom Navigation */
+        .viewfrom {
+            height: 100px;
+            border: 2px solid #464545;
+            background-color: #1a1a1a;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 30px;
+            position: sticky;
+            bottom: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+            border-radius: 15px;
+        }
+
+        .nav-item:hover {
+            background-color: #2a2a2a;
+        }
+
+        .nav-item.active {
+            background-color: #667eea;
+        }
+
+        .nav-item svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+        .nav-item h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar-center {
+                font-size: 24px;
+            }
+
+            .items {
+                min-width: 220px;
+                height: 120px;
+            }
+
+            .items-text {
+                font-size: 18px;
+            }
+
+            .items-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .nav-item {
+                padding: 10px;
+            }
+
+            .nav-item h3 {
+                font-size: 12px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .items {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="navigate">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-left">
+                <div class="menu-icon" onclick="toggleMenu()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="navbar-center">Lorry</div>
+            <div class="navbar-right">
+                <div class="options-icon" onclick="toggleOptions()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Customer Advertisement -->
+        <div class="ad">
+            <div class="ad-image">AD<br>Space</div>
+            <div class="ad-input">
+                <input type="text" placeholder="+ Place your advertisement here [for Customer]">
+            </div>
+        </div>
+
+        <!-- Suggestions Section -->
+        <div class="sugglabel">
+            <div class="first">Suggestions</div>
+            <div class="second" onclick="seeAll('suggestions')">See All</div>
+        </div>
+
+        <div class="container">
+            <div class="items" onclick="handleClick('trip')">
+                <div class="items-content">
+                    <div class="items-text">Trip</div>
+                    <div class="items-icon">🚚</div>
+                </div>
+            </div>
+            <div class="items" onclick="handleClick('reserve')">
+                <div class="items-content">
+                    <div class="items-text">Reserve</div>
+                    <div class="items-icon">📅</div>
+                </div>
+            </div>
+            <div class="items" onclick="handleClick('allotment')">
+                <div class="items-content">
+                    <div class="items-text">Allotment</div>
+                    <div class="items-icon">📦</div>
+                </div>
+            </div>
+            <div class="items" onclick="handleClick('occasional')">
+                <div class="items-content">
+                    <div class="items-text">Occasional</div>
+                    <div class="items-icon">⭐</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transporter Advertisement -->
+        <div class="ad">
+            <div class="ad-image">AD<br>Space</div>
+            <div class="ad-input">
+                <input type="text" placeholder="+ Place your advertisement here [for Transporter]">
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="sugglabel">
+            <div class="first">Features</div>
+            <div class="second" onclick="seeAll('features')">See All</div>
+        </div>
+
+        <div class="container">
+            <div class="items" onclick="handleClick('tracking')">
+                <div class="items-content">
+                    <div class="items-text">Live Tracking</div>
+                    <div class="items-icon">📍</div>
+                </div>
+            </div>
+            <div class="items" onclick="handleClick('insurance')">
+                <div class="items-content">
+                    <div class="items-text">Insurance</div>
+                    <div class="items-icon">🛡️</div>
+                </div>
+            </div>
+            <div class="items" onclick="handleClick('recovery')">
+                <div class="items-content">
+                    <div class="items-text">Recovery</div>
+                    <div class="items-icon">🔧</div>
+                </div>
+            </div>
+            <div class="items" onclick="handleClick('hotel')">
+                <div class="items-content">
+                    <div class="items-text">Quick-Book</div>
+                    <div class="items-icon">📝</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="viewfrom">
+            <div class="nav-item active" onclick="navigate('home')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <h3>Home</h3>
+            </div>
+            <div class="nav-item" onclick="navigate('services')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2l-5.5 9h11z M17.5 13h-11l5.5 9z"/>
+                </svg>
+                <h3>Services</h3>
+            </div>
+            <div class="nav-item" onclick="navigate('activity')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                </svg>
+                <h3>Activity</h3>
+            </div>
+            <div class="nav-item" onclick="navigate('account')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+                <h3>Account</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu toggle function
+        function toggleMenu() {
+            alert('Menu opened! (You can implement a sidebar here)');
+        }
+
+        // Options toggle function
+        function toggleOptions() {
+            alert('Options opened! (You can implement a dropdown menu here)');
+        }
+
+        // Handle item clicks
+        function handleClick(item) {
+            console.log(`${item} clicked`);
+            alert(`You clicked on ${item.charAt(0).toUpperCase() + item.slice(1)}`);
+            // You can navigate to different pages or show modal here
+        }
+
+        // See All functionality
+        function seeAll(section) {
+            console.log(`See all ${section}`);
+            alert(`Showing all ${section}...`);
+            // Implement navigation to full list page
+        }
+
+        // Bottom navigation
+        function navigate(page) {
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Add active class to clicked item
+            event.currentTarget.classList.add('active');
+            
+            console.log(`Navigating to ${page}`);
+            alert(`Navigating to ${page.charAt(0).toUpperCase() + page.slice(1)} page`);
+            // Implement actual navigation here
+        }
+
+        // Smooth scroll for containers
+        document.querySelectorAll('.container').forEach(container => {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            container.addEventListener('mousedown', (e) => {
+                isDown = true;
+                container.style.cursor = 'grabbing';
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                isDown = false;
+                container.style.cursor = 'default';
+            });
+
+            container.addEventListener('mouseup', () => {
+                isDown = false;
+                container.style.cursor = 'default';
+            });
+
+            container.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 2;
+                container.scrollLeft = scrollLeft - walk;
+            });
+        });
+
+        // Add touch support for mobile
+        document.querySelectorAll('.items').forEach(item => {
+            item.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            item.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        console.log('Lorry Transporter App Loaded Successfully!');
+    </script>
+</body>
+</html>

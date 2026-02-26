@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trip Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181b24;
+    --surface2: #1e2130;
+    --surface3: #232737;
+    --border: #2a2d3a;
+    --text: #ffffff;
+    --text-muted: #8b8fa8;
+    --accent: #e8513a;
+    --accent2: #f47c5a;
+    --blue: #276EF1;
+    --radius: 18px;
+    --radius-sm: 12px;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ─── App Bar ─── */
+  .app-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(15,17,23,0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 58px;
+  }
+
+  .app-bar-title { font-size: 27px; font-weight: 700; letter-spacing: -0.3px; }
+
+  .close-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .close-btn:hover { background: var(--surface3); }
+  .close-btn:active { transform: scale(0.9); }
+  .close-btn svg { width: 16px; height: 16px; stroke: var(--text-muted); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+  /* ─── Page ─── */
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+
+  @media (min-width: 600px) { .page { padding: 32px 24px 80px; } }
+  @media (min-width: 1024px) { .page { padding: 40px 24px 80px; } }
+
+  /* ─── Trip Header ─── */
+  .trip-header { margin-bottom: 20px; }
+
+  .trip-label {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: var(--text);
+  }
+
+  .trip-eta {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text);
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+
+  /* ─── Active Trip Card ─── */
+  .trip-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  .card-info {
+    padding: 16px 16px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3a4060, #5a6080);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid var(--border);
+  }
+
+  .avatar svg { width: 24px; height: 24px; stroke: #aaa; fill: none; stroke-width: 1.8; stroke-linecap: round; }
+  .avatar.orange { background: linear-gradient(135deg, #d4603a, #e88060); }
+  .avatar.blue { background: linear-gradient(135deg, #2a5aba, #4a7aea); }
+
+  .passenger-info { flex: 1; min-width: 0; }
+
+  .passenger-name {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  .address {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dropoff-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 6px;
+  }
+
+  .dropoff-label span { color: var(--text-muted); font-weight: 400; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.2px;
+  }
+
+  .badge svg { width: 11px; height: 11px; fill: var(--accent2); }
+
+  .card-options-btn {
+    background: none; border: none; cursor: pointer;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .card-options-btn:hover { background: var(--surface3); }
+  .card-options-btn svg { width: 18px; height: 18px; fill: var(--text-muted); }
+
+  /* ─── Map ─── */
+  .map-wrap {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 480px) { .map-wrap { height: 240px; } }
+
+  .map-bg {
+    width: 100%; height: 100%;
+    background: #141824;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* SVG grid streets */
+  .map-bg svg.map-streets {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0.55;
+  }
+
+  /* Route line */
+  .route-line {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+
+  /* Map pins */
+  .map-pin {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-50%, -100%);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    animation: pinDrop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+
+  @keyframes pinDrop {
+    from { transform: translate(-50%, -160%); opacity: 0; }
+    to   { transform: translate(-50%, -100%); opacity: 1; }
+  }
+
+  .map-pin svg { width: 28px; height: 36px; }
+  .map-pin.pickup { top: 62%; left: 45%; animation-delay: 0.1s; }
+  .map-pin.dropoff { top: 28%; left: 68%; animation-delay: 0.3s; }
+
+  /* Map labels */
+  .map-label {
+    position: absolute;
+    background: rgba(15,17,23,0.82);
+    color: #ccc;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ─── Section Title ─── */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 14px;
+  }
+
+  /* ─── Next Trip Card ─── */
+  .next-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .next-card-inner {
+    padding: 16px 16px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .next-pin-icon {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .next-pin-icon svg { width: 22px; height: 22px; }
+
+  /* ─── Accept Bar ─── */
+  .accept-bar {
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+    padding: 14px 16px;
+  }
+
+  .accept-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .accept-icon-wrap {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .accept-icon-wrap svg { width: 18px; height: 18px; stroke: var(--text-muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  .accept-text { flex: 1; }
+  .accept-text .a-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+  .accept-text .a-route { font-size: 12px; color: #555; margin-top: 1px; }
+
+  .accept-btn {
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    flex-shrink: 0;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.1px;
+  }
+  .accept-btn:hover { background: #3a7ef5; }
+  .accept-btn:active { transform: scale(0.95); }
+
+  /* ─── Divider ─── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+  }
+
+  /* ─── Pulse animation on active trip ─── */
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    margin-right: 6px;
+    position: relative;
+  }
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid #4ade80;
+    animation: pulse 1.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(2.2); }
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(74,222,128,0.1);
+    color: #4ade80;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px 3px 6px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  /* ETA countdown */
+  #eta-display { transition: opacity 0.3s; }
+
+  /* ─── Bottom action bar ─── */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(15,17,23,0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    gap: 12px;
+    max-width: 640px;
+    margin: 0 auto;
+    left: 50%; transform: translateX(-50%);
+    width: 100%;
+  }
+
+  .bottom-btn {
+    flex: 1;
+    height: 48px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.15s;
+    letter-spacing: 0.1px;
+  }
+  .bottom-btn:active { transform: scale(0.96); }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #d44832; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--surface3); }
+</style>
+</head>
+<body>
+
+<!-- App Bar -->
+<div class="app-bar">
+  <span class="app-bar-title">Trip Planner</span>
+  <button class="close-btn" onclick="history.back()">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+</div>
+
+<!-- Page Content -->
+<div class="page">
+
+  <!-- Trip Header -->
+  <div class="trip-header">
+    <div class="live-badge"><span class="live-dot"></span>&nbsp;Live</div>
+    <div class="trip-label">Trip to Joely</div>
+    <div class="trip-eta" id="eta-display">1:47</div>
+  </div>
+
+  <!-- Active Trip Card -->
+  <div class="trip-card">
+    <div class="card-info">
+      <div class="avatar orange">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="passenger-info">
+        <div class="passenger-name">Joely</div>
+        <div class="address">123 Ash St</div>
+        <div class="dropoff-label">Dropoff: <span>456 Elm Ave</span></div>
+        <div class="badge">
+          <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="5"/></svg>
+          Favorites
+        </div>
+      </div>
+      <button class="card-options-btn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+      </button>
+    </div>
+
+    <!-- Map -->
+    <div class="map-wrap">
+      <div class="map-bg">
+        <!-- Street grid SVG -->
+        <svg class="map-streets" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <!-- Horizontal streets -->
+          <line x1="0" y1="40" x2="400" y2="40" stroke="#2a3050" stroke-width="6"/>
+          <line x1="0" y1="80" x2="400" y2="80" stroke="#2a3050" stroke-width="3"/>
+          <line x1="0" y1="120" x2="400" y2="120" stroke="#2a3050" stroke-width="6"/>
+          <line x1="0" y1="160" x2="400" y2="160" stroke="#2a3050" stroke-width="3"/>
+          <line x1="0" y1="200" x2="400" y2="200" stroke="#2a3050" stroke-width="6"/>
+          <!-- Vertical streets -->
+          <line x1="50" y1="0" x2="50" y2="240" stroke="#2a3050" stroke-width="3"/>
+          <line x1="110" y1="0" x2="110" y2="240" stroke="#2a3050" stroke-width="6"/>
+          <line x1="170" y1="0" x2="170" y2="240" stroke="#2a3050" stroke-width="3"/>
+          <line x1="240" y1="0" x2="240" y2="240" stroke="#2a3050" stroke-width="6"/>
+          <line x1="300" y1="0" x2="300" y2="240" stroke="#2a3050" stroke-width="3"/>
+          <line x1="360" y1="0" x2="360" y2="240" stroke="#2a3050" stroke-width="3"/>
+          <!-- Diagonal street -->
+          <line x1="0" y1="240" x2="300" y2="0" stroke="#2a3050" stroke-width="4"/>
+          <!-- Blocks fill -->
+          <rect x="51" y="41" width="58" height="38" fill="#161a28" rx="2"/>
+          <rect x="51" y="121" width="58" height="38" fill="#161a28" rx="2"/>
+          <rect x="111" y="41" width="58" height="38" fill="#161a28" rx="2"/>
+          <rect x="111" y="121" width="58" height="38" fill="#1a1e2e" rx="2"/>
+          <rect x="171" y="81" width="68" height="38" fill="#161a28" rx="2"/>
+          <rect x="241" y="41" width="58" height="38" fill="#1a1e2e" rx="2"/>
+          <rect x="241" y="121" width="58" height="38" fill="#161a28" rx="2"/>
+          <rect x="301" y="41" width="58" height="78" fill="#161a28" rx="2"/>
+          <rect x="171" y="161" width="68" height="38" fill="#1a1e2e" rx="2"/>
+          <!-- Street name labels -->
+          <text x="55" y="74" fill="#3a4060" font-size="7" font-family="sans-serif">ASH ST</text>
+          <text x="115" y="115" fill="#3a4060" font-size="7" font-family="sans-serif">ELM AVE</text>
+          <text x="155" y="38" fill="#3a4060" font-size="7" font-family="sans-serif" transform="rotate(-90,155,38)">MAPLE</text>
+          <text x="235" y="38" fill="#3a4060" font-size="7" font-family="sans-serif" transform="rotate(-90,235,38)">OAK DR</text>
+        </svg>
+
+        <!-- Route path -->
+        <svg class="route-line" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="routeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#e8513a;stop-opacity:0.9"/>
+              <stop offset="100%" style="stop-color:#f4a23a;stop-opacity:0.9"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path d="M180 148 L180 120 L240 120 L240 80 L270 68" 
+                stroke="url(#routeGrad)" stroke-width="3.5" fill="none" 
+                stroke-linecap="round" stroke-linejoin="round"
+                filter="url(#glow)"
+                stroke-dasharray="200"
+                stroke-dashoffset="200">
+            <animate attributeName="stroke-dashoffset" from="200" to="0" dur="1.2s" begin="0.3s" fill="freeze"/>
+          </path>
+        </svg>
+
+        <!-- Pickup pin -->
+        <div class="map-pin pickup">
+          <svg viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 0C6.27 0 0 6.27 0 14c0 9.33 14 22 14 22s14-12.67 14-22C28 6.27 21.73 0 14 0z" fill="#e8513a"/>
+            <circle cx="14" cy="14" r="5" fill="white"/>
+          </svg>
+        </div>
+
+        <!-- Dropoff pin -->
+        <div class="map-pin dropoff">
+          <svg viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 0C6.27 0 0 6.27 0 14c0 9.33 14 22 14 22s14-12.67 14-22C28 6.27 21.73 0 14 0z" fill="#e8513a"/>
+            <circle cx="14" cy="14" r="5" fill="white"/>
+          </svg>
+        </div>
+
+        <!-- Map label overlays -->
+        <div class="map-label" style="bottom:10px;left:12px;">Pickup: 123 Ash St</div>
+        <div class="map-label" style="top:10px;right:12px;">Dropoff: 456 Elm Ave</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Trip -->
+  <div class="section-title">Next Trip</div>
+
+  <div class="next-card">
+    <div class="next-card-inner">
+      <div class="avatar blue">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="passenger-info">
+        <div class="passenger-name">Mark</div>
+        <div class="address">123 Ash St</div>
+        <div class="dropoff-label">Dropoff: <span>456 Elm Ave.</span></div>
+        <div class="badge">
+          <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="5"/></svg>
+          Favorites
+        </div>
+      </div>
+      <div class="next-pin-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C7.58 0 4 3.58 4 8c0 5.25 8 13 8 13s8-7.75 8-13c0-4.42-3.58-8-8-8zm0 10.5A2.5 2.5 0 1 1 12 5.5a2.5 2.5 0 0 1 0 5z" fill="#e8513a"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Accept row -->
+    <div class="accept-bar">
+      <div class="accept-inner">
+        <div class="accept-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="accept-text">
+          <div class="a-label">Ready in ~3 min</div>
+          <div class="a-route">Ash St → Elm Ave</div>
+        </div>
+        <button class="accept-btn" onclick="acceptTrip()">Accept</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom Action Bar -->
+<div class="bottom-bar">
+  <button class="bottom-btn btn-secondary" onclick="showToast('Navigation opened')">Navigate</button>
+  <button class="bottom-btn btn-primary" onclick="showToast('Trip started!')">Start Trip</button>
+</div>
+
+<!-- Toast -->
+<div id="toast" style="
+  position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:#fff; color:#111; font-family:'DM Sans',sans-serif;
+  font-size:13px; font-weight:600; padding:9px 18px;
+  border-radius:40px; box-shadow:0 6px 24px rgba(0,0,0,0.4);
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  opacity:0; pointer-events:none; white-space:nowrap; z-index:999;
+"></div>
+
+<script>
+  // ETA countdown
+  let totalSeconds = 107; // 1:47
+  function updateEta() {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    document.getElementById('eta-display').textContent = m + ':' + String(s).padStart(2,'0');
+    if (totalSeconds > 0) { totalSeconds--; setTimeout(updateEta, 1000); }
+  }
+  setTimeout(updateEta, 1000);
+
+  // Toast
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2200);
+  }
+
+  function acceptTrip() {
+    showToast('Trip accepted! ✓');
+    const btn = document.querySelector('.accept-btn');
+    btn.textContent = 'Accepted ✓';
+    btn.style.background = '#22c55e';
+    btn.disabled = true;
+  }
+</script>
+</body>
+</html>

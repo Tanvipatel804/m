@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Selection Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background: #2d2d2d;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .route {
+            font-size: 14px;
+            color: #d1d5db;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-section {
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border-radius: 24px;
+            border: 2px solid #4b5563;
+            background: #2d2d2d;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #4ade80;
+            color: #000;
+            border-color: #4ade80;
+        }
+
+        .drivers-accepted {
+            text-align: center;
+            color: #4ade80;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            padding: 0 20px;
+            margin-bottom: 16px;
+        }
+
+        .driver-card {
+            background: #2d2d2d;
+            border: 2px solid #4b5563;
+            border-radius: 16px;
+            margin: 0 20px 16px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .driver-card.best-match {
+            border-color: #4ade80;
+        }
+
+        .best-match-badge {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background: #4ade80;
+            color: #000;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 14px 0 14px 0;
+            text-transform: uppercase;
+        }
+
+        .driver-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .driver-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .driver-info {
+            flex: 1;
+        }
+
+        .driver-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .driver-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .star {
+            color: #fbbf24;
+            font-size: 16px;
+        }
+
+        .rating-number {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .verification-badge {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .driver-content {
+            display: flex;
+            gap: 20px;
+        }
+
+        .left-section {
+            flex: 1;
+        }
+
+        .large-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .large-rating .star {
+            font-size: 24px;
+        }
+
+        .large-rating-number {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            background: #4ade80;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge.expires {
+            background: #374151;
+            color: #d1d5db;
+        }
+
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .capability {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .check-icon {
+            color: #4ade80;
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .cross-icon {
+            color: #ef4444;
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .assign-btn {
+            flex: 1;
+            background: #4ade80;
+            color: #000;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .assign-btn:hover {
+            background: #22c55e;
+        }
+
+        .message-btn {
+            background: #374151;
+            color: #fff;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.3s;
+        }
+
+        .message-btn:hover {
+            background: #4b5563;
+        }
+
+        @media (max-width: 480px) {
+            .driver-content {
+                flex-direction: column;
+            }
+
+            .right-section {
+                margin-top: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">‹</button>
+        <div class="header-content">
+            <div class="header-title">Driver Selection: Dashboard</div>
+            <div class="route">Los Angeles → Las Vegas</div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <button class="filter-btn" onclick="filterDrivers('smart')">Smart Match</button>
+        <button class="filter-btn active" onclick="filterDrivers('rated')">Top Rated (4.8+)</button>
+        <button class="filter-btn" onclick="filterDrivers('lowest')">Lowest Rate</button>
+    </div>
+
+    <div class="drivers-accepted">3 Drivers Accepted</div>
+
+    <div class="section-title">Driver Comparison Cards</div>
+
+    <div class="driver-card best-match">
+        <div class="best-match-badge">Best Match</div>
+        
+        <div class="driver-header">
+            <img src="https://i.pravatar.cc/150?img=12" alt="Driver John Doe" class="driver-avatar">
+            <div class="driver-info">
+                <div class="driver-name">Driver John Doe</div>
+                <div class="driver-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="rating-number">4.7</span>
+                </div>
+                <div class="verification-badge">Verified Pro</div>
+            </div>
+        </div>
+
+        <div class="driver-content">
+            <div class="left-section">
+                <div class="large-rating">
+                    <span class="star">★</span>
+                    <span class="large-rating-number">4.9</span>
+                </div>
+                <div class="price">$1,250</div>
+                <div class="badges">
+                    <span class="badge">✓ Verified Pro</span>
+                    <span class="badge expires">Offer expires in 14m</span>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>53' Dry Van</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>Liftgate</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>Liftgate</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>Forklift Ready</span>
+                </div>
+                <div class="capability">
+                    <span class="cross-icon">✗</span>
+                    <span>Forklift Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="assign-btn" onclick="assignLoad('John Doe')">Assign Load</button>
+            <button class="message-btn" onclick="messageDriver('John Doe')">Message Driver</button>
+        </div>
+    </div>
+
+    <div class="driver-card">
+        <div class="driver-header">
+            <img src="https://i.pravatar.cc/150?img=45" alt="Driver Sarah Chen" class="driver-avatar">
+            <div class="driver-info">
+                <div class="driver-name">Driver Sarah Chen</div>
+                <div class="driver-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="rating-number">4.7</span>
+                </div>
+                <div class="verification-badge">Verified</div>
+            </div>
+        </div>
+
+        <div class="driver-content">
+            <div class="left-section">
+                <div class="large-rating">
+                    <span class="star">★</span>
+                    <span class="large-rating-number">4.7</span>
+                </div>
+                <div class="price">$1,000</div>
+            </div>
+            
+            <div class="right-section">
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>Michael Lee</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>53' Dry Van</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>New Driver</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="assign-btn" onclick="assignLoad('Sarah Chen')">Assign Load</button>
+            <button class="message-btn" onclick="messageDriver('Sarah Chen')">Message Driver</button>
+        </div>
+    </div>
+
+    <div class="driver-card">
+        <div class="driver-header">
+            <img src="https://i.pravatar.cc/150?img=33" alt="Driver Mike Rodriguez" class="driver-avatar">
+            <div class="driver-info">
+                <div class="driver-name">Driver Mike Rodriguez</div>
+                <div class="driver-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="rating-number">4.8</span>
+                </div>
+                <div class="verification-badge">Verified Pro</div>
+            </div>
+        </div>
+
+        <div class="driver-content">
+            <div class="left-section">
+                <div class="large-rating">
+                    <span class="star">★</span>
+                    <span class="large-rating-number">4.8</span>
+                </div>
+                <div class="price">$1,150</div>
+                <div class="badges">
+                    <span class="badge">✓ Verified Pro</span>
+                    <span class="badge expires">Offer expires in 22m</span>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>53' Reefer</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>Temperature Control</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>Liftgate</span>
+                </div>
+                <div class="capability">
+                    <span class="check-icon">✓</span>
+                    <span>Hazmat Certified</span>
+                </div>
+                <div class="capability">
+                    <span class="cross-icon">✗</span>
+                    <span>Team Driver</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="assign-btn" onclick="assignLoad('Mike Rodriguez')">Assign Load</button>
+            <button class="message-btn" onclick="messageDriver('Mike Rodriguez')">Message Driver</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            alert('Navigating back...');
+            // window.history.back();
+        }
+
+        function filterDrivers(type) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            
+            console.log(`Filtering by: ${type}`);
+            alert(`Filtering drivers by: ${type}`);
+        }
+
+        function assignLoad(driverName) {
+            if(confirm(`Assign load to ${driverName}?`)) {
+                alert(`Load assigned to ${driverName}!`);
+            }
+        }
+
+        function messageDriver(driverName) {
+            alert(`Opening message to ${driverName}...`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Opportunity - Driver View</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1c23; /* Darker theme for better readability in vehicles */
+            color: #e1e1e1;
+            padding: 15px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #2d303e;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Status Header */
+        .status-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            text-align: center;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .price-tag {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 10px 0;
+            color: #fff;
+        }
+
+        /* Detail Sections */
+        .content { padding: 20px; }
+        .section-title {
+            color: #84fab0;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            background: #363a4d;
+            padding: 12px;
+            border-radius: 10px;
+        }
+        .label { color: #aaa; font-size: 13px; }
+        .value { font-weight: 600; text-align: right; }
+
+        /* Route Preview */
+        .route-box {
+            background: #1a1c23;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            position: relative;
+        }
+        .route-point { display: flex; align-items: center; gap: 10px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #667eea; }
+        .line { width: 2px; height: 20px; background: #444; margin-left: 4px; }
+
+        /* Actions */
+        .action-area {
+            position: sticky;
+            bottom: 0;
+            background: #2d303e;
+            padding: 20px;
+            border-top: 1px solid #444;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-decline { background: #444; color: #fff; }
+        .btn-accept { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #1a1c23; }
+        .btn:active { transform: scale(0.95); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #2d303e;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="status-header">
+        <span class="badge">New Long-Term Offer</span>
+        <div class="price-tag">₹4,50,000</div>
+        <div style="font-size: 14px; opacity: 0.9;">Total Contract Value</div>
+    </div>
+
+    <div class="content">
+        <h3 class="section-title">Route & Schedule</h3>
+        <div class="route-box">
+            <div class="route-point">
+                <div class="dot"></div>
+                <div>
+                    <div class="label">Pickup</div>
+                    <div class="value">Bhuj APMC Market</div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="route-point">
+                <div class="dot" style="background: #84fab0;"></div>
+                <div>
+                    <div class="label">Destination</div>
+                    <div class="value">Mundra Port Terminal T2</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <span class="label">Duration</span>
+            <span class="value">180 Days (Daily)</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Duty Time</span>
+            <span class="value">08:00 AM - 08:00 PM</span>
+        </div>
+
+        <h3 class="section-title">Cargo & Vehicle</h3>
+        <div class="info-row">
+            <span class="label">Truck Type</span>
+            <span class="value">Flatbed Isolated</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Goods</span>
+            <span class="value">Solid (Steel Rolls)</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Capacity</span>
+            <span class="value">25,000 kg Required</span>
+        </div>
+
+        <h3 class="section-title">Compliance Requirements</h3>
+        <div id="compliance-list" style="margin-bottom: 20px;">
+            </div>
+
+        <div style="background: rgba(132, 250, 176, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed #84fab0;">
+            <div class="label" style="color: #84fab0;">Customer Note:</div>
+            <div class="value" style="text-align: left; font-size: 14px; margin-top: 5px;">
+                "Looking for a reliable partner for our 6-month export cycle. GPS tracking is mandatory."
+            </div>
+        </div>
+    </div>
+
+    <div class="action-area">
+        <button class="btn btn-decline" onclick="showModal('declined')">Decline</button>
+        <button class="btn btn-accept" onclick="showModal('accepted')">Accept Contract</button>
+    </div>
+</div>
+
+<div id="responseModal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Success!</h2>
+        <p id="modalBody" style="margin: 15px 0; color: #aaa;"></p>
+        <button class="btn btn-accept" style="width: 100%;" onclick="closeModal()">Back to Dashboard</button>
+    </div>
+</div>
+
+<script>
+    // Sample Data simulated from Customer Post
+    const contractData = {
+        compliance: [
+            "GPS API Tracking",
+            "Transit Insurance",
+            "Euro 5 Compliant Vehicle",
+            "HSE Site Induction"
+        ]
+    };
+
+    // Load Compliance Chips
+    const complianceContainer = document.getElementById('compliance-list');
+    contractData.compliance.forEach(item => {
+        const div = document.createElement('div');
+        div.style.cssText = "display:inline-block; background:#1a1c23; padding:5px 12px; border-radius:15px; font-size:12px; margin:3px; border: 1px solid #444;";
+        div.innerHTML = `✓ ${item}`;
+        complianceContainer.appendChild(div);
+    });
+
+    function showModal(type) {
+        const modal = document.getElementById('responseModal');
+        const title = document.getElementById('modalTitle');
+        const body = document.getElementById('modalBody');
+        
+        modal.style.display = 'flex';
+        
+        if(type === 'accepted') {
+            title.innerText = "Contract Accepted!";
+            title.style.color = "#84fab0";
+            body.innerText = "The customer has been notified. Check your 'My Contracts' tab for onboarding instructions.";
+        } else {
+            title.innerText = "Offer Declined";
+            title.style.color = "#ff6b6b";
+            body.innerText = "This post will be removed from your feed.";
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('responseModal').style.display = 'none';
+        // Logic to redirect or refresh feed
+    }
+</script>
+
+</body>
+</html>

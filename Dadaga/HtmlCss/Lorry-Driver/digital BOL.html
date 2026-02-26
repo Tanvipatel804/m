@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital BOL System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .pickup-view {
+            min-height: 100vh;
+            background-color: #111827;
+            color: white;
+            padding: 16px;
+            padding-bottom: 120px;
+        }
+
+        .delivery-view {
+            min-height: 100vh;
+            background-color: #f3f4f6;
+            color: #111827;
+            padding: 16px;
+            padding-bottom: 120px;
+        }
+
+        .header {
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .delivery-view .header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-info h1 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .delivery-badge {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .check-badge {
+            background-color: #10b981;
+            border-radius: 50%;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .delivery-view .card {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .shipment-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #374151;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .delivery-view .shipment-item {
+            background-color: #f9fafb;
+        }
+
+        .shipment-item span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+        }
+
+        .contact-section {
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .delivery-view .contact-section {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-header {
+            font-size: 12px;
+            font-weight: bold;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .contact-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info p {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .contact-info .address {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .contact-info .po {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .contact-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .call-btn {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .call-btn:hover {
+            background-color: #059669;
+        }
+
+        .call-btn:active {
+            transform: scale(0.95);
+        }
+
+        .message-btn {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .message-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .message-btn:active {
+            transform: scale(0.95);
+        }
+
+        .divider {
+            border-top: 1px solid #374151;
+            margin: 12px 0;
+        }
+
+        .delivery-view .divider {
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .special-instructions {
+            border: 2px solid #ca8a04;
+        }
+
+        .special-instructions h2 {
+            color: #fbbf24;
+        }
+
+        .special-box {
+            background-color: rgba(120, 53, 15, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #92400e;
+        }
+
+        .special-box p {
+            color: #fde68a;
+            font-weight: 600;
+        }
+
+        .special-box .note {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 4px;
+            font-weight: normal;
+        }
+
+        .signature-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+
+        .delivery-view .signature-container {
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+        }
+
+        canvas {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: crosshair;
+            touch-action: none;
+            background-color: white;
+        }
+
+        .clear-btn {
+            width: 100%;
+            background-color: #374151;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .clear-btn:hover {
+            background-color: #4b5563;
+        }
+
+        .delivery-view .clear-btn {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+
+        .delivery-view .clear-btn:hover {
+            background-color: #d1d5db;
+        }
+
+        .photo-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #374151;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .photo-upload-label:hover {
+            background-color: #4b5563;
+        }
+
+        .delivery-view .photo-upload-label {
+            background-color: #dbeafe;
+            border: 2px solid #93c5fd;
+            color: #1e40af;
+        }
+
+        .delivery-view .photo-upload-label:hover {
+            background-color: #bfdbfe;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .photo-grid img {
+            width: 310%;
+            height: 180px;
+            object-fit: fill;
+            border-radius: 6px;
+        }
+
+        .delivery-view .photo-grid img {
+            border: 2px solid #e5e7eb;
+        }
+
+        .condition-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            background-color: #f9fafb;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .condition-btn.active-good {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .condition-btn.active-damage {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .condition-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .condition-icon.active-good {
+            background-color: #10b981;
+        }
+
+        .condition-icon.active-damage {
+            background-color: #ef4444;
+        }
+
+        .damage-report {
+            margin-top: 16px;
+            padding: 16px;
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+        }
+
+        .damage-report label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #991b1b;
+            margin-bottom: 8px;
+        }
+
+        .damage-report textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #fca5a5;
+            border-radius: 6px;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .fixed-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background-color: #111827;
+            border-top: 1px solid #374151;
+        }
+
+        .delivery-view .fixed-bottom {
+            background-color: #f3f4f6;
+            border-top: 1px solid #d1d5db;
+        }
+
+        .shipment-photo-container {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .shipment-photo-container>.card {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        .approve-btn {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .approve-btn:hover {
+            background-color: #059669;
+        }
+
+        .approve-btn:disabled {
+            background-color: #047857;
+            cursor: not-allowed;
+        }
+
+        .confirm-btn {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .confirm-btn:disabled {
+            background-color: #10b981;
+            cursor: not-allowed;
+        }
+
+        .switch-btn {
+            width: 100%;
+            margin-top: 8px;
+            padding: 12px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .switch-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .delivery-view .switch-btn {
+            background-color: #4b5563;
+        }
+
+        .delivery-view .switch-btn:hover {
+            background-color: #374151;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-sm {
+            width: 16px;
+            height: 16px;
+        }
+
+        .icon-lg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Pickup View -->
+    <div id="pickupView" class="pickup-view">
+        <div class="header">
+            <div class="header-info">
+                <h1>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    Pickup BOL: #ALC-9982
+                </h1>
+                <div class="header-location">
+                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Oakland, CA → Fresno, CA</span>
+                </div>
+            </div>
+            <div id="pickupCheckBadge" class="check-badge hidden">
+                <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="shipment-photo-container">
+            <div class="card">
+                <h2>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Shipment Details
+                </h2>
+                <div class="shipment-item">
+                    <span>
+                        <span class="status-dot"></span>
+                        50 Crates - Grade A Almonds
+                    </span>
+                    <svg class="icon" fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div class="shipment-item">
+                    <span>
+                        <span class="status-dot"></span>
+                        Total Weight: 2,500 lbs
+                    </span>
+                    <svg class="icon" fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div class="shipment-item">
+                    <span>
+                        <span class="status-dot"></span>
+                        5 Pallets (Shrink-wrapped)
+                    </span>
+                    <svg class="icon" fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>
+                    Loading Photo
+                </h2>
+
+                <div id="photoGridLoading" class="photo-grid"><img
+                        src="C:\Users\DADAGA\Pictures\Saved Pictures\1option.jpg"></div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h3 class="contact-header">SHIPPER</h3>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>California Almond Growers</p>
+                    <p class="address">1250 Harvest Lane, Oakland, CA 94607</p>
+                    <p class="po">PO#: AG-2025-0126</p>
+                </div>
+                <div class="contact-buttons">
+                    <button class="contact-btn call-btn" onclick="makeCall('shipper')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </button>
+                    <button class="contact-btn message-btn" onclick="sendMessage('shipper')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3 class="contact-header">Reciever</h3>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>Valley Distribution Center</p>
+                    <p class="address">5800 Commerce Blvd, Fresno, CA 93727</p>
+                </div>
+                <div class="contact-buttons">
+                    <button class="contact-btn call-btn" onclick="makeCall('consignee')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </button>
+                    <button class="contact-btn message-btn" onclick="sendMessage('consignee')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card special-instructions">
+            <h2>
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Special Instructions
+            </h2>
+            <div class="special-box">
+                <p>Keep Refrigerated: 34°F</p>
+                <p class="note">Temperature-sensitive cargo. Must maintain cold chain.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Shipper Signature</h2>
+            <p style="font-size: 12px; color: #9ca3af; margin-bottom: 8px;">
+                By signing, shipper confirms the accuracy of this BOL and transfers custody to carrier.
+            </p>
+            <div class="signature-container">
+                <canvas id="signatureCanvas" width="300" height="150"></canvas>
+            </div>
+            <button class="clear-btn" onclick="clearSignature()">Clear Signature</button>
+        </div>
+
+        <div class="fixed-bottom">
+            <button id="approveBtn" class="primary-btn approve-btn" onclick="approvePickup()">
+                Approve & Start Trip
+            </button>
+            <button class="switch-btn" onclick="switchView('delivery')">
+                Go to Delivery Screen →
+            </button>
+        </div>
+    </div>
+
+    <!-- Delivery View -->
+    <div id="deliveryView" class="delivery-view hidden">
+        <div class="header">
+            <div class="header-info">
+                <h1>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Delivery BOL: #ALC-9982
+                </h1>
+                <div>
+                    <span class="delivery-badge">Delivered</span>
+                </div>
+            </div>
+            <div id="deliveryCheckBadge" class="check-badge hidden">
+                <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="shipment-photo-container">
+            <div class="card">
+                <h2 style="color: #374151;">Receipt Details</h2>
+                <div class="shipment-item">
+                    <span>
+                        <span class="status-dot"></span>
+                        50 Crates - Grade A Almonds
+                    </span>
+                    <svg class="icon" fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div class="shipment-item">
+                    <span>
+                        <span class="status-dot"></span>
+                        Material: Almonds
+                    </span>
+                    <svg class="icon" fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div class="shipment-item">
+                    <span>
+                        <span class="status-dot"></span>
+                        Total Weight: 2,500 lbs
+                    </span>
+                    <svg class="icon" fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="color: #374151;">Unloading Photo</h2>
+                <div id="photoGridUnloading" class="photo-grid">
+                    <img src="C:\Users\DADAGA\Pictures\Saved Pictures\1option.jpg">
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h3 class="contact-header">SHIPPER</h3>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>California Almond Growers</p>
+                    <p class="address">1250 Harvest Lane, Oakland, CA 94607</p>
+                    <p class="po">PO#: AG-2025-0126</p>
+                </div>
+                <div class="contact-buttons">
+                    <button class="contact-btn call-btn" onclick="makeCall('shipper')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </button>
+                    <button class="contact-btn message-btn" onclick="sendMessage('shipper')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3 class="contact-header">Reciever</h3>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>Valley Distribution Center</p>
+                    <p class="address">5800 Commerce Blvd, Fresno, CA 93727</p>
+                </div>
+                <div class="contact-buttons">
+                    <button class="contact-btn call-btn" onclick="makeCall('consignee')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </button>
+                    <button class="contact-btn message-btn" onclick="sendMessage('consignee')">
+                        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2 style="color: #374151;">Condition of Goods</h2>
+            <button class="condition-btn active-good" id="goodConditionBtn" onclick="setCondition('good')">
+                <div class="condition-icon active-good">
+                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <span style="font-weight: 600;">Received in Full, No Damage</span>
+            </button>
+
+            <button class="condition-btn" id="damageConditionBtn" onclick="setCondition('damage')">
+                <div class="condition-icon">
+                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <span style="font-weight: 600;">Report Damage/Shortage</span>
+            </button>
+
+            <div id="damageReport" class="damage-report hidden">
+                <label>Describe Issue:</label>
+                <textarea id="damageDetails" rows="3"
+                    placeholder="e.g., 3 crates damaged, visible water damage on pallet 2..."></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="color: #374151;">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Proof of Delivery Photos
+            </h2>
+            <input type="file" accept="image/*" multiple id="photoUploadDelivery" class="hidden"
+                onchange="handlePhotoUpload(event, 'delivery')">
+            <label for="photoUploadDelivery" class="photo-upload-label">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span style="font-weight: 600;">Take/Upload Photos</span>
+            </label>
+            <div id="photoGridDelivery" class="photo-grid hidden"></div>
+        </div>
+
+        <div class="card">
+            <h2 style="color: #374151;">Receiver Signature</h2>
+            <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">
+                By signing, receiver acknowledges receipt of goods as described above.
+            </p>
+            <div class="signature-container">
+                <canvas id="deliverySignatureCanvas" width="300" height="150"></canvas>
+            </div>
+            <button class="clear-btn" onclick="clearDeliverySignature()">Clear Signature</button>
+        </div>
+
+        <div class="fixed-bottom">
+            <button id="confirmBtn" class="primary-btn confirm-btn" onclick="confirmDelivery()">
+                Confirm Delivery & Finalize
+            </button>
+            <button class="switch-btn" onclick="switchView('pickup')">
+                ← Back to Pickup Screen
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let isDrawing = false;
+        let pickupPhotos = [];
+        let deliveryPhotos = [];
+        let unloadingPhotos = [];
+        let loadingPhotos = [];
+        let damageReported = false;
+
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+
+        const deliveryCanvas = document.getElementById('deliverySignatureCanvas');
+        const deliveryCtx = deliveryCanvas.getContext('2d');
+        deliveryCtx.strokeStyle = '#2563eb';
+        deliveryCtx.lineWidth = 2;
+        deliveryCtx.lineCap = 'round';
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        deliveryCanvas.addEventListener('mousedown', startDeliveryDrawing);
+        deliveryCanvas.addEventListener('mousemove', drawDelivery);
+        deliveryCanvas.addEventListener('mouseup', stopDrawing);
+        deliveryCanvas.addEventListener('mouseleave', stopDrawing);
+        deliveryCanvas.addEventListener('touchstart', startDeliveryDrawing);
+        deliveryCanvas.addEventListener('touchmove', drawDelivery);
+        deliveryCanvas.addEventListener('touchend', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+
+        function startDeliveryDrawing(e) {
+            isDrawing = true;
+            const rect = deliveryCanvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            deliveryCtx.beginPath();
+            deliveryCtx.moveTo(x, y);
+        }
+
+        function drawDelivery(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const rect = deliveryCanvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            deliveryCtx.lineTo(x, y);
+            deliveryCtx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function clearDeliverySignature() {
+            deliveryCtx.clearRect(0, 0, deliveryCanvas.width, deliveryCanvas.height);
+        }
+
+        function approvePickup() {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const hasSignature = Array.from(imageData.data).some(channel => channel !== 0);
+
+            if (hasSignature) {
+                document.getElementById('pickupCheckBadge').classList.remove('hidden');
+                document.getElementById('approveBtn').disabled = true;
+                document.getElementById('approveBtn').textContent = '✓ Pickup Approved - In Transit';
+                alert('✓ Pickup Approved! Load is now "In Transit"\n\nCustomer has been notified.');
+            } else {
+                alert('Please provide your signature first.');
+            }
+        }
+
+        function confirmDelivery() {
+            const imageData = deliveryCtx.getImageData(0, 0, deliveryCanvas.width, deliveryCanvas.height);
+            const hasSignature = Array.from(imageData.data).some(channel => channel !== 0);
+
+            if (hasSignature) {
+                document.getElementById('deliveryCheckBadge').classList.remove('hidden');
+                document.getElementById('confirmBtn').disabled = true;
+                document.getElementById('confirmBtn').textContent = '✓ Delivery Finalized - Payout Initiated';
+                alert('✓ Delivery Confirmed!\n\nPayout has been initiated.\nBOL has been finalized.');
+            } else {
+                alert('Please obtain receiver signature first.');
+            }
+        }
+
+        function switchView(view) {
+            if (view === 'delivery') {
+                document.getElementById('pickupView').classList.add('hidden');
+                document.getElementById('deliveryView').classList.remove('hidden');
+            } else {
+                document.getElementById('deliveryView').classList.add('hidden');
+                document.getElementById('pickupView').classList.remove('hidden');
+            }
+        }
+
+        function handlePhotoUpload(event, type) {
+            const files = Array.from(event.target.files);
+            let gridId;
+
+            if (type === 'pickup') {
+                gridId = 'photoGridPickup';
+            } else if (type === 'delivery') {
+                gridId = 'photoGridDelivery';
+            } else if (type === 'unloading') {
+                gridId = 'photoGridUnloading';
+            } else if (type === 'loading') {
+                gridId = 'photoGridLoading';
+            }
+
+            const grid = document.getElementById(gridId);
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    grid.appendChild(img);
+                    grid.classList.remove('hidden');
+
+                    if (type === 'pickup') {
+                        pickupPhotos.push(e.target.result);
+                    } else if (type === 'delivery') {
+                        deliveryPhotos.push(e.target.result);
+                    } else if (type === 'unloading') {
+                        unloadingPhotos.push(e.target.result);
+                    } else if (type === 'loading') {
+                        loadingPhotos.push(e.target.result);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function setCondition(condition) {
+            const goodBtn = document.getElementById('goodConditionBtn');
+            const damageBtn = document.getElementById('damageConditionBtn');
+            const damageReport = document.getElementById('damageReport');
+
+            if (condition === 'good') {
+                goodBtn.classList.add('active-good');
+                goodBtn.querySelector('.condition-icon').classList.add('active-good');
+                damageBtn.classList.remove('active-damage');
+                damageBtn.querySelector('.condition-icon').classList.remove('active-damage');
+                damageReport.classList.add('hidden');
+                damageReported = false;
+            } else {
+                damageBtn.classList.add('active-damage');
+                damageBtn.querySelector('.condition-icon').classList.add('active-damage');
+                goodBtn.classList.remove('active-good');
+                goodBtn.querySelector('.condition-icon').classList.remove('active-good');
+                damageReport.classList.remove('hidden');
+                damageReported = true;
+            }
+        }
+
+        function makeCall(party) {
+            alert('📞 Calling ' + party + '...\n\nIn a real app, this would initiate a phone call.');
+        }
+
+        function sendMessage(party) {
+            alert('💬 Opening message to ' + party + '...\n\nIn a real app, this would open the messaging interface.');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Sharing App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        /* ── Map ── */
+        .map-section {
+            position: relative;
+            height: 300px;
+            background: #e3e8ef;
+            width: 100%;
+        }
+        #map { width: 100%; height: 100%; }
+
+        .map-button {
+            position: absolute;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+        .map-button:hover { background: #f5f5f5; box-shadow: 0 3px 8px rgba(0,0,0,0.4); }
+        .menu-btn      { top: 15px; left: 15px; }
+        .book-btn      { bottom: 20px; left: 15px; }
+        .location-btn  { top: 15px; right: 15px; }
+        .location-btn a { color: inherit; }
+
+        /* Zoom buttons — stacked vertically, joined */
+        .zoom-group {
+            position: absolute;
+            top: 70px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            z-index: 1000;
+        }
+        .zoom-group .map-button {
+            position: static;
+            border-radius: 0;
+            box-shadow: none;
+            border-bottom: 1px solid #e8e8e8;
+            width: 40px;
+            height: 40px;
+        }
+        .zoom-group .map-button:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+        .zoom-group .map-button:last-child {
+            border-radius: 0 0 8px 8px;
+            border-bottom: none;
+        }
+        .zoom-group {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .search-btn   { bottom: 30px; right: 42%; width: 200px; border-radius: 20px; border: 2px solid white; }
+        .settings-btn { bottom: 15px; right: 15px; }
+        .settings-btn a { color: inherit; }
+
+        .go-offline-btn {
+            position: absolute;
+            top: 20px; left: 50%;
+            transform: translateX(-50%);
+            background: orangered;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 22px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+        .go-offline-btn a { color: white; text-decoration: none; }
+        .go-offline-btn:hover { background: rgb(238,95,42); }
+
+        /* ── Content ── */
+        .content-container {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+            min-height: 60vh;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            padding-bottom: 90px;
+        }
+
+        /* ── Ad Banner ── */
+        .ad-banner {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 20px;
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .ad-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20px;
+            width: 100px; height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            transform: rotate(45deg);
+        }
+        .ad-content { flex: 1; }
+        .ad-title   { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .ad-subtitle{ font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
+        .ad-button  {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 8px 15px;
+            border-radius: 20px; font-size: 12px;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .ad-button:hover { background: rgba(255,255,255,0.3); }
+        .ad-icon {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin-left: 15px;
+        }
+        .close-ad {
+            position: absolute; top: 10px; right: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none; color: white;
+            width: 25px; height: 25px;
+            border-radius: 50%; cursor: pointer;
+            font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ── Trip Header ── */
+        .trip-header { padding: 20px 20px 0; }
+        .trip-title  { font-size: 26px; font-weight: bold; color: #333; margin-bottom: 16px; }
+
+        /* ── Trip Options ── */
+        .trip-options {
+            display: flex;
+            gap: 15px;
+            padding: 0 20px 20px;
+        }
+        .trip-option {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .trip-option:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .trip-option.active { background: #e3f2fd; border-color: #2196f3; }
+        .trip-icon {
+            width: 50px; height: 40px;
+            margin: 0 auto 12px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+        }
+        .rides-icon    { background: linear-gradient(135deg, #4caf50, #45a049); color: white; }
+        .schedule-icon { background: linear-gradient(135deg, #2196f3, #1976d2); color: white; }
+        .trip-label    { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 3px; }
+        .trip-subtitle { font-size: 12px; color: #666; }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 20px 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: white;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 22px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .filter-btn:hover {
+            border-color: #2196f3;
+            color: #2196f3;
+            background: #e8f4fd;
+            box-shadow: 0 2px 8px rgba(33,150,243,0.15);
+        }
+        .filter-btn .btn-icon { font-size: 14px; }
+
+        .sort-select {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: white;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 22px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+        }
+        .sort-select select {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+        }
+        .sort-select:hover {
+            border-color: #2196f3;
+            color: #2196f3;
+        }
+
+        /* ── Trip Cards (MT-trips style) ── */
+        .transaction-cards { padding: 0 16px; }
+
+        .trip-card {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            border-left: 4px solid #ddd;
+            display: grid;
+            grid-template-columns: 100px 1fr 130px;
+            gap: 14px;
+            align-items: center;
+        }
+        .trip-card:hover {
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+            transform: translateX(3px);
+        }
+        .trip-card { cursor: pointer; }
+        .trip-card.single    { border-left-color: #f093fb; }
+        .trip-card.allotment { border-left-color: #4facfe; }
+        .trip-card.contract  { border-left-color: #43e97b; }
+        .trip-card.return    { border-left-color: #ffa94d; }
+
+        /* LEFT col */
+        .vehicle-compact {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .truck-model-name {
+            font-size: 0.61rem;
+            font-weight: 800;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            text-align: center;
+        }
+        .vehicle-compact svg { width: 96px; height: 54px; }
+        .truck-dims {
+            font-size: 0.61rem;
+            font-weight: 600;
+            color: #aaa;
+            text-align: center;
+        }
+
+        /* MIDDLE col */
+        .trip-middle {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .price-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .price-compact {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2c3e50;
+            line-height: 1;
+        }
+        .badge-mini {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            white-space: nowrap;
+        }
+        .badge-single    { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .badge-allotment { background: linear-gradient(135deg, #4facfe, #00f2fe); color: #003366; }
+        .badge-contract  { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a5c38; }
+        .badge-return    { background: linear-gradient(135deg, #ffa94d, #ff6b35); }
+
+        .route-stack { display: flex; flex-direction: column; align-items: flex-start; }
+        .route-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.77rem;
+        }
+        .route-item .r-icon   { font-size: 0.82rem; width: 16px; flex-shrink: 0; }
+        .route-item .location { font-weight: 700; color: #2c3e50; }
+        .route-item .r-time   { color: #aaa; font-size: 0.68rem; margin-left: 4px; }
+
+        .route-connector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 0 3px 7px;
+            flex-wrap: wrap;
+        }
+        .connector-line {
+            width: 2px; height: 22px;
+            background: #d0d0d0;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .duration-pill {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #667eea;
+            background: #f0f2ff;
+            border: 1px solid #d0d6ff;
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+
+        .distance-pill {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #1a7a4a;
+            background: #edfdf5;
+            border: 1px solid #86efbc;
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+
+        /* Contract middle */
+        .contract-middle { display: flex; flex-direction: column; gap: 7px; }
+        .contract-mini {
+            background: #fffbf0;
+            padding: 8px 10px;
+            border-radius: 5px;
+            font-size: 0.74rem;
+            border-left: 3px solid #ffc107;
+        }
+        .contract-mini .ctitle {
+            font-weight: 700; color: #333;
+            margin-bottom: 5px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .contract-mini .details { 
+            gap: 5px;
+        }
+        .contract-mini .item { display: flex; flex-direction: column; gap: 1px; }
+        .contract-mini .item-label {
+            font-size: 0.6rem; color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .contract-mini .item-value { font-weight: 700; color: #333; font-size: 0.71rem; }
+
+        /* Return trip */
+        .return-route-wrapper { display: flex; flex-direction: column; gap: 0; }
+        .trip-direction { display: flex; flex-direction: column; align-items: flex-start; }
+        .direction-label {
+            font-size: 0.6rem; font-weight: 800;
+            color: #ff8c42; text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px; padding-left: 2px;
+        }
+        .return-separator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 0 5px 7px;
+            margin: 2px 0;
+            flex-wrap: wrap;
+        }
+        .separator-icon { font-size: 0.85rem; color: #ff8c42; }
+
+        /* Return trip right column — material top + material bottom */
+        .return-right-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .return-mat-divider {
+            font-size: 0.85rem;
+            color: #ff8c42;
+            line-height: 1;
+        }
+
+        .return-material-block {
+            background: linear-gradient(160deg, #f0fff6 0%, #c8f5dc 100%) !important;
+            border-color: #7ee8a2 !important;
+        }
+
+        .return-material-block .mat-kg {
+            border-color: #7ee8a2 !important;
+        }
+
+        /* RIGHT col: material block */
+        .material-block {
+            background: linear-gradient(160deg, #fff9e6 0%, #ffeab8 100%);
+            padding: 9px 10px 8px;
+            border-radius: 7px;
+            border: 1px solid #ffd680;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            text-align: center;
+        }
+        .mat-photo-box {
+            width: 50px; height: 44px;
+            background: rgba(255,255,255,0.78);
+            border-radius: 6px;
+            border: 1px solid #ffc84a;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.7rem; line-height: 1;
+            margin-bottom: 3px;
+        }
+        .mat-row { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .mat-label {
+            font-size: 0.55rem; font-weight: 700;
+            color: #c08020; text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .mat-value { font-size: 0.68rem; font-weight: 700; color: #333; line-height: 1.25; }
+        .mat-kg {
+            font-size: 0.7rem; font-weight: 800; color: #555;
+            background: rgba(255,255,255,0.65);
+            border: 1px solid #ffd27a;
+            padding: 2px 10px; border-radius: 8px; margin-top: 2px;
+        }
+
+        /* ── Smart Filters Modal ── */
+        .distance-modal {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: flex-end; justify-content: center;
+        }
+        .distance-modal.active { display: flex; }
+        .distance-content {
+            background: #1a1f2e;
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 500px;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 0 0 20px 0;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        .sf-header {
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid #2a3044;
+        }
+        .sf-title {
+            font-size: 20px; font-weight: 800; color: white;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+        .sf-section {
+            margin: 14px 16px;
+            background: #1e2538;
+            border-radius: 14px;
+            padding: 16px 18px;
+            border: 1px solid #2a3044;
+        }
+        .sf-section.active-green  { border-color: #00c853; box-shadow: 0 0 0 1px #00c853; }
+        .sf-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sf-label {
+            font-size: 13px; font-weight: 800; color: white;
+            letter-spacing: 0.07em; text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+        .sf-sublabel {
+            font-size: 11px; color: #7a8aaa;
+            margin-top: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        /* Toggle */
+        .sf-toggle {
+            position: relative; width: 52px; height: 28px;
+            cursor: pointer; flex-shrink: 0;
+        }
+        .sf-toggle input { opacity: 0; width: 0; height: 0; }
+        .sf-toggle-track {
+            position: absolute; inset: 0;
+            border-radius: 14px;
+            background: #2a3044;
+            transition: background 0.3s;
+        }
+        .sf-toggle input:checked ~ .sf-toggle-track { background: #00c853; }
+        .sf-toggle-thumb {
+            position: absolute; top: 3px; left: 3px;
+            width: 22px; height: 22px;
+            border-radius: 50%; background: white;
+            transition: transform 0.3s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+        .sf-toggle input:checked ~ .sf-toggle-thumb { transform: translateX(24px); }
+        /* Blue toggle variant */
+        .sf-toggle.blue input:checked ~ .sf-toggle-track { background: #2979ff; }
+        /* Slider */
+        .sf-slider-wrap { margin-top: 14px; }
+        .sf-slider-labels {
+            display: flex; justify-content: space-between;
+            font-size: 11px; color: #7a8aaa; margin-bottom: 6px;
+            font-family: 'Courier New', monospace;
+        }
+        .sf-value { color: #ff9800; font-weight: 800; font-size: 13px; font-family: 'Courier New', monospace; }
+        input[type=range].sf-range {
+            width: 100%; height: 6px; 
+            background: linear-gradient(to right, #ff9800 0%, #ff9800 50%, #2a3044 50%, #2a3044 100%);
+            border-radius: 3px; outline: none; cursor: pointer;
+        }
+        input[type=range].sf-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: #ff9800;
+            border: 3px solid #1a1f2e;
+            box-shadow: 0 0 0 2px #ff9800;
+            cursor: pointer;
+        }
+        /* Load type buttons */
+        .sf-load-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .sf-load-btn {
+            background: #1a1f2e;
+            border: 1px solid #2a3044;
+            border-radius: 10px;
+            padding: 12px 4px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .sf-load-btn:hover { border-color: #ff9800; }
+        .sf-load-btn.selected {
+            background: #2a2000;
+            border-color: #ff9800;
+            box-shadow: 0 0 0 1px #ff9800;
+        }
+        .sf-load-btn .sf-load-icon { font-size: 22px; }
+        .sf-load-btn .sf-load-label {
+            font-size: 9px; font-weight: 700; color: #9aa0b0;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            font-family: 'Courier New', monospace;
+        }
+        .sf-load-btn.selected .sf-load-label { color: #ff9800; }
+        /* Pickup time pills */
+        .sf-pill-row {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+        }
+        .sf-pill {
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 12px; font-weight: 700;
+            background: #1a1f2e; border: 1px solid #2a3044;
+            color: #9aa0b0; cursor: pointer; transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+        }
+        .sf-pill:hover { border-color: #7c4dff; color: #c0b0ff; }
+        .sf-pill.selected {
+            background: #3d1e8f; border-color: #7c4dff;
+            color: white;
+        }
+        /* Direction pills */
+        .sf-dir-row {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+        }
+        .sf-dir-btn {
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 12px; font-weight: 700;
+            background: #1a1f2e; border: 1px solid #2a3044;
+            color: #9aa0b0; cursor: pointer; transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+        }
+        .sf-dir-btn:hover { border-color: #2979ff; color: #a0c4ff; }
+        .sf-dir-btn.selected {
+            background: #0d1e44; border-color: #2979ff;
+            color: white;
+        }
+        /* Apply button */
+        .sf-apply-btn {
+            display: block; width: calc(100% - 32px);
+            margin: 16px 16px 4px;
+            background: #ff9800;
+            border: none; border-radius: 14px;
+            padding: 16px;
+            font-size: 14px; font-weight: 800; color: #1a1200;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            cursor: pointer; transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+        }
+        .sf-apply-btn:hover { background: #ffb300; box-shadow: 0 4px 16px rgba(255,152,0,0.4); }
+
+        /* Sort Modal */
+        .sort-modal {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center; justify-content: center;
+        }
+        .sort-modal.active { display: flex; }
+        .sort-content {
+            background: white;
+            padding: 28px;
+            border-radius: 20px;
+            margin: 20px;
+            max-width: 360px; width: 100%;
+        }
+        .sort-title { font-size: 18px; font-weight: bold; margin-bottom: 18px; text-align: center; }
+        .sort-option {
+            padding: 14px 18px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 600; font-size: 14px;
+        }
+        .sort-option:hover    { border-color: #2196f3; background: #f8f9fa; }
+        .sort-option.selected { border-color: #2196f3; background: #e3f2fd; color: #2196f3; }
+
+        /* ── Bottom Nav ── */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            padding: 2px 0;
+            z-index: 100;
+        }
+        .nav-item {
+            flex: 1; text-align: center;
+            padding: 10px; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-item:hover  { background: #f8f9fa; }
+        .nav-item.active { color: #2196f3; }
+        .nav-icon  { font-size: 24px; margin-bottom: 4px; display: block; }
+        .nav-label { font-size: 13px; font-weight: 500; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .trip-card {
+                grid-template-columns: 88px 1fr;
+            }
+            .material-block {
+                grid-column: 1 / 3;
+                flex-direction: row;
+                justify-content: center;
+                gap: 12px;
+            }
+            .trip-title  { font-size: 22px; }
+            .price-compact { font-size: 1.2rem; }
+        }
+        @media (max-width: 500px) {
+            .trip-card {
+                grid-template-columns: 1fr;
+            }
+            .material-block {
+                grid-column: 1;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .filter-bar {
+                justify-content: flex-end;
+                gap: 8px;
+            }
+            .trip-options { gap: 10px; }
+        }
+        @media (max-width: 380px) {
+            .filter-btn, .sort-select {
+                padding: 7px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* ══════════════════════════════════════════
+           FULL-SCREEN PREFERENCE PAGE
+        ══════════════════════════════════════════ */
+        .pref-modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            z-index: 5000;
+            flex-direction: column;
+            background: #f0f2f5;
+            overflow: hidden;
+        }
+        .pref-modal-overlay.active { display: flex; }
+
+        /* ── Top Bar ── */
+        .pref-topbar {
+            background: #fff;
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1.5px solid #e4e6ea;
+            flex-shrink: 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        }
+        .pref-back {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #f0f2f5; border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; cursor: pointer; color: #333;
+            flex-shrink: 0; transition: background 0.2s;
+        }
+        .pref-back:hover { background: #e0e2e6; }
+        .pref-page-title { font-size: 17px; font-weight: 700; color: #111; }
+
+        /* ── Main Toggle Pills ── */
+        .pref-main-tabs {
+            background: #fff;
+            padding: 10px 16px 12px;
+            border-bottom: 1.5px solid #e4e6ea;
+            flex-shrink: 0;
+        }
+        .pref-pill-row {
+            display: flex; background: #eef0f4;
+            border-radius: 14px; padding: 4px; gap: 4px;
+        }
+        .pmain-tab {
+            flex: 1; padding: 10px 0;
+            border: none; border-radius: 11px;
+            font-size: 14px; font-weight: 700;
+            cursor: pointer; transition: all 0.25s;
+            background: transparent; color: #888;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+        }
+        .pmain-tab.active {
+            background: #fff; color: #111;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.13);
+        }
+
+        .pref-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+
+        /* ═══════════════════ MESSAGES TAB ═══════════════════ */
+        .pref-msg-page { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        .pref-msg-page.active { display: flex; }
+
+        .msg-sidebar {
+            background: #fff; display: flex; flex-direction: row;
+            border-bottom: 1.5px solid #e8eaed; flex-shrink: 0; overflow-x: auto;
+        }
+        .msg-tab-btn {
+            flex: 1; min-width: 90px; display: flex; flex-direction: column; align-items: center;
+            padding: 11px 6px 9px; border: none; background: transparent;
+            cursor: pointer; transition: all 0.2s; border-bottom: 3px solid transparent;
+            gap: 4px; position: relative;
+        }
+        .msg-tab-btn.active         { border-bottom-color: #4caf50; background: #f6fff6; }
+        .msg-tab-btn.active.opp     { border-bottom-color: #ff9800; background: #fff9f0; }
+        .msg-tab-btn.active.svc     { border-bottom-color: #7c4dff; background: #f8f5ff; }
+        .msg-tab-icon {
+            width: 40px; height: 40px; border-radius: 11px;
+            display: flex; align-items: center; justify-content: center; font-size: 19px;
+        }
+        .msg-tab-btn.trips .msg-tab-icon        { background: #e8f5e9; }
+        .msg-tab-btn.opp .msg-tab-icon          { background: #fff3e0; }
+        .msg-tab-btn.svc .msg-tab-icon          { background: #ede7f6; }
+        .msg-tab-btn.active.trips .msg-tab-icon { background: #4caf50; }
+        .msg-tab-btn.active.opp .msg-tab-icon   { background: #ff9800; }
+        .msg-tab-btn.active.svc .msg-tab-icon   { background: #7c4dff; }
+        .msg-tab-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+        .msg-tab-btn.active .msg-tab-label { color: #222; }
+        .msg-tab-badge {
+            position: absolute; top: 7px; right: 8px;
+            background: #f44336; color: #fff; font-size: 9px; font-weight: 800;
+            min-width: 16px; height: 16px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; padding: 0 3px;
+        }
+        .msg-searchbar {
+            background: #fff; display: flex; align-items: center; gap: 10px;
+            padding: 9px 14px; border-bottom: 1px solid #e8eaed; flex-shrink: 0;
+        }
+        .msg-search-wrap {
+            flex: 1; display: flex; align-items: center;
+            background: #f2f3f5; border-radius: 22px; padding: 7px 14px; gap: 8px;
+            border: 1px solid #e4e6ea;
+        }
+        .msg-search-wrap i { color: #aaa; font-size: 13px; }
+        .msg-search-wrap input { border: none; background: transparent; font-size: 13px; outline: none; color: #333; flex: 1; }
+        .msg-clear-btn {
+            background: #444; color: #fff; border: none; border-radius: 8px;
+            padding: 8px 16px; font-size: 12px; font-weight: 700;
+            cursor: pointer; flex-shrink: 0; white-space: nowrap; transition: background 0.2s;
+        }
+        .msg-clear-btn:hover { background: #222; }
+        .msg-list-scroll { flex: 1; overflow-y: auto; background: #f4f5f8; }
+        .msg-panel { display: none; padding: 4px 0 16px; }
+        .msg-panel.active { display: block; }
+        .msg-card {
+            background: #fff; margin: 8px 12px; border-radius: 10px;
+            border-left: 4px solid #4caf50; padding: 13px 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.07); cursor: pointer; transition: box-shadow 0.2s;
+        }
+        .msg-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.11); }
+        .msg-card.opp { border-left-color: #ff9800; }
+        .msg-card.svc { border-left-color: #7c4dff; }
+        .mc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; gap: 8px; }
+        .mc-title { font-size: 14px; font-weight: 700; color: #111; }
+        .mc-meta  { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+        .mc-time  { font-size: 11px; color: #aaa; white-space: nowrap; }
+        .mc-badge { font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 20px; white-space: nowrap; color: #fff; }
+        .mc-badge.high   { background: #f44336; }
+        .mc-badge.medium { background: #ff9800; }
+        .mc-badge.low    { background: #9e9e9e; }
+        .mc-badge.info   { background: #2196f3; }
+        .mc-body  { font-size: 13px; color: #555; line-height: 1.55; }
+        .mc-body2 { font-size: 12px; color: #999; margin-top: 4px; line-height: 1.4; }
+
+        /* ═══════════════════ TRIP TAB ═══════════════════ */
+        .pref-trip-page { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        .pref-trip-page.active { display: flex; }
+        .trip-subtabs {
+            background: #fff; padding: 10px 14px;
+            border-bottom: 1.5px solid #e4e6ea;
+            display: flex; gap: 8px; flex-shrink: 0;
+        }
+        .trip-stab {
+            flex: 1; padding: 10px 0; border: 1.5px solid #e0e0e0;
+            border-radius: 12px; font-size: 13px; font-weight: 700;
+            cursor: pointer; transition: all 0.22s;
+            background: #f8f9fa; color: #888;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .trip-stab.active { background: #12151f; border-color: #12151f; color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
+        .trip-panel { display: none; flex: 1; overflow-y: auto; }
+        .trip-panel.active { display: block; }
+
+        /* ─── DASHBOARD ─── */
+        .dash-wrap { background: #0d1120; min-height: 100%; padding: 16px; }
+        .db-toprow { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .db-title  { font-size: 26px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; letter-spacing: 0.04em; }
+        .db-date   { font-size: 12px; color: #5a6a88; font-family: 'Courier New', monospace; margin-top: 2px; }
+        .db-status { background: #192800; border: 1px solid #4a7a00; border-radius: 10px; padding: 8px 14px; text-align: center; }
+        .db-status-lbl { font-size: 9px; color: #7a9a50; font-family: 'Courier New', monospace; letter-spacing: 0.1em; display: block; }
+        .db-status-val { font-size: 13px; font-weight: 900; color: #a8f030; font-family: 'Courier New', monospace; }
+        .db-status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #7aee30; margin-right: 4px; }
+        .db-card { background: #141829; border-radius: 16px; padding: 16px; margin-bottom: 14px; border: 1px solid #1e2538; }
+        .db-card-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .db-card-title { font-size: 11px; font-weight: 800; color: #7a8aaa; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Courier New', monospace; }
+        .db-card-badge { font-size: 10px; color: #5a6a88; font-family: 'Courier New', monospace; }
+        .db-gauges { display: flex; justify-content: space-around; gap: 8px; }
+        .db-gauge  { text-align: center; flex: 1; }
+        .db-gauge svg { display: block; margin: 0 auto 4px; }
+        .db-gauge-lbl { font-size: 10px; font-weight: 700; color: #7a8aaa; letter-spacing: 0.06em; font-family: 'Courier New', monospace; }
+        .db-gauge-sub { font-size: 10px; color: #5a6a88; font-family: 'Courier New', monospace; }
+        .db-load-hdr   { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .db-load-title { font-size: 13px; font-weight: 900; color: #ffa94d; letter-spacing: 0.08em; font-family: 'Courier New', monospace; }
+        .db-enroute    { background: #0a2a1a; border: 1px solid #43e97b; border-radius: 8px; padding: 3px 10px; font-size: 10px; color: #43e97b; font-family: 'Courier New', monospace; }
+        .db-route-row  { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .db-route-city { flex: 1; }
+        .db-route-tag  { font-size: 9px; color: #5a6a88; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+        .db-route-name { font-size: 16px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; }
+        .db-route-sub  { font-size: 10px; color: #5a6a88; }
+        .db-arrow      { font-size: 18px; color: #ffa94d; }
+        .db-prog-lbl   { display: flex; justify-content: space-between; font-size: 10px; color: #7a8aaa; font-family: 'Courier New', monospace; margin-bottom: 5px; }
+        .db-prog-track { background: #1e2538; border-radius: 4px; height: 8px; margin-bottom: 14px; overflow: hidden; }
+        .db-prog-fill  { height: 100%; background: linear-gradient(90deg,#ffa94d,#ff6b35); border-radius: 4px; width: 68%; }
+        .db-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+        .db-stat  { background: #0f1420; border-radius: 10px; padding: 10px 6px; text-align: center; border: 1px solid #1e2538; }
+        .db-stat-icon { font-size: 16px; }
+        .db-stat-lbl  { font-size: 9px; color: #5a6a88; font-family: 'Courier New', monospace; letter-spacing: 0.06em; margin-top: 2px; }
+        .db-stat-val  { font-size: 13px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; }
+        .db-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+        .db-qcard { background: #141829; border-radius: 16px; padding: 20px 14px; text-align: center; border: 1px solid #1e2538; cursor: pointer; transition: border-color 0.2s; position: relative; }
+        .db-qcard:hover { border-color: #ffa94d; }
+        .db-qcard-icon { font-size: 34px; margin-bottom: 8px; }
+        .db-qcard-name { font-size: 12px; font-weight: 900; color: #ffa94d; letter-spacing: 0.06em; font-family: 'Courier New', monospace; }
+        .db-qcard-sub  { font-size: 10px; color: #5a6a88; margin-top: 2px; }
+        .db-qcard-badge { position: absolute; top: 10px; right: 12px; background: #f44336; color: #fff; font-size: 10px; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .db-reload { background: #141829; border-radius: 14px; padding: 14px 16px; border: 1px solid #1e2538; display: flex; align-items: center; gap: 12px; }
+        .db-reload-dot   { width: 10px; height: 10px; border-radius: 50%; background: #43e97b; flex-shrink: 0; }
+        .db-reload-info  { flex: 1; }
+        .db-reload-title { font-size: 13px; font-weight: 900; color: #43e97b; font-family: 'Courier New', monospace; letter-spacing: 0.05em; }
+        .db-reload-sub   { font-size: 11px; color: #5a6a88; }
+        .db-reload-btn   { background: #43e97b; color: #0a1a10; border: none; border-radius: 10px; padding: 9px 16px; font-size: 12px; font-weight: 900; cursor: pointer; font-family: 'Courier New', monospace; white-space: nowrap; transition: background 0.2s; }
+        .db-reload-btn:hover { background: #6effa0; }
+
+        /* ─── TRIP PLANNER ─── */
+        .tp-wrap  { background: #0a0d16; min-height: 100%; padding: 16px; }
+        .tp-live-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+        .tp-live-dot { width: 10px; height: 10px; border-radius: 50%; background: #43e97b; animation: tpPulse 1.4s infinite; }
+        @keyframes tpPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.35)} }
+        .tp-live-lbl { font-size: 11px; font-weight: 800; color: #43e97b; letter-spacing: 0.1em; font-family: 'Courier New', monospace; }
+        .tp-heading  { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .tp-timer    { font-size: 40px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; margin-bottom: 18px; }
+        .tp-card     { background: #141829; border-radius: 16px; margin-bottom: 20px; overflow: hidden; border: 1px solid #1e2538; }
+        .tp-card-hdr { padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
+        .tp-avatar   { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .tp-avatar.org { background: linear-gradient(135deg,#e65100,#ff9800); }
+        .tp-avatar.blu { background: linear-gradient(135deg,#1565c0,#2979ff); }
+        .tp-info   { flex: 1; }
+        .tp-name   { font-size: 15px; font-weight: 800; color: #fff; }
+        .tp-addr   { font-size: 12px; color: #7a8aaa; }
+        .tp-drop   { font-size: 12px; color: #7a8aaa; }
+        .tp-drop b { color: #fff; font-weight: 600; }
+        .tp-fav    { display: inline-flex; align-items: center; gap: 5px; background: #2a1800; border-radius: 10px; padding: 3px 10px; margin-top: 5px; font-size: 11px; color: #ff9800; font-weight: 700; }
+        .tp-menu-btn { background: none; border: none; color: #7a8aaa; font-size: 20px; cursor: pointer; }
+        .tp-map    { background: #1a2030; height: 165px; position: relative; overflow: hidden; }
+        .tp-grid   { position: absolute; inset: 0; background-image: linear-gradient(#1e2540 1px,transparent 1px),linear-gradient(90deg,#1e2540 1px,transparent 1px); background-size: 36px 36px; }
+        .tp-route-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .tp-map-lbl { position: absolute; font-size: 9px; font-weight: 700; color: #5a6a88; font-family: 'Courier New', monospace; letter-spacing: 0.06em; }
+        .tp-map-lbl.pu { bottom: 10px; left: 12px; }
+        .tp-map-lbl.do { top: 8px; right: 10px; }
+        .tp-pin    { position: absolute; font-size: 22px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
+        .tp-pin.pu { bottom: 30px; left: 88px; }
+        .tp-pin.do { top: 22px; right: 58px; }
+        .tp-next-title  { font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+        .tp-next-footer { padding: 12px 16px; background: #0f1420; display: flex; align-items: center; gap: 12px; border-top: 1px solid #1e2538; }
+        .tp-ready-icon  { font-size: 18px; color: #7a8aaa; }
+        .tp-ready-info  { flex: 1; }
+        .tp-ready-lbl   { font-size: 12px; font-weight: 700; color: #fff; }
+        .tp-ready-route { font-size: 11px; color: #7a8aaa; }
+        .tp-accept-btn  { background: #2979ff; color: #fff; border: none; border-radius: 10px; padding: 10px 22px; font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+        .tp-accept-btn:hover { background: #1565c0; }
+        .tp-loc-icon { color: #f44336; font-size: 20px; align-self: flex-start; margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+    <!-- MAP -->
+    <div class="map-section">
+        <div id="map"></div>
+        <button class="map-button menu-btn">
+            <i class="fas fa-bars" style="font-size:18px;"></i>
+        </button>
+        <button class="map-button book-btn">
+            <i class="fas fa-book" style="font-size:16px;"></i>
+        </button>
+        <button class="map-button location-btn">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\14 settings3sle.html"><i class="fas fa-shield-halved" style="font-size:16px;"></i></a>
+        </button>
+        <div class="zoom-group">
+            <button class="map-button" onclick="map.zoomIn()" title="Zoom In">
+                <i class="fas fa-plus" style="font-size:16px;color:#333;"></i>
+            </button>
+            <button class="map-button" onclick="map.zoomOut()" title="Zoom Out">
+                <i class="fas fa-minus" style="font-size:16px;color:#333;"></i>
+            </button>
+        </div>
+        <button class="map-button search-btn">
+            <i class="fas fa-search" style="font-size:14px;"></i> Search location
+        </button>
+        <button class="map-button settings-btn">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\13 filtersetting.html"><i class="fas fa-cog" style="font-size:18px;"></i></a>
+        </button>
+        <button class="go-offline-btn">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\11practice-connect.html">Go Offline</a>
+        </button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-container">
+
+        <!-- Ad Banner -->
+        <div class="ad-banner" id="adBanner">
+            <button class="close-ad" onclick="closeAd()">×</button>
+            <div class="ad-content">
+                <div class="ad-title">30% off 5 rides</div>
+                <div class="ad-subtitle">Limited time offer</div>
+                <button class="ad-button" onclick="viewAdDetails()">View details</button>
+            </div>
+            <div class="ad-icon">🎯</div>
+        </div>
+
+        <!-- Trip Header -->
+        <div class="trip-header">
+            <h1 class="trip-title">Smooth Dispatch ahead.</h1>
+        </div>
+
+        <!-- Trip Type Options -->
+        <div class="trip-options">
+            <div class="trip-option active" onclick="selectTripOption(this,'rides')">
+                <div class="trip-icon rides-icon">🚚</div>
+                <div class="trip-label">Trip</div>
+                <div class="trip-subtitle">Let's go for Shipment</div>
+            </div>
+            <div class="trip-option" onclick="selectTripOption(this,'schedule')">
+                <div class="trip-icon schedule-icon">📅</div>
+                <div class="trip-label">Schedule</div>
+                <div class="trip-subtitle">Book ahead</div>
+            </div>
+        </div>
+
+        <!-- ✦ Filter & Sort Bar ✦ -->
+        <div class="filter-bar">
+            <button class="filter-btn pref-btn" onclick="openPrefModal()">
+                <i class="fas fa-sliders-h"></i>
+                <span>Preference</span>
+            </button>
+            <div class="filter-bar-right">
+                <button class="filter-btn" onclick="openDistanceModal()">
+                    <span class="btn-icon">🎚️</span>
+                    <span id="distanceText">Filter</span>
+                    <i class="fas fa-chevron-down" style="font-size:10px;opacity:0.6;"></i>
+                </button>
+                <button class="filter-btn" onclick="openSortModal()" id="sortBtn">
+                    <span class="btn-icon">↕️</span>
+                    <span id="sortText">Sort By</span>
+                    <i class="fas fa-chevron-down" style="font-size:10px;opacity:0.6;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Trip Cards -->
+        <div class="transaction-cards" id="transactionCards"></div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         FULL-SCREEN PREFERENCE PAGE
+    ══════════════════════════════════════ -->
+    <div class="pref-modal-overlay" id="prefModal">
+
+        <!-- Top bar -->
+        <div class="pref-topbar">
+            <button class="pref-back" onclick="closePrefModal()">&#8592;</button>
+            <span class="pref-page-title">⚙️ Preferences</span>
+        </div>
+
+        <!-- Main toggle: Messages | Trip -->
+        <div class="pref-main-tabs">
+            <div class="pref-pill-row">
+                <button class="pmain-tab active" id="pmTab-msg" onclick="switchPrefTab('msg')">
+                    💬 Messages
+                </button>
+                <button class="pmain-tab" id="pmTab-trip" onclick="switchPrefTab('trip')">
+                    🚚 Trip
+                </button>
+            </div>
+        </div>
+
+        <div class="pref-body">
+
+            <!-- ═══════════ MESSAGES PAGE ═══════════ -->
+            <div class="pref-msg-page active" id="prefMsgPage">
+
+                <!-- Tab sidebar: Trips | Opportunities | Service -->
+                <div class="msg-sidebar">
+                    <button class="msg-tab-btn trips active" id="msgt-trips" onclick="switchMsgTab('trips')">
+                        <div class="msg-tab-icon">🚚</div>
+                        <span class="msg-tab-label">Trips</span>
+                        <span class="msg-tab-badge">2</span>
+                    </button>
+                    <button class="msg-tab-btn opp" id="msgt-opp" onclick="switchMsgTab('opp')">
+                        <div class="msg-tab-icon">🎯</div>
+                        <span class="msg-tab-label">Opportunities</span>
+                        <span class="msg-tab-badge">3</span>
+                    </button>
+                    <button class="msg-tab-btn svc" id="msgt-svc" onclick="switchMsgTab('svc')">
+                        <div class="msg-tab-icon">🛠️</div>
+                        <span class="msg-tab-label">Service</span>
+                    </button>
+                </div>
+
+                <!-- Search bar -->
+                <div class="msg-searchbar">
+                    <div class="msg-search-wrap">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="msgSearchInput" placeholder="Search messages..." oninput="filterMsgCards()">
+                    </div>
+                    <button class="msg-clear-btn" onclick="clearMsgSearch()">Clear</button>
+                </div>
+
+                <!-- Scrollable list -->
+                <div class="msg-list-scroll">
+
+                    <!-- TRIPS messages -->
+                    <div class="msg-panel active" id="msgp-trips">
+                        <div class="msg-card">
+                            <div class="mc-top">
+                                <div class="mc-title">Urgent Pickup Request — Dubai Marina</div>
+                                <div class="mc-meta"><span class="mc-time">8 minutes ago</span><span class="mc-badge high">HIGH</span></div>
+                            </div>
+                            <div class="mc-body">High-priority cargo delivery needed from Dubai Marina to Abu Dhabi International Airport. Cargo type: Medical supplies (1.3 tons).</div>
+                            <div class="mc-body2">Time-sensitive delivery required within 3 hours. Premium rate: $280. Client has excellent rating history.</div>
+                        </div>
+                        <div class="msg-card">
+                            <div class="mc-top">
+                                <div class="mc-title">Active Trip Progress Update</div>
+                                <div class="mc-meta"><span class="mc-time">23 minutes ago</span><span class="mc-badge medium">MEDIUM</span></div>
+                            </div>
+                            <div class="mc-body">Current delivery to Sharjah Industrial Area is 85% complete. GPS shows clear traffic ahead. Estimated arrival: 18 minutes.</div>
+                            <div class="mc-body2">Customer has been notified and is preparing for receipt.</div>
+                        </div>
+                        <div class="msg-card">
+                            <div class="mc-top">
+                                <div class="mc-title">Delivery Completed Successfully</div>
+                                <div class="mc-meta"><span class="mc-time">1 hour ago</span><span class="mc-badge low">LOW</span></div>
+                            </div>
+                            <div class="mc-body">Furniture delivery to Al Ain residential complex completed. Customer satisfaction: 5 stars. Payment received: $195 + $25 tip.</div>
+                            <div class="mc-body2">Loading/unloading assistance was appreciated. Customer requests future bookings.</div>
+                        </div>
+                        <div class="msg-card">
+                            <div class="mc-top">
+                                <div class="mc-title">Route Change — Traffic on Sheikh Zayed Rd</div>
+                                <div class="mc-meta"><span class="mc-time">2 hours ago</span><span class="mc-badge medium">MEDIUM</span></div>
+                            </div>
+                            <div class="mc-body">Traffic delay detected. Alternate route via Al Khail Road recommended. ETA adjusted by +12 minutes.</div>
+                        </div>
+                        <div class="msg-card">
+                            <div class="mc-top">
+                                <div class="mc-title">Load #4821 — Rate Confirmation</div>
+                                <div class="mc-meta"><span class="mc-time">Yesterday</span><span class="mc-badge info">INFO</span></div>
+                            </div>
+                            <div class="mc-body">Rate confirmation for load #4821 attached. Please sign and return before pickup window. Broker: FastFreight LLC.</div>
+                        </div>
+                    </div>
+
+                    <!-- OPPORTUNITY messages -->
+                    <div class="msg-panel" id="msgp-opp">
+                        <div class="msg-card opp">
+                            <div class="mc-top">
+                                <div class="mc-title">Hot Load — Chicago → Detroit</div>
+                                <div class="mc-meta"><span class="mc-time">Just now</span><span class="mc-badge high">HOT 🔥</span></div>
+                            </div>
+                            <div class="mc-body">$1,850 · 284 mi · 38,000 lbs Dry Van. Pickup today 3:00 PM. Rate above market +22%.</div>
+                        </div>
+                        <div class="msg-card opp">
+                            <div class="mc-top">
+                                <div class="mc-title">Reload Match — 12 mi from Drop</div>
+                                <div class="mc-meta"><span class="mc-time">5 min ago</span><span class="mc-badge medium">MATCH</span></div>
+                            </div>
+                            <div class="mc-body">$850 · Columbus → Pittsburgh. 4h fits your HOS. Dry Van. Pickup 4:00 PM.</div>
+                            <div class="mc-body2">12 miles from your current destination. Perfectly fits remaining drive time.</div>
+                        </div>
+                        <div class="msg-card opp">
+                            <div class="mc-top">
+                                <div class="mc-title">Contract Offer — Midwest Freight</div>
+                                <div class="mc-meta"><span class="mc-time">32 min ago</span><span class="mc-badge info">CONTRACT</span></div>
+                            </div>
+                            <div class="mc-body">3-month dedicated lane Chicago → Indianapolis. $3,200/week guaranteed. Respond by 5 PM today.</div>
+                        </div>
+                        <div class="msg-card opp">
+                            <div class="mc-top">
+                                <div class="mc-title">Backhaul — Cincinnati → Chicago</div>
+                                <div class="mc-meta"><span class="mc-time">2h ago</span><span class="mc-badge low">BACKHAUL</span></div>
+                            </div>
+                            <div class="mc-body">$720 · 302 mi · Return to home base. Available tomorrow AM. Flatbed required.</div>
+                        </div>
+                    </div>
+
+                    <!-- SERVICE messages -->
+                    <div class="msg-panel" id="msgp-svc">
+                        <div class="msg-card svc">
+                            <div class="mc-top">
+                                <div class="mc-title">Maintenance Due — Unit #TRK-441</div>
+                                <div class="mc-meta"><span class="mc-time">Today · 8:00 AM</span><span class="mc-badge high">ACTION</span></div>
+                            </div>
+                            <div class="mc-body">Oil change overdue by 1,200 mi. Schedule service at nearest authorized shop to avoid penalty.</div>
+                        </div>
+                        <div class="msg-card svc">
+                            <div class="mc-top">
+                                <div class="mc-title">Tire Pressure Alert</div>
+                                <div class="mc-meta"><span class="mc-time">9:15 AM</span><span class="mc-badge high">URGENT</span></div>
+                            </div>
+                            <div class="mc-body">Left rear tire reading 88 PSI (recommended 110 PSI). Check at next stop.</div>
+                        </div>
+                        <div class="msg-card svc">
+                            <div class="mc-top">
+                                <div class="mc-title">Insurance Renewal — Due in 14 Days</div>
+                                <div class="mc-meta"><span class="mc-time">Feb 20</span><span class="mc-badge medium">REMINDER</span></div>
+                            </div>
+                            <div class="mc-body">Commercial auto policy expires Mar 7. Contact your agent or renew online to avoid coverage gap.</div>
+                        </div>
+                        <div class="msg-card svc">
+                            <div class="mc-top">
+                                <div class="mc-title">ELD Sync Complete</div>
+                                <div class="mc-meta"><span class="mc-time">11:00 PM</span><span class="mc-badge info">OK</span></div>
+                            </div>
+                            <div class="mc-body">Logs synced successfully. FMCSA compliance status: OK. Next HOS reset in 3h 22min.</div>
+                        </div>
+                        <div class="msg-card svc">
+                            <div class="mc-top">
+                                <div class="mc-title">Fuel Card — Low Balance</div>
+                                <div class="mc-meta"><span class="mc-time">Feb 19</span><span class="mc-badge low">LOW</span></div>
+                            </div>
+                            <div class="mc-body">Comdata card balance is $124.80. Reload recommended before next fuel stop on I-70.</div>
+                        </div>
+                    </div>
+
+                </div><!-- /msg-list-scroll -->
+            </div><!-- /prefMsgPage -->
+
+            <!-- ═══════════ TRIP PAGE ═══════════ -->
+            <div class="pref-trip-page" id="prefTripPage">
+
+                <!-- Sub-toggle -->
+                <div class="trip-subtabs">
+                    <button class="trip-stab active" id="tstab-dash" onclick="switchTripTab('dash')">
+                        📊 Dashboard
+                    </button>
+                    <button class="trip-stab" id="tstab-planner" onclick="switchTripTab('planner')">
+                        🗺️ Trip Planner
+                    </button>
+                </div>
+
+                <!-- Dashboard panel -->
+                <div class="trip-panel active" id="tripPanel-dash">
+                    <div class="dash-wrap">
+                        <!-- Header -->
+                        <div class="db-toprow">
+                            <div>
+                                <div class="db-title">DASHBOARD</div>
+                                <div class="db-date">Saturday, Feb 21 · 10:24 AM</div>
+                            </div>
+                            <div class="db-status">
+                                <span class="db-status-lbl">CURRENT STATUS</span>
+                                <div class="db-status-val"><span class="db-status-dot"></span>ON DUTY</div>
+                            </div>
+                        </div>
+                        <!-- HOS -->
+                        <div class="db-card">
+                            <div class="db-card-hdr">
+                                <div class="db-card-title">Hours of Service</div>
+                                <div class="db-card-badge">11h DAILY LIMIT</div>
+                            </div>
+                            <div class="db-gauges">
+                                <div class="db-gauge">
+                                    <svg width="74" height="74" viewBox="0 0 74 74">
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7"/>
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#ffa94d" stroke-width="7" stroke-dasharray="182" stroke-dashoffset="91" stroke-linecap="round" transform="rotate(-90 37 37)"/>
+                                        <text x="37" y="42" text-anchor="middle" font-size="14" font-weight="900" fill="#ffa94d" font-family="Courier New">3.5</text>
+                                    </svg>
+                                    <div class="db-gauge-lbl">DRIVE</div>
+                                    <div class="db-gauge-sub">3.5h left</div>
+                                </div>
+                                <div class="db-gauge">
+                                    <svg width="74" height="74" viewBox="0 0 74 74">
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7"/>
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#2979ff" stroke-width="7" stroke-dasharray="182" stroke-dashoffset="91" stroke-linecap="round" transform="rotate(-90 37 37)"/>
+                                        <text x="37" y="42" text-anchor="middle" font-size="14" font-weight="900" fill="#2979ff" font-family="Courier New">3.5</text>
+                                    </svg>
+                                    <div class="db-gauge-lbl">ON DUTY</div>
+                                    <div class="db-gauge-sub">3.5h left</div>
+                                </div>
+                                <div class="db-gauge">
+                                    <svg width="74" height="74" viewBox="0 0 74 74">
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7"/>
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#a855f7" stroke-width="7" stroke-dasharray="182" stroke-dashoffset="30" stroke-linecap="round" transform="rotate(-90 37 37)"/>
+                                        <text x="37" y="42" text-anchor="middle" font-size="13" font-weight="900" fill="#a855f7" font-family="Courier New">18.0</text>
+                                    </svg>
+                                    <div class="db-gauge-lbl">CYCLE</div>
+                                    <div class="db-gauge-sub">18.0h left</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Active Load -->
+                        <div class="db-card">
+                            <div class="db-load-hdr">
+                                <div class="db-load-title">ACTIVE LOAD</div>
+                                <div class="db-enroute">● EN ROUTE</div>
+                            </div>
+                            <div class="db-route-row">
+                                <div class="db-route-city">
+                                    <div class="db-route-tag">ORIGIN</div>
+                                    <div class="db-route-name">Chicago, IL</div>
+                                    <div class="db-route-sub">Distribution Center</div>
+                                </div>
+                                <div class="db-arrow">→</div>
+                                <div class="db-route-city" style="text-align:right">
+                                    <div class="db-route-tag" style="text-align:right">DESTINATION</div>
+                                    <div class="db-route-name">Columbus, OH</div>
+                                    <div class="db-route-sub">Warehouse Gate 4</div>
+                                </div>
+                            </div>
+                            <div class="db-prog-lbl"><span>PROGRESS</span><span style="color:#ffa94d">68% · 112 mi left</span></div>
+                            <div class="db-prog-track"><div class="db-prog-fill"></div></div>
+                            <div class="db-stats">
+                                <div class="db-stat"><div class="db-stat-icon">⏰</div><div class="db-stat-lbl">ETA</div><div class="db-stat-val">2:45 PM</div></div>
+                                <div class="db-stat"><div class="db-stat-icon">💰</div><div class="db-stat-lbl">RATE</div><div class="db-stat-val">$1,240</div></div>
+                                <div class="db-stat"><div class="db-stat-icon">⚖️</div><div class="db-stat-lbl">WEIGHT</div><div class="db-stat-val">38,400</div></div>
+                            </div>
+                        </div>
+                        <!-- Quick cards -->
+                        <div class="db-quick">
+                            <div class="db-qcard">
+                                <div class="db-qcard-icon">🚛</div>
+                                <div class="db-qcard-name">DUTY &amp; RIG</div>
+                                <div class="db-qcard-sub">Status &amp; Profile</div>
+                            </div>
+                            <div class="db-qcard">
+                                <div class="db-qcard-badge">3</div>
+                                <div class="db-qcard-icon">📋</div>
+                                <div class="db-qcard-name">MANIFEST</div>
+                                <div class="db-qcard-sub">3 Stops Remaining</div>
+                            </div>
+                        </div>
+                        <!-- Reload found -->
+                        <div class="db-reload">
+                            <div class="db-reload-dot"></div>
+                            <div class="db-reload-info">
+                                <div class="db-reload-title">RELOAD FOUND</div>
+                                <div class="db-reload-sub">12 mi from destination · $850 · Fits 4h remaining</div>
+                            </div>
+                            <button class="db-reload-btn">VIEW →</button>
+                        </div>
+                    </div>
+                </div><!-- /dash panel -->
+
+                <!-- Trip Planner panel -->
+                <div class="trip-panel" id="tripPanel-planner">
+                    <div class="tp-wrap">
+                        <!-- Live header -->
+                        <div class="tp-live-row">
+                            <div class="tp-live-dot"></div>
+                            <span class="tp-live-lbl">LIVE</span>
+                        </div>
+                        <div class="tp-heading">Trip to Joely</div>
+                        <div class="tp-timer">1:30</div>
+
+                        <!-- Current trip card -->
+                        <div class="tp-card">
+                            <div class="tp-card-hdr">
+                                <div class="tp-avatar org">👤</div>
+                                <div class="tp-info">
+                                    <div class="tp-name">Joely</div>
+                                    <div class="tp-addr">123 Ash St</div>
+                                    <div class="tp-drop"><b>Dropoff:</b> 456 Elm Ave</div>
+                                    <div class="tp-fav">🟠 Favorites</div>
+                                </div>
+                                <button class="tp-menu-btn">⋮</button>
+                            </div>
+                            <!-- Map -->
+                            <div class="tp-map">
+                                <div class="tp-grid"></div>
+                                <svg class="tp-route-svg" viewBox="0 0 340 165" preserveAspectRatio="none">
+                                    <polyline points="118,128 118,68 232,68 232,38" fill="none" stroke="#ff9800" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <div class="tp-map-lbl pu">PICKUP: 123 ASH ST</div>
+                                <div class="tp-map-lbl do">DROPOFF: 456 ELM AVE</div>
+                                <div class="tp-pin pu">📍</div>
+                                <div class="tp-pin do">📍</div>
+                            </div>
+                        </div>
+
+                        <!-- Next trip -->
+                        <div class="tp-next-title">Next Trip</div>
+                        <div class="tp-card">
+                            <div class="tp-card-hdr">
+                                <div class="tp-avatar blu">👤</div>
+                                <div class="tp-info">
+                                    <div class="tp-name">Mark</div>
+                                    <div class="tp-addr">123 Ash St</div>
+                                    <div class="tp-drop"><b>Dropoff:</b> 456 Elm Ave.</div>
+                                    <div class="tp-fav">🟠 Favorites</div>
+                                </div>
+                                <div class="tp-loc-icon">📍</div>
+                            </div>
+                            <div class="tp-next-footer">
+                                <div class="tp-ready-icon">🕐</div>
+                                <div class="tp-ready-info">
+                                    <div class="tp-ready-lbl">Ready in ~3 min</div>
+                                    <div class="tp-ready-route">Ash St → Elm Ave</div>
+                                </div>
+                                <button class="tp-accept-btn">Accept</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /planner panel -->
+
+            </div><!-- /prefTripPage -->
+        </div><!-- /pref-body -->
+    </div><!-- /prefModal -->
+
+    <!-- Smart Filters Modal -->
+    <div class="distance-modal" id="distanceModal">
+        <div class="distance-content">
+            <!-- Header -->
+            <div class="sf-header">
+                <div class="sf-title">Smart Filters</div>
+            </div>
+
+            <!-- Auto-Reload -->
+            <div class="sf-section active-green">
+                <div class="sf-row">
+                    <div>
+                        <div class="sf-label">Auto-Reload</div>
+                        <div class="sf-sublabel">Notify when a match is found near destination</div>
+                    </div>
+                    <label class="sf-toggle">
+                        <input type="checkbox" id="sf-autoreload" checked>
+                        <div class="sf-toggle-track"></div>
+                        <div class="sf-toggle-thumb"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Destination Buffer -->
+            <div class="sf-section">
+                <div class="sf-row">
+                    <div class="sf-label">Destination Buffer</div>
+                    <div class="sf-value" id="sf-buffer-val">50 mi</div>
+                </div>
+                <div class="sf-slider-wrap">
+                    <input type="range" class="sf-range" id="sf-buffer" min="0" max="100" value="50"
+                        oninput="document.getElementById('sf-buffer-val').textContent=this.value+' mi'; updateSliderBg(this);">
+                    <div class="sf-slider-labels"><span>0 mi</span><span>100 mi</span></div>
+                </div>
+            </div>
+
+            <!-- Clock Guard -->
+            <div class="sf-section">
+                <div class="sf-row">
+                    <div>
+                        <div class="sf-label">Clock Guard (HOS)</div>
+                        <div class="sf-sublabel">Only show loads that fit remaining drive time</div>
+                    </div>
+                    <label class="sf-toggle blue">
+                        <input type="checkbox" id="sf-clockguard" checked>
+                        <div class="sf-toggle-track"></div>
+                        <div class="sf-toggle-thumb"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Load Type -->
+            <div class="sf-section">
+                <div class="sf-label">Load Type (Trailer Match)</div>
+                <div class="sf-load-grid">
+                    <div class="sf-load-btn selected" onclick="selectLoadType(this)">
+                        <div class="sf-load-icon">📦</div>
+                        <div class="sf-load-label">Dry Van</div>
+                    </div>
+                    <div class="sf-load-btn" onclick="selectLoadType(this)">
+                        <div class="sf-load-icon">❄️</div>
+                        <div class="sf-load-label">Reefer</div>
+                    </div>
+                    <div class="sf-load-btn" onclick="selectLoadType(this)">
+                        <div class="sf-load-icon">⬜</div>
+                        <div class="sf-load-label">Flatbed</div>
+                    </div>
+                    <div class="sf-load-btn" onclick="selectLoadType(this)">
+                        <div class="sf-load-icon">🔀</div>
+                        <div class="sf-load-label">Any</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reload Window -->
+            <div class="sf-section">
+                <div class="sf-label">Reload Window (Earliest Pickup)</div>
+                <div class="sf-pill-row">
+                    <div class="sf-pill" onclick="selectPill(this,'pickup')">2:00 PM</div>
+                    <div class="sf-pill" onclick="selectPill(this,'pickup')">3:00 PM</div>
+                    <div class="sf-pill selected" onclick="selectPill(this,'pickup')">4:00 PM</div>
+                    <div class="sf-pill" onclick="selectPill(this,'pickup')">5:00 PM</div>
+                    <div class="sf-pill" onclick="selectPill(this,'pickup')">6:00 PM</div>
+                    <div class="sf-pill" onclick="selectPill(this,'pickup')">Tomorrow AM</div>
+                </div>
+            </div>
+
+            <!-- Back-to-Base Direction -->
+            <div class="sf-section">
+                <div class="sf-label">Back-to-Base Direction</div>
+                <div class="sf-dir-row">
+                    <div class="sf-dir-btn selected" onclick="selectDir(this)">Any</div>
+                    <div class="sf-dir-btn" onclick="selectDir(this)">Home Base</div>
+                    <div class="sf-dir-btn" onclick="selectDir(this)">Chicago, IL</div>
+                    <div class="sf-dir-btn" onclick="selectDir(this)">Nashville, TN</div>
+                </div>
+            </div>
+
+            <!-- Apply Button -->
+            <button class="sf-apply-btn" onclick="applySmartFilters()">Apply Filters &amp; Search</button>
+        </div>
+    </div>
+
+    <!-- Sort Modal -->
+    <div class="sort-modal" id="sortModal">
+        <div class="sort-content">
+            <h3 class="sort-title">Sort By</h3>
+            <div class="sort-option" onclick="selectSort('price-asc','Price: Low → High')">
+                <span>💰</span> Price: Low → High
+            </div>
+            <div class="sort-option" onclick="selectSort('price-desc','Price: High → Low')">
+                <span>💰</span> Price: High → Low
+            </div>
+            <div class="sort-option" onclick="selectSort('duration-asc','Duration: Short → Long')">
+                <span>⏱️</span> Duration: Short → Long
+            </div>
+            <div class="sort-option" onclick="selectSort('type','Trip Type')">
+                <span>🗂️</span> Range
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <!-- <div class="bottom-nav">
+        <div class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <div class="nav-label">Home</div>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">📋</span>
+            <div class="nav-label">Order</div>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">👤</span>
+            <div class="nav-label">Account</div>
+        </div>
+    </div> -->
+
+    <script>
+    /* ── Map ── */
+    const map = L.map('map', { zoomControl: false, attributionControl: false })
+        .setView([24.4539, 54.3773], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    [
+        [24.4539, 54.3773],
+        [24.4239, 54.4373]
+    ].forEach(pos => {
+        L.marker(pos, {
+            icon: L.divIcon({
+                className: 'custom-marker',
+                html: '<i class="fas fa-map-marker-alt" style="font-size:28px;color:#ff4444;"></i>',
+                iconSize: [30, 30], iconAnchor: [15, 30]
+            })
+        }).addTo(map);
+    });
+
+    /* ── Truck SVGs ── */
+    function flatbedSVG(color) {
+        return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="66" width="196" height="7" fill="#444" rx="2"/>
+            <rect x="58" y="54" width="146" height="13" fill="${color}" rx="2"/>
+            <rect x="58" y="54" width="146" height="3" fill="rgba(255,255,255,0.2)" rx="1"/>
+            <rect x="80"  y="63" width="5" height="5" fill="${color}" rx="1"/>
+            <rect x="130" y="63" width="5" height="5" fill="${color}" rx="1"/>
+            <rect x="180" y="63" width="5" height="5" fill="${color}" rx="1"/>
+            <rect x="10" y="34" width="52" height="34" fill="${color}" rx="4"/>
+            <rect x="10" y="34" width="52" height="7" fill="rgba(255,255,255,0.15)" rx="3"/>
+            <rect x="16" y="38" width="28" height="18" fill="#aee6f7" rx="2" opacity="0.9"/>
+            <rect x="11" y="58" width="8" height="5" fill="#FFD700" rx="1"/>
+            <rect x="11" y="46" width="5" height="10" fill="rgba(0,0,0,0.2)" rx="1"/>
+            <rect x="57" y="26" width="4" height="22" fill="#777" rx="2"/>
+            <circle cx="172" cy="81" r="13" fill="#222"/><circle cx="172" cy="81" r="6" fill="#555"/>
+            <circle cx="190" cy="81" r="13" fill="#222"/><circle cx="190" cy="81" r="6" fill="#555"/>
+            <circle cx="38"  cy="81" r="13" fill="#222"/><circle cx="38"  cy="81" r="6" fill="#555"/>
+        </svg>`;
+    }
+    function containerSVG(color) {
+        return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="68" width="200" height="7" fill="#444" rx="2"/>
+            <rect x="58" y="25" width="148" height="45" fill="${color}" rx="3"/>
+            <rect x="58" y="25" width="148" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+            <line x1="96"  y1="25" x2="96"  y2="70" stroke="rgba(0,0,0,0.13)" stroke-width="2"/>
+            <line x1="134" y1="25" x2="134" y2="70" stroke="rgba(0,0,0,0.13)" stroke-width="2"/>
+            <line x1="172" y1="25" x2="172" y2="70" stroke="rgba(0,0,0,0.13)" stroke-width="2"/>
+            <line x1="198" y1="28" x2="198" y2="68" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <rect x="10" y="35" width="52" height="35" fill="${color}" rx="4"/>
+            <rect x="10" y="35" width="52" height="7" fill="rgba(255,255,255,0.15)" rx="3"/>
+            <rect x="16" y="39" width="28" height="19" fill="#aee6f7" rx="2" opacity="0.9"/>
+            <rect x="11" y="60" width="8" height="5" fill="#FFD700" rx="1"/>
+            <rect x="11" y="47" width="5" height="11" fill="rgba(0,0,0,0.2)" rx="1"/>
+            <rect x="57" y="22" width="4" height="24" fill="#777" rx="2"/>
+            <circle cx="170" cy="83" r="13" fill="#222"/><circle cx="170" cy="83" r="6" fill="#555"/>
+            <circle cx="188" cy="83" r="13" fill="#222"/><circle cx="188" cy="83" r="6" fill="#555"/>
+            <circle cx="38"  cy="83" r="13" fill="#222"/><circle cx="38"  cy="83" r="6" fill="#555"/>
+        </svg>`;
+    }
+    function openBoxSVG(color) {
+        return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="68" width="200" height="7" fill="#444" rx="2"/>
+            <rect x="58" y="57" width="148" height="12" fill="${color}" rx="1"/>
+            <rect x="58" y="32" width="7" height="27" fill="${color}" rx="1"/>
+            <rect x="199" y="32" width="7" height="27" fill="${color}" rx="1"/>
+            <rect x="58" y="30" width="148" height="6" fill="${color}" rx="2"/>
+            <rect x="58" y="30" width="148" height="3" fill="rgba(255,255,255,0.25)" rx="1"/>
+            <rect x="65" y="42" width="134" height="16" fill="rgba(0,0,0,0.07)" rx="1"/>
+            <rect x="10" y="35" width="52" height="35" fill="${color}" rx="4"/>
+            <rect x="10" y="35" width="52" height="7" fill="rgba(255,255,255,0.15)" rx="3"/>
+            <rect x="16" y="39" width="28" height="19" fill="#aee6f7" rx="2" opacity="0.9"/>
+            <rect x="11" y="60" width="8" height="5" fill="#FFD700" rx="1"/>
+            <rect x="11" y="47" width="5" height="11" fill="rgba(0,0,0,0.2)" rx="1"/>
+            <rect x="57" y="24" width="4" height="24" fill="#777" rx="2"/>
+            <circle cx="170" cy="83" r="13" fill="#222"/><circle cx="170" cy="83" r="6" fill="#555"/>
+            <circle cx="188" cy="83" r="13" fill="#222"/><circle cx="188" cy="83" r="6" fill="#555"/>
+            <circle cx="38"  cy="83" r="13" fill="#222"/><circle cx="38"  cy="83" r="6" fill="#555"/>
+        </svg>`;
+    }
+    function getTruckSVG(truckType, color) {
+        if (truckType === 'Flatbed Truck')   return flatbedSVG(color);
+        if (truckType === 'Container Truck') return containerSVG(color);
+        return openBoxSVG(color);
+    }
+
+    /* ── Data ── */
+    const transactions = [
+        {
+            type: 'single',
+            price: '₹80,000',
+            tripType: 'Single',
+            truckType: 'Flatbed Truck',
+            pickupLocation: 'Surat, NCR',
+            pickupDate: '26-10-2024, 10:00am',
+            dropLocation: 'Delhi, DL',
+            dropDate: '26-10-2024, 08:00pm',
+            durationHours: '10 hrs',
+            weight: '18,000 KG',
+            dimensions: '15m × 2.5 × 4m',
+            materialType: 'Solid',
+            materialName: 'General Cargo',
+            materialEmoji: '📦',
+            vehicleColor: '#d64545',
+            distance: '< 100 km',
+            distanceKm: '75 km',
+            priceNum: 80000
+        },
+        {
+            type: 'allotment',
+            price: '₹80,000',
+            tripType: 'Allotment',
+            truckType: 'Container Truck',
+            pickupLocation: 'Delhi, NCR',
+            pickupDate: '26-10-2024, 10:00am',
+            dropLocation: 'Delhi, DJ',
+            dropDate: '26-10-2024, 11:00pm',
+            durationHours: '10 hrs',
+            weight: '18,000 KG',
+            dimensions: '15m × 2.5 × 4m',
+            materialType: 'Liquid',
+            materialName: 'Juice Bottles',
+            materialEmoji: '🧃',
+            vehicleColor: '#5a9fb5',
+            distance: '100-300 km',
+            distanceKm: '210 km',
+            priceNum: 80000
+        },
+        {
+            type: 'return',
+            price: '₹1,20,000',
+            tripType: 'Return',
+            truckType: 'Open-Box Truck',
+            pickupLocation: 'Mumbai, MH',
+            pickupDate: '27-10-2024, 08:00am',
+            dropLocation: 'Bangalore, KA',
+            dropDate: '27-10-2024, 06:00pm',
+            durationHours: '10 hrs',
+            returnPickupLocation: 'Bangalore, KA',
+            returnPickupDate: '28-10-2024, 09:00am',
+            returnDropLocation: 'Mumbai, MH',
+            returnDropDate: '28-10-2024, 07:00pm',
+            returnDurationHours: '10 hrs',
+            layoverDuration: '2 hrs',
+            layoverDistanceKm: '40 km',
+            weight: '18,000 KG',
+            dimensions: '15m × 2.5 × 4m',
+            materialType: 'Liquid',
+            materialName: 'Body-wash Bottles',
+            materialEmoji: '🧴',
+            returnMaterialType: 'Liquid',
+            returnMaterialName: 'Empty Bottles',
+            returnMaterialEmoji: '🫙',
+            returnWeight: '8,000 KG',
+            vehicleColor: '#e07b39',
+            distance: '600+ km',
+            distanceKm: '980 km',
+            priceNum: 120000
+        },
+        {
+            type: 'contract',
+            price: '₹1,50,000',
+            priceNote: '/ 30 Days',
+            tripType: 'Contract',
+            truckType: 'Container Truck',
+            companyAddress: 'GMDC, Mandvi-Gujarat',
+            durationPerDay: '8 hrs/day (6 days/week)',
+            contractPeriod: 'Yearly (24-08-2024 to 23-08-2025)',
+            billingCycle: 'Every 30 days',
+            weight: '18,000 KG',
+            dimensions: '15m × 2.5 × 4m',
+            materialType: 'Glass',
+            materialName: 'Cosmetic Items',
+            materialEmoji: '💄',
+            vehicleColor: '#5a9fb5',
+            distance: '300-600 km',
+            distanceKm: '430 km',
+            priceNum: 150000
+        },
+        {
+            type: 'single',
+            price: '₹95,000',
+            tripType: 'Single',
+            truckType: 'Flatbed Truck',
+            pickupLocation: 'Mumbai, MH',
+            pickupDate: '27-10-2024, 09:00am',
+            dropLocation: 'Pune, MH',
+            dropDate: '27-10-2024, 03:00pm',
+            durationHours: '6 hrs',
+            weight: '12,000 KG',
+            dimensions: '12m × 2.3 × 3.8m',
+            materialType: 'Solid',
+            materialName: 'General Cargo',
+            materialEmoji: '📦',
+            vehicleColor: '#c44539',
+            distance: '< 100 km',
+            distanceKm: '150 km',
+            priceNum: 95000
+        }
+    ];
+
+    let currentFilter = 'Any distance';
+    let currentSort   = null;
+
+    /* ── Card Builder ── */
+    function createTripCard(trip) {
+        const leftCol = `
+            <div class="vehicle-compact">
+                <div class="truck-model-name">${trip.truckType}</div>
+                ${getTruckSVG(trip.truckType, trip.vehicleColor)}
+                <div class="truck-dims">${trip.dimensions}</div>
+            </div>`;
+
+        let middleCol = '';
+        if (trip.type === 'contract') {
+            middleCol = `
+                <div class="contract-middle">
+                    <div class="price-badge-row">
+                        <div class="price-compact">${trip.price}<span style="font-size:0.78rem;font-weight:600;color:#999;"> ${trip.priceNote||''}</span></div>
+                        <div class="badge-mini badge-${trip.type}">${trip.tripType}</div>
+                    </div>
+                    <div class="contract-mini">
+                        <div class="ctitle">Contract Details</div>
+                        <div class="details">
+                            <div class="item"><div class="item-label">Company</div><div class="item-value">${trip.companyAddress}</div></div>
+                            <div class="item"><div class="item-label">Duration / Day</div><div class="item-value">${trip.durationPerDay}</div></div>
+                            <div class="item"><div class="item-label">Billing</div><div class="item-value">${trip.billingCycle}</div></div>
+                            <div class="item"><div class="item-label">Period</div><div class="item-value">${trip.contractPeriod}</div></div>
+                        </div>
+                    </div>
+                </div>`;
+        } else if (trip.type === 'return') {
+            middleCol = `
+                <div class="trip-middle">
+                    <div class="price-badge-row">
+                        <div class="price-compact">${trip.price}</div>
+                        <div class="badge-mini badge-${trip.type}">${trip.tripType}</div>
+                    </div>
+                    <div class="return-route-wrapper">
+                        <div class="trip-direction">
+                            <div class="direction-label">⟶ Outbound</div>
+                            <div class="route-stack">
+                                <div class="route-item"><span class="r-icon">📍</span><span class="location">${trip.pickupLocation}</span><span class="r-time">${trip.pickupDate}</span></div>
+                                <div class="route-connector"><div class="connector-line"></div><div class="duration-pill">⏱ ${trip.durationHours}</div><div class="distance-pill">📍 ${trip.distanceKm}</div></div>
+                                <div class="route-item"><span class="r-icon">🎯</span><span class="location">${trip.dropLocation}</span><span class="r-time">${trip.dropDate}</span></div>
+                            </div>
+                        </div>
+                        <div class="return-separator">
+                            <div class="duration-pill" style="background-color:orange; color:blue">⏱ ${trip.layoverDuration}</div>
+                            <span class="separator-icon">🔄</span>
+                            <div class="distance-pill" style="background-color:orange; color:blue">📍 ${trip.layoverDistanceKm}</div>
+                        </div>
+                        <div class="trip-direction">
+                            <div class="direction-label">⟵ Return</div>
+                            <div class="route-stack">
+                                <div class="route-item"><span class="r-icon">📍</span><span class="location">${trip.returnPickupLocation}</span><span class="r-time">${trip.returnPickupDate}</span></div>
+                                <div class="route-connector"><div class="connector-line"></div><div class="duration-pill">⏱ ${trip.returnDurationHours}</div><div class="distance-pill">📍 ${trip.distanceKm}</div></div>
+                                <div class="route-item"><span class="r-icon">🎯</span><span class="location">${trip.returnDropLocation}</span><span class="r-time">${trip.returnDropDate}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        } else {
+            middleCol = `
+                <div class="trip-middle">
+                    <div class="price-badge-row">
+                        <div class="price-compact">${trip.price}</div>
+                        <div class="badge-mini badge-${trip.type}">${trip.tripType}</div>
+                    </div>
+                    <div class="route-stack">
+                        <div class="route-item"><span class="r-icon">📍</span><span class="location">${trip.pickupLocation}</span><span class="r-time">${trip.pickupDate}</span></div>
+                        <div class="route-connector"><div class="connector-line"></div><div class="duration-pill">⏱ ${trip.durationHours}</div><div class="distance-pill">📍 ${trip.distanceKm}</div></div>
+                        <div class="route-item"><span class="r-icon">🎯</span><span class="location">${trip.dropLocation}</span><span class="r-time">${trip.dropDate}</span></div>
+                    </div>
+                </div>`;
+        }
+
+        let rightCol = '';
+        if (trip.type === 'return') {
+            rightCol = `
+                <div class="return-right-col">
+                    <div class="material-block">
+                        <div class="mat-photo-box">${trip.materialEmoji}</div>
+                        <div class="mat-row"><div class="mat-value">${trip.materialType}</div></div>
+                        <div class="mat-row"><div class="mat-value">${trip.materialName}</div></div>
+                        <div class="mat-kg">${trip.weight}</div>
+                    </div> 
+                    <div class="material-block return-material-block">
+                        <div class="mat-photo-box">${trip.returnMaterialEmoji}</div>
+                        <div class="mat-row"><div class="mat-value">${trip.returnMaterialType}</div></div>
+                        <div class="mat-row"><div class="mat-value">${trip.returnMaterialName}</div></div>
+                        <div class="mat-kg">${trip.returnWeight}</div>
+                    </div>
+                </div>`;
+        } else {
+            rightCol = `
+                <div class="material-block">
+                    <div class="mat-photo-box">${trip.materialEmoji}</div>
+                    <div class="mat-row"><div class="mat-value">${trip.materialType}</div></div>
+                    <div class="mat-row"><div class="mat-value">${trip.materialName}</div></div>
+                    <div class="mat-kg">${trip.weight}</div>
+                </div>`;
+        }
+
+        const pageMap = {
+            single:     'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_singletrip.html',
+            return:     'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_returntrip.html',
+            allotment:  'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_allotment.html',
+            contract:   'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_longterm-contract.html'
+        };
+        const targetPage = pageMap[trip.type] || '#';
+        return `<div class="trip-card ${trip.type}" onclick="window.location.href='${targetPage}?type=${trip.type}'" title="Click to view ${trip.tripType} trip details">${leftCol}${middleCol}${rightCol}</div>`;
+    }
+
+    function renderTransactions(list = transactions) {
+        document.getElementById('transactionCards').innerHTML =
+            list.length ? list.map(createTripCard).join('') :
+            '<p style="text-align:center;color:#aaa;padding:40px 0;">No trips found for this filter.</p>';
+    }
+
+    /* ── Smart Filters JS ── */
+    function updateSliderBg(input) {
+        const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
+        input.style.background = `linear-gradient(to right, #ff9800 0%, #ff9800 ${pct}%, #2a3044 ${pct}%, #2a3044 100%)`;
+    }
+
+    function selectLoadType(el) {
+        el.closest('.sf-load-grid').querySelectorAll('.sf-load-btn').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    function selectPill(el, group) {
+        el.closest('.sf-pill-row').querySelectorAll('.sf-pill').forEach(p => p.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    function selectDir(el) {
+        el.closest('.sf-dir-row').querySelectorAll('.sf-dir-btn').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    function applySmartFilters() {
+        const loadType = document.querySelector('.sf-load-btn.selected .sf-load-label')?.textContent || 'All';
+        document.getElementById('distanceText').textContent = loadType;
+        closeDistanceModal();
+        applyFiltersAndSort();
+    }
+
+    /* ── Filter (open/close) ── */
+    function openDistanceModal()  { document.getElementById('distanceModal').classList.add('active'); }
+    function closeDistanceModal() { document.getElementById('distanceModal').classList.remove('active'); }
+
+    function selectDistance(distance, shortName) {
+        currentFilter = distance;
+        document.getElementById('distanceText').textContent = shortName;
+        document.querySelectorAll('.distance-option').forEach(o => o.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        closeDistanceModal();
+        applyFiltersAndSort();
+    }
+
+    /* ── Sort ── */
+    function openSortModal()  { document.getElementById('sortModal').classList.add('active'); }
+    function closeSortModal() { document.getElementById('sortModal').classList.remove('active'); }
+
+    function selectSort(sortKey, label) {
+        currentSort = sortKey;
+        document.getElementById('sortText').textContent = label;
+        document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        closeSortModal();
+        applyFiltersAndSort();
+    }
+
+    function applyFiltersAndSort() {
+        let result = currentFilter === 'Any distance'
+            ? [...transactions]
+            : transactions.filter(t => t.distance === currentFilter);
+
+        if (currentSort === 'price-asc')      result.sort((a,b) => a.priceNum - b.priceNum);
+        else if (currentSort === 'price-desc') result.sort((a,b) => b.priceNum - a.priceNum);
+        else if (currentSort === 'duration-asc') result.sort((a,b) => {
+            const hrs = t => parseInt((t.durationHours||'0').replace(/\D/g,''));
+            return hrs(a) - hrs(b);
+        });
+        else if (currentSort === 'type') result.sort((a,b) => a.type.localeCompare(b.type));
+
+        renderTransactions(result);
+    }
+
+    /* ── Other ── */
+    function selectTripOption(el, type) {
+        document.querySelectorAll('.trip-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+    }
+    function closeAd() {
+        const b = document.getElementById('adBanner');
+        b.style.transition = 'all 0.3s'; b.style.opacity = '0'; b.style.transform = 'translateX(100%)';
+        setTimeout(() => b.style.display = 'none', 300);
+    }
+    function viewAdDetails() { alert('30% off your next 5 rides! Use code SAVE30. Valid until end of month.'); }
+
+    /* ── Preference Full-Screen Page ── */
+    function openPrefModal() {
+        document.getElementById('prefModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closePrefModal() {
+        document.getElementById('prefModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function switchPrefTab(tab) {
+        document.getElementById('pmTab-msg').classList.toggle('active',  tab === 'msg');
+        document.getElementById('pmTab-trip').classList.toggle('active', tab === 'trip');
+        document.getElementById('prefMsgPage').classList.toggle('active',  tab === 'msg');
+        document.getElementById('prefTripPage').classList.toggle('active', tab === 'trip');
+    }
+
+    function switchMsgTab(key) {
+        ['trips','opp','svc'].forEach(k => {
+            document.getElementById('msgt-' + k).classList.toggle('active', k === key);
+            document.getElementById('msgp-' + k).classList.toggle('active', k === key);
+        });
+    }
+
+    function switchTripTab(key) {
+        ['dash','planner'].forEach(k => {
+            document.getElementById('tstab-'     + k).classList.toggle('active', k === key);
+            document.getElementById('tripPanel-' + k).classList.toggle('active', k === key);
+        });
+    }
+
+    function filterMsgCards() {
+        const q = document.getElementById('msgSearchInput').value.toLowerCase();
+        document.querySelectorAll('.msg-card').forEach(c => {
+            c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+    function clearMsgSearch() {
+        document.getElementById('msgSearchInput').value = '';
+        document.querySelectorAll('.msg-card').forEach(c => c.style.display = '');
+    }
+
+    function togglePrefSection() {}   /* kept for back-compat */
+    function handlePrefNav()       {}   /* kept for back-compat */
+
+    /* Close modals on outside click */
+    document.getElementById('distanceModal').addEventListener('click', function(e){ if(e.target===this) closeDistanceModal(); });
+    document.getElementById('sortModal').addEventListener('click', function(e){ if(e.target===this) closeSortModal(); });
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    /* Init */
+    renderTransactions();
+    </script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Finalized</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background: #2a2a2a;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-banner {
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .success-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4CAF50;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .success-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .schedule-box {
+            background: #363636;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .schedule-text {
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        .share-icon {
+            color: #888;
+            font-size: 18px;
+        }
+
+        .driver-card {
+            background: #2196F3;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .driver-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #2196F3;
+            font-size: 15px;
+        }
+
+        .driver-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .driver-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #ddd;
+        }
+
+        .driver-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .driver-details {
+            flex: 1;
+        }
+
+        .driver-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .driver-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .pro-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .driver-rating {
+            color: white;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .star {
+            color: #FFC107;
+        }
+
+        .driver-trips {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+        }
+
+        .van-type {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .price-status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .price {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .price-type {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .status-badge {
+            background: #C8E6C9;
+            color: #2E7D32;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .check-shield {
+            font-size: 16px;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .offer-expires {
+            color: #FF5252;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .calendar-btn {
+            background: #2196F3;
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-btn:hover {
+            background: #1976D2;
+        }
+
+        .trip-details-card {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #3a3a3a;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .detail-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #e0e0e0;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #e0e0e0;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .arrow {
+            color: #666;
+            font-size: 18px;
+        }
+
+        .route-arrow {
+            color: #888;
+            margin: 0 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">‹</button>
+        <div class="header-title">Contract Finalized</div>
+    </div>
+
+    <div class="container">
+        <div class="success-banner">
+            <div class="success-icon">✓</div>
+            <div class="success-text">Contract Finalized!</div>
+        </div>
+
+        <div class="schedule-box">
+            <div class="schedule-text">Scheduled for Friday, Oct 27</div>
+            <div class="share-icon">⎙ ✏️</div>
+        </div>
+
+        <div class="driver-card">
+            <div class="driver-header">Driver Assigned</div>
+            
+            <div class="driver-info">
+                <div class="driver-avatar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23ddd' width='100' height='100'/%3E%3Ccircle cx='50' cy='40' r='20' fill='%23999'/%3E%3Cpath d='M20,90 Q20,65 50,65 T80,90 Z' fill='%23999'/%3E%3C/svg%3E" alt="Driver">
+                </div>
+                <div class="driver-details">
+                    <div class="driver-name-row">
+                        <div class="driver-name">John Doe</div>
+                        <div class="pro-badge">PRO Driver</div>
+                    </div>
+                    <div class="driver-rating">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star" style="color: #ddd;">★</span>
+                        4.9 Driver
+                    </div>
+                    <div class="driver-trips">187 Trips</div>
+                </div>
+                <div class="van-type">53' Dry Van</div>
+            </div>
+
+            <div class="price-status-row">
+                <div>
+                    <span class="price">$1,250</span>
+                    <span class="price-type">(Flat)</span>
+                </div>
+                <div class="status-badge">
+                    <!-- <span class="check-shield">🛡</span> -->
+                    Forklift Ready <span class="check-shield">🛡</span>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <div class="offer-expires">Offer expires in 14m</div>
+                <button class="calendar-btn" onclick="addToCalendar()">Add to Calendar</button>
+            </div>
+        </div>
+
+        <div class="trip-details-card">
+            <div class="card-title">Trip Details</div>
+            
+            <div class="detail-row" onclick="viewRoute()">
+                <div class="detail-label">Route:</div>
+                <div class="detail-value">
+                    Angeles <span class="route-arrow">→</span> Las Vegas
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewRate()">
+                <div class="detail-label">Rate:</div>
+                <div class="detail-value">
+                    $1,250 (Flat)
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewPickup()">
+                <div class="detail-label">Pickup:</div>
+                <div class="detail-value">
+                    Fri, 08:00 AM
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewDropoff()">
+                <div class="detail-label">Dropoff:</div>
+                <div class="detail-value">
+                    Sat, 02:00 PM
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewDistance()">
+                <div class="detail-label">Distance:</div>
+                <div class="detail-value">
+                    270 miles
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewCargo()">
+                <div class="detail-label">Cargo:</div>
+                <div class="detail-value">
+                    50 Crates - Grade A Almonds
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewWeight()">
+                <div class="detail-label">Weight:</div>
+                <div class="detail-value">
+                    2,500 lbs
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewEquipment()">
+                <div class="detail-label">Equipment:</div>
+                <div class="detail-value">
+                    53' Dry Van
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewSpecialInstructions()">
+                <div class="detail-label">Special:</div>
+                <div class="detail-value">
+                    Keep Refrigerated: 34°F
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <div class="detail-row" onclick="viewPallets()">
+                <div class="detail-label">Pallets:</div>
+                <div class="detail-value">
+                    5 Pallets (Shrink-wrapped)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            alert('Going back to previous page...');
+        }
+
+        function addToCalendar() {
+            alert('Adding trip to your calendar...');
+        }
+
+        function viewRoute() {
+            alert('Route Details:\nFrom: Angeles, CA\nTo: Las Vegas, NV\nEstimated Duration: 4-5 hours');
+        }
+
+        function viewRate() {
+            alert('Rate Information:\nBase Rate: $1,250 (Flat)\nPayment Method: Invoice\nTerms: Net 30');
+        }
+
+        function viewPickup() {
+            alert('Pickup Details:\nDate: Friday, Oct 27\nTime: 08:00 AM\nLocation: Angeles Distribution Center\nAddress: 1234 Industrial Blvd, Angeles, CA');
+        }
+
+        function viewDropoff() {
+            alert('Dropoff Details:\nDate: Saturday, Oct 28\nTime: 02:00 PM\nLocation: Las Vegas Warehouse\nAddress: 5678 Commerce Dr, Las Vegas, NV');
+        }
+
+        function viewDistance() {
+            alert('Distance Information:\nTotal Distance: 270 miles\nEstimated Fuel: 45 gallons\nApprox. Drive Time: 4.5 hours');
+        }
+
+        function viewCargo() {
+            alert('Cargo Details:\nProduct: Grade A Almonds\nQuantity: 50 Crates\nPackaging: Sealed boxes\nCondition: Fresh, refrigerated');
+        }
+
+        function viewWeight() {
+            alert('Weight Details:\nTotal Weight: 2,500 lbs\nPer Pallet: 500 lbs\nWithin weight limits for 53\' Dry Van');
+        }
+
+        function viewEquipment() {
+            alert('Equipment Details:\nType: 53\' Dry Van\nFeatures: Refrigerated, Forklift Ready\nCondition: Excellent\nDriver: John Doe (PRO)');
+        }
+
+        function viewSpecialInstructions() {
+            alert('Special Instructions:\n• Keep Refrigerated at 34°F\n• Maintain temperature log\n• Handle with care - fragile items\n• Report any temperature deviations immediately');
+        }
+
+        function viewPallets() {
+            alert('Pallet Information:\nQuantity: 5 Pallets\nPackaging: Shrink-wrapped\nStacking: Double-stacked\nDimensions: Standard 48" x 40"');
+        }
+
+        // Countdown timer for offer expiration
+        let timeLeft = 14 * 60; // 14 minutes in seconds
+        
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timerElement = document.querySelector('.offer-expires');
+            
+            if (timeLeft > 0) {
+                timerElement.textContent = `Offer expires in ${minutes}m ${seconds}s`;
+                timeLeft--;
+            } else {
+                timerElement.textContent = 'Offer expired';
+                timerElement.style.color = '#999';
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
