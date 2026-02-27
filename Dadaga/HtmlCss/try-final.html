@@ -352,6 +352,14 @@ body {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+}
+
+/* Wrapper for clickable KPI with dropdown */
+.kpi-wrap {
+  position: relative;
 }
 
 .kpi {
@@ -359,8 +367,8 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px;
-  position: relative;
-  overflow: hidden;
+  position: static; /* NOT relative — dropdown anchors to .kpi-row */
+  overflow: visible;
   cursor: default;
   transition: transform 0.2s, border-color 0.2s;
   animation: fadeUp 0.4s ease both;
@@ -370,15 +378,63 @@ body {
 .kpi.clickable { cursor: pointer; }
 .kpi.y.kpi-active { box-shadow: inset 0 0 0 1.5px rgba(255,211,42,0.3), 0 0 20px rgba(255,211,42,0.12); border-color: rgba(255,211,42,0.35); }
 .kpi.p.kpi-active { box-shadow: inset 0 0 0 1.5px rgba(168,85,247,0.3), 0 0 20px rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.35); }
+.kpi.r.kpi-active { box-shadow: inset 0 0 0 1.5px rgba(255,71,87,0.3), 0 0 20px rgba(255,71,87,0.12); border-color: rgba(255,71,87,0.35); }
 
-/* Panel slide-in animation */
+/* The bottom-bar stripe — now using a pseudo on a wrapper span */
+.kpi-stripe {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 0 0 12px 12px;
+  pointer-events: none;
+}
+.kpi.c .kpi-stripe { background: var(--accent); }
+.kpi.o .kpi-stripe { background: var(--orange); }
+.kpi.g .kpi-stripe { background: var(--green); }
+.kpi.r .kpi-stripe { background: var(--red); }
+.kpi.y .kpi-stripe { background: var(--yellow); }
+.kpi.p .kpi-stripe { background: var(--purple); }
+
+/* KPI wrapper — carries relative so dropdown floats under it */
+.kpi-wrap {
+  position: relative;
+}
+
+/* KPI DROPDOWN PANELS — floating below the card */
+.kpi-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 300px;
+  z-index: 200;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+
+/* caret arrow pointing up */
+.kpi-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 22px;
+  width: 12px; height: 12px;
+  background: var(--surface);
+  border-left: 1px solid var(--border2);
+  border-top: 1px solid var(--border2);
+  transform: rotate(45deg);
+  z-index: 1;
+}
+
 @keyframes panelSlideIn {
-  from { opacity: 0; transform: translateX(18px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .panel-hidden { display: none !important; }
-.panel-reveal { animation: panelSlideIn 0.28s cubic-bezier(0.22,1,0.36,1) both; }
+.panel-reveal { animation: panelSlideIn 0.22s cubic-bezier(0.22,1,0.36,1) both; }
 
 .kpi::after {
   content: '';
@@ -411,11 +467,11 @@ body {
 .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); font-weight: 600; margin-bottom: 8px; }
 .kpi-sub { font-size: 11px; color: var(--text3); margin-top: 6px; }
 
-/* Content grid */
+/* Content grid — full width now that panels are KPI dropdowns */
 .content-grid {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   animation: fadeUp 0.4s ease 0.1s both;
 }
 
@@ -583,7 +639,7 @@ body {
   border: 1px solid rgba(255,255,255,0.06);
 }
 
-.truck-name {
+.truck-plate {
   font-size: 12px;
   font-weight: 700;
   color: var(--text);
@@ -591,7 +647,7 @@ body {
   white-space: nowrap;
 }
 
-.truck-plate {
+.truck-name {
   font-family: var(--mono);
   font-size: 10px;
   color: var(--accent);
@@ -767,9 +823,6 @@ body {
 }
 
 .act-btn:hover::after { opacity: 1; }
-
-/* Right column */
-.right-col { display: flex; flex-direction: column; gap: 14px; }
 
 /* HOS Panel */
 .hos-list { padding: 4px 0; }
@@ -958,43 +1011,169 @@ body {
 
     <!-- KPI ROW -->
     <div class="kpi-row">
+
       <div class="kpi c">
         <div class="kpi-label">Active Loads</div>
         <div class="kpi-val">8</div>
         <div class="kpi-sub">↑ 2 from yesterday</div>
+        <div class="kpi-stripe"></div>
       </div>
+
       <div class="kpi g">
         <div class="kpi-label">On Road</div>
         <div class="kpi-val">8</div>
         <div class="kpi-sub">Trucks moving now</div>
+        <div class="kpi-stripe"></div>
       </div>
+
       <div class="kpi o">
         <div class="kpi-label">Idle</div>
         <div class="kpi-val">4</div>
         <div class="kpi-sub">Ready to assign</div>
+        <div class="kpi-stripe"></div>
       </div>
-      <div class="kpi r">
-        <div class="kpi-label">At Risk</div>
-        <div class="kpi-val">1</div>
-        <div class="kpi-sub">Late delivery warning</div>
+
+      <div class="kpi-wrap">
+        <div class="kpi r clickable" id="kpi-r" onclick="togglePanel('alerts-panel','kpi-r')">
+          <div class="kpi-label">At Risk</div>
+          <div class="kpi-val">1</div>
+          <div class="kpi-sub">Late delivery warning ▾</div>
+          <div class="kpi-stripe"></div>
+        </div>
+        <!-- FLEET ALERTS FLOATING DROPDOWN -->
+        <div class="kpi-dropdown panel-hidden" id="alerts-panel" onclick="event.stopPropagation()">
+          <div class="panel-head">
+            <div class="panel-title">Fleet Alerts</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:10px;background:var(--red-dim);color:var(--red);padding:2px 8px;border-radius:5px;font-weight:700">4 New</span>
+              <span onclick="togglePanel('alerts-panel','kpi-r')" style="cursor:pointer;color:var(--text3);font-size:14px;line-height:1;padding:4px;">✕</span>
+            </div>
+          </div>
+          <div class="alert-feed">
+            <div class="alert-row">
+              <div class="alert-ic a-red">🔴</div>
+              <div>
+                <div class="alert-text"><strong>Suresh Patil</strong> HOS near limit — 10.8h driven.</div>
+                <div class="alert-ts">08:45 AM</div>
+              </div>
+            </div>
+            <div class="alert-row">
+              <div class="alert-ic a-yellow">⚠️</div>
+              <div>
+                <div class="alert-text"><strong>MH-11-TK</strong> sent to maintenance. Engine fault.</div>
+                <div class="alert-ts">07:20 AM</div>
+              </div>
+            </div>
+            <div class="alert-row">
+              <div class="alert-ic a-yellow">📁</div>
+              <div>
+                <div class="alert-text"><strong>MH-07-TK</strong> permit expires in 45 days.</div>
+                <div class="alert-ts">Yesterday</div>
+              </div>
+            </div>
+            <div class="alert-row">
+              <div class="alert-ic a-cyan">📍</div>
+              <div>
+                <div class="alert-text"><strong>MH-09-TK</strong> approaching Surat. Notify warehouse.</div>
+                <div class="alert-ts">08:12 AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="kpi y clickable" id="kpi-y" onclick="togglePanel('hos-panel', 'kpi-y')">
-        <div class="kpi-label">HOS Alerts</div>
-        <div class="kpi-val">2</div>
-        <div class="kpi-sub">Near limit drivers</div>
+
+      <!-- HOS KPI with floating dropdown -->
+      <div class="kpi-wrap">
+        <div class="kpi y clickable" id="kpi-y" onclick="togglePanel('hos-panel','kpi-y')">
+          <div class="kpi-label">HOS Alerts</div>
+          <div class="kpi-val">2</div>
+          <div class="kpi-sub">Near limit drivers ▾</div>
+          <div class="kpi-stripe"></div>
+        </div>
+        <!-- HOS FLOATING DROPDOWN -->
+        <div class="kpi-dropdown panel-hidden" id="hos-panel" onclick="event.stopPropagation()">
+          <div class="panel-head">
+            <div class="panel-title">Driver HOS <span>Hours of Service</span></div>
+            <span onclick="togglePanel('hos-panel','kpi-y')" style="cursor:pointer;color:var(--text3);font-size:14px;line-height:1;padding:4px;">✕</span>
+          </div>
+          <div class="hos-list">
+            <div class="hos-item">
+              <div class="hos-av" style="background:rgba(0,212,255,0.15);color:var(--accent)">AK</div>
+              <div class="hos-info">
+                <div class="hos-name">Arjun Kumar</div>
+                <div class="hos-sub">MH-01 · In Transit</div>
+              </div>
+              <div class="hos-bar-wrap">
+                <div class="hos-label" style="color:var(--green)">52%</div>
+                <div class="hos-bar"><div class="hos-fill" style="width:52%;background:var(--green)"></div></div>
+              </div>
+            </div>
+            <div class="hos-item">
+              <div class="hos-av" style="background:rgba(168,85,247,0.15);color:var(--purple)">RS</div>
+              <div class="hos-info">
+                <div class="hos-name">Rahul Sharma</div>
+                <div class="hos-sub">MH-03 · Moving</div>
+              </div>
+              <div class="hos-bar-wrap">
+                <div class="hos-label" style="color:var(--accent)">38%</div>
+                <div class="hos-bar"><div class="hos-fill" style="width:38%;background:var(--accent)"></div></div>
+              </div>
+            </div>
+            <div class="hos-item">
+              <div class="hos-av" style="background:rgba(255,211,42,0.15);color:var(--yellow)">SP</div>
+              <div class="hos-info">
+                <div class="hos-name">Suresh Patil</div>
+                <div class="hos-sub">MH-07 · Idle</div>
+              </div>
+              <div class="hos-bar-wrap">
+                <div class="hos-label" style="color:var(--red)">98%</div>
+                <div class="hos-bar"><div class="hos-fill" style="width:98%;background:var(--red)"></div></div>
+              </div>
+            </div>
+            <div class="hos-item">
+              <div class="hos-av" style="background:rgba(0,230,118,0.15);color:var(--green)">VM</div>
+              <div class="hos-info">
+                <div class="hos-name">Vijay More</div>
+                <div class="hos-sub">MH-05 · Moving</div>
+              </div>
+              <div class="hos-bar-wrap">
+                <div class="hos-label" style="color:var(--yellow)">71%</div>
+                <div class="hos-bar"><div class="hos-fill" style="width:71%;background:var(--yellow)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="kpi p clickable" id="kpi-p" onclick="togglePanel('summary-panel', 'kpi-p')">
-        <div class="kpi-label">Today's Rev</div>
-        <div class="kpi-val">₹82K</div>
-        <div class="kpi-sub">Target: ₹1.2L</div>
+
+      <!-- Revenue KPI with floating dropdown -->
+      <div class="kpi-wrap">
+        <div class="kpi p clickable" id="kpi-p" onclick="togglePanel('summary-panel','kpi-p')">
+          <div class="kpi-label">Today's Rev</div>
+          <div class="kpi-val">₹82K</div>
+          <div class="kpi-sub">Target: ₹1.2L ▾</div>
+          <div class="kpi-stripe"></div>
+        </div>
+        <!-- SUMMARY FLOATING DROPDOWN -->
+        <div class="kpi-dropdown panel-hidden" id="summary-panel" onclick="event.stopPropagation()">
+          <div class="panel-head">
+            <div class="panel-title">Today's Summary</div>
+            <span onclick="togglePanel('summary-panel','kpi-p')" style="cursor:pointer;color:var(--text3);font-size:14px;line-height:1;padding:4px;">✕</span>
+          </div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:11px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;"><span style="color:var(--text3)">Deliveries completed</span><span style="color:var(--green);font-weight:700">5 ✓</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;"><span style="color:var(--text3)">Loads in transit</span><span style="color:var(--accent);font-weight:700">8</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;"><span style="color:var(--text3)">Pending assignments</span><span style="color:var(--yellow);font-weight:700">3</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;"><span style="color:var(--text3)">Fuel cost today</span><span style="color:var(--text);font-weight:700">₹12,400</span></div>
+            <div style="height:1px;background:var(--border)"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--text3)">Revenue today</span><span style="color:var(--green);font-weight:800;font-size:16px;font-family:var(--display)">₹82,000</span></div>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <!-- MAIN CONTENT GRID -->
     <div class="content-grid">
-
-      <!-- LEFT: Map + Dispatch Table -->
-      <div style="display:flex;flex-direction:column;gap:14px;">
 
         <!-- LIVE MAP -->
         <div class="panel">
@@ -1080,9 +1259,9 @@ body {
                   <div class="truck-info">
                     <div class="truck-icon-box" style="background:rgba(0,230,118,0.1)">🚛</div>
                     <div>
-                      <div class="truck-name">Tata Prima 5530.S</div>
                       <div class="truck-plate">MH-01-AB-1234</div>
-                    </div>
+                      <div class="truck-name">Tata Prima 5530.S</div>
+                                          </div>
                   </div>
                 </td>
                 <td>
@@ -1135,9 +1314,9 @@ body {
                 <td>
                   <div class="truck-info">
                     <div class="truck-icon-box" style="background:rgba(168,85,247,0.1)">🚛</div>
-                    <div>
-                      <div class="truck-name">Ashok Leyland 4923</div>
+                    <div>                      
                       <div class="truck-plate">MH-03-CD-5678</div>
+                      <div class="truck-name">Ashok Leyland 4923</div>
                     </div>
                   </div>
                 </td>
@@ -1192,8 +1371,8 @@ body {
                   <div class="truck-info">
                     <div class="truck-icon-box" style="background:rgba(255,211,42,0.1)">🚛</div>
                     <div>
-                      <div class="truck-name">TATA LPT 1613</div>
                       <div class="truck-plate">MH-07-EF-9012</div>
+                      <div class="truck-name">TATA LPT 1613</div> 
                     </div>
                   </div>
                 </td>
@@ -1248,8 +1427,8 @@ body {
                   <div class="truck-info">
                     <div class="truck-icon-box" style="background:rgba(0,212,255,0.1)">🚛</div>
                     <div>
-                      <div class="truck-name">BharatBenz 2523R</div>
                       <div class="truck-plate">MH-05-GH-3456</div>
+                      <div class="truck-name">BharatBenz 2523R</div>
                     </div>
                   </div>
                 </td>
@@ -1304,8 +1483,8 @@ body {
                   <div class="truck-info">
                     <div class="truck-icon-box" style="background:rgba(255,71,87,0.1)">🔧</div>
                     <div>
-                      <div class="truck-name">Eicher Pro 6025</div>
                       <div class="truck-plate">MH-11-IJ-7890</div>
+                      <div class="truck-name">Eicher Pro 6025</div>
                     </div>
                   </div>
                 </td>
@@ -1358,116 +1537,6 @@ body {
           </table>
         </div>
 
-      </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="right-col">
-
-        <!-- HOS Panel -->
-        <div class="panel panel-hidden" id="hos-panel">
-          <div class="panel-head">
-            <div class="panel-title">Driver HOS <span>Hours of Service</span></div>
-          </div>
-          <div class="hos-list">
-            <div class="hos-item">
-              <div class="hos-av" style="background:rgba(0,212,255,0.15);color:var(--accent)">AK</div>
-              <div class="hos-info">
-                <div class="hos-name">Arjun Kumar</div>
-                <div class="hos-sub">MH-01 · In Transit</div>
-              </div>
-              <div class="hos-bar-wrap">
-                <div class="hos-label" style="color:var(--green)">52%</div>
-                <div class="hos-bar"><div class="hos-fill" style="width:52%;background:var(--green)"></div></div>
-              </div>
-            </div>
-            <div class="hos-item">
-              <div class="hos-av" style="background:rgba(168,85,247,0.15);color:var(--purple)">RS</div>
-              <div class="hos-info">
-                <div class="hos-name">Rahul Sharma</div>
-                <div class="hos-sub">MH-03 · Moving</div>
-              </div>
-              <div class="hos-bar-wrap">
-                <div class="hos-label" style="color:var(--accent)">38%</div>
-                <div class="hos-bar"><div class="hos-fill" style="width:38%;background:var(--accent)"></div></div>
-              </div>
-            </div>
-            <div class="hos-item">
-              <div class="hos-av" style="background:rgba(255,211,42,0.15);color:var(--yellow)">SP</div>
-              <div class="hos-info">
-                <div class="hos-name">Suresh Patil</div>
-                <div class="hos-sub">MH-07 · Idle</div>
-              </div>
-              <div class="hos-bar-wrap">
-                <div class="hos-label" style="color:var(--red)">98%</div>
-                <div class="hos-bar"><div class="hos-fill" style="width:98%;background:var(--red)"></div></div>
-              </div>
-            </div>
-            <div class="hos-item">
-              <div class="hos-av" style="background:rgba(0,230,118,0.15);color:var(--green)">VM</div>
-              <div class="hos-info">
-                <div class="hos-name">Vijay More</div>
-                <div class="hos-sub">MH-05 · Moving</div>
-              </div>
-              <div class="hos-bar-wrap">
-                <div class="hos-label" style="color:var(--yellow)">71%</div>
-                <div class="hos-bar"><div class="hos-fill" style="width:71%;background:var(--yellow)"></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Fleet Alerts -->
-        <div class="panel">
-          <div class="panel-head">
-            <div class="panel-title">Fleet Alerts</div>
-            <span style="font-size:10px;background:var(--red-dim);color:var(--red);padding:2px 8px;border-radius:5px;font-weight:700">4 New</span>
-          </div>
-          <div class="alert-feed">
-            <div class="alert-row">
-              <div class="alert-ic a-red">🔴</div>
-              <div>
-                <div class="alert-text"><strong>Suresh Patil</strong> HOS near limit — 10.8h driven.</div>
-                <div class="alert-ts">08:45 AM</div>
-              </div>
-            </div>
-            <div class="alert-row">
-              <div class="alert-ic a-yellow">⚠️</div>
-              <div>
-                <div class="alert-text"><strong>MH-11-TK</strong> sent to maintenance. Engine fault.</div>
-                <div class="alert-ts">07:20 AM</div>
-              </div>
-            </div>
-            <div class="alert-row">
-              <div class="alert-ic a-yellow">📁</div>
-              <div>
-                <div class="alert-text"><strong>MH-07-TK</strong> permit expires in 45 days.</div>
-                <div class="alert-ts">Yesterday</div>
-              </div>
-            </div>
-            <div class="alert-row">
-              <div class="alert-ic a-cyan">📍</div>
-              <div>
-                <div class="alert-text"><strong>MH-09-TK</strong> approaching Surat. Notify warehouse.</div>
-                <div class="alert-ts">08:12 AM</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Today's Summary -->
-        <div class="panel panel-hidden" id="summary-panel">
-          <div class="panel-head"><div class="panel-title">Today's Summary</div></div>
-          <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
-            <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Deliveries completed</span><span style="color:var(--green);font-weight:600">5 ✓</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Loads in transit</span><span style="color:var(--accent);font-weight:600">8</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Pending assignments</span><span style="color:var(--yellow);font-weight:600">3</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Fuel cost today</span><span style="color:var(--text);font-weight:600">₹12,400</span></div>
-            <div style="height:1px;background:var(--border)"></div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Revenue today</span><span style="color:var(--green);font-weight:700;font-size:14px;">₹82,000</span></div>
-          </div>
-        </div>
-
-      </div>
     </div>
   </div>
 </div>
@@ -1528,26 +1597,55 @@ body {
 
 <script>
 // KPI panel toggle
+const kpiPanels = [
+  { panelId: 'hos-panel',     kpiId: 'kpi-y' },
+  { panelId: 'summary-panel', kpiId: 'kpi-p' },
+  { panelId: 'alerts-panel',  kpiId: 'kpi-r' },
+];
+
+function closeAllPanels(exceptPanelId) {
+  kpiPanels.forEach(({ panelId, kpiId }) => {
+    if (panelId === exceptPanelId) return;
+    const p = document.getElementById(panelId);
+    const k = document.getElementById(kpiId);
+    if (p) { p.classList.add('panel-hidden'); p.classList.remove('panel-reveal'); }
+    if (k) k.classList.remove('kpi-active');
+  });
+}
+
 function togglePanel(panelId, kpiId) {
   const panel = document.getElementById(panelId);
   const kpi   = document.getElementById(kpiId);
   const isHidden = panel.classList.contains('panel-hidden');
 
   if (isHidden) {
-    // Show
+    closeAllPanels(panelId);
     panel.classList.remove('panel-hidden');
     panel.classList.remove('panel-reveal');
-    // Force reflow so animation replays
-    void panel.offsetWidth;
+    void panel.offsetWidth; // reflow
     panel.classList.add('panel-reveal');
     kpi.classList.add('kpi-active');
   } else {
-    // Hide
     panel.classList.add('panel-hidden');
     panel.classList.remove('panel-reveal');
     kpi.classList.remove('kpi-active');
   }
 }
+
+// Close KPI panels when clicking outside
+document.addEventListener('click', function(e) {
+  kpiPanels.forEach(({ panelId, kpiId }) => {
+    const panel = document.getElementById(panelId);
+    const kpi   = document.getElementById(kpiId);
+    if (panel && kpi && !panel.classList.contains('panel-hidden')) {
+      if (!panel.contains(e.target) && !kpi.contains(e.target)) {
+        panel.classList.add('panel-hidden');
+        panel.classList.remove('panel-reveal');
+        kpi.classList.remove('kpi-active');
+      }
+    }
+  });
+});
 
 // Live clock
 function updateClock() {
