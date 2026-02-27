@@ -253,6 +253,47 @@
                 grid-template-columns: 1fr;
             }
         }
+        img{
+            height: 40px;
+            width: 50px;
+        }
+
+        /* Single-row horizontal scroll for Truck Type & Kind of Load */
+        .scroll-row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            gap: 12px;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #7cb342 #f0f0f0;
+        }
+
+        .scroll-row::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .scroll-row::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        .scroll-row::-webkit-scrollbar-thumb {
+            background: #7cb342;
+            border-radius: 10px;
+        }
+
+        .scroll-row .option-btn {
+            flex: 0 0 auto;
+            min-width: 120px;
+            max-width: 140px;
+            white-space: normal;
+            word-break: break-word;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -265,43 +306,43 @@
     <!-- <div class="container"> --> 
     <div class="section">
         <h2 class="section-title">What is Your Truck Type?</h2>
-        <div class="grid">
+        <div class="grid scroll-row">
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Flatbed</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Flatbed Isolated</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed Isolated</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div class="icon">Open Box</div>
+                <div class="icon"><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Open Box</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Close Box</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Close Box</div>
             </button>
             <button class="option-btn selected" onclick="selectOption(this, 'truck-type')">
-                <div>Stack</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Stack</div>
                 <span class="checkmark">✓</span>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Reefer</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\reefer truck.jpg"><br>Reefer</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div class="icon">Dump</div>
+                <div class="icon"><image src="C:\Users\DADAGA\Pictures\Saved Pictures\dump truck.jpg"><br>Dump</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Concrete Transport</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\Concrete transport truck.jpg"><br>Concrete Transport</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Fly Ash Transport</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fly ash transport truck.jpg"><br>Fly Ash Transport</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Tanker </div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\tanker truck.jpg"><br>Tanker </div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Car Transport</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\car transport truck.jpg"><br>Car Transport</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Fixed Crane</div>
+                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fixed crane truck.jpg"><br>Fixed Crane</div>
             </button>
             <button class="option-btn" onclick="selectOption(this, 'truck-type')">
                 <div>Special...</div>
@@ -343,7 +384,7 @@
         </div>
 
         <h3 class="subtitle">What Kind of Load?</h3>
-        <div class="grid">
+        <div class="grid scroll-row">
             <button class="option-btn" onclick="selectOption(this, 'load-type')">
                 <div class="icon">📦</div>
                 <div>Packaged / Bags</div>
