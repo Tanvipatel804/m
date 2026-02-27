@@ -367,6 +367,18 @@ body {
 }
 
 .kpi:hover { transform: translateY(-2px); border-color: var(--border2); }
+.kpi.clickable { cursor: pointer; }
+.kpi.y.kpi-active { box-shadow: inset 0 0 0 1.5px rgba(255,211,42,0.3), 0 0 20px rgba(255,211,42,0.12); border-color: rgba(255,211,42,0.35); }
+.kpi.p.kpi-active { box-shadow: inset 0 0 0 1.5px rgba(168,85,247,0.3), 0 0 20px rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.35); }
+
+/* Panel slide-in animation */
+@keyframes panelSlideIn {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.panel-hidden { display: none !important; }
+.panel-reveal { animation: panelSlideIn 0.28s cubic-bezier(0.22,1,0.36,1) both; }
 
 .kpi::after {
   content: '';
@@ -530,94 +542,231 @@ body {
   border-radius: 3px;
 }
 
-/* Dispatch Table */
+/* ═══ DISPATCH TABLE — RICH STYLE ═══ */
 .dispatch-table { width: 100%; border-collapse: collapse; }
 
 .dispatch-table th {
-  padding: 9px 16px;
+  padding: 10px 14px;
   text-align: left;
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   color: var(--text3);
-  font-weight: 600;
+  font-weight: 700;
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
+  white-space: nowrap;
 }
 
 .dispatch-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(31,40,64,0.5);
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(31,40,64,0.4);
   vertical-align: middle;
 }
 
 .dispatch-table tr:last-child td { border-bottom: none; }
-.dispatch-table tr:hover td { background: rgba(20,24,32,0.6); }
+.dispatch-table tr:hover td { background: rgba(20,24,32,0.5); }
 
-.treg { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+/* TRUCK INFO CELL */
+.truck-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-.driver-chip {
+.truck-icon-box {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.truck-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.truck-plate {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+/* ROUTE / TYPE CELL */
+.route-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trip-route {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.trip-route span { color: var(--accent); font-size: 11px; }
+
+.trip-truck {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.5px;
+}
+
+.route-type-badge {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  background: var(--surface3);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 3px 10px 3px 4px;
-}
-
-.chip-av {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
   font-size: 9px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  width: fit-content;
 }
 
-.chip-name { font-size: 12px; font-weight: 500; }
+.rt-flatbed   { background: rgba(0,212,255,0.1);  color: var(--accent); }
+.rt-container { background: rgba(168,85,247,0.12); color: var(--purple); }
+.rt-tanker    { background: rgba(255,140,66,0.12); color: var(--orange); }
 
+/* DRIVER CELL */
+.driver-cell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.mini-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+.driver-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* LOAD CELL */
+.load-cell { display: flex; flex-direction: column; gap: 2px; }
+.load-cargo { font-size: 12px; font-weight: 600; color: var(--text); }
+.load-weight {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text3);
+}
+
+/* STATUS PILL */
 .status-pill {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 20px;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
-.sp-dot { width: 5px; height: 5px; border-radius: 50%; }
-.s-green { background: var(--green-dim); color: var(--green); }
-.s-green .sp-dot { background: var(--green); animation: blink 1.5s infinite; }
+.sp-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink:0; }
+.s-green  { background: var(--green-dim);  color: var(--green);  }
+.s-green .sp-dot  { background: var(--green);  animation: blink 1.5s infinite; }
 .s-yellow { background: var(--yellow-dim); color: var(--yellow); }
 .s-yellow .sp-dot { background: var(--yellow); }
-.s-red { background: var(--red-dim); color: var(--red); }
-.s-red .sp-dot { background: var(--red); }
-.s-blue { background: rgba(0,212,255,0.1); color: var(--accent); }
-.s-blue .sp-dot { background: var(--accent); }
+.s-red    { background: var(--red-dim);    color: var(--red);    }
+.s-red .sp-dot    { background: var(--red);    }
+.s-blue   { background: rgba(0,212,255,0.1); color: var(--accent); }
+.s-blue .sp-dot   { background: var(--accent); }
 
-.progress-cell { display: flex; align-items: center; gap: 8px; }
-.mini-bar { width: 60px; height: 3px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
-.mini-fill { height: 100%; border-radius: 2px; }
-.pct { font-family: var(--mono); font-size: 10px; color: var(--text2); }
+/* PROGRESS CELL */
+.progress-cell { display: flex; flex-direction: column; gap: 4px; min-width: 90px; }
+.prog-row { display: flex; align-items: center; gap: 7px; }
+.mini-bar { flex: 1; height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; min-width: 60px; }
+.mini-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.pct { font-family: var(--mono); font-size: 10px; color: var(--text2); min-width: 28px; text-align: right; }
+.prog-km { font-size: 9px; color: var(--text3); font-family: var(--mono); }
 
-.action-row { display: flex; gap: 5px; }
-
-.micro-btn {
-  width: 26px; height: 26px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
+/* ETA CELL */
+.eta-cell { display: flex; flex-direction: column; gap: 3px; }
+.eta-clock {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+.eta-remaining {
+  font-size: 10px;
   color: var(--text3);
-  font-size: 12px;
-  transition: all 0.2s;
+  font-family: var(--body);
 }
 
-.micro-btn:hover { background: var(--surface3); color: var(--text); }
+/* ACTION BUTTONS */
+.action-row { display: flex; gap: 5px; align-items: center; }
+
+.act-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.18s;
+  color: var(--text3);
+  position: relative;
+}
+
+.act-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.act-btn.loc:hover   { background: rgba(0,212,255,0.12);  border-color: rgba(0,212,255,0.4);  color: var(--accent); }
+.act-btn.call:hover  { background: rgba(0,230,118,0.12);  border-color: rgba(0,230,118,0.4);  color: var(--green); }
+.act-btn.msg:hover   { background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.4); color: var(--purple); }
+.act-btn.edit:hover  { background: rgba(255,140,66,0.12); border-color: rgba(255,140,66,0.4); color: var(--orange); }
+
+/* tooltip */
+.act-btn::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface4);
+  color: var(--text);
+  font-size: 9px;
+  font-family: var(--body);
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  border: 1px solid var(--border2);
+}
+
+.act-btn:hover::after { opacity: 1; }
 
 /* Right column */
 .right-col { display: flex; flex-direction: column; gap: 14px; }
@@ -829,12 +978,12 @@ body {
         <div class="kpi-val">1</div>
         <div class="kpi-sub">Late delivery warning</div>
       </div>
-      <div class="kpi y">
+      <div class="kpi y clickable" id="kpi-y" onclick="togglePanel('hos-panel', 'kpi-y')">
         <div class="kpi-label">HOS Alerts</div>
         <div class="kpi-val">2</div>
         <div class="kpi-sub">Near limit drivers</div>
       </div>
-      <div class="kpi p">
+      <div class="kpi p clickable" id="kpi-p" onclick="togglePanel('summary-panel', 'kpi-p')">
         <div class="kpi-label">Today's Rev</div>
         <div class="kpi-val">₹82K</div>
         <div class="kpi-sub">Target: ₹1.2L</div>
@@ -914,66 +1063,297 @@ body {
             <thead>
               <tr>
                 <th>Truck</th>
+                <th>Type / Route</th>
                 <th>Driver</th>
-                <th>Route</th>
                 <th>Load</th>
                 <th>Status</th>
                 <th>Progress</th>
                 <th>ETA</th>
-                <th></th>
+                <th style="text-align:center">Actions</th>
               </tr>
             </thead>
             <tbody>
+
+              <!-- ROW 1 — Moving -->
               <tr>
-                <td><div class="treg">MH-01-TK</div><div style="font-size:10px;color:var(--text3)">Flatbed 20T</div></td>
-                <td><div class="driver-chip"><div class="chip-av" style="background:rgba(0,212,255,0.2);color:var(--accent)">AK</div><span class="chip-name">Arjun K.</span></div></td>
-                <td style="font-size:12px">Mumbai → Pune</td>
-                <td style="font-size:11px;color:var(--text2)">Steel Coils / 18T</td>
+                <td>
+                  <div class="truck-info">
+                    <div class="truck-icon-box" style="background:rgba(0,230,118,0.1)">🚛</div>
+                    <div>
+                      <div class="truck-name">Tata Prima 5530.S</div>
+                      <div class="truck-plate">MH-01-AB-1234</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="route-cell">
+                    <div class="route-type-badge rt-flatbed">Flatbed · 20T</div>
+                    <div class="trip-route">Mumbai <span>→</span> Pune</div>
+                    <div class="trip-truck">MH-01-TK</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="driver-cell">
+                    <div class="mini-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2)">AK</div>
+                    <div class="driver-name">Arjun Kumar</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="load-cell">
+                    <div class="load-cargo">Steel Coils</div>
+                    <div class="load-weight">18.0 T · #TRP-2024</div>
+                  </div>
+                </td>
                 <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
-                <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:65%;background:var(--green)"></div></div><span class="pct">65%</span></div></td>
-                <td style="font-size:11px;color:var(--text2)">2h 10m</td>
-                <td><div class="action-row"><button class="micro-btn">📍</button><button class="micro-btn">📞</button><button class="micro-btn">💬</button></div></td>
+                <td>
+                  <div class="progress-cell">
+                    <div class="prog-row">
+                      <div class="mini-bar"><div class="mini-fill" style="width:65%;background:var(--green)"></div></div>
+                      <span class="pct">65%</span>
+                    </div>
+                    <div class="prog-km">127 km left</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="eta-cell">
+                    <div class="eta-clock">16:45</div>
+                    <div class="eta-remaining">2h 10m away</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-row" style="justify-content:center">
+                    <button class="act-btn loc" data-tip="Location">📍</button>
+                    <button class="act-btn call" data-tip="Call">📞</button>
+                    <button class="act-btn msg" data-tip="Message">💬</button>
+                    <button class="act-btn edit" data-tip="Edit">✏️</button>
+                  </div>
+                </td>
               </tr>
+
+              <!-- ROW 2 — Moving -->
               <tr>
-                <td><div class="treg">MH-03-TK</div><div style="font-size:10px;color:var(--text3)">Container 30T</div></td>
-                <td><div class="driver-chip"><div class="chip-av" style="background:rgba(168,85,247,0.2);color:var(--purple)">RS</div><span class="chip-name">Rahul S.</span></div></td>
-                <td style="font-size:12px">Nashik → Nagpur</td>
-                <td style="font-size:11px;color:var(--text2)">FMCG / 22T</td>
+                <td>
+                  <div class="truck-info">
+                    <div class="truck-icon-box" style="background:rgba(168,85,247,0.1)">🚛</div>
+                    <div>
+                      <div class="truck-name">Ashok Leyland 4923</div>
+                      <div class="truck-plate">MH-03-CD-5678</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="route-cell">
+                    <div class="route-type-badge rt-container">Container · 30T</div>
+                    <div class="trip-route">Nashik <span>→</span> Nagpur</div>
+                    <div class="trip-truck">MH-03-TK</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="driver-cell">
+                    <div class="mini-avatar" style="background:linear-gradient(135deg,#f093fb,#f5576c)">RS</div>
+                    <div class="driver-name">Rahul Sharma</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="load-cell">
+                    <div class="load-cargo">FMCG Goods</div>
+                    <div class="load-weight">22.0 T · #TRP-2025</div>
+                  </div>
+                </td>
                 <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
-                <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:34%;background:var(--accent)"></div></div><span class="pct">34%</span></div></td>
-                <td style="font-size:11px;color:var(--text2)">5h 40m</td>
-                <td><div class="action-row"><button class="micro-btn">📍</button><button class="micro-btn">📞</button><button class="micro-btn">💬</button></div></td>
+                <td>
+                  <div class="progress-cell">
+                    <div class="prog-row">
+                      <div class="mini-bar"><div class="mini-fill" style="width:34%;background:var(--accent)"></div></div>
+                      <span class="pct">34%</span>
+                    </div>
+                    <div class="prog-km">412 km left</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="eta-cell">
+                    <div class="eta-clock">21:15</div>
+                    <div class="eta-remaining">5h 40m away</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-row" style="justify-content:center">
+                    <button class="act-btn loc" data-tip="Location">📍</button>
+                    <button class="act-btn call" data-tip="Call">📞</button>
+                    <button class="act-btn msg" data-tip="Message">💬</button>
+                    <button class="act-btn edit" data-tip="Edit">✏️</button>
+                  </div>
+                </td>
               </tr>
+
+              <!-- ROW 3 — Idle -->
               <tr>
-                <td><div class="treg">MH-07-TK</div><div style="font-size:10px;color:var(--text3)">Tanker 15T</div></td>
-                <td><div class="driver-chip"><div class="chip-av" style="background:rgba(255,211,42,0.2);color:var(--yellow)">SP</div><span class="chip-name">Suresh P.</span></div></td>
-                <td style="font-size:12px;color:var(--text3)">Not assigned</td>
-                <td style="font-size:11px;color:var(--text3)">—</td>
+                <td>
+                  <div class="truck-info">
+                    <div class="truck-icon-box" style="background:rgba(255,211,42,0.1)">🚛</div>
+                    <div>
+                      <div class="truck-name">TATA LPT 1613</div>
+                      <div class="truck-plate">MH-07-EF-9012</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="route-cell">
+                    <div class="route-type-badge rt-tanker">Tanker · 15T</div>
+                    <div class="trip-route" style="color:var(--text3)">Not Assigned</div>
+                    <div class="trip-truck">MH-07-TK</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="driver-cell">
+                    <div class="mini-avatar" style="background:linear-gradient(135deg,#f7971e,#ffd200)">SP</div>
+                    <div class="driver-name">Suresh Patil</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="load-cell">
+                    <div class="load-cargo" style="color:var(--text3)">—</div>
+                    <div class="load-weight">Awaiting load</div>
+                  </div>
+                </td>
                 <td><span class="status-pill s-yellow"><span class="sp-dot"></span>Idle</span></td>
-                <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:0%;background:var(--yellow)"></div></div><span class="pct">—</span></div></td>
-                <td style="font-size:11px;color:var(--text3)">—</td>
-                <td><div class="action-row"><button class="micro-btn" onclick="openAssignLoad()">⚡</button><button class="micro-btn">📞</button></div></td>
+                <td>
+                  <div class="progress-cell">
+                    <div class="prog-row">
+                      <div class="mini-bar"><div class="mini-fill" style="width:0%"></div></div>
+                      <span class="pct" style="color:var(--text3)">—</span>
+                    </div>
+                    <div class="prog-km">—</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="eta-cell">
+                    <div class="eta-clock" style="color:var(--text3)">—:—</div>
+                    <div class="eta-remaining">Unassigned</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-row" style="justify-content:center">
+                    <button class="act-btn loc" data-tip="Location">📍</button>
+                    <button class="act-btn call" data-tip="Call">📞</button>
+                    <button class="act-btn msg" data-tip="Message">💬</button>
+                    <button class="act-btn edit" data-tip="Assign" onclick="openAssignLoad()">⚡</button>
+                  </div>
+                </td>
               </tr>
+
+              <!-- ROW 4 — Near delivery -->
               <tr>
-                <td><div class="treg">MH-05-TK</div><div style="font-size:10px;color:var(--text3)">Flatbed 25T</div></td>
-                <td><div class="driver-chip"><div class="chip-av" style="background:rgba(0,230,118,0.2);color:var(--green)">VM</div><span class="chip-name">Vijay M.</span></div></td>
-                <td style="font-size:12px">Pune → Nashik</td>
-                <td style="font-size:11px;color:var(--text2)">Auto Parts / 14T</td>
+                <td>
+                  <div class="truck-info">
+                    <div class="truck-icon-box" style="background:rgba(0,212,255,0.1)">🚛</div>
+                    <div>
+                      <div class="truck-name">BharatBenz 2523R</div>
+                      <div class="truck-plate">MH-05-GH-3456</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="route-cell">
+                    <div class="route-type-badge rt-flatbed">Flatbed · 25T</div>
+                    <div class="trip-route">Pune <span>→</span> Nashik</div>
+                    <div class="trip-truck">MH-05-TK</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="driver-cell">
+                    <div class="mini-avatar" style="background:linear-gradient(135deg,#1adba7,#0bb5e0)">VM</div>
+                    <div class="driver-name">Vijay More</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="load-cell">
+                    <div class="load-cargo">Auto Parts</div>
+                    <div class="load-weight">14.5 T · #TRP-2026</div>
+                  </div>
+                </td>
                 <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
-                <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:78%;background:var(--green)"></div></div><span class="pct">78%</span></div></td>
-                <td style="font-size:11px;color:var(--text2)">45m</td>
-                <td><div class="action-row"><button class="micro-btn">📍</button><button class="micro-btn">📞</button><button class="micro-btn">💬</button></div></td>
+                <td>
+                  <div class="progress-cell">
+                    <div class="prog-row">
+                      <div class="mini-bar"><div class="mini-fill" style="width:78%;background:var(--green)"></div></div>
+                      <span class="pct">78%</span>
+                    </div>
+                    <div class="prog-km">42 km left</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="eta-cell">
+                    <div class="eta-clock" style="color:var(--green)">16:20</div>
+                    <div class="eta-remaining">~45 min away</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-row" style="justify-content:center">
+                    <button class="act-btn loc" data-tip="Location">📍</button>
+                    <button class="act-btn call" data-tip="Call">📞</button>
+                    <button class="act-btn msg" data-tip="Message">💬</button>
+                    <button class="act-btn edit" data-tip="Edit">✏️</button>
+                  </div>
+                </td>
               </tr>
+
+              <!-- ROW 5 — Maintenance -->
               <tr>
-                <td><div class="treg">MH-11-TK</div><div style="font-size:10px;color:var(--text3)">Container 30T</div></td>
-                <td><div class="driver-chip"><div class="chip-av" style="background:rgba(255,71,87,0.2);color:var(--red)">DD</div><span class="chip-name">Deepak D.</span></div></td>
-                <td style="font-size:12px;color:var(--red)">— Maintenance</td>
-                <td style="font-size:11px;color:var(--text3)">—</td>
+                <td>
+                  <div class="truck-info">
+                    <div class="truck-icon-box" style="background:rgba(255,71,87,0.1)">🔧</div>
+                    <div>
+                      <div class="truck-name">Eicher Pro 6025</div>
+                      <div class="truck-plate">MH-11-IJ-7890</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="route-cell">
+                    <div class="route-type-badge rt-container">Container · 30T</div>
+                    <div class="trip-route" style="color:var(--red)">In Maintenance</div>
+                    <div class="trip-truck">MH-11-TK</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="driver-cell">
+                    <div class="mini-avatar" style="background:linear-gradient(135deg,#ff416c,#ff4b2b)">DD</div>
+                    <div class="driver-name">Deepak Das</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="load-cell">
+                    <div class="load-cargo" style="color:var(--red)">Engine Fault</div>
+                    <div class="load-weight">Grounded · Service</div>
+                  </div>
+                </td>
                 <td><span class="status-pill s-red"><span class="sp-dot"></span>Maint.</span></td>
-                <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:0%"></div></div><span class="pct">—</span></div></td>
-                <td style="font-size:11px;color:var(--text3)">—</td>
-                <td><div class="action-row"><button class="micro-btn">🔧</button></div></td>
+                <td>
+                  <div class="progress-cell">
+                    <div class="prog-row">
+                      <div class="mini-bar"><div class="mini-fill" style="width:0%"></div></div>
+                      <span class="pct" style="color:var(--text3)">—</span>
+                    </div>
+                    <div class="prog-km">—</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="eta-cell">
+                    <div class="eta-clock" style="color:var(--red)">~2 days</div>
+                    <div class="eta-remaining">Est. repair time</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-row" style="justify-content:center">
+                    <button class="act-btn loc" data-tip="Location">📍</button>
+                    <button class="act-btn call" data-tip="Call">📞</button>
+                    <button class="act-btn msg" data-tip="Message">💬</button>
+                    <button class="act-btn edit" data-tip="Edit">✏️</button>
+                  </div>
+                </td>
               </tr>
+
             </tbody>
           </table>
         </div>
@@ -984,7 +1364,7 @@ body {
       <div class="right-col">
 
         <!-- HOS Panel -->
-        <div class="panel">
+        <div class="panel panel-hidden" id="hos-panel">
           <div class="panel-head">
             <div class="panel-title">Driver HOS <span>Hours of Service</span></div>
           </div>
@@ -1075,7 +1455,7 @@ body {
         </div>
 
         <!-- Today's Summary -->
-        <div class="panel">
+        <div class="panel panel-hidden" id="summary-panel">
           <div class="panel-head"><div class="panel-title">Today's Summary</div></div>
           <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
             <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Deliveries completed</span><span style="color:var(--green);font-weight:600">5 ✓</span></div>
@@ -1147,6 +1527,28 @@ body {
 </div>
 
 <script>
+// KPI panel toggle
+function togglePanel(panelId, kpiId) {
+  const panel = document.getElementById(panelId);
+  const kpi   = document.getElementById(kpiId);
+  const isHidden = panel.classList.contains('panel-hidden');
+
+  if (isHidden) {
+    // Show
+    panel.classList.remove('panel-hidden');
+    panel.classList.remove('panel-reveal');
+    // Force reflow so animation replays
+    void panel.offsetWidth;
+    panel.classList.add('panel-reveal');
+    kpi.classList.add('kpi-active');
+  } else {
+    // Hide
+    panel.classList.add('panel-hidden');
+    panel.classList.remove('panel-reveal');
+    kpi.classList.remove('kpi-active');
+  }
+}
+
 // Live clock
 function updateClock() {
   const now = new Date();
