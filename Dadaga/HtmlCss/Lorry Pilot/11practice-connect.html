@@ -1095,7 +1095,7 @@
                 <div class="trip-label">Trip</div>
                 <div class="trip-subtitle">Let's go for Shipment</div>
             </div>
-            <div class="trip-option" onclick="selectTripOption(this,'schedule')">
+            <div class="trip-option" onclick="selectTripOption(this,'schedule'); openSchedulePage()">
                 <div class="trip-icon schedule-icon">📅</div>
                 <div class="trip-label">Schedule</div>
                 <div class="trip-subtitle">Book ahead</div>
@@ -2064,5 +2064,380 @@
     /* Init */
     renderTransactions();
     </script>
+
+<!-- ═══════════════════════════════════════════════
+     SCHEDULE TRIP OVERLAY (embedded from 16_schedule-trip.html)
+════════════════════════════════════════════════════ -->
+<div id="schedulePage" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:#e8e8e8; overflow-y:auto;">
+
+  <style>
+    /* ── Schedule page scoped styles ── */
+    #schedulePage .st-header {
+        background: #3d3d3d;
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #schedulePage .st-back-btn {
+        font-size: 28px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: white;
+        line-height: 1;
+    }
+    #schedulePage .st-header h1 {
+        width: auto;
+        height: auto;
+        flex: 1;
+        text-align: center;
+        font-size: 25px;
+        color: white;
+        border-radius: 0;
+        background: none;
+        display: block;
+    }
+    #schedulePage .st-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    #schedulePage .st-section-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #000;
+    }
+    #schedulePage .st-subtitle {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 25px 0 15px 0;
+        color: #000;
+    }
+    #schedulePage .st-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    #schedulePage .st-grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    #schedulePage .st-opt-btn {
+        background: #f5f5f5;
+        border: 2px solid transparent;
+        border-radius: 20px;
+        padding: 20px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60px;
+        position: relative;
+    }
+    #schedulePage .st-opt-btn.selected {
+        background: #7cb342;
+        color: white;
+        border-color: #7cb342;
+    }
+    #schedulePage .st-opt-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    #schedulePage .st-checkmark {
+        position: absolute;
+        top: 10px; right: 10px;
+        width: 25px; height: 25px;
+        background: white;
+        border-radius: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: #7cb342;
+        font-size: 16px;
+    }
+    #schedulePage .st-opt-btn.selected .st-checkmark { display: flex; }
+    #schedulePage .st-input-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    #schedulePage .st-input-field {
+        flex: 1;
+        padding: 18px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 16px;
+        background: #f9f9f9;
+        font-family: inherit;
+    }
+    #schedulePage .st-input-field:focus {
+        outline: none;
+        border-color: #7cb342;
+    }
+    #schedulePage .st-input-with-icon {
+        position: relative;
+        flex: 1;
+    }
+    #schedulePage .st-input-with-icon .st-icon {
+        position: absolute;
+        left: 15px; top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #7cb342;
+    }
+    #schedulePage .st-input-with-icon input {
+        padding-left: 50px;
+        width: 100%;
+    }
+    #schedulePage textarea.st-input-field {
+        min-height: 100px;
+        width: 100%;
+        resize: vertical;
+    }
+    #schedulePage .st-submit-btn {
+        width: 100%;
+        padding: 20px;
+        background: #7cb342;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+    #schedulePage .st-submit-btn:hover {
+        background: #689f38;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124,179,66,0.4);
+    }
+    #schedulePage .st-date-btn {
+        flex: 1;
+        padding: 15px;
+        background: #f5f5f5;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    #schedulePage .st-date-btn.selected {
+        background: #7cb342;
+        color: white;
+    }
+    /* Scroll row */
+    #schedulePage .st-scroll-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 12px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        scrollbar-width: thin;
+        scrollbar-color: #7cb342 #f0f0f0;
+    }
+    #schedulePage .st-scroll-row::-webkit-scrollbar { height: 6px; }
+    #schedulePage .st-scroll-row::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 10px; }
+    #schedulePage .st-scroll-row::-webkit-scrollbar-thumb { background: #7cb342; border-radius: 10px; }
+    #schedulePage .st-scroll-row .st-opt-btn {
+        flex: 0 0 auto;
+        min-width: 120px;
+        max-width: 140px;
+        white-space: normal;
+        word-break: break-word;
+        text-align: center;
+    }
+    #schedulePage img { height: 40px; width: 50px; }
+    @media (max-width: 768px) {
+        #schedulePage .st-grid { grid-template-columns: repeat(2, 1fr); }
+        #schedulePage .st-input-row { flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+        #schedulePage .st-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <!-- Header -->
+  <div class="st-header">
+    <button class="st-back-btn" onclick="closeSchedulePage()">‹</button>
+    <h1>Schedule Trip</h1>
+  </div>
+
+  <div class="st-section">
+
+    <!-- Truck Type -->
+    <h2 class="st-section-title">What is Your Truck Type?</h2>
+    <div class="st-grid st-scroll-row">
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed Isolated</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Open Box</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Close Box</div></button>
+      <button class="st-opt-btn selected" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Stack</div><span class="st-checkmark">✓</span></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\reefer truck.jpg"><br>Reefer</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\dump truck.jpg"><br>Dump</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\Concrete transport truck.jpg"><br>Concrete Transport</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fly ash transport truck.jpg"><br>Fly Ash Transport</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\tanker truck.jpg"><br>Tanker</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\car transport truck.jpg"><br>Car Transport</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fixed crane truck.jpg"><br>Fixed Crane</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div>Special...</div></button>
+    </div>
+
+    <!-- Load Details -->
+    <h2 class="st-section-title">How Heavy & What Kind of Load?</h2>
+    <h3 class="st-subtitle">Maximum Load Weight (KG)</h3>
+    <div class="st-grid">
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">&lt; 1000 KG</button>
+      <button class="st-opt-btn selected" onclick="stSelectOption(this,'weight')">1000 - 3000 KG<span class="st-checkmark">✓</span></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">3000 - 6000 KG</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">6000 - 10000 KG</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">10000 - 15000 KG</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">15000 - 20000 KG</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">20000 - 30000 KG</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">30000 - 40000 KG</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">&gt; 40000 KG</button>
+    </div>
+
+    <h3 class="st-subtitle">What Kind of Load?</h3>
+    <div class="st-grid st-scroll-row">
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">📦</div><div>Packaged / Bags</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">⛰️</div><div>Powdered / Grain</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🛢️</div><div>Liquid / Gas</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">❄️</div><div>Frozen / Food</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🧱</div><div>Solid</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🧻</div><div>Bulky</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🍽️</div><div>Fragile</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🚪🛏️</div><div>Furniture</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">⚒️</div><div>fragmented / Scrap</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">⚛︎ 🧬 🧫 🧪</div><div>Hazardous</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🖥️</div><div>Electrical</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🏗️</div><div>Equipments</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🚢</div><div>Containers</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">💉</div><div>Medical</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🎻</div><div>Instrument</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🐘🦏🦒🦁🦓</div><div>Living Beings</div></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🌱🌱</div><div>Others</div></button>
+    </div>
+
+    <!-- Availability -->
+    <h2 class="st-section-title">When Are You Available 📅🗺️📍</h2>
+    <h3 class="st-subtitle">Available Dates</h3>
+    <div class="st-input-row">
+      <div class="st-input-with-icon">
+        <span class="st-icon">📅</span>
+        <input type="text" class="st-input-field" placeholder="Start Date">
+      </div>
+      <button class="st-opt-btn" style="flex:0.4;">Anytime</button>
+    </div>
+
+    <!-- Location -->
+    <h2 class="st-section-title">Where & When Are You Available? 📍</h2>
+    <div class="st-input-row">
+      <div class="st-input-with-icon">
+        <span class="st-icon">📍</span>
+        <input type="text" class="st-input-field" placeholder="Current City, State">
+      </div>
+      <button class="st-opt-btn" style="flex:0.4;">Anywhere</button>
+    </div>
+
+    <h3 class="st-subtitle">Your Location<br><br>Where You Want To Go?</h3>
+    <div class="st-input-row">
+      <div class="st-input-with-icon">
+        <span class="st-icon">🌐</span>
+        <input type="text" class="st-input-field" placeholder="Destination City, State">
+      </div>
+      <button class="st-opt-btn" style="flex:0.4;">Anywhere</button>
+    </div>
+
+    <!-- Trip Details -->
+    <h3 class="st-subtitle">Trip Details</h3>
+    <div class="st-subtitle" style="font-size:16px;margin-top:15px;">Distance Range (KM)</div>
+    <div class="st-grid">
+      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">&lt; 200 KM</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">200 - 500 KM</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">500 - 1000 KM</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">&gt; 1000 KM</button>
+    </div>
+
+    <div class="st-subtitle" style="font-size:16px;margin-top:15px;">Trip-type</div>
+    <div class="st-grid">
+      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Single Trip</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Return Trip</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Allotment Trip</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Long-Term Trip</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">All</button>
+    </div>
+
+    <!-- Delivery & Pay -->
+    <h2 class="st-section-title">⭐ Delivery, Pay & Ratings</h2>
+    <h3 class="st-subtitle">Delivery Mode</h3>
+    <div class="st-grid">
+      <button class="st-opt-btn selected" onclick="stSelectOption(this,'delivery')">✓ Normal<span class="st-checkmark">✓</span></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'delivery')">⚡ Express</button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'delivery')">⚡ Both</button>
+    </div>
+
+    <h3 class="st-subtitle">Payment Preffered</h3>
+    <div class="st-grid st-grid-2">
+      <button class="st-opt-btn selected" onclick="stSelectOption(this,'payment-final')">Cash Preferred<span class="st-checkmark">✓</span></button>
+      <button class="st-opt-btn" onclick="stSelectOption(this,'payment-final')">Digital Pay</button>
+    </div>
+
+    <!-- Order Time & Notes -->
+    <h2 class="st-section-title">Order Time & Final Notes ⏰📝</h2>
+    <h3 class="st-subtitle">When Can You Confirm?</h3>
+    <div class="st-input-row">
+      <button class="st-date-btn selected">Confirm Order Time</button>
+      <button class="st-date-btn">Flexible Time</button>
+    </div>
+
+    <h3 class="st-subtitle">Additional Comments</h3>
+    <textarea class="st-input-field" placeholder="Write any extra details here..."></textarea>
+
+    <button class="st-submit-btn" onclick="stSubmitForm()">Post My Trip!</button>
+  </div>
+</div>
+
+<script>
+  function openSchedulePage() {
+    document.getElementById('schedulePage').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSchedulePage() {
+    document.getElementById('schedulePage').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function stSelectOption(btn, group) {
+    const section = btn.closest('.st-section');
+    section.querySelectorAll(`.st-opt-btn[onclick*="${group}"]`).forEach(b => {
+      b.classList.remove('selected');
+      const check = b.querySelector('.st-checkmark');
+      if (check) check.style.display = 'none';
+    });
+    btn.classList.add('selected');
+    const checkmark = btn.querySelector('.st-checkmark');
+    if (checkmark) checkmark.style.display = 'flex';
+  }
+  function stSubmitForm() {
+    alert('Trip posted successfully! 🎉');
+  }
+</script>
+
 </body>
 </html>
