@@ -1,91 +1,3482 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP Verification</title>
-     <style>
-        * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FleetOS — Transporter & Driver Views</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08090d;
+  --surface: #0e1117;
+  --surface2: #141820;
+  --surface3: #1c2230;
+  --surface4: #232c3d;
+  --border: #1f2840;
+  --border2: #2a3550;
+  --accent: #00d4ff;
+  --accent-dim: rgba(0,212,255,0.1);
+  --accent-glow: 0 0 20px rgba(0,212,255,0.3);
+  --orange: #ff8c42;
+  --orange-dim: rgba(255,140,66,0.1);
+  --green: #00e676;
+  --green-dim: rgba(0,230,118,0.1);
+  --red: #ff4757;
+  --red-dim: rgba(255,71,87,0.1);
+  --yellow: #ffd32a;
+  --yellow-dim: rgba(255,211,42,0.1);
+  --purple: #a855f7;
+  --purple-dim: rgba(168,85,247,0.1);
+  --text: #e2e8f4;
+  --text2: #6b7fa3;
+  --text3: #3a4a68;
+  --mono: 'DM Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #373535;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 13px;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-.otp-container {
-    text-align: center;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* ═══════════════════════════════════
+   TOP ROLE SWITCHER
+═══════════════════════════════════ */
+.role-banner {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-h2 {
-    margin-bottom: 20px;
+.brand {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.otp-inputs {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+.brand-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
 }
 
-.otp-input {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    text-align: center;
-    border: 2px solid #ccc;
-    border-radius: 5px;
+.brand span { color: var(--accent); }
+
+.role-switcher {
+  display: flex;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #f9fafc;
-    color: rgb(16, 15, 15);
-    border: 2px solid black;
-    border-radius: 5px;
-    cursor: pointer;
+.role-btn {
+  padding: 8px 20px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
-button:hover {
-    background-color: #a7bcd0;
+.role-btn.admin.active {
+  background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(168,85,247,0.2));
+  color: var(--accent);
+  border: 1px solid rgba(0,212,255,0.3);
 }
 
-#message {
-    margin-top: 10px;
-    font-size: 16px;
+.role-btn.driver.active {
+  background: linear-gradient(135deg, rgba(255,140,66,0.2), rgba(0,230,118,0.15));
+  color: var(--orange);
+  border: 1px solid rgba(255,140,66,0.3);
 }
 
-     </style>
+.role-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  animation: blink 2s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.role-label {
+  font-size: 11px;
+  color: var(--text2);
+  padding: 6px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+/* ═══════════════════════════════════
+   VIEWS
+═══════════════════════════════════ */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ═══════════════════════════════════
+   ADMIN DASHBOARD
+═══════════════════════════════════ */
+.admin-shell {
+  display: grid;
+  grid-template-columns: 64px 220px 1fr;
+  min-height: calc(100vh - 57px);
+}
+
+/* Icon sidebar */
+.icon-rail {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  gap: 6px;
+}
+
+.rail-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text3);
+  transition: all 0.2s;
+  font-size: 18px;
+}
+
+.rail-icon:hover { background: var(--surface2); color: var(--text2); }
+.rail-icon.active { background: var(--accent-dim); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,212,255,0.2); }
+.rail-spacer { flex: 1; }
+
+/* Left nav panel */
+.left-nav {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text3);
+  font-weight: 600;
+  padding: 0 16px;
+  margin: 16px 0 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  margin: 1px 0;
+}
+
+.nav-link:hover { background: var(--surface2); color: var(--text); }
+.nav-link.active { background: var(--accent-dim); color: var(--accent); border-left-color: var(--accent); }
+
+.nav-link .icon { font-size: 15px; width: 20px; text-align: center; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.nav-badge.yellow { background: var(--yellow); color: #000; }
+.nav-badge.green { background: var(--green); color: #000; }
+
+/* Transporter profile in nav */
+.transporter-card {
+  margin: 0 12px 16px;
+  background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(168,85,247,0.08));
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.t-name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.t-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+.t-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.t-stat {
+  background: var(--surface3);
+  border-radius: 6px;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.t-stat-val {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent);
+}
+
+.t-stat-label { font-size: 10px; color: var(--text3); }
+
+/* Main content */
+.admin-main {
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.admin-topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.page-heading {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.page-heading em { color: var(--text2); font-style: normal; font-size: 12px; font-family: var(--body); font-weight: 400; margin-left: 8px; }
+
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+.btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: none;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-cyan { background: var(--accent); color: #000; }
+.btn-cyan:hover { background: #33ddff; box-shadow: var(--accent-glow); }
+.btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--surface3); color: var(--text); }
+.btn-orange { background: var(--orange); color: #000; }
+
+.admin-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+
+/* KPI Row */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.kpi:hover { transform: translateY(-2px); border-color: var(--border2); }
+
+.kpi::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.kpi.c::after { background: var(--accent); }
+.kpi.o::after { background: var(--orange); }
+.kpi.g::after { background: var(--green); }
+.kpi.r::after { background: var(--red); }
+.kpi.y::after { background: var(--yellow); }
+.kpi.p::after { background: var(--purple); }
+
+.kpi-val {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.kpi.c .kpi-val { color: var(--accent); }
+.kpi.o .kpi-val { color: var(--orange); }
+.kpi.g .kpi-val { color: var(--green); }
+.kpi.r .kpi-val { color: var(--red); }
+.kpi.y .kpi-val { color: var(--yellow); }
+.kpi.p .kpi-val { color: var(--purple); }
+
+.kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); font-weight: 600; margin-bottom: 8px; }
+.kpi-sub { font-size: 11px; color: var(--text3); margin-top: 6px; }
+
+/* Content grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.panel-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.panel-title span { color: var(--text2); font-size: 11px; font-family: var(--body); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+
+/* Live map placeholder */
+.live-map {
+  height: 220px;
+  background: var(--surface2);
+  position: relative;
+  overflow: hidden;
+}
+
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.map-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 50%, rgba(0,212,255,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 30%, rgba(168,85,247,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 70%, rgba(0,230,118,0.05) 0%, transparent 40%);
+}
+
+/* Road lines */
+.road {
+  position: absolute;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+}
+
+.map-tag {
+  position: absolute;
+  background: rgba(8,9,13,0.85);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 10px;
+  color: var(--text2);
+  font-family: var(--mono);
+  backdrop-filter: blur(4px);
+}
+
+/* Truck markers */
+.truck-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.marker-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid;
+  animation: markerPulse 2.5s infinite;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+@keyframes markerPulse {
+  0% { width: 20px; height: 20px; opacity: 0.8; }
+  100% { width: 50px; height: 50px; opacity: 0; }
+}
+
+.marker-body {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  border: 1.5px solid;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s;
+}
+
+.truck-marker:hover .marker-body { transform: scale(1.15); }
+
+.m-active .marker-body { background: rgba(0,230,118,0.2); border-color: var(--green); }
+.m-active .marker-ring { border-color: var(--green); }
+.m-idle .marker-body { background: rgba(255,211,42,0.2); border-color: var(--yellow); }
+.m-maintenance .marker-body { background: rgba(255,71,87,0.15); border-color: var(--red); }
+
+.marker-id {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--accent);
+  white-space: nowrap;
+  background: rgba(8,9,13,0.9);
+  border: 1px solid var(--border2);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* DISPATCH TABLE */
+.dispatch-table { width: 100%; border-collapse: collapse; }
+
+.dispatch-table th {
+  padding: 9px 16px;
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text3);
+  font-weight: 600;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.dispatch-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(31,40,64,0.5);
+  vertical-align: middle;
+}
+
+.dispatch-table tr:last-child td { border-bottom: none; }
+.dispatch-table tr:hover td { background: rgba(20,24,32,0.6); }
+
+.treg { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+
+.driver-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 10px 3px 4px;
+}
+
+.chip-av {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.chip-name { font-size: 12px; font-weight: 500; }
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sp-dot { width: 5px; height: 5px; border-radius: 50%; }
+.s-green { background: var(--green-dim); color: var(--green); }
+.s-green .sp-dot { background: var(--green); animation: blink 1.5s infinite; }
+.s-yellow { background: var(--yellow-dim); color: var(--yellow); }
+.s-yellow .sp-dot { background: var(--yellow); }
+.s-red { background: var(--red-dim); color: var(--red); }
+.s-red .sp-dot { background: var(--red); }
+.s-blue { background: rgba(0,212,255,0.1); color: var(--accent); }
+.s-blue .sp-dot { background: var(--accent); }
+
+.progress-cell { display: flex; align-items: center; gap: 8px; }
+.mini-bar { width: 60px; height: 3px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+.mini-fill { height: 100%; border-radius: 2px; }
+.pct { font-family: var(--mono); font-size: 10px; color: var(--text2); }
+
+.action-row { display: flex; gap: 5px; }
+
+.micro-btn {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text3);
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.micro-btn:hover { background: var(--surface3); color: var(--text); }
+
+/* Right column */
+.right-col { display: flex; flex-direction: column; gap: 14px; }
+
+/* HOS Panel */
+.hos-list { padding: 4px 0; }
+
+.hos-item {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(31,40,64,0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.hos-item:last-child { border-bottom: none; }
+.hos-item:hover { background: rgba(20,24,32,0.5); }
+
+.hos-av {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.hos-info { flex: 1; min-width: 0; }
+.hos-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hos-sub { font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+.hos-bar-wrap { width: 50px; }
+.hos-label { font-size: 9px; color: var(--text3); text-align: right; margin-bottom: 2px; }
+.hos-bar { height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+.hos-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+
+/* Alert panel */
+.alert-feed { padding: 4px 0; }
+
+.alert-row {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(31,40,64,0.5);
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+
+.alert-row:last-child { border-bottom: none; }
+
+.alert-ic {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.a-red { background: var(--red-dim); }
+.a-yellow { background: var(--yellow-dim); }
+.a-cyan { background: var(--accent-dim); }
+
+.alert-text { font-size: 11px; color: var(--text2); line-height: 1.5; }
+.alert-text strong { color: var(--text); }
+.alert-ts { font-size: 9px; color: var(--text3); font-family: var(--mono); margin-top: 3px; }
+
+/* Architecture / Flow section */
+.arch-section {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.arch-title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.arch-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+
+.arch-flow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 8px;
+}
+
+.flow-step::after {
+  content: '→';
+  position: absolute;
+  right: -6px;
+  top: 22px;
+  color: var(--border2);
+  font-size: 18px;
+  z-index: 1;
+}
+
+.flow-step:last-child::after { display: none; }
+
+.flow-num {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.fn1 { background: var(--accent-dim); color: var(--accent); border: 1.5px solid rgba(0,212,255,0.3); box-shadow: 0 0 16px rgba(0,212,255,0.15); }
+.fn2 { background: var(--purple-dim); color: var(--purple); border: 1.5px solid rgba(168,85,247,0.3); box-shadow: 0 0 16px rgba(168,85,247,0.15); }
+.fn3 { background: var(--orange-dim); color: var(--orange); border: 1.5px solid rgba(255,140,66,0.3); box-shadow: 0 0 16px rgba(255,140,66,0.15); }
+.fn4 { background: var(--green-dim); color: var(--green); border: 1.5px solid rgba(0,230,118,0.3); box-shadow: 0 0 16px rgba(0,230,118,0.15); }
+.fn5 { background: var(--yellow-dim); color: var(--yellow); border: 1.5px solid rgba(255,211,42,0.3); box-shadow: 0 0 16px rgba(255,211,42,0.15); }
+
+.flow-label {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.flow-desc {
+  font-size: 10px;
+  color: var(--text3);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Comparison grid */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.compare-card {
+  background: var(--surface2);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.compare-head {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.compare-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.admin-head .compare-icon { background: var(--accent-dim); }
+.driver-head .compare-icon { background: var(--orange-dim); }
+
+.compare-name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.admin-head .compare-name { color: var(--accent); }
+.driver-head .compare-name { color: var(--orange); }
+
+.compare-role { font-size: 10px; color: var(--text3); }
+
+.compare-items { padding: 6px 0 10px; }
+
+.compare-item {
+  padding: 8px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.ci-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+/* DATA FIELDS TABLE */
+.fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.fields-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fields-head {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-tag {
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-weight: 500;
+}
+
+.tag-truck { background: var(--accent-dim); color: var(--accent); }
+.tag-driver { background: var(--orange-dim); color: var(--orange); }
+.tag-trip { background: var(--green-dim); color: var(--green); }
+.tag-account { background: var(--purple-dim); color: var(--purple); }
+
+.field-row {
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(31,40,64,0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.field-row:last-child { border-bottom: none; }
+
+.field-name { font-family: var(--mono); font-size: 11px; color: var(--accent); flex: 1; }
+.field-type { font-size: 10px; color: var(--purple); background: var(--purple-dim); padding: 1px 6px; border-radius: 4px; font-family: var(--mono); }
+.field-desc { font-size: 11px; color: var(--text3); flex: 1.5; }
+
+/* ═══════════════════════════════════
+   DRIVER APP VIEW
+═══════════════════════════════════ */
+.driver-view {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32px;
+  padding: 32px 24px;
+  background: var(--bg);
+  min-height: calc(100vh - 57px);
+  flex-wrap: wrap;
+}
+
+/* Phone mockup */
+.phone-wrap { position: relative; flex-shrink: 0; }
+
+.phone {
+  width: 320px;
+  border-radius: 40px;
+  background: #0a0b10;
+  border: 2px solid #2a3550;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+}
+
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 28px;
+  background: #0a0b10;
+  border-radius: 0 0 16px 16px;
+  z-index: 10;
+  border: 2px solid #2a3550;
+  border-top: none;
+}
+
+.phone-screen {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Driver App Screens */
+.d-screen { display: none; }
+.d-screen.active { display: block; }
+
+.d-status-bar {
+  background: #0a0b10;
+  padding: 36px 20px 8px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text2);
+  font-family: var(--mono);
+}
+
+.d-header {
+  padding: 12px 20px 14px;
+  background: var(--surface);
+}
+
+.d-greeting { font-size: 11px; color: var(--text2); }
+.d-name { font-family: var(--display); font-weight: 800; font-size: 20px; color: var(--text); margin-top: 2px; }
+
+.d-truck-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,140,66,0.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--orange);
+  font-weight: 600;
+  margin-top: 8px;
+  font-family: var(--mono);
+}
+
+.d-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+.d-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.d-card-head {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.d-card-body { padding: 12px 14px; }
+
+/* Active trip card */
+.trip-from-to {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.trip-city { font-family: var(--display); font-weight: 700; font-size: 16px; }
+.trip-arrow { color: var(--orange); font-size: 18px; }
+
+.trip-progress-wrap { margin-bottom: 10px; }
+.tp-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 5px; }
+.tp-bar { height: 6px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.tp-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--orange), var(--yellow)); }
+
+.trip-meta-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+.trip-meta-box {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+}
+
+.tmb-val { font-family: var(--display); font-weight: 700; font-size: 14px; color: var(--text); }
+.tmb-label { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+.d-action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.d-btn {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.d-btn-primary { background: var(--orange); color: #000; }
+.d-btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+
+/* Mini map */
+.mini-map {
+  height: 80px;
+  background: var(--surface2);
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 13px 13px;
+}
+
+.mini-map-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,140,66,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,140,66,0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.mini-route {
+  position: absolute;
+  top: 50%; left: 15%;
+  width: 70%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--green), var(--orange));
+  transform: translateY(-50%);
+  border-radius: 1px;
+}
+
+.route-dot {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.rd-start { left: 0; background: var(--green); box-shadow: 0 0 8px var(--green); }
+.rd-truck { left: 55%; background: var(--orange); box-shadow: 0 0 8px var(--orange); animation: truckMove 3s infinite; }
+.rd-end { right: 0; background: var(--text3); }
+
+@keyframes truckMove {
+  0%,100% { left: 52%; }
+  50% { left: 58%; }
+}
+
+/* Doc status */
+.doc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(31,40,64,0.5);
+}
+
+.doc-row:last-child { border-bottom: none; }
+.doc-name { font-size: 12px; color: var(--text); }
+.doc-exp { font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+/* Bottom nav */
+.d-bottom-nav {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 8px 0 20px;
+}
+
+.d-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.d-nav-icon { font-size: 20px; transition: transform 0.2s; }
+.d-nav-item:hover .d-nav-icon { transform: scale(1.1); }
+.d-nav-label { font-size: 9px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.d-nav-item.active .d-nav-label { color: var(--orange); }
+.d-nav-item.active .d-nav-icon { filter: drop-shadow(0 0 4px var(--orange)); }
+
+/* Screen switcher */
+.phone-tabs {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.phone-tab {
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text3);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--display);
+}
+
+.phone-tab.active { background: var(--orange-dim); color: var(--orange); border-color: rgba(255,140,66,0.3); }
+
+/* Right side explanation */
+.driver-explainer {
+  flex: 1;
+  min-width: 320px;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.explainer-title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.explainer-title span { color: var(--orange); }
+
+.explainer-sub { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+.privacy-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.priv-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.priv-ic { font-size: 14px; }
+
+.permission-table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.perm-head {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  padding: 10px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.ph-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); font-weight: 600; }
+
+.perm-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(31,40,64,0.4);
+  font-size: 12px;
+  align-items: center;
+}
+
+.perm-row:last-child { border-bottom: none; }
+.perm-feature { color: var(--text2); }
+.check-y { color: var(--green); font-size: 14px; }
+.check-n { color: var(--red); font-size: 14px; }
+.check-p { color: var(--yellow); font-size: 12px; font-weight: 600; }
+
+/* Onboarding flow */
+.onboard-flow {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.onboard-title {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.onboard-steps { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+.ob-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.ob-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 11px;
+  flex-shrink: 0;
+  border: 1.5px solid;
+}
+
+.ob1 { background: var(--accent-dim); color: var(--accent); border-color: rgba(0,212,255,0.3); }
+.ob2 { background: var(--purple-dim); color: var(--purple); border-color: rgba(168,85,247,0.3); }
+.ob3 { background: var(--orange-dim); color: var(--orange); border-color: rgba(255,140,66,0.3); }
+.ob4 { background: var(--green-dim); color: var(--green); border-color: rgba(0,230,118,0.3); }
+
+.ob-content { padding-top: 3px; }
+.ob-step-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.ob-step-desc { font-size: 11px; color: var(--text3); margin-top: 2px; line-height: 1.5; }
+
+/* ═══════════════════════════════════
+   ARCHITECTURE VIEW
+═══════════════════════════════════ */
+.arch-view { padding: 28px 24px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface4); border-radius: 3px; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-body > * {
+  animation: fadeUp 0.4s ease both;
+}
+
+.kpi-row { animation-delay: 0.05s; }
+.content-grid { animation-delay: 0.1s; }
+.arch-section { animation-delay: 0.15s; }
+
+/* Notification bubble */
+.notif-bubble {
+  width: 34px; height: 34px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  position: relative;
+  font-size: 16px;
+}
+
+.nb-dot {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 7px; height: 7px;
+  background: var(--red);
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+}
+
+/* Search bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  width: 180px;
+}
+
+.search-bar span { color: var(--text3); font-size: 13px; }
+.search-bar input { background: none; border: none; outline: none; color: var(--text); font-family: var(--body); font-size: 12px; width: 100%; }
+.search-bar input::placeholder { color: var(--text3); }
+</style>
 </head>
 <body>
 
-    <div class="otp-container">
-        <h2>Enter OTP</h2>
-        <form id="otp-form">
-            <div class="otp-inputs">
-                <input type="text" id="otp1" maxlength="1" class="otp-input" oninput="moveFocus(1)">
-                <input type="text" id="otp2" maxlength="1" class="otp-input" oninput="moveFocus(2)">
-                <input type="text" id="otp3" maxlength="1" class="otp-input" oninput="moveFocus(3)">
-                <input type="text" id="otp4" maxlength="1" class="otp-input" oninput="moveFocus(4)">
-                <input type="text" id="otp5" maxlength="1" class="otp-input" oninput="moveFocus(5)">
-                <input type="text" id="otp6" maxlength="1" class="otp-input" oninput="moveFocus(6)">
-            </div>
-            <button type="button" onclick="verifyOTP()">Verify OTP</button>
-        </form>
-        <div id="message"></div>
+<!-- TOP ROLE SWITCHER -->
+<div class="role-banner">
+  <div class="brand">
+    <div class="brand-icon">🚛</div>
+    Fleet<span>OS</span>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="role-label">Switch View</span>
+    <div class="role-switcher">
+      <button class="role-btn admin active" onclick="switchRole('admin', this)">
+        <div class="role-dot" style="background:var(--accent)"></div>
+        Transporter (Admin)
+      </button>
+      <button class="role-btn driver" onclick="switchRole('driver', this)">
+        <div class="role-dot" style="background:var(--orange)"></div>
+        Driver App
+      </button>
+      <button class="role-btn" onclick="switchRole('arch', this)" style="color:var(--text2)">
+        <div class="role-dot" style="background:var(--purple)"></div>
+        Architecture
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     ADMIN VIEW
+═══════════════════════════════ -->
+<div id="view-admin" class="view active">
+  <div class="admin-shell">
+
+    <!-- ICON RAIL -->
+    <div class="icon-rail">
+      <div class="rail-icon active">🗺</div>
+      <div class="rail-icon">🚛</div>
+      <div class="rail-icon">👥</div>
+      <div class="rail-icon">📋</div>
+      <div class="rail-icon">💬</div>
+      <div class="rail-icon">📊</div>
+      <div class="rail-spacer"></div>
+      <div class="rail-icon">⚙️</div>
     </div>
 
-    <script src="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\otp.js"></script>
+    <!-- LEFT NAV -->
+    <div class="left-nav">
+      <div class="transporter-card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:12px;color:#000">RS</div>
+          <div>
+            <div class="t-name">Rahman Shipping</div>
+            <div class="t-meta">Company Account</div>
+          </div>
+        </div>
+        <div class="t-stats">
+          <div class="t-stat">
+            <div class="t-stat-val">14</div>
+            <div class="t-stat-label">Trucks</div>
+          </div>
+          <div class="t-stat">
+            <div class="t-stat-val">16</div>
+            <div class="t-stat-label">Drivers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-section-label">Operations</div>
+      <div class="nav-link active"><span class="icon">🗺</span> Live Map</div>
+      <div class="nav-link"><span class="icon">⚡</span> Dispatch <span class="nav-badge green">8</span></div>
+      <div class="nav-link"><span class="icon">📋</span> Load Board <span class="nav-badge">3</span></div>
+
+      <div class="nav-section-label">Assets</div>
+      <div class="nav-link"><span class="icon">🚛</span> Fleet</div>
+      <div class="nav-link"><span class="icon">👤</span> Drivers</div>
+      <div class="nav-link"><span class="icon">📁</span> Document Vault <span class="nav-badge yellow">2</span></div>
+
+      <div class="nav-section-label">Reports</div>
+      <div class="nav-link"><span class="icon">💰</span> Revenue</div>
+      <div class="nav-link"><span class="icon">⏱</span> HOS Reports</div>
+      <div class="nav-link"><span class="icon">🔧</span> Maintenance</div>
+
+      <div class="nav-section-label">Settings</div>
+      <div class="nav-link"><span class="icon">💬</span> Communication Hub</div>
+      <div class="nav-link"><span class="icon">⚙️</span> Account Settings</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="admin-main">
+      <!-- TOPBAR -->
+      <div class="admin-topbar">
+        <div class="page-heading">Live Dispatch <em>— Today, 26 Feb 2026 · 8 Active Loads</em></div>
+        <div class="topbar-actions">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" placeholder="Search trucks, drivers...">
+          </div>
+          <div class="notif-bubble">🔔<div class="nb-dot"></div></div>
+          <button class="btn btn-ghost">+ Add Truck</button>
+          <button class="btn btn-cyan">⚡ Dispatch Load</button>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="admin-body">
+
+        <!-- KPI ROW -->
+        <div class="kpi-row">
+          <div class="kpi c">
+            <div class="kpi-label">Active Loads</div>
+            <div class="kpi-val">8</div>
+            <div class="kpi-sub">↑ 2 from yesterday</div>
+          </div>
+          <div class="kpi g">
+            <div class="kpi-label">On Road</div>
+            <div class="kpi-val">8</div>
+            <div class="kpi-sub">Trucks moving now</div>
+          </div>
+          <div class="kpi o">
+            <div class="kpi-label">Idle</div>
+            <div class="kpi-val">4</div>
+            <div class="kpi-sub">Ready to assign</div>
+          </div>
+          <div class="kpi r">
+            <div class="kpi-label">At Risk</div>
+            <div class="kpi-val">1</div>
+            <div class="kpi-sub">Late delivery warning</div>
+          </div>
+          <div class="kpi y">
+            <div class="kpi-label">HOS Alerts</div>
+            <div class="kpi-val">2</div>
+            <div class="kpi-sub">Near limit drivers</div>
+          </div>
+          <div class="kpi p">
+            <div class="kpi-label">Today's Rev</div>
+            <div class="kpi-val">₹82K</div>
+            <div class="kpi-sub">Target: ₹1.2L</div>
+          </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="content-grid">
+          <!-- LEFT: Map + Dispatch Table -->
+          <div style="display:flex;flex-direction:column;gap:14px;">
+
+            <!-- LIVE MAP -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">Live Fleet Map <span>GPS updated 14s ago</span></div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <span style="font-size:10px;color:var(--green);font-weight:600">● 8 Active</span>
+                  <span style="font-size:10px;color:var(--yellow);font-weight:600">● 4 Idle</span>
+                  <span style="font-size:10px;color:var(--red);font-weight:600">● 2 Maint.</span>
+                </div>
+              </div>
+              <div class="live-map">
+                <div class="map-grid"></div>
+                <div class="map-glow"></div>
+
+                <!-- Road lines -->
+                <div class="road" style="width:55%;height:1px;top:50%;left:5%;transform:rotate(-8deg)"></div>
+                <div class="road" style="width:40%;height:1px;top:35%;left:40%;transform:rotate(12deg)"></div>
+                <div class="road" style="width:30%;height:1px;top:65%;left:50%;transform:rotate(-5deg)"></div>
+                <div class="road" style="width:2px;height:40%;top:20%;left:28%;"></div>
+                <div class="road" style="width:2px;height:50%;top:15%;left:65%;"></div>
+
+                <!-- City tags -->
+                <div class="map-tag" style="left:5%;top:42%">Mumbai</div>
+                <div class="map-tag" style="left:38%;top:52%">Pune</div>
+                <div class="map-tag" style="left:60%;top:18%">Nashik</div>
+                <div class="map-tag" style="left:78%;top:60%">Nagpur</div>
+                <div class="map-tag" style="left:22%;top:75%">Kolhapur</div>
+
+                <!-- Truck markers -->
+                <div class="truck-marker m-active" style="left:20%;top:46%">
+                  <div class="marker-id">MH-01-TK</div>
+                  <div class="marker-body">🚛</div>
+                  <div class="marker-ring" style="border-color:var(--green)"></div>
+                </div>
+                <div class="truck-marker m-active" style="left:48%;top:48%">
+                  <div class="marker-id">MH-03-TK</div>
+                  <div class="marker-body">🚛</div>
+                  <div class="marker-ring" style="border-color:var(--green)"></div>
+                </div>
+                <div class="truck-marker m-active" style="left:68%;top:28%">
+                  <div class="marker-id">MH-05-TK</div>
+                  <div class="marker-body">🚛</div>
+                  <div class="marker-ring" style="border-color:var(--green)"></div>
+                </div>
+                <div class="truck-marker m-idle" style="left:33%;top:72%">
+                  <div class="marker-id">MH-07-TK</div>
+                  <div class="marker-body">🚛</div>
+                </div>
+                <div class="truck-marker m-active" style="left:80%;top:55%">
+                  <div class="marker-id">MH-09-TK</div>
+                  <div class="marker-body">🚛</div>
+                  <div class="marker-ring" style="border-color:var(--green)"></div>
+                </div>
+                <div class="truck-marker m-maintenance" style="left:55%;top:35%">
+                  <div class="marker-id">MH-11-TK</div>
+                  <div class="marker-body">🔧</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DISPATCH TABLE -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">Active Dispatches</div>
+                <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px;">⚡ New Dispatch</button>
+              </div>
+              <table class="dispatch-table">
+                <thead>
+                  <tr>
+                    <th>Truck</th>
+                    <th>Driver</th>
+                    <th>Route</th>
+                    <th>Load</th>
+                    <th>Status</th>
+                    <th>Progress</th>
+                    <th>ETA</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="treg">MH-01-TK</div><div style="font-size:10px;color:var(--text3)">Flatbed 20T</div></td>
+                    <td><div class="driver-chip"><div class="chip-av" style="background:rgba(0,212,255,0.2);color:var(--accent)">AK</div><span class="chip-name">Arjun K.</span></div></td>
+                    <td style="font-size:12px">Mumbai → Pune</td>
+                    <td style="font-size:11px;color:var(--text2)">Steel Coils / 18T</td>
+                    <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
+                    <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:65%;background:var(--green)"></div></div><span class="pct">65%</span></div></td>
+                    <td style="font-size:11px;color:var(--text2)">2h 10m</td>
+                    <td><div class="action-row"><button class="micro-btn">📍</button><button class="micro-btn">📞</button><button class="micro-btn">💬</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="treg">MH-03-TK</div><div style="font-size:10px;color:var(--text3)">Container 30T</div></td>
+                    <td><div class="driver-chip"><div class="chip-av" style="background:rgba(168,85,247,0.2);color:var(--purple)">RS</div><span class="chip-name">Rahul S.</span></div></td>
+                    <td style="font-size:12px">Nashik → Nagpur</td>
+                    <td style="font-size:11px;color:var(--text2)">FMCG / 22T</td>
+                    <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
+                    <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:34%;background:var(--accent)"></div></div><span class="pct">34%</span></div></td>
+                    <td style="font-size:11px;color:var(--text2)">5h 40m</td>
+                    <td><div class="action-row"><button class="micro-btn">📍</button><button class="micro-btn">📞</button><button class="micro-btn">💬</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="treg">MH-07-TK</div><div style="font-size:10px;color:var(--text3)">Tanker 15T</div></td>
+                    <td><div class="driver-chip"><div class="chip-av" style="background:rgba(255,211,42,0.2);color:var(--yellow)">SP</div><span class="chip-name">Suresh P.</span></div></td>
+                    <td style="font-size:12px;color:var(--text3)">Not assigned</td>
+                    <td style="font-size:11px;color:var(--text3)">—</td>
+                    <td><span class="status-pill s-yellow"><span class="sp-dot"></span>Idle</span></td>
+                    <td><div class="progress-cell"><div class="mini-bar"></div><span class="pct" style="color:var(--text3)">—</span></div></td>
+                    <td><button class="btn btn-orange" style="font-size:10px;padding:4px 10px;" onclick="openDispatch()">Assign ⚡</button></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><div class="treg">MH-09-TK</div><div style="font-size:10px;color:var(--text3)">Mini 5T</div></td>
+                    <td><div class="driver-chip"><div class="chip-av" style="background:rgba(0,230,118,0.2);color:var(--green)">DJ</div><span class="chip-name">Dinesh J.</span></div></td>
+                    <td style="font-size:12px">Mumbai → Surat</td>
+                    <td style="font-size:11px;color:var(--text2)">Textiles / 4T</td>
+                    <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
+                    <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:88%;background:var(--green)"></div></div><span class="pct">88%</span></div></td>
+                    <td style="font-size:11px;color:var(--green);font-weight:600">~25m</td>
+                    <td><div class="action-row"><button class="micro-btn">📍</button><button class="micro-btn">📞</button><button class="micro-btn">💬</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- RIGHT COL -->
+          <div class="right-col">
+
+            <!-- HOS Panel -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">HOS Monitor <span>Hours of Service</span></div>
+                <span style="font-size:10px;background:var(--yellow-dim);color:var(--yellow);padding:2px 8px;border-radius:5px;font-weight:700">2 Alerts</span>
+              </div>
+              <div class="hos-list">
+                <div class="hos-item">
+                  <div class="hos-av" style="background:rgba(0,212,255,0.15);color:var(--accent)">AK</div>
+                  <div class="hos-info">
+                    <div class="hos-name">Arjun Kumar</div>
+                    <div class="hos-sub">6.5h / 11h limit</div>
+                  </div>
+                  <div class="hos-bar-wrap">
+                    <div class="hos-label">59%</div>
+                    <div class="hos-bar"><div class="hos-fill" style="width:59%;background:var(--green)"></div></div>
+                  </div>
+                </div>
+                <div class="hos-item">
+                  <div class="hos-av" style="background:rgba(168,85,247,0.15);color:var(--purple)">RS</div>
+                  <div class="hos-info">
+                    <div class="hos-name">Rahul Singh</div>
+                    <div class="hos-sub">9.2h / 11h limit</div>
+                  </div>
+                  <div class="hos-bar-wrap">
+                    <div class="hos-label" style="color:var(--yellow)">84%</div>
+                    <div class="hos-bar"><div class="hos-fill" style="width:84%;background:var(--yellow)"></div></div>
+                  </div>
+                </div>
+                <div class="hos-item">
+                  <div class="hos-av" style="background:rgba(0,230,118,0.15);color:var(--green)">DJ</div>
+                  <div class="hos-info">
+                    <div class="hos-name">Dinesh Joshi</div>
+                    <div class="hos-sub">3.1h / 11h limit</div>
+                  </div>
+                  <div class="hos-bar-wrap">
+                    <div class="hos-label">28%</div>
+                    <div class="hos-bar"><div class="hos-fill" style="width:28%;background:var(--green)"></div></div>
+                  </div>
+                </div>
+                <div class="hos-item">
+                  <div class="hos-av" style="background:rgba(255,71,87,0.15);color:var(--red)">SP</div>
+                  <div class="hos-info">
+                    <div class="hos-name">Suresh Patil</div>
+                    <div class="hos-sub">10.8h / 11h ⚠</div>
+                  </div>
+                  <div class="hos-bar-wrap">
+                    <div class="hos-label" style="color:var(--red)">98%</div>
+                    <div class="hos-bar"><div class="hos-fill" style="width:98%;background:var(--red)"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ALERTS -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">Fleet Alerts</div>
+                <span style="font-size:10px;background:var(--red-dim);color:var(--red);padding:2px 8px;border-radius:5px;font-weight:700">4 New</span>
+              </div>
+              <div class="alert-feed">
+                <div class="alert-row">
+                  <div class="alert-ic a-red">🔴</div>
+                  <div>
+                    <div class="alert-text"><strong>Suresh Patil</strong> HOS near limit — 10.8h driven. Do not assign new loads.</div>
+                    <div class="alert-ts">08:45 AM</div>
+                  </div>
+                </div>
+                <div class="alert-row">
+                  <div class="alert-ic a-yellow">⚠️</div>
+                  <div>
+                    <div class="alert-text"><strong>MH-11-TK</strong> sent to maintenance. Engine fault reported by driver.</div>
+                    <div class="alert-ts">07:20 AM</div>
+                  </div>
+                </div>
+                <div class="alert-row">
+                  <div class="alert-ic a-yellow">📁</div>
+                  <div>
+                    <div class="alert-text"><strong>MH-07-TK</strong> permit expires in 45 days. Renewal required.</div>
+                    <div class="alert-ts">Yesterday</div>
+                  </div>
+                </div>
+                <div class="alert-row">
+                  <div class="alert-ic a-cyan">📍</div>
+                  <div>
+                    <div class="alert-text"><strong>MH-09-TK</strong> approaching Surat delivery. Notify warehouse.</div>
+                    <div class="alert-ts">08:12 AM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- QUICK STATS -->
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">Today's Summary</div></div>
+              <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Deliveries completed</span><span style="color:var(--green);font-weight:600">5 ✓</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Loads in transit</span><span style="color:var(--accent);font-weight:600">8</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Pending assignments</span><span style="color:var(--yellow);font-weight:600">3</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Fuel cost today</span><span style="color:var(--text);font-weight:600">₹12,400</span></div>
+                <div style="height:1px;background:var(--border)"></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text3)">Revenue today</span><span style="color:var(--green);font-weight:700;font-size:14px;">₹82,000</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     DRIVER APP VIEW
+═══════════════════════════════ -->
+<div id="view-driver" class="view">
+  <div class="driver-view">
+
+    <!-- PHONE MOCKUP -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+
+          <!-- SCREEN: MY TRIP -->
+          <div id="d-trip" class="d-screen active">
+            <div class="d-status-bar">
+              <span>9:41</span>
+              <span>📶 🔋</span>
+            </div>
+            <div class="d-header">
+              <div class="d-greeting">Good morning,</div>
+              <div class="d-name">Arjun Kumar</div>
+              <div class="d-truck-badge">🚛 MH-01-TK-2201 • Flatbed 20T</div>
+            </div>
+            <div class="d-body">
+
+              <!-- Active Trip -->
+              <div class="d-card">
+                <div class="d-card-head">
+                  Active Trip
+                  <span class="status-pill s-green" style="font-size:9px;padding:2px 7px"><span class="sp-dot"></span>In Transit</span>
+                </div>
+                <div class="d-card-body">
+                  <div class="trip-from-to">
+                    <div class="trip-city">Mumbai</div>
+                    <div class="trip-arrow">→</div>
+                    <div class="trip-city">Pune</div>
+                  </div>
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Steel Coils • 18 Tons • Load #TRP-2024</div>
+                  <div class="trip-progress-wrap">
+                    <div class="tp-label"><span>Departed 06:30 AM</span><span>ETA 2h 10m</span></div>
+                    <div class="tp-bar"><div class="tp-fill" style="width:65%"></div></div>
+                  </div>
+                  <div class="trip-meta-row">
+                    <div class="trip-meta-box"><div class="tmb-val">65%</div><div class="tmb-label">Done</div></div>
+                    <div class="trip-meta-box"><div class="tmb-val">127</div><div class="tmb-label">Km Left</div></div>
+                    <div class="trip-meta-box"><div class="tmb-val">62</div><div class="tmb-label">km/h</div></div>
+                  </div>
+                </div>
+                <!-- Mini Map -->
+                <div class="mini-map">
+                  <div class="mini-map-grid"></div>
+                  <div class="mini-route">
+                    <div class="route-dot rd-start"></div>
+                    <div class="route-dot rd-truck">🚛</div>
+                    <div class="route-dot rd-end"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="d-action-row">
+                <button class="d-btn d-btn-primary">✅ Mark Picked Up</button>
+                <button class="d-btn d-btn-ghost">📞 Call Dispatcher</button>
+              </div>
+
+              <!-- Load details -->
+              <div class="d-card">
+                <div class="d-card-head">Delivery Details</div>
+                <div class="d-card-body" style="font-size:12px;display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Pickup</span><span>Nhava Sheva Port</span></div>
+                  <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Delivery</span><span>Pune Warehouse B4</span></div>
+                  <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Contact</span><span style="color:var(--accent)">+91 98765 00001</span></div>
+                  <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Load Type</span><span>Steel Coils</span></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Nav -->
+            <div class="d-bottom-nav">
+              <div class="d-nav-item active">
+                <div class="d-nav-icon">🏠</div>
+                <div class="d-nav-label">My Trip</div>
+              </div>
+              <div class="d-nav-item" onclick="switchPhone('d-docs')">
+                <div class="d-nav-icon">📄</div>
+                <div class="d-nav-label">Docs</div>
+              </div>
+              <div class="d-nav-item">
+                <div class="d-nav-icon">💬</div>
+                <div class="d-nav-label">Chat</div>
+              </div>
+              <div class="d-nav-item">
+                <div class="d-nav-icon">👤</div>
+                <div class="d-nav-label">Profile</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCREEN: DOCUMENTS -->
+          <div id="d-docs" class="d-screen">
+            <div class="d-status-bar">
+              <span>9:41</span>
+              <span>📶 🔋</span>
+            </div>
+            <div class="d-header">
+              <div class="d-greeting">My Documents</div>
+              <div class="d-name">Digital Vault</div>
+            </div>
+            <div class="d-body">
+              <div class="d-card">
+                <div class="d-card-head">My License & Permits</div>
+                <div class="d-card-body" style="padding:6px 0">
+                  <div class="doc-row">
+                    <div><div class="doc-name">🪪 Driving License</div><div class="doc-exp">Expires: Mar 2027</div></div>
+                    <span class="status-pill s-green" style="font-size:9px"><span class="sp-dot"></span>Valid</span>
+                  </div>
+                  <div class="doc-row">
+                    <div><div class="doc-name">🚛 Vehicle RC</div><div class="doc-exp">Expires: Jun 2028</div></div>
+                    <span class="status-pill s-green" style="font-size:9px"><span class="sp-dot"></span>Valid</span>
+                  </div>
+                  <div class="doc-row">
+                    <div><div class="doc-name">🛡 Insurance</div><div class="doc-exp">Expires: Dec 2026</div></div>
+                    <span class="status-pill s-green" style="font-size:9px"><span class="sp-dot"></span>Valid</span>
+                  </div>
+                  <div class="doc-row">
+                    <div><div class="doc-name">📋 Fitness Cert.</div><div class="doc-exp">Expires: Apr 2026</div></div>
+                    <span class="status-pill s-yellow" style="font-size:9px"><span class="sp-dot"></span>Renew Soon</span>
+                  </div>
+                </div>
+              </div>
+              <div class="d-card">
+                <div class="d-card-head">My Hours of Service</div>
+                <div class="d-card-body">
+                  <div class="trip-progress-wrap">
+                    <div class="tp-label"><span>6.5h driven</span><span>4.5h remaining</span></div>
+                    <div class="tp-bar"><div class="tp-fill" style="width:59%;background:var(--green)"></div></div>
+                  </div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:8px">Daily limit: 11 hours. Rest required after limit.</div>
+                </div>
+              </div>
+            </div>
+            <div class="d-bottom-nav">
+              <div class="d-nav-item" onclick="switchPhone('d-trip')">
+                <div class="d-nav-icon">🏠</div>
+                <div class="d-nav-label">My Trip</div>
+              </div>
+              <div class="d-nav-item active">
+                <div class="d-nav-icon">📄</div>
+                <div class="d-nav-label">Docs</div>
+              </div>
+              <div class="d-nav-item">
+                <div class="d-nav-icon">💬</div>
+                <div class="d-nav-label">Chat</div>
+              </div>
+              <div class="d-nav-item">
+                <div class="d-nav-icon">👤</div>
+                <div class="d-nav-label">Profile</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="phone-tabs">
+        <div class="phone-tab active" onclick="switchPhone('d-trip'); setPhoneTab(this)">My Trip</div>
+        <div class="phone-tab" onclick="switchPhone('d-docs'); setPhoneTab(this)">My Docs</div>
+      </div>
+    </div>
+
+    <!-- EXPLAINER -->
+    <div class="driver-explainer">
+      <div>
+        <div class="explainer-title">Driver's <span>Simplified</span><br>App View</div>
+        <div style="height:12px"></div>
+        <div class="explainer-sub">The driver sees only what they need. No fleet data, no other drivers' info, no earnings overview. Just their truck, their trip, and their documents.</div>
+      </div>
+
+      <div class="privacy-badges">
+        <div class="priv-badge"><span class="priv-ic">🔒</span> Can't see other drivers</div>
+        <div class="priv-badge"><span class="priv-ic">🚫</span> No fleet revenue data</div>
+        <div class="priv-badge"><span class="priv-ic">👤</span> Own profile only</div>
+        <div class="priv-badge"><span class="priv-ic">📦</span> Assigned trips only</div>
+      </div>
+
+      <!-- PERMISSIONS TABLE -->
+      <div class="permission-table">
+        <div class="perm-head">
+          <div class="ph-label">Feature / Data</div>
+          <div class="ph-label">Transporter</div>
+          <div class="ph-label">Driver</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Live location of all trucks</div>
+          <div class="check-y">✓</div>
+          <div class="check-n">✗</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Own truck location</div>
+          <div class="check-y">✓</div>
+          <div class="check-y">✓</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Assign trips / loads</div>
+          <div class="check-y">✓</div>
+          <div class="check-n">✗</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">View assigned trip</div>
+          <div class="check-y">✓</div>
+          <div class="check-y">✓</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Update trip status</div>
+          <div class="check-p">View</div>
+          <div class="check-y">✓</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Revenue & earnings</div>
+          <div class="check-y">✓</div>
+          <div class="check-n">✗</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Other drivers' data</div>
+          <div class="check-y">✓</div>
+          <div class="check-n">✗</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Own HOS / documents</div>
+          <div class="check-y">✓</div>
+          <div class="check-y">✓</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-feature">Chat with dispatcher</div>
+          <div class="check-y">✓</div>
+          <div class="check-y">✓</div>
+        </div>
+      </div>
+
+      <!-- ONBOARDING -->
+      <div class="onboard-flow">
+        <div class="onboard-title">⚡ Driver Onboarding Flow</div>
+        <div class="onboard-steps">
+          <div class="ob-step">
+            <div class="ob-num ob1">1</div>
+            <div class="ob-content">
+              <div class="ob-step-name">Transporter adds Truck</div>
+              <div class="ob-step-desc">Registers VIN, plate, type, capacity, and all compliance documents to company account.</div>
+            </div>
+          </div>
+          <div class="ob-step">
+            <div class="ob-num ob2">2</div>
+            <div class="ob-content">
+              <div class="ob-step-name">Driver gets Invite Link</div>
+              <div class="ob-step-desc">Unique invite code sent via SMS/WhatsApp. Driver creates a personal profile — auto-linked to the transporter's company.</div>
+            </div>
+          </div>
+          <div class="ob-step">
+            <div class="ob-num ob3">3</div>
+            <div class="ob-content">
+              <div class="ob-step-name">Assignment & Check-In</div>
+              <div class="ob-step-desc">Transporter assigns Driver A to Truck B. Driver "checks in" from the app. Truck turns green on dispatcher's map.</div>
+            </div>
+          </div>
+          <div class="ob-step">
+            <div class="ob-num ob4">4</div>
+            <div class="ob-content">
+              <div class="ob-step-name">Trip is Live</div>
+              <div class="ob-step-desc">Driver sees only their route. Transporter sees the full fleet. All status updates flow in real-time between both.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     ARCHITECTURE VIEW
+═══════════════════════════════ -->
+<div id="view-arch" class="view">
+  <div class="arch-view">
+
+    <!-- FLOW DIAGRAM -->
+    <div class="arch-section">
+      <div class="arch-title">System Architecture</div>
+      <div class="arch-sub">How a single transporter account manages an entire fleet without chaos</div>
+
+      <div class="arch-flow">
+        <div class="flow-step">
+          <div class="flow-num fn1">1</div>
+          <div class="flow-label">Transporter<br>Account</div>
+          <div class="flow-desc">Master company profile. Owns all trucks & manages all drivers</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num fn2">2</div>
+          <div class="flow-label">Truck<br>Registry</div>
+          <div class="flow-desc">Each truck registered with VIN, type, docs, compliance data</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num fn3">3</div>
+          <div class="flow-label">Driver<br>Invitation</div>
+          <div class="flow-desc">Invite link creates sub-profile linked to company account</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num fn4">4</div>
+          <div class="flow-label">Assignment<br>& Dispatch</div>
+          <div class="flow-desc">Dispatcher pairs Driver + Truck + Load for each session</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num fn5">5</div>
+          <div class="flow-label">Live<br>Monitoring</div>
+          <div class="flow-desc">GPS + HOS + status updates flow into transporter's dashboard</div>
+        </div>
+      </div>
+
+      <!-- COMPARE GRID -->
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-head admin-head">
+            <div class="compare-icon">🖥</div>
+            <div>
+              <div class="compare-name">Transporter (Admin)</div>
+              <div class="compare-role">Web Dashboard / Pro App</div>
+            </div>
+          </div>
+          <div class="compare-items">
+            <div class="compare-item"><div class="ci-dot" style="background:var(--accent)"></div>Sees all 14 trucks on live map with GPS trails</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--accent)"></div>Assigns any driver to any idle truck in 2 taps</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--accent)"></div>Manages document vault: insurance, permits, fitness certs</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--accent)"></div>Dispatches new loads and pushes to driver's phone instantly</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--accent)"></div>Monitors Hours of Service for all drivers to avoid violations</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--accent)"></div>Sees revenue, trip history, and driver performance scores</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--accent)"></div>Broadcasts alerts to entire fleet or individual drivers</div>
+          </div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-head driver-head">
+            <div class="compare-icon">📱</div>
+            <div>
+              <div class="compare-name">Driver (Operator)</div>
+              <div class="compare-role">Simplified Mobile App</div>
+            </div>
+          </div>
+          <div class="compare-items">
+            <div class="compare-item"><div class="ci-dot" style="background:var(--orange)"></div>Sees only their assigned truck and active trip details</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--orange)"></div>Turn-by-turn navigation to pickup and delivery point</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--orange)"></div>One-tap status updates: Picked Up / In Transit / Delivered</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--orange)"></div>Views own digital documents (license, permits) in one place</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--orange)"></div>Checks personal HOS remaining hours for the day</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--orange)"></div>In-app chat with dispatcher only — not with other drivers</div>
+            <div class="compare-item"><div class="ci-dot" style="background:var(--orange)"></div>Cannot see other drivers' locations, pay, or assignments</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATABASE FIELDS -->
+    <div class="arch-section">
+      <div class="arch-title">Database Schema</div>
+      <div class="arch-sub">Key data fields required for each entity in the system</div>
+
+      <div class="fields-grid">
+
+        <!-- Truck -->
+        <div class="fields-card">
+          <div class="fields-head">🚛 Truck <span class="field-tag tag-truck">trucks</span></div>
+          <div class="field-row"><span class="field-name">truck_id</span><span class="field-type">UUID</span><span class="field-desc">Primary key</span></div>
+          <div class="field-row"><span class="field-name">transporter_id</span><span class="field-type">FK</span><span class="field-desc">Links to owner account</span></div>
+          <div class="field-row"><span class="field-name">registration_no</span><span class="field-type">STRING</span><span class="field-desc">License plate number</span></div>
+          <div class="field-row"><span class="field-name">truck_type</span><span class="field-type">ENUM</span><span class="field-desc">Flatbed / Container / Tanker</span></div>
+          <div class="field-row"><span class="field-name">capacity_tons</span><span class="field-type">INT</span><span class="field-desc">Max load capacity</span></div>
+          <div class="field-row"><span class="field-name">status</span><span class="field-type">ENUM</span><span class="field-desc">Active / Idle / Maintenance</span></div>
+          <div class="field-row"><span class="field-name">insurance_expiry</span><span class="field-type">DATE</span><span class="field-desc">Insurance validity date</span></div>
+          <div class="field-row"><span class="field-name">permit_expiry</span><span class="field-type">DATE</span><span class="field-desc">Route permit expiry</span></div>
+          <div class="field-row"><span class="field-name">assigned_driver_id</span><span class="field-type">FK</span><span class="field-desc">Current driver (nullable)</span></div>
+          <div class="field-row"><span class="field-name">gps_lat / gps_lng</span><span class="field-type">FLOAT</span><span class="field-desc">Live GPS coordinates</span></div>
+        </div>
+
+        <!-- Driver -->
+        <div class="fields-card">
+          <div class="fields-head">👤 Driver <span class="field-tag tag-driver">drivers</span></div>
+          <div class="field-row"><span class="field-name">driver_id</span><span class="field-type">UUID</span><span class="field-desc">Primary key</span></div>
+          <div class="field-row"><span class="field-name">transporter_id</span><span class="field-type">FK</span><span class="field-desc">Parent company account</span></div>
+          <div class="field-row"><span class="field-name">full_name</span><span class="field-type">STRING</span><span class="field-desc">Driver's full name</span></div>
+          <div class="field-row"><span class="field-name">phone</span><span class="field-type">STRING</span><span class="field-desc">Login & contact number</span></div>
+          <div class="field-row"><span class="field-name">license_no</span><span class="field-type">STRING</span><span class="field-desc">Driving license number</span></div>
+          <div class="field-row"><span class="field-name">license_expiry</span><span class="field-type">DATE</span><span class="field-desc">License validity</span></div>
+          <div class="field-row"><span class="field-name">status</span><span class="field-type">ENUM</span><span class="field-desc">Active / Idle / Off Duty</span></div>
+          <div class="field-row"><span class="field-name">hos_today_hours</span><span class="field-type">FLOAT</span><span class="field-desc">Hours driven today</span></div>
+          <div class="field-row"><span class="field-name">rating</span><span class="field-type">FLOAT</span><span class="field-desc">Performance score 0–5</span></div>
+          <div class="field-row"><span class="field-name">total_trips</span><span class="field-type">INT</span><span class="field-desc">Lifetime trips completed</span></div>
+        </div>
+
+        <!-- Trip -->
+        <div class="fields-card">
+          <div class="fields-head">📋 Trip <span class="field-tag tag-trip">trips</span></div>
+          <div class="field-row"><span class="field-name">trip_id</span><span class="field-type">UUID</span><span class="field-desc">Primary key</span></div>
+          <div class="field-row"><span class="field-name">transporter_id</span><span class="field-type">FK</span><span class="field-desc">Owning company</span></div>
+          <div class="field-row"><span class="field-name">truck_id</span><span class="field-type">FK</span><span class="field-desc">Assigned truck</span></div>
+          <div class="field-row"><span class="field-name">driver_id</span><span class="field-type">FK</span><span class="field-desc">Assigned driver</span></div>
+          <div class="field-row"><span class="field-name">pickup_location</span><span class="field-type">STRING</span><span class="field-desc">Origin address / coords</span></div>
+          <div class="field-row"><span class="field-name">delivery_location</span><span class="field-type">STRING</span><span class="field-desc">Destination address</span></div>
+          <div class="field-row"><span class="field-name">load_type</span><span class="field-type">STRING</span><span class="field-desc">Cargo description</span></div>
+          <div class="field-row"><span class="field-name">load_weight_tons</span><span class="field-type">FLOAT</span><span class="field-desc">Cargo weight</span></div>
+          <div class="field-row"><span class="field-name">status</span><span class="field-type">ENUM</span><span class="field-desc">Assigned / In Transit / Done</span></div>
+          <div class="field-row"><span class="field-name">eta</span><span class="field-type">DATETIME</span><span class="field-desc">Estimated arrival time</span></div>
+        </div>
+
+        <!-- Transporter Account -->
+        <div class="fields-card">
+          <div class="fields-head">🏢 Transporter <span class="field-tag tag-account">accounts</span></div>
+          <div class="field-row"><span class="field-name">transporter_id</span><span class="field-type">UUID</span><span class="field-desc">Master account key</span></div>
+          <div class="field-row"><span class="field-name">company_name</span><span class="field-type">STRING</span><span class="field-desc">Business name</span></div>
+          <div class="field-row"><span class="field-name">owner_name</span><span class="field-type">STRING</span><span class="field-desc">Account owner</span></div>
+          <div class="field-row"><span class="field-name">phone / email</span><span class="field-type">STRING</span><span class="field-desc">Primary login credentials</span></div>
+          <div class="field-row"><span class="field-name">gst_number</span><span class="field-type">STRING</span><span class="field-desc">Tax registration</span></div>
+          <div class="field-row"><span class="field-name">plan_type</span><span class="field-type">ENUM</span><span class="field-desc">Basic / Pro / Enterprise</span></div>
+          <div class="field-row"><span class="field-name">fleet_size_limit</span><span class="field-type">INT</span><span class="field-desc">Max trucks by plan tier</span></div>
+          <div class="field-row"><span class="field-name">total_trucks</span><span class="field-type">INT</span><span class="field-desc">Current registered trucks</span></div>
+          <div class="field-row"><span class="field-name">total_drivers</span><span class="field-type">INT</span><span class="field-desc">Linked driver accounts</span></div>
+          <div class="field-row"><span class="field-name">created_at</span><span class="field-type">DATETIME</span><span class="field-desc">Account creation date</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* ═══════════════════════════ MODAL STYLES ═══════════════════════════ */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75); z-index: 100;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  width: 520px; max-width: 95vw;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+  animation: fadeUp 0.25s ease;
+}
+.modal-head {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title { font-family: var(--display); font-weight: 800; font-size: 16px; }
+.modal-close {
+  width: 30px; height: 30px; border-radius: 7px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text2); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.modal-close:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.modal-footer {
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 8px;
+}
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); font-weight: 600; }
+.form-input, .form-select {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 12px;
+  color: var(--text); font-family: var(--body); font-size: 13px;
+  outline: none; transition: border-color 0.2s; width: 100%;
+}
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-select option { background: var(--surface2); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.info-box {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.info-row { display: flex; justify-content: space-between; font-size: 12px; }
+.info-key { color: var(--text3); }
+.info-val { color: var(--text); font-weight: 500; }
+
+/* Toast */
+.toast-container {
+  position: fixed; bottom: 24px; right: 24px;
+  z-index: 200; display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; min-width: 260px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: fadeUp 0.3s ease;
+  transition: opacity 0.3s;
+}
+.toast.success { border-left: 3px solid var(--green); }
+.toast.warning { border-left: 3px solid var(--yellow); }
+.toast.error { border-left: 3px solid var(--red); }
+.toast.info { border-left: 3px solid var(--accent); }
+
+/* Panel content areas */
+.panel-content { display: none; }
+.panel-content.visible { display: block; }
+
+/* Section headings in main area */
+.section-page { display: none; padding: 0; }
+.section-page.active { display: flex; flex-direction: column; gap: 20px; }
+
+/* Fleet table */
+.fleet-table { width: 100%; border-collapse: collapse; }
+.fleet-table th { padding: 9px 16px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); font-weight: 600; background: var(--surface2); border-bottom: 1px solid var(--border); }
+.fleet-table td { padding: 12px 16px; border-bottom: 1px solid rgba(31,40,64,0.5); vertical-align: middle; }
+.fleet-table tr:last-child td { border-bottom: none; }
+.fleet-table tr:hover td { background: rgba(20,24,32,0.6); }
+
+/* Revenue chart bars */
+.rev-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; padding: 0 4px; }
+.rev-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.rev-bar { width: 100%; border-radius: 3px 3px 0 0; transition: opacity 0.2s; cursor: pointer; }
+.rev-bar:hover { opacity: 0.8; }
+.rev-bar-label { font-size: 9px; color: var(--text3); }
+
+/* Notification dropdown */
+.notif-dropdown {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  width: 300px; background: var(--surface);
+  border: 1px solid var(--border2); border-radius: 12px;
+  z-index: 50; box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+}
+.notif-dropdown.open { display: block; animation: fadeUp 0.2s ease; }
+.notif-drop-head {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.notif-drop-title { font-family: var(--display); font-weight: 700; font-size: 13px; }
+.notif-item {
+  padding: 10px 16px; border-bottom: 1px solid rgba(31,40,64,0.4);
+  display: flex; gap: 10px; cursor: pointer; transition: background 0.15s;
+}
+.notif-item:hover { background: var(--surface2); }
+.notif-item.unread { background: rgba(0,212,255,0.03); }
+.notif-item:last-child { border-bottom: none; border-radius: 0 0 12px 12px; }
+.ni-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+.ni-dot.read { background: transparent; }
+.ni-text { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.ni-ts { font-size: 10px; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
+
+/* Driver chat screen */
+.d-chat-messages { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; height: 280px; overflow-y: auto; }
+.chat-msg { max-width: 85%; }
+.chat-msg.recv { align-self: flex-start; }
+.chat-msg.sent { align-self: flex-end; }
+.chat-bubble {
+  padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.5;
+}
+.chat-msg.recv .chat-bubble { background: var(--surface3); color: var(--text2); border-radius: 4px 12px 12px 12px; }
+.chat-msg.sent .chat-bubble { background: var(--orange); color: #000; border-radius: 12px 4px 12px 12px; }
+.chat-msg-time { font-size: 9px; color: var(--text3); margin-top: 3px; font-family: var(--mono); }
+.chat-msg.sent .chat-msg-time { text-align: right; }
+.d-chat-input { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); background: var(--surface); }
+.d-chat-input input {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 8px 14px; color: var(--text);
+  font-family: var(--body); font-size: 12px; outline: none;
+}
+.d-chat-send {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--orange);
+  border: none; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Driver profile screen */
+.profile-av {
+  width: 64px; height: 64px; border-radius: 16px;
+  background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(0,212,255,0.1));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-weight: 800; font-size: 24px;
+  color: var(--accent); margin: 0 auto 10px;
+}
+
+/* Active nav highlighting */
+.d-nav-item { transition: opacity 0.2s; }
+.d-nav-item.active .d-nav-icon { filter: none; }
+.d-nav-item:not(.active) { opacity: 0.5; }
+
+/* HOS item click */
+.hos-item { cursor: pointer; border-radius: 6px; transition: background 0.15s; }
+
+/* Truck marker click tooltip */
+.marker-tooltip {
+  display: none; position: absolute; bottom: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%); white-space: nowrap;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 8px 12px;
+  font-size: 11px; z-index: 10;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  min-width: 160px;
+}
+.truck-marker:hover .marker-tooltip { display: block; }
+
+/* Search results */
+.search-results {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0;
+  width: 280px; background: var(--surface);
+  border: 1px solid var(--border2); border-radius: 10px;
+  z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.search-results.open { display: block; }
+.search-result-item {
+  padding: 8px 14px; cursor: pointer; display: flex; gap: 8px;
+  align-items: center; transition: background 0.15s; font-size: 12px;
+}
+.search-result-item:hover { background: var(--surface2); }
+.search-result-item:first-child { border-radius: 10px 10px 0 0; }
+.search-result-item:last-child { border-radius: 0 0 10px 10px; }
+
+/* Add truck / driver modal fields */
+.upload-zone {
+  border: 2px dashed var(--border2); border-radius: 8px;
+  padding: 20px; text-align: center;
+  color: var(--text3); font-size: 12px; cursor: pointer; transition: all 0.2s;
+}
+.upload-zone:hover { border-color: var(--accent); color: var(--accent); }
+
+/* KPI clickable */
+.kpi { cursor: pointer; }
+</style>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- DISPATCH LOAD MODAL -->
+<div id="modal-dispatch" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⚡ Dispatch Load</div>
+      <button class="modal-close" onclick="closeModal('modal-dispatch')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box" style="background:rgba(255,140,66,0.08);border-color:rgba(255,140,66,0.25)">
+        <div style="font-size:11px;color:var(--orange);font-weight:600;margin-bottom:4px">📍 Idle Truck Selected</div>
+        <div class="info-row"><span class="info-key">Truck</span><span class="info-val" style="font-family:var(--mono);color:var(--accent)">MH-07-TK</span></div>
+        <div class="info-row"><span class="info-key">Type</span><span class="info-val">Tanker 15T</span></div>
+        <div class="info-row"><span class="info-key">Location</span><span class="info-val">Kolhapur Yard</span></div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Assign Driver</div>
+        <select class="form-select" id="dispatch-driver">
+          <option value="">— Select Driver —</option>
+          <option value="sp">Suresh Patil (⚠ 10.8h HOS — Near Limit)</option>
+          <option value="ak">Arjun Kumar (6.5h HOS)</option>
+          <option value="dj">Dinesh Joshi (3.1h HOS — Available)</option>
+          <option value="rs">Rahul Singh (9.2h HOS)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Pickup Location</div>
+          <input type="text" class="form-input" placeholder="e.g. Kolhapur Depot" id="dispatch-pickup">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Delivery Location</div>
+          <input type="text" class="form-input" placeholder="e.g. Pune Terminal" id="dispatch-delivery">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Load Type</div>
+          <input type="text" class="form-input" placeholder="e.g. Chemicals / 12T" id="dispatch-load">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Expected Delivery</div>
+          <input type="datetime-local" class="form-input" id="dispatch-eta">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Dispatcher Note (optional)</div>
+        <input type="text" class="form-input" placeholder="Special instructions for driver..." id="dispatch-note">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-dispatch')">Cancel</button>
+      <button class="btn btn-cyan" onclick="confirmDispatch()">⚡ Confirm Dispatch</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TRUCK MODAL -->
+<div id="modal-add-truck" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">🚛 Add New Truck</div>
+      <button class="modal-close" onclick="closeModal('modal-add-truck')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Registration Number</div>
+          <input type="text" class="form-input" placeholder="e.g. MH-04-TK-0099" id="truck-reg">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Truck Type</div>
+          <select class="form-select" id="truck-type">
+            <option>Flatbed</option>
+            <option>Container</option>
+            <option>Tanker</option>
+            <option>Mini Truck</option>
+            <option>Trailer</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Capacity (Tons)</div>
+          <input type="number" class="form-input" placeholder="e.g. 20" id="truck-capacity">
+        </div>
+        <div class="form-group">
+          <div class="form-label">VIN / Chassis No.</div>
+          <input type="text" class="form-input" placeholder="17-char VIN" id="truck-vin">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Insurance Expiry</div>
+          <input type="date" class="form-input" id="truck-ins">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Permit Expiry</div>
+          <input type="date" class="form-input" id="truck-permit">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Upload Documents</div>
+        <div class="upload-zone" onclick="showToast('info','📎 File upload available in production build')">
+          📎 Click to upload RC, Insurance, Fitness Cert...
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-truck')">Cancel</button>
+      <button class="btn btn-cyan" onclick="confirmAddTruck()">+ Add Truck</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRUCK DETAIL MODAL -->
+<div id="modal-truck-detail" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-truck-title">🚛 Truck Details</div>
+      <button class="modal-close" onclick="closeModal('modal-truck-detail')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-truck-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-truck-detail')">Close</button>
+      <button class="btn btn-orange" onclick="closeModal('modal-truck-detail');openModal('modal-dispatch')">⚡ Dispatch</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOS DETAIL MODAL -->
+<div id="modal-hos" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⏱ Hours of Service Detail</div>
+      <button class="modal-close" onclick="closeModal('modal-hos')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-hos-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-hos')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CALL / CONTACT MODAL -->
+<div id="modal-contact" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-contact-title">📞 Contact Driver</div>
+      <button class="modal-close" onclick="closeModal('modal-contact')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-contact-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-contact')">Cancel</button>
+      <button class="btn btn-cyan" onclick="showToast('success','📞 Calling driver...');closeModal('modal-contact')">📞 Call Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT MODAL (Admin) -->
+<div id="modal-chat" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">💬 Message Driver</div>
+      <button class="modal-close" onclick="closeModal('modal-chat')">✕</button>
+    </div>
+    <div class="modal-body" style="gap:8px;padding-bottom:0">
+      <div id="admin-chat-messages" style="background:var(--surface2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;height:220px;overflow-y:auto">
+        <div class="chat-msg recv"><div class="chat-bubble">Dispatcher, I'm 30 mins from Pune. Should I go to Gate 2?</div><div class="chat-msg-time">08:32 AM</div></div>
+        <div class="chat-msg sent"><div class="chat-bubble">Yes, Gate 2. Contact Ramesh at warehouse on arrival.</div><div class="chat-msg-time">08:34 AM</div></div>
+        <div class="chat-msg recv"><div class="chat-bubble">Got it. Will do. 🙏</div><div class="chat-msg-time">08:34 AM</div></div>
+      </div>
+    </div>
+    <div class="d-chat-input" style="border-radius:0 0 16px 16px">
+      <input type="text" id="admin-chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendAdminMsg()">
+      <button class="d-chat-send" onclick="sendAdminMsg()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI DETAIL MODAL -->
+<div id="modal-kpi" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-kpi-title">KPI Detail</div>
+      <button class="modal-close" onclick="closeModal('modal-kpi')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-kpi-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-kpi')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   CORE UTILITIES
+═══════════════════════════════════════════════ */
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) closeModal(this.id);
+  });
+});
+
+let toastCount = 0;
+function showToast(type, msg) {
+  const icons = { success: '✅', warning: '⚠️', error: '❌', info: 'ℹ️' };
+  const tc = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500);
+}
+
+/* ═══════════════════════════════════════════════
+   ROLE SWITCHER
+═══════════════════════════════════════════════ */
+function switchRole(role, btn) {
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + role).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════
+   PHONE SCREENS (DRIVER APP)
+═══════════════════════════════════════════════ */
+function switchPhone(screenId) {
+  document.querySelectorAll('.d-screen').forEach(s => s.classList.remove('active'));
+  const screen = document.getElementById(screenId);
+  if (screen) screen.classList.add('active');
+  // sync phone tabs
+  const tabMap = { 'd-trip': 0, 'd-docs': 1 };
+  const tabs = document.querySelectorAll('.phone-tab');
+  if (tabMap[screenId] !== undefined && tabs[tabMap[screenId]]) {
+    tabs.forEach(t => t.classList.remove('active'));
+    tabs[tabMap[screenId]].classList.add('active');
+  }
+  // sync bottom nav
+  document.querySelectorAll('.d-nav-item').forEach(n => n.classList.remove('active'));
+  const navMap = { 'd-trip': 0, 'd-docs': 1, 'd-chat': 2, 'd-profile': 3 };
+  const navIdx = navMap[screenId];
+  if (navIdx !== undefined) {
+    const allNavs = document.querySelectorAll('.d-bottom-nav');
+    allNavs.forEach(nav => {
+      const items = nav.querySelectorAll('.d-nav-item');
+      if (items[navIdx]) items[navIdx].classList.add('active');
+    });
+  }
+}
+
+function setPhoneTab(tab) {
+  document.querySelectorAll('.phone-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════
+   ADMIN NAV — section switching
+═══════════════════════════════════════════════ */
+const navSections = {
+  'Live Map':         'section-livemap',
+  'Dispatch':         'section-dispatch',
+  'Load Board':       'section-loadboard',
+  'Fleet':            'section-fleet',
+  'Drivers':          'section-drivers',
+  'Document Vault':   'section-docs',
+  'Revenue':          'section-revenue',
+  'HOS Reports':      'section-hos',
+  'Maintenance':      'section-maintenance',
+  'Communication Hub':'section-comms',
+  'Account Settings': 'section-settings',
+};
+
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', function() {
+    const label = this.textContent.replace(/[0-9]/g,'').trim();
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+
+    // find matching section key
+    let matched = null;
+    for (const [key, sectionId] of Object.entries(navSections)) {
+      if (label.includes(key)) { matched = sectionId; break; }
+    }
+    if (matched) {
+      document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
+      const sec = document.getElementById(matched);
+      if (sec) sec.classList.add('active');
+    }
+    // update page heading
+    updatePageHeading(label);
+  });
+});
+
+// Icon rail
+document.querySelectorAll('.rail-icon').forEach((icon, i) => {
+  icon.addEventListener('click', function() {
+    document.querySelectorAll('.rail-icon').forEach(r => r.classList.remove('active'));
+    this.classList.add('active');
+    const railNav = ['Live Map','Fleet','Drivers','Dispatch','Communication Hub','Revenue','','Account Settings'];
+    const target = railNav[i];
+    if (target) {
+      document.querySelectorAll('.nav-link').forEach(l => {
+        if (l.textContent.replace(/[0-9]/g,'').trim().includes(target)) l.click();
+      });
+    }
+  });
+});
+
+function updatePageHeading(label) {
+  const headings = {
+    'Live Map': 'Live Dispatch <em>— Today, 26 Feb 2026 · 8 Active Loads</em>',
+    'Dispatch': 'Dispatch Board <em>— 8 Active, 3 Pending</em>',
+    'Load Board': 'Load Board <em>— 3 Pending Assignments</em>',
+    'Fleet': 'Fleet Management <em>— 14 Trucks</em>',
+    'Drivers': 'Drivers <em>— 16 Active Drivers</em>',
+    'Document Vault': 'Document Vault <em>— 2 Expiring Soon</em>',
+    'Revenue': 'Revenue <em>— Feb 2026</em>',
+    'HOS Reports': 'Hours of Service <em>— 2 Near Limit</em>',
+    'Maintenance': 'Maintenance <em>— 1 Truck In Service</em>',
+    'Communication Hub': 'Communication Hub <em>— 3 Unread</em>',
+    'Account Settings': 'Account Settings',
+  };
+  const ph = document.querySelector('.page-heading');
+  for (const [key, val] of Object.entries(headings)) {
+    if (label.includes(key)) { ph.innerHTML = val; break; }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   DISPATCH MODAL
+═══════════════════════════════════════════════ */
+function openDispatch() {
+  openModal('modal-dispatch');
+}
+
+function confirmDispatch() {
+  const driver = document.getElementById('dispatch-driver').value;
+  const pickup = document.getElementById('dispatch-pickup').value;
+  const delivery = document.getElementById('dispatch-delivery').value;
+  if (!driver) { showToast('error', '⚠️ Please select a driver'); return; }
+  if (!pickup || !delivery) { showToast('error', '⚠️ Fill in pickup and delivery locations'); return; }
+  const driverMap = { sp: 'Suresh Patil', ak: 'Arjun Kumar', dj: 'Dinesh Joshi', rs: 'Rahul Singh' };
+  if (driver === 'sp') {
+    showToast('warning', '⚠️ Suresh Patil is near HOS limit (10.8h). Consider another driver.');
+    setTimeout(() => {
+      closeModal('modal-dispatch');
+      showToast('success', `⚡ Dispatch confirmed: MH-07-TK → ${driverMap[driver]}`);
+    }, 1000);
+  } else {
+    closeModal('modal-dispatch');
+    showToast('success', `⚡ Dispatched MH-07-TK to ${driverMap[driver]}: ${pickup} → ${delivery}`);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ADD TRUCK MODAL
+═══════════════════════════════════════════════ */
+function confirmAddTruck() {
+  const reg = document.getElementById('truck-reg').value;
+  const type = document.getElementById('truck-type').value;
+  const cap = document.getElementById('truck-capacity').value;
+  if (!reg) { showToast('error', '⚠️ Enter registration number'); return; }
+  if (!cap) { showToast('error', '⚠️ Enter truck capacity'); return; }
+  closeModal('modal-add-truck');
+  showToast('success', `🚛 ${reg} (${type}, ${cap}T) added to fleet`);
+  // Update KPI
+  const kpiEl = document.querySelector('.kpi.c .kpi-val');
+  // just show confirmation
+}
+
+/* ═══════════════════════════════════════════════
+   TRUCK MARKERS — click
+═══════════════════════════════════════════════ */
+const truckData = {
+  'MH-01-TK': { driver: 'Arjun Kumar', status: 'Moving', load: 'Steel Coils / 18T', route: 'Mumbai → Pune', progress: '65%', eta: '2h 10m', type: 'Flatbed 20T' },
+  'MH-03-TK': { driver: 'Rahul Singh', status: 'Moving', load: 'FMCG / 22T', route: 'Nashik → Nagpur', progress: '34%', eta: '5h 40m', type: 'Container 30T' },
+  'MH-05-TK': { driver: 'Pending', status: 'Moving', load: 'Auto Parts / 15T', route: 'Mumbai → Nashik', progress: '50%', eta: '3h 00m', type: 'Flatbed 15T' },
+  'MH-07-TK': { driver: 'Unassigned', status: 'Idle', load: '—', route: 'Kolhapur Yard', progress: '—', eta: '—', type: 'Tanker 15T' },
+  'MH-09-TK': { driver: 'Dinesh Joshi', status: 'Moving', load: 'Textiles / 4T', route: 'Mumbai → Surat', progress: '88%', eta: '~25m', type: 'Mini 5T' },
+  'MH-11-TK': { driver: 'N/A', status: 'Maintenance', load: '—', route: 'Pune Workshop', progress: '—', eta: '—', type: 'Trailer 30T' },
+};
+
+document.querySelectorAll('.truck-marker').forEach(marker => {
+  const idEl = marker.querySelector('.marker-id');
+  if (!idEl) return;
+  const truckId = idEl.textContent.trim();
+  const data = truckData[truckId];
+  if (!data) return;
+
+  // Add tooltip
+  const tip = document.createElement('div');
+  tip.className = 'marker-tooltip';
+  tip.innerHTML = `
+    <div style="font-family:var(--mono);font-size:11px;color:var(--accent);margin-bottom:4px">${truckId}</div>
+    <div style="font-size:11px;color:var(--text2)">🚛 ${data.type}</div>
+    <div style="font-size:11px;color:var(--text2)">👤 ${data.driver}</div>
+    <div style="font-size:11px;color:var(--text2)">📍 ${data.route}</div>
+    <div style="font-size:11px;color:var(--text2);margin-top:4px;font-weight:600">ETA: ${data.eta}</div>
+  `;
+  marker.style.position = 'absolute';
+  marker.appendChild(tip);
+
+  marker.style.cursor = 'pointer';
+  marker.addEventListener('click', () => openTruckDetail(truckId, data));
+});
+
+function openTruckDetail(id, data) {
+  document.getElementById('modal-truck-title').textContent = `🚛 ${id} — ${data.type}`;
+  document.getElementById('modal-truck-body').innerHTML = `
+    <div class="info-box">
+      <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:${data.status==='Moving'?'var(--green)':data.status==='Idle'?'var(--yellow)':'var(--red)'}">${data.status}</span></div>
+      <div class="info-row"><span class="info-key">Driver</span><span class="info-val">${data.driver}</span></div>
+      <div class="info-row"><span class="info-key">Route</span><span class="info-val">${data.route}</span></div>
+      <div class="info-row"><span class="info-key">Load</span><span class="info-val">${data.load}</span></div>
+      <div class="info-row"><span class="info-key">Progress</span><span class="info-val">${data.progress}</span></div>
+      <div class="info-row"><span class="info-key">ETA</span><span class="info-val">${data.eta}</span></div>
+    </div>
+    <div style="font-size:12px;color:var(--text3);text-align:center">Click Dispatch to assign a load to this truck.</div>
+  `;
+  openModal('modal-truck-detail');
+}
+
+/* ═══════════════════════════════════════════════
+   MICRO BUTTONS in dispatch table
+═══════════════════════════════════════════════ */
+document.querySelectorAll('.dispatch-table tbody tr').forEach((row, i) => {
+  const btns = row.querySelectorAll('.micro-btn');
+  const trucks = ['MH-01-TK','MH-03-TK','MH-09-TK'];
+  const drivers = ['Arjun Kumar (MH-01)','Rahul Singh (MH-03)','Dinesh Joshi (MH-09)'];
+  const phones = ['+91 98765 00011','+91 98765 00022','+91 98765 00033'];
+
+  if (btns[0]) btns[0].addEventListener('click', () => {
+    if (trucks[i]) openTruckDetail(trucks[i], truckData[trucks[i]]);
+    else showToast('info', 'ℹ️ No GPS data — truck is idle');
+  });
+  if (btns[1]) btns[1].addEventListener('click', () => {
+    if (!drivers[i]) return;
+    document.getElementById('modal-contact-title').textContent = `📞 Call ${drivers[i]}`;
+    document.getElementById('modal-contact-body').innerHTML = `
+      <div class="info-box">
+        <div class="info-row"><span class="info-key">Driver</span><span class="info-val">${drivers[i]}</span></div>
+        <div class="info-row"><span class="info-key">Phone</span><span class="info-val" style="color:var(--accent)">${phones[i]}</span></div>
+        <div class="info-row"><span class="info-key">Truck</span><span class="info-val" style="font-family:var(--mono)">${trucks[i]}</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--text3)">Tap "Call Now" to initiate a direct call.</div>`;
+    openModal('modal-contact');
+  });
+  if (btns[2]) btns[2].addEventListener('click', () => openModal('modal-chat'));
+});
+
+/* ═══════════════════════════════════════════════
+   HOS ITEM click
+═══════════════════════════════════════════════ */
+const hosData = [
+  { name:'Arjun Kumar', truck:'MH-01-TK', hours:6.5, limit:11, status:'On Road', pct:59, color:'var(--green)', trips:3 },
+  { name:'Rahul Singh', truck:'MH-03-TK', hours:9.2, limit:11, status:'On Road', pct:84, color:'var(--yellow)', trips:5 },
+  { name:'Dinesh Joshi', truck:'MH-09-TK', hours:3.1, limit:11, status:'On Road', pct:28, color:'var(--green)', trips:2 },
+  { name:'Suresh Patil', truck:'MH-07-TK', hours:10.8, limit:11, status:'Idle – Near Limit ⚠', pct:98, color:'var(--red)', trips:7 },
+];
+
+document.querySelectorAll('.hos-item').forEach((item, i) => {
+  if (!hosData[i]) return;
+  item.addEventListener('click', () => {
+    const d = hosData[i];
+    document.getElementById('modal-hos-body').innerHTML = `
+      <div class="info-box">
+        <div class="info-row"><span class="info-key">Driver</span><span class="info-val">${d.name}</span></div>
+        <div class="info-row"><span class="info-key">Assigned Truck</span><span class="info-val" style="font-family:var(--mono);color:var(--accent)">${d.truck}</span></div>
+        <div class="info-row"><span class="info-key">Status</span><span class="info-val">${d.status}</span></div>
+        <div class="info-row"><span class="info-key">Hours Driven Today</span><span class="info-val" style="color:${d.color};font-weight:700">${d.hours}h / ${d.limit}h (${d.pct}%)</span></div>
+        <div class="info-row"><span class="info-key">Remaining</span><span class="info-val">${(d.limit - d.hours).toFixed(1)}h</span></div>
+        <div class="info-row"><span class="info-key">Trips Today</span><span class="info-val">${d.trips}</span></div>
+      </div>
+      <div style="background:var(--surface2);border-radius:8px;padding:12px;">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">HOS Progress</div>
+        <div style="height:8px;background:var(--surface3);border-radius:4px;overflow:hidden">
+          <div style="width:${d.pct}%;height:100%;background:${d.color};border-radius:4px;transition:width 0.5s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px"><span>0h</span><span style="color:${d.color};font-weight:600">${d.hours}h driven</span><span>${d.limit}h limit</span></div>
+      </div>
+      ${d.pct >= 90 ? '<div style="background:var(--red-dim);border:1px solid var(--red);border-radius:8px;padding:10px;font-size:12px;color:var(--red)">⚠️ This driver is near their daily HOS limit. Avoid assigning new loads.</div>' : ''}
+    `;
+    openModal('modal-hos');
+  });
+});
+
+/* ═══════════════════════════════════════════════
+   KPI CARDS — click for detail
+═══════════════════════════════════════════════ */
+const kpiDetails = [
+  { title: '⚡ Active Loads', content: `<div class="info-box"><div class="info-row"><span class="info-key">Total Active</span><span class="info-val" style="color:var(--accent);font-weight:700">8 Loads</span></div><div class="info-row"><span class="info-key">Moving</span><span class="info-val" style="color:var(--green)">6</span></div><div class="info-row"><span class="info-key">Stalled</span><span class="info-val" style="color:var(--red)">1</span></div><div class="info-row"><span class="info-key">At Pickup</span><span class="info-val" style="color:var(--yellow)">1</span></div><div class="info-row"><span class="info-key">↑ vs Yesterday</span><span class="info-val">+2 loads</span></div></div>` },
+  { title: '🚛 On Road', content: `<div class="info-box"><div class="info-row"><span class="info-key">Trucks Moving</span><span class="info-val" style="color:var(--green);font-weight:700">8</span></div><div class="info-row"><span class="info-key">Total Fleet</span><span class="info-val">14</span></div><div class="info-row"><span class="info-key">Utilization</span><span class="info-val" style="color:var(--green)">57%</span></div></div>` },
+  { title: '🟡 Idle Trucks', content: `<div class="info-box"><div class="info-row"><span class="info-key">Idle Trucks</span><span class="info-val" style="color:var(--orange);font-weight:700">4</span></div><div class="info-row"><span class="info-key">Ready to Assign</span><span class="info-val" style="color:var(--green)">3</span></div><div class="info-row"><span class="info-key">Pending Maintenance</span><span class="info-val" style="color:var(--yellow)">1</span></div></div>` },
+  { title: '🔴 At Risk', content: `<div class="info-box"><div class="info-row"><span class="info-key">Delayed Deliveries</span><span class="info-val" style="color:var(--red);font-weight:700">1</span></div><div class="info-row"><span class="info-key">Truck</span><span class="info-val" style="font-family:var(--mono)">MH-09-TK</span></div><div class="info-row"><span class="info-key">Route</span><span class="info-val">Mumbai → Surat</span></div><div class="info-row"><span class="info-key">Delay</span><span class="info-val" style="color:var(--red)">~45 mins behind</span></div></div>` },
+  { title: '⚠️ HOS Alerts', content: `<div class="info-box"><div class="info-row"><span class="info-key">Near Limit Drivers</span><span class="info-val" style="color:var(--yellow);font-weight:700">2</span></div><div class="info-row"><span class="info-key">Suresh Patil</span><span class="info-val" style="color:var(--red)">10.8h / 11h</span></div><div class="info-row"><span class="info-key">Rahul Singh</span><span class="info-val" style="color:var(--yellow)">9.2h / 11h</span></div></div>` },
+  { title: '💰 Today\'s Revenue', content: `<div class="info-box"><div class="info-row"><span class="info-key">Revenue Earned</span><span class="info-val" style="color:var(--green);font-weight:700">₹82,000</span></div><div class="info-row"><span class="info-key">Daily Target</span><span class="info-val">₹1,20,000</span></div><div class="info-row"><span class="info-key">Achieved</span><span class="info-val" style="color:var(--yellow)">68%</span></div><div class="info-row"><span class="info-key">Completed Trips</span><span class="info-val">5</span></div><div class="info-row"><span class="info-key">In-Progress Revenue</span><span class="info-val">₹38,000 pending</span></div></div>` },
+];
+
+document.querySelectorAll('.kpi').forEach((kpi, i) => {
+  kpi.style.cursor = 'pointer';
+  kpi.addEventListener('click', () => {
+    if (!kpiDetails[i]) return;
+    document.getElementById('modal-kpi-title').textContent = kpiDetails[i].title;
+    document.getElementById('modal-kpi-body').innerHTML = kpiDetails[i].content;
+    openModal('modal-kpi');
+  });
+});
+
+/* ═══════════════════════════════════════════════
+   NOTIFICATION BUBBLE
+═══════════════════════════════════════════════ */
+const notifBubble = document.querySelector('.notif-bubble');
+const notifDropdown = document.createElement('div');
+notifDropdown.className = 'notif-dropdown';
+notifDropdown.innerHTML = `
+  <div class="notif-drop-head">
+    <span class="notif-drop-title">🔔 Notifications</span>
+    <span style="font-size:10px;color:var(--accent);cursor:pointer" onclick="markAllRead()">Mark all read</span>
+  </div>
+  <div class="notif-item unread"><div class="ni-dot"></div><div><div class="ni-text"><strong>Suresh Patil</strong> HOS at 98% — near daily limit</div><div class="ni-ts">08:45 AM</div></div></div>
+  <div class="notif-item unread"><div class="ni-dot"></div><div><div class="ni-text"><strong>MH-11-TK</strong> sent to maintenance — engine fault</div><div class="ni-ts">07:20 AM</div></div></div>
+  <div class="notif-item unread"><div class="ni-dot"></div><div><div class="ni-text"><strong>MH-07-TK</strong> permit expiring in 45 days</div><div class="ni-ts">Yesterday</div></div></div>
+  <div class="notif-item"><div class="ni-dot read"></div><div><div class="ni-text"><strong>MH-09-TK</strong> approaching Surat — notify warehouse</div><div class="ni-ts">08:12 AM</div></div></div>
+`;
+notifBubble.style.position = 'relative';
+notifBubble.appendChild(notifDropdown);
+notifBubble.addEventListener('click', (e) => {
+  e.stopPropagation();
+  notifDropdown.classList.toggle('open');
+});
+document.addEventListener('click', () => notifDropdown.classList.remove('open'));
+
+function markAllRead() {
+  document.querySelectorAll('.ni-dot').forEach(d => d.classList.add('read'));
+  document.querySelector('.nb-dot').style.display = 'none';
+  showToast('success', '✅ All notifications marked as read');
+  notifDropdown.classList.remove('open');
+}
+
+/* ═══════════════════════════════════════════════
+   SEARCH BAR
+═══════════════════════════════════════════════ */
+const searchInput = document.querySelector('.search-bar input');
+const searchWrap = document.querySelector('.search-bar');
+const searchItems = [
+  { icon:'🚛', label:'MH-01-TK — Flatbed 20T', sub:'Moving • Mumbai → Pune' },
+  { icon:'🚛', label:'MH-03-TK — Container 30T', sub:'Moving • Nashik → Nagpur' },
+  { icon:'🚛', label:'MH-07-TK — Tanker 15T', sub:'Idle • Kolhapur Yard' },
+  { icon:'🚛', label:'MH-09-TK — Mini 5T', sub:'Moving • Mumbai → Surat' },
+  { icon:'🚛', label:'MH-11-TK — Trailer 30T', sub:'Maintenance • Pune Workshop' },
+  { icon:'👤', label:'Arjun Kumar', sub:'Driver • On Road' },
+  { icon:'👤', label:'Rahul Singh', sub:'Driver • On Road' },
+  { icon:'👤', label:'Suresh Patil', sub:'Driver • Idle (HOS Alert ⚠)' },
+  { icon:'👤', label:'Dinesh Joshi', sub:'Driver • On Road' },
+];
+
+const srContainer = document.createElement('div');
+srContainer.className = 'search-results';
+searchWrap.style.position = 'relative';
+searchWrap.appendChild(srContainer);
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  if (!q) { srContainer.classList.remove('open'); srContainer.innerHTML=''; return; }
+  const filtered = searchItems.filter(i => i.label.toLowerCase().includes(q) || i.sub.toLowerCase().includes(q));
+  if (!filtered.length) { srContainer.classList.remove('open'); return; }
+  srContainer.innerHTML = filtered.map(i => `
+    <div class="search-result-item" onclick="searchSelect('${i.label}')">
+      <span style="font-size:16px">${i.icon}</span>
+      <div><div style="font-weight:500">${i.label}</div><div style="font-size:10px;color:var(--text3)">${i.sub}</div></div>
+    </div>`).join('');
+  srContainer.classList.add('open');
+});
+
+function searchSelect(label) {
+  searchInput.value = '';
+  srContainer.classList.remove('open');
+  showToast('info', `🔍 Selected: ${label}`);
+}
+
+searchInput.addEventListener('keydown', (e) => { if(e.key==='Escape') { srContainer.classList.remove('open'); searchInput.value=''; } });
+document.addEventListener('click', (e) => { if (!searchWrap.contains(e.target)) srContainer.classList.remove('open'); });
+
+/* ═══════════════════════════════════════════════
+   TOP BUTTONS: + Add Truck / ⚡ Dispatch Load
+═══════════════════════════════════════════════ */
+document.querySelectorAll('.btn-ghost').forEach(btn => {
+  if (btn.textContent.includes('Add Truck')) btn.addEventListener('click', () => openModal('modal-add-truck'));
+});
+document.querySelectorAll('.btn-cyan').forEach(btn => {
+  if (btn.textContent.includes('Dispatch Load')) btn.addEventListener('click', () => openModal('modal-dispatch'));
+});
+
+/* ═══════════════════════════════════════════════
+   ADMIN CHAT
+═══════════════════════════════════════════════ */
+function sendAdminMsg() {
+  const input = document.getElementById('admin-chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('admin-chat-messages');
+  const el = document.createElement('div');
+  el.className = 'chat-msg sent';
+  el.innerHTML = `<div class="chat-bubble">${msg}</div><div class="chat-msg-time">Now</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+  // auto reply
+  setTimeout(() => {
+    const reply = document.createElement('div');
+    reply.className = 'chat-msg recv';
+    reply.innerHTML = `<div class="chat-bubble">Received, will update shortly.</div><div class="chat-msg-time">Now</div>`;
+    msgs.appendChild(reply);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200);
+}
+
+/* ═══════════════════════════════════════════════
+   DRIVER APP — Action buttons
+═══════════════════════════════════════════════ */
+document.querySelectorAll('.d-btn').forEach(btn => {
+  const txt = btn.textContent.trim();
+  if (txt.includes('Mark Picked Up')) {
+    btn.addEventListener('click', function() {
+      showToast('success', '✅ Status updated: Picked Up');
+      this.textContent = '📦 Mark Delivered';
+      document.querySelectorAll('.status-pill.s-green .sp-dot').forEach(d => {});
+    });
+  }
+  if (txt.includes('Mark Delivered') || txt.includes('Delivered')) {
+    btn.addEventListener('click', function() {
+      showToast('success', '🎉 Trip Completed! Load delivered successfully.');
+      this.textContent = '✅ Completed';
+      this.style.background = 'var(--green)';
+      this.disabled = true;
+    });
+  }
+  if (txt.includes('Call Dispatcher')) {
+    btn.addEventListener('click', () => showToast('info', '📞 Calling dispatcher... +91 98765 99999'));
+  }
+});
+
+/* Driver bottom nav */
+document.querySelectorAll('.d-nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    const label = this.querySelector('.d-nav-label')?.textContent;
+    const map = { 'My Trip': 'd-trip', 'Docs': 'd-docs', 'Chat': 'd-chat', 'Profile': 'd-profile' };
+    if (map[label]) {
+      // make sure screen exists; if not, create it
+      if (!document.getElementById(map[label]) && (label === 'Chat' || label === 'Profile')) {
+        createDriverScreen(map[label], label);
+      }
+      switchPhone(map[label]);
+    }
+    const allNavItems = this.closest('.d-bottom-nav').querySelectorAll('.d-nav-item');
+    allNavItems.forEach(n => n.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+function createDriverScreen(id, label) {
+  const phoneScreen = document.querySelector('.phone-screen');
+  const div = document.createElement('div');
+  div.id = id;
+  div.className = 'd-screen';
+
+  if (label === 'Chat') {
+    div.innerHTML = `
+      <div class="d-status-bar"><span>9:41</span><span>📶 🔋</span></div>
+      <div class="d-header"><div class="d-greeting">Dispatcher Chat</div><div class="d-name" style="font-size:16px">💬 Rahman Shipping</div></div>
+      <div class="d-chat-messages" id="driver-chat-msgs">
+        <div class="chat-msg recv"><div class="chat-bubble">Head to Gate 2 at Pune warehouse. Contact Ramesh.</div><div class="chat-msg-time">08:34 AM</div></div>
+        <div class="chat-msg sent"><div class="chat-bubble">Got it. Will do. 🙏</div><div class="chat-msg-time">08:34 AM</div></div>
+      </div>
+      <div class="d-chat-input">
+        <input type="text" id="driver-chat-input" placeholder="Message dispatcher..." onkeydown="if(event.key==='Enter')sendDriverMsg()">
+        <button class="d-chat-send" onclick="sendDriverMsg()">➤</button>
+      </div>
+      <div class="d-bottom-nav">${bottomNavHTML('Chat')}</div>`;
+  }
+  if (label === 'Profile') {
+    div.innerHTML = `
+      <div class="d-status-bar"><span>9:41</span><span>📶 🔋</span></div>
+      <div class="d-header"><div class="d-greeting">My Profile</div></div>
+      <div class="d-body">
+        <div style="text-align:center;padding:10px 0">
+          <div class="profile-av">AK</div>
+          <div style="font-family:var(--display);font-weight:800;font-size:18px">Arjun Kumar</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">Driver ID: DRV-0041 · Rahman Shipping</div>
+        </div>
+        <div class="d-card">
+          <div class="d-card-head">My Info</div>
+          <div class="d-card-body" style="font-size:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Phone</span><span style="color:var(--accent)">+91 98765 00011</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">License No.</span><span>MH-5555-2020</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Rating</span><span style="color:var(--yellow)">★ 4.8</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Total Trips</span><span style="color:var(--green);font-weight:600">312</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Joined</span><span>Jan 2021</span></div>
+          </div>
+        </div>
+        <button class="d-btn d-btn-ghost" style="width:100%;margin-top:4px" onclick="showToast('info','⚙️ Settings coming soon')">⚙️ Settings</button>
+      </div>
+      <div class="d-bottom-nav">${bottomNavHTML('Profile')}</div>`;
+  }
+  phoneScreen.appendChild(div);
+
+  // Attach nav listeners for new screen
+  div.querySelectorAll('.d-nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const lbl = this.querySelector('.d-nav-label')?.textContent;
+      const map = { 'My Trip': 'd-trip', 'Docs': 'd-docs', 'Chat': 'd-chat', 'Profile': 'd-profile' };
+      if (map[lbl]) {
+        if (!document.getElementById(map[lbl]) && (lbl === 'Chat' || lbl === 'Profile')) createDriverScreen(map[lbl], lbl);
+        switchPhone(map[lbl]);
+      }
+      div.querySelectorAll('.d-nav-item').forEach(n => n.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+function bottomNavHTML(active) {
+  const items = [['🏠','My Trip'],['📄','Docs'],['💬','Chat'],['👤','Profile']];
+  return items.map(([icon, lbl]) => `
+    <div class="d-nav-item ${lbl===active?'active':''}">
+      <div class="d-nav-icon">${icon}</div>
+      <div class="d-nav-label">${lbl}</div>
+    </div>`).join('');
+}
+
+function sendDriverMsg() {
+  const input = document.getElementById('driver-chat-input');
+  if (!input) return;
+  const msg = input.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('driver-chat-msgs');
+  const el = document.createElement('div');
+  el.className = 'chat-msg sent';
+  el.innerHTML = `<div class="chat-bubble">${msg}</div><div class="chat-msg-time">Now</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+  setTimeout(() => {
+    const reply = document.createElement('div');
+    reply.className = 'chat-msg recv';
+    reply.innerHTML = `<div class="chat-bubble">Acknowledged. Keep us posted. ✅</div><div class="chat-msg-time">Now</div>`;
+    msgs.appendChild(reply);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1500);
+}
+
+/* ═══════════════════════════════════════════════
+   DISPATCH TABLE — "New Dispatch" button
+═══════════════════════════════════════════════ */
+document.querySelectorAll('.panel-head .btn-cyan').forEach(btn => {
+  if (btn.textContent.includes('New Dispatch')) btn.addEventListener('click', () => openModal('modal-dispatch'));
+});
+
+/* ═══════════════════════════════════════════════
+   ALERT ROWS — click
+═══════════════════════════════════════════════ */
+document.querySelectorAll('.alert-row').forEach((row, i) => {
+  row.style.cursor = 'pointer';
+  row.addEventListener('click', function() {
+    const text = this.querySelector('.alert-text').textContent;
+    showToast('info', `ℹ️ ${text.substring(0,60)}...`);
+  });
+});
+
+/* ═══════════════════════════════════════════════
+   SECTION PAGES — build them dynamically
+═══════════════════════════════════════════════ */
+const adminBody = document.querySelector('.admin-body');
+
+// The default section (live map + dispatch) is the existing content
+// We wrap it in a section-page div
+const existingContent = [...adminBody.children];
+const defaultSection = document.createElement('div');
+defaultSection.id = 'section-livemap';
+defaultSection.className = 'section-page active';
+existingContent.forEach(el => defaultSection.appendChild(el));
+adminBody.appendChild(defaultSection);
+
+// Fleet section
+const fleetSection = document.createElement('div');
+fleetSection.id = 'section-fleet';
+fleetSection.className = 'section-page';
+fleetSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Fleet Management <span>14 Trucks</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="openModal('modal-add-truck')">+ Add Truck</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Reg No.</th><th>Type</th><th>Capacity</th><th>Status</th><th>Driver</th><th>Insurance</th><th>Permit</th><th></th></tr></thead>
+      <tbody>
+        ${[
+          ['MH-01-TK','Flatbed','20T','Moving','Arjun Kumar','Dec 2026','Aug 2026'],
+          ['MH-03-TK','Container','30T','Moving','Rahul Singh','Sep 2026','Nov 2026'],
+          ['MH-05-TK','Flatbed','15T','Moving','Pending','Mar 2027','Jan 2027'],
+          ['MH-07-TK','Tanker','15T','Idle','Unassigned','Mar 2027','May 2026'],
+          ['MH-09-TK','Mini','5T','Moving','Dinesh Joshi','Oct 2026','Jul 2026'],
+          ['MH-11-TK','Trailer','30T','Maintenance','N/A','Feb 2027','Dec 2026'],
+          ['MH-13-TK','Container','25T','Idle','Unassigned','Jan 2027','Oct 2026'],
+          ['MH-15-TK','Flatbed','18T','Idle','Pending','Jun 2027','Mar 2027'],
+        ].map(([reg,type,cap,status,driver,ins,permit]) => `
+          <tr>
+            <td><div class="treg">${reg}</div></td>
+            <td style="font-size:12px">${type}</td>
+            <td style="font-size:12px;color:var(--text2)">${cap}</td>
+            <td><span class="status-pill ${status==='Moving'?'s-green':status==='Idle'?'s-yellow':'s-red'}"><span class="sp-dot"></span>${status}</span></td>
+            <td style="font-size:12px">${driver}</td>
+            <td style="font-size:11px;color:var(--text3)">${ins}</td>
+            <td style="font-size:11px;color:var(--text3)">${permit}</td>
+            <td><div class="action-row">
+              <button class="micro-btn" onclick="showToast('info','📝 Edit ${reg}')">✏️</button>
+              <button class="micro-btn" onclick="openModal('modal-dispatch')">⚡</button>
+            </div></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(fleetSection);
+
+// Drivers section
+const driversSection = document.createElement('div');
+driversSection.id = 'section-drivers';
+driversSection.className = 'section-page';
+driversSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Drivers <span>16 Active</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="showToast('info','👤 Add Driver modal coming')">+ Add Driver</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Driver</th><th>Phone</th><th>License</th><th>Status</th><th>HOS Today</th><th>Rating</th><th>Trips</th><th></th></tr></thead>
+      <tbody>
+        ${[
+          ['AK','Arjun Kumar','+91 98765 00011','MH-5555-2020','On Road','6.5h',4.8,312,'var(--accent)'],
+          ['RS','Rahul Singh','+91 98765 00022','MH-6666-2019','On Road','9.2h',4.5,289,'var(--purple)'],
+          ['DJ','Dinesh Joshi','+91 98765 00033','MH-7777-2021','On Road','3.1h',4.9,198,'var(--green)'],
+          ['SP','Suresh Patil','+91 98765 00044','MH-8888-2018','Idle','10.8h ⚠',4.2,401,'var(--red)'],
+          ['VK','Vijay Kumar','+91 98765 00055','MH-9999-2020','Off Duty','0h',4.7,156,'var(--orange)'],
+          ['PJ','Pradeep Jain','+91 98765 00066','MH-1111-2022','Off Duty','0h',4.6,89,'var(--yellow)'],
+        ].map(([init,name,phone,lic,status,hos,rating,trips,clr]) => `
+          <tr>
+            <td><div class="driver-chip"><div class="chip-av" style="background:rgba(${clr==='var(--accent)'?'0,212,255':clr==='var(--purple)'?'168,85,247':clr==='var(--green)'?'0,230,118':clr==='var(--red)'?'255,71,87':clr==='var(--orange)'?'255,140,66':'255,211,42'},0.2);color:${clr}">${init}</div><span class="chip-name">${name}</span></div></td>
+            <td style="font-size:11px;color:var(--accent)">${phone}</td>
+            <td style="font-size:11px;font-family:var(--mono);color:var(--text3)">${lic}</td>
+            <td><span class="status-pill ${status==='On Road'?'s-green':status==='Idle'?'s-yellow':'s-blue'}"><span class="sp-dot"></span>${status}</span></td>
+            <td style="font-size:11px;${hos.includes('⚠')?'color:var(--red)':'color:var(--text2)'}">${hos}</td>
+            <td style="font-size:12px;color:var(--yellow)">★ ${rating}</td>
+            <td style="font-size:12px;color:var(--text2)">${trips}</td>
+            <td><div class="action-row">
+              <button class="micro-btn" onclick="showToast('info','📞 Calling ${name}')">📞</button>
+              <button class="micro-btn" onclick="openModal('modal-chat')">💬</button>
+            </div></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(driversSection);
+
+// Revenue section
+const revenueSection = document.createElement('div');
+revenueSection.id = 'section-revenue';
+revenueSection.className = 'section-page';
+revenueSection.innerHTML = `
+  <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi g" style="cursor:default"><div class="kpi-label">This Month</div><div class="kpi-val">₹18.4L</div><div class="kpi-sub">+12% vs Jan</div></div>
+    <div class="kpi c" style="cursor:default"><div class="kpi-label">Trips This Month</div><div class="kpi-val">142</div><div class="kpi-sub">Avg 4.7/day</div></div>
+    <div class="kpi o" style="cursor:default"><div class="kpi-label">Fuel Cost</div><div class="kpi-val">₹3.2L</div><div class="kpi-sub">17.4% of revenue</div></div>
+    <div class="kpi p" style="cursor:default"><div class="kpi-label">Net Profit</div><div class="kpi-val">₹15.2L</div><div class="kpi-sub">82.6% margin</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Daily Revenue — February 2026</div></div>
+    <div style="padding:20px">
+      <div class="rev-bars">
+        ${[42,58,63,71,55,82,48,90,76,68,82,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0].slice(0,20).map((v,i)=>`
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:${v}%;background:${v>80?'var(--green)':v>60?'var(--accent)':'var(--surface4)'}" onclick="showToast('info','Feb ${i+1}: ₹${Math.round(v*1500).toLocaleString()} revenue')"></div>
+            <div class="rev-bar-label">${i+1}</div>
+          </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:16px;margin-top:14px;font-size:11px;color:var(--text3)">
+        <span>● <span style="color:var(--green)">₹1.2L+</span> Days</span>
+        <span>● <span style="color:var(--accent)">₹90K–1.2L</span></span>
+        <span>● <span style="color:var(--text3)">Below ₹90K</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Top Revenue Drivers</div></div>
+    <div style="padding:14px;display:flex;flex-direction:column;gap:8px">
+      ${[['Suresh Patil','₹4.2L',401,'98%'],['Arjun Kumar','₹3.8L',312,'95%'],['Rahul Singh','₹3.6L',289,'92%'],['Dinesh Joshi','₹2.8L',198,'89%']].map(([n,rev,trips,eff])=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(31,40,64,0.4)">
+          <div style="flex:1;font-size:13px">${n}</div>
+          <div style="font-size:12px;color:var(--text3)">${trips} trips</div>
+          <div style="font-size:12px;color:var(--green);font-weight:600">${rev}</div>
+          <div style="font-size:11px;color:var(--accent)">${eff}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+adminBody.appendChild(revenueSection);
+
+// HOS Reports section
+const hosSection = document.createElement('div');
+hosSection.id = 'section-hos';
+hosSection.className = 'section-page';
+hosSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Hours of Service Report <span>Today, 26 Feb 2026</span></div></div>
+    <div class="hos-list">
+      ${hosData.map(d=>`
+        <div class="hos-item" style="padding:14px 18px;cursor:pointer" onclick="">
+          <div class="hos-av" style="background:rgba(${d.color==='var(--green)'?'0,230,118':d.color==='var(--yellow)'?'255,211,42':d.color==='var(--red)'?'255,71,87':'0,212,255'},0.15);color:${d.color}">${d.name.split(' ').map(n=>n[0]).join('')}</div>
+          <div class="hos-info">
+            <div class="hos-name">${d.name}</div>
+            <div class="hos-sub">${d.hours}h driven • ${d.trips} trips today • ${d.status}</div>
+          </div>
+          <div style="width:120px">
+            <div class="hos-label" style="color:${d.color}">${d.pct}% (${d.hours}h / ${d.limit}h)</div>
+            <div class="hos-bar"><div class="hos-fill" style="width:${d.pct}%;background:${d.color}"></div></div>
+          </div>
+          ${d.pct>=90?'<span style="font-size:10px;background:var(--red-dim);color:var(--red);padding:3px 8px;border-radius:5px;font-weight:700;margin-left:8px">⚠ ALERT</span>':''}
+        </div>`).join('')}
+    </div>
+  </div>`;
+adminBody.appendChild(hosSection);
+
+// Maintenance section
+const maintSection = document.createElement('div');
+maintSection.id = 'section-maintenance';
+maintSection.className = 'section-page';
+maintSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Maintenance Tracker</div>
+      <button class="btn btn-ghost" style="font-size:11px" onclick="showToast('info','📋 Schedule maintenance modal coming')">+ Schedule</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Truck</th><th>Issue</th><th>Status</th><th>Workshop</th><th>Reported</th><th>Est. Return</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="treg">MH-11-TK</div><div style="font-size:10px;color:var(--text3)">Trailer 30T</div></td>
+          <td style="font-size:12px;color:var(--red)">Engine fault — reported by driver</td>
+          <td><span class="status-pill s-red"><span class="sp-dot"></span>In Service</span></td>
+          <td style="font-size:12px">Pune Auto Works</td>
+          <td style="font-size:11px;color:var(--text3)">Today 07:20 AM</td>
+          <td style="font-size:11px;color:var(--yellow)">2–3 days</td>
+        </tr>
+        <tr>
+          <td><div class="treg">MH-07-TK</div><div style="font-size:10px;color:var(--text3)">Tanker 15T</div></td>
+          <td style="font-size:12px;color:var(--yellow)">Permit expiring in 45 days</td>
+          <td><span class="status-pill s-yellow"><span class="sp-dot"></span>Pending</span></td>
+          <td style="font-size:12px;color:var(--text3)">—</td>
+          <td style="font-size:11px;color:var(--text3)">Yesterday</td>
+          <td style="font-size:11px;color:var(--text3)">Schedule renewal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(maintSection);
+
+// Docs section
+const docsSection = document.createElement('div');
+docsSection.id = 'section-docs';
+docsSection.className = 'section-page';
+docsSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Document Vault <span>2 Expiring Soon</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="showToast('info','📎 Upload document modal coming')">+ Upload Doc</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Document</th><th>Entity</th><th>Type</th><th>Expiry Date</th><th>Status</th></tr></thead>
+      <tbody>
+        ${[
+          ['🛡 Insurance','MH-01-TK','Truck','Dec 2026','Valid'],
+          ['📋 Fitness Cert.','MH-01-TK','Truck','Apr 2026','Renew Soon'],
+          ['🪪 Driving License','Arjun Kumar','Driver','Mar 2027','Valid'],
+          ['🚛 Permit','MH-07-TK','Truck','May 2026','Renew Soon'],
+          ['🛡 Insurance','MH-03-TK','Truck','Sep 2026','Valid'],
+          ['🛡 Insurance','MH-09-TK','Truck','Oct 2026','Valid'],
+          ['📋 Fitness Cert.','MH-03-TK','Truck','Nov 2026','Valid'],
+        ].map(([doc,entity,type,exp,status])=>`
+          <tr>
+            <td style="font-size:12px">${doc}</td>
+            <td><div class="treg" style="${type==='Driver'?'color:var(--orange)':''}">${entity}</div></td>
+            <td style="font-size:11px;color:var(--text3)">${type}</td>
+            <td style="font-size:12px;${status==='Renew Soon'?'color:var(--yellow);font-weight:600':''}">${exp}</td>
+            <td><span class="status-pill ${status==='Valid'?'s-green':'s-yellow'}"><span class="sp-dot"></span>${status}</span></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(docsSection);
+
+// Communications
+const commsSection = document.createElement('div');
+commsSection.id = 'section-comms';
+commsSection.className = 'section-page';
+commsSection.innerHTML = `
+  <div class="content-grid" style="grid-template-columns:1fr 340px">
+    <div class="panel" style="display:flex;flex-direction:column">
+      <div class="panel-head"><div class="panel-title">💬 Communication Hub</div></div>
+      <div id="comm-msgs" style="flex:1;padding:16px;display:flex;flex-direction:column;gap:8px;height:320px;overflow-y:auto">
+        <div class="chat-msg recv"><div class="chat-bubble">Dispatcher, at Mumbai warehouse, load confirmed.</div><div class="chat-msg-time">Arjun Kumar — 08:20 AM</div></div>
+        <div class="chat-msg sent"><div class="chat-bubble">Good. Proceed to Gate 2 Pune on arrival.</div><div class="chat-msg-time">Dispatcher — 08:21 AM</div></div>
+        <div class="chat-msg recv"><div class="chat-bubble">Engine light came on. Should I stop?</div><div class="chat-msg-time">MH-11-TK Driver — 07:15 AM</div></div>
+        <div class="chat-msg sent"><div class="chat-bubble">Yes, pull over safely. MH-11-TK being routed to Pune Auto Works.</div><div class="chat-msg-time">Dispatcher — 07:18 AM</div></div>
+      </div>
+      <div class="d-chat-input" style="border-radius:0 0 14px 14px">
+        <input type="text" id="comm-input" placeholder="Broadcast message or reply..." onkeydown="if(event.key==='Enter')sendCommMsg()">
+        <button class="d-chat-send" onclick="sendCommMsg()">➤</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Active Drivers</div></div>
+        ${hosData.map(d=>`
+          <div class="hos-item" onclick="showToast('info','💬 Opening chat with ${d.name}')">
+            <div class="hos-av" style="background:var(--surface3);color:var(--text)">${d.name.split(' ').map(n=>n[0]).join('')}</div>
+            <div class="hos-info"><div class="hos-name">${d.name}</div><div class="hos-sub">${d.status}</div></div>
+            <span style="font-size:16px;cursor:pointer">💬</span>
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+adminBody.appendChild(commsSection);
+
+function sendCommMsg() {
+  const input = document.getElementById('comm-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('comm-msgs');
+  const el = document.createElement('div');
+  el.className = 'chat-msg sent';
+  el.innerHTML = `<div class="chat-bubble">${msg}</div><div class="chat-msg-time">Dispatcher — Now</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+  showToast('success', '📤 Message sent to fleet');
+}
+
+// Load Board
+const loadBoardSection = document.createElement('div');
+loadBoardSection.id = 'section-loadboard';
+loadBoardSection.className = 'section-page';
+loadBoardSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Load Board <span>3 Pending</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="openModal('modal-dispatch')">+ Post Load</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Load ID</th><th>Route</th><th>Cargo</th><th>Weight</th><th>Pickup Date</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        ${[
+          ['LD-2024','Mumbai → Pune','Steel Coils','18T','Today 6AM','Assigned'],
+          ['LD-2025','Nashik → Nagpur','FMCG Goods','22T','Today 7AM','Assigned'],
+          ['LD-2026','Kolhapur → Pune','Chemicals','12T','Today 9AM','Pending'],
+          ['LD-2027','Mumbai → Surat','Textiles','4T','Today 8AM','Assigned'],
+          ['LD-2028','Pune → Mumbai','Machine Parts','9T','Today 11AM','Pending'],
+          ['LD-2029','Nagpur → Nashik','Cement','28T','Tomorrow 6AM','Pending'],
+        ].map(([id,route,cargo,wt,date,status])=>`
+          <tr>
+            <td style="font-family:var(--mono);font-size:11px;color:var(--accent)">${id}</td>
+            <td style="font-size:12px">${route}</td>
+            <td style="font-size:11px;color:var(--text2)">${cargo}</td>
+            <td style="font-size:11px;color:var(--text3)">${wt}</td>
+            <td style="font-size:11px;color:var(--text3)">${date}</td>
+            <td><span class="status-pill ${status==='Assigned'?'s-green':'s-yellow'}"><span class="sp-dot"></span>${status}</span></td>
+            <td>${status==='Pending'?`<button class="btn btn-orange" style="font-size:10px;padding:4px 10px" onclick="openModal('modal-dispatch')">Assign ⚡</button>`:'<span style="font-size:11px;color:var(--text3)">—</span>'}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(loadBoardSection);
+
+// Dispatch section (= same as live map in demo)
+const dispatchSection = document.createElement('div');
+dispatchSection.id = 'section-dispatch';
+dispatchSection.className = 'section-page';
+dispatchSection.innerHTML = `<div class="panel"><div class="panel-head"><div class="panel-title">Dispatch Board</div><button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="openModal('modal-dispatch')">⚡ New Dispatch</button></div>
+<div style="padding:20px;color:var(--text3);font-size:13px">Dispatch board showing all active and pending assignments. Use the Live Map for real-time tracking.</div>
+</div>`;
+adminBody.appendChild(dispatchSection);
+
+// Settings section
+const settingsSection = document.createElement('div');
+settingsSection.id = 'section-settings';
+settingsSection.className = 'section-page';
+settingsSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Account Settings</div></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:16px;max-width:500px">
+      <div class="form-group"><div class="form-label">Company Name</div><input type="text" class="form-input" value="Rahman Shipping" id="setting-company"></div>
+      <div class="form-group"><div class="form-label">Owner Name</div><input type="text" class="form-input" value="Abdul Rahman" id="setting-owner"></div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Phone</div><input type="text" class="form-input" value="+91 98765 00000" id="setting-phone"></div>
+        <div class="form-group"><div class="form-label">GST Number</div><input type="text" class="form-input" value="27AAACR1234A1Z5" id="setting-gst"></div>
+      </div>
+      <div class="form-group"><div class="form-label">Plan</div>
+        <select class="form-select"><option>Pro (14 trucks)</option><option>Basic (5 trucks)</option><option>Enterprise (Unlimited)</option></select>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-cyan" onclick="saveSettings()">Save Changes</button>
+        <button class="btn btn-ghost" onclick="showToast('info','🔒 Change password flow coming')">Change Password</button>
+      </div>
+    </div>
+  </div>`;
+adminBody.appendChild(settingsSection);
+
+function saveSettings() {
+  showToast('success', '✅ Settings saved successfully');
+}
+
+/* ═══════════════════════════════════════════════
+   GPS ANIMATION — move truck markers subtly
+═══════════════════════════════════════════════ */
+function animateMarkers() {
+  const activeMarkers = document.querySelectorAll('.truck-marker.m-active');
+  activeMarkers.forEach(marker => {
+    const baseLeft = parseFloat(marker.style.left);
+    const baseTop = parseFloat(marker.style.top);
+    const dL = (Math.random() - 0.5) * 0.4;
+    const dT = (Math.random() - 0.5) * 0.2;
+    marker.style.left = `${Math.max(5, Math.min(95, baseLeft + dL))}%`;
+    marker.style.top = `${Math.max(5, Math.min(90, baseTop + dT))}%`;
+  });
+}
+setInterval(animateMarkers, 3000);
+
+/* ═══════════════════════════════════════════════
+   LIVE CLOCK in topbar
+═══════════════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  const ph = document.querySelector('.page-heading em');
+  if (ph && ph.textContent.includes('Today')) {
+    const base = ph.textContent.split('·')[0];
+    ph.innerHTML = `${base}· <span style="font-family:var(--mono)">${time}</span>`;
+  }
+  // update phone clock
+  document.querySelectorAll('.d-status-bar span:first-child').forEach(el => {
+    if (el.textContent.includes(':')) el.textContent = time;
+  });
+}
+setInterval(updateClock, 60000);
+
+/* ═══════════════════════════════════════════════
+   INITIAL TOAST
+═══════════════════════════════════════════════ */
+setTimeout(() => showToast('info', '🚛 FleetOS loaded — All options are now interactive!'), 500);
+</script>
 </body>
 </html>
