@@ -57,6 +57,8 @@ body {
   align-items: center;
   gap: 0;
   min-height: 64px;
+  position: relative;
+  z-index: 50;
 }
 
 /* Hamburger menu button */
@@ -335,6 +337,176 @@ body {
   margin-top: 5px;
   margin-left: auto;
 }
+
+/* ═══════════════════════════════════
+   LEFT NAV DRAWER (from votp.html)
+═══════════════════════════════════ */
+
+/* Backdrop overlay */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 200;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease;
+}
+.nav-overlay.open { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Left nav drawer */
+.left-nav-drawer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 260px;
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  z-index: 300;
+  overflow-y: auto;
+  padding: 20px 0;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+  display: flex;
+  flex-direction: column;
+}
+
+.left-nav-drawer.open {
+  transform: translateX(0);
+}
+
+/* Drawer header close button */
+.nav-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.nav-drawer-brand {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-drawer-brand .brand-icon {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+
+.nav-drawer-brand span { color: var(--accent); }
+
+.nav-close-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.nav-close-btn:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+
+/* Nav content (same styles as votp.html left-nav) */
+.nav-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text3);
+  font-weight: 600;
+  padding: 0 16px;
+  margin: 16px 0 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  margin: 1px 0;
+}
+
+.nav-link:hover { background: var(--surface2); color: var(--text); }
+.nav-link.active { background: var(--accent-dim); color: var(--accent); border-left-color: var(--accent); }
+.nav-link .icon { font-size: 15px; width: 20px; text-align: center; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.nav-badge.yellow { background: var(--yellow); color: #000; }
+.nav-badge.green { background: var(--green); color: #000; }
+
+/* Transporter profile card in nav */
+.transporter-card {
+  margin: 0 12px 16px;
+  background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(168,85,247,0.08));
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.t-name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.t-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+.t-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.t-stat {
+  background: var(--surface3);
+  border-radius: 6px;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.t-stat-val {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent);
+}
+
+.t-stat-label { font-size: 10px; color: var(--text3); }
 
 /* ═══════════════════════════════════
    ADMIN BODY — FULL WIDTH (no sidebar)
@@ -903,9 +1075,136 @@ body {
 .admin-body > * { animation: fadeUp 0.4s ease both; }
 .kpi-row { animation-delay: 0.05s; }
 .content-grid { animation-delay: 0.1s; }
+
+/* ═══ SECTION PAGES ═══ */
+.section-page { display: none; padding: 0; width: 100%; }
+.section-page.active { display: flex; flex-direction: column; gap: 20px; width: 100%; animation: fadeUp 0.25s ease; }
+
+/* ═══ FLEET TABLE ═══ */
+.fleet-table { width: 100%; border-collapse: collapse; }
+.fleet-table th { padding: 9px 16px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); font-weight: 600; background: var(--surface2); border-bottom: 1px solid var(--border); }
+.fleet-table td { padding: 12px 16px; border-bottom: 1px solid rgba(31,40,64,0.5); vertical-align: middle; }
+.fleet-table tr:last-child td { border-bottom: none; }
+.fleet-table tr:hover td { background: rgba(20,24,32,0.6); }
+.treg { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+
+.driver-chip { display: inline-flex; align-items: center; gap: 7px; background: var(--surface3); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px 3px 4px; }
+.chip-av { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+.chip-name { font-size: 12px; font-weight: 500; }
+
+.micro-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text3); font-size: 12px; transition: all 0.2s; }
+.micro-btn:hover { background: var(--surface3); color: var(--text); }
+.action-row { display: flex; gap: 5px; }
+
+/* ═══ REVENUE CHART ═══ */
+.rev-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; padding: 0 4px; }
+.rev-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.rev-bar { width: 100%; border-radius: 3px 3px 0 0; transition: opacity 0.2s; cursor: pointer; }
+.rev-bar:hover { opacity: 0.8; }
+.rev-bar-label { font-size: 9px; color: var(--text3); }
+
+/* ═══ MODAL STYLES ═══ */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 400; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 40px 80px rgba(0,0,0,0.6); animation: fadeUp 0.25s ease; }
+.modal-head { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-family: var(--display); font-weight: 800; font-size: 16px; }
+.modal-close { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.modal-close:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); font-weight: 600; }
+.form-input, .form-select { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; color: var(--text); font-family: var(--body); font-size: 13px; outline: none; transition: border-color 0.2s; width: 100%; }
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-select option { background: var(--surface2); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.info-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+.info-row { display: flex; justify-content: space-between; font-size: 12px; }
+.info-key { color: var(--text3); }
+.info-val { color: var(--text); font-weight: 500; }
+.upload-zone { border: 2px dashed var(--border2); border-radius: 8px; padding: 20px; text-align: center; color: var(--text3); font-size: 12px; cursor: pointer; transition: all 0.2s; }
+.upload-zone:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ TOAST ═══ */
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 500; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 13px; min-width: 260px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); animation: fadeUp 0.3s ease; transition: opacity 0.3s; }
+.toast.success { border-left: 3px solid var(--green); }
+.toast.warning { border-left: 3px solid var(--yellow); }
+.toast.error { border-left: 3px solid var(--red); }
+.toast.info { border-left: 3px solid var(--accent); }
+
+/* ═══ CHAT ═══ */
+.chat-msg { max-width: 85%; }
+.chat-msg.recv { align-self: flex-start; }
+.chat-msg.sent { align-self: flex-end; }
+.chat-bubble { padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; }
+.chat-msg.recv .chat-bubble { background: var(--surface3); color: var(--text2); border-radius: 4px 12px 12px 12px; }
+.chat-msg.sent .chat-bubble { background: var(--accent); color: #000; border-radius: 12px 4px 12px 12px; }
+.chat-msg-time { font-size: 9px; color: var(--text3); margin-top: 3px; font-family: var(--mono); }
+.chat-msg.sent .chat-msg-time { text-align: right; }
+.d-chat-input { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); background: var(--surface); }
+.d-chat-input input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 8px 14px; color: var(--text); font-family: var(--body); font-size: 12px; outline: none; }
+.d-chat-send { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; color: #000; }
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════
+     LEFT NAV DRAWER (votp.html nav)
+═══════════════════════════════ -->
+<div class="nav-overlay" id="navOverlay" onclick="closeNav()"></div>
+
+<div class="left-nav-drawer" id="leftNavDrawer">
+  <!-- Drawer Header -->
+  <div class="nav-drawer-header">
+    <div class="nav-drawer-brand">
+      <div class="brand-icon">🚛</div>
+      Fleet<span>OS</span>
+    </div>
+    <button class="nav-close-btn" onclick="closeNav()" title="Close">✕</button>
+  </div>
+
+  <!-- Transporter Profile Card -->
+  <div class="transporter-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:12px;color:#000">RS</div>
+      <div>
+        <div class="t-name">Rahman Shipping</div>
+        <div class="t-meta">Company Account</div>
+      </div>
+    </div>
+    <div class="t-stats">
+      <div class="t-stat">
+        <div class="t-stat-val">14</div>
+        <div class="t-stat-label">Trucks</div>
+      </div>
+      <div class="t-stat">
+        <div class="t-stat-val">16</div>
+        <div class="t-stat-label">Drivers</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-section-label">Operations</div>
+  <div class="nav-link active" data-section="livemap"><span class="icon">🗺</span> Live Map</div>
+  <div class="nav-link" data-section="dispatch"><span class="icon">⚡</span> Dispatch <span class="nav-badge green">8</span></div>
+  <div class="nav-link" data-section="loadboard"><span class="icon">📋</span> Load Board <span class="nav-badge">3</span></div>
+
+  <div class="nav-section-label">Assets</div>
+  <div class="nav-link" data-section="fleet"><span class="icon">🚛</span> Fleet</div>
+  <div class="nav-link" data-section="drivers"><span class="icon">👤</span> Drivers</div>
+  <div class="nav-link" data-section="docs"><span class="icon">📁</span> Document Vault <span class="nav-badge yellow">2</span></div>
+
+  <div class="nav-section-label">Reports</div>
+  <div class="nav-link" data-section="revenue"><span class="icon">💰</span> Revenue</div>
+  <div class="nav-link" data-section="hos"><span class="icon">⏱</span> HOS Reports</div>
+  <div class="nav-link" data-section="maintenance"><span class="icon">🔧</span> Maintenance</div>
+
+  <div class="nav-section-label">Settings</div>
+  <div class="nav-link" data-section="comms"><span class="icon">💬</span> Communication Hub</div>
+  <div class="nav-link" data-section="settings"><span class="icon">⚙️</span> Account Settings</div>
+</div>
 
 <!-- ═══════════════════════════════
      ROLE BANNER — NEW DESIGN
@@ -1595,15 +1894,247 @@ body {
   </div>
 </div>
 
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- DISPATCH LOAD MODAL -->
+<div id="modal-dispatch" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⚡ Dispatch Load</div>
+      <button class="modal-close" onclick="closeModal('modal-dispatch')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box" style="background:rgba(255,140,66,0.08);border-color:rgba(255,140,66,0.25)">
+        <div style="font-size:11px;color:var(--orange);font-weight:600;margin-bottom:4px">📍 Idle Truck Selected</div>
+        <div class="info-row"><span class="info-key">Truck</span><span class="info-val" style="font-family:var(--mono);color:var(--accent)">MH-07-TK</span></div>
+        <div class="info-row"><span class="info-key">Type</span><span class="info-val">Tanker 15T</span></div>
+        <div class="info-row"><span class="info-key">Location</span><span class="info-val">Kolhapur Yard</span></div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Assign Driver</div>
+        <select class="form-select" id="dispatch-driver">
+          <option value="">— Select Driver —</option>
+          <option value="sp">Suresh Patil (⚠ 10.8h HOS — Near Limit)</option>
+          <option value="ak">Arjun Kumar (6.5h HOS)</option>
+          <option value="dj">Dinesh Joshi (3.1h HOS — Available)</option>
+          <option value="rs">Rahul Singh (9.2h HOS)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Pickup Location</div>
+          <input type="text" class="form-input" placeholder="e.g. Kolhapur Depot" id="dispatch-pickup">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Delivery Location</div>
+          <input type="text" class="form-input" placeholder="e.g. Pune Terminal" id="dispatch-delivery">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Load Type</div>
+          <input type="text" class="form-input" placeholder="e.g. Chemicals / 12T" id="dispatch-load">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Expected Delivery</div>
+          <input type="datetime-local" class="form-input" id="dispatch-eta">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Dispatcher Note (optional)</div>
+        <input type="text" class="form-input" placeholder="Special instructions for driver..." id="dispatch-note">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-dispatch')">Cancel</button>
+      <button class="btn btn-cyan" onclick="confirmDispatch()">⚡ Confirm Dispatch</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TRUCK MODAL -->
+<div id="modal-add-truck" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">🚛 Add New Truck</div>
+      <button class="modal-close" onclick="closeModal('modal-add-truck')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Registration Number</div>
+          <input type="text" class="form-input" placeholder="e.g. MH-04-TK-0099" id="truck-reg">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Truck Type</div>
+          <select class="form-select" id="truck-type">
+            <option>Flatbed</option><option>Container</option><option>Tanker</option><option>Mini Truck</option><option>Trailer</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Capacity (Tons)</div>
+          <input type="number" class="form-input" placeholder="e.g. 20" id="truck-capacity">
+        </div>
+        <div class="form-group">
+          <div class="form-label">VIN / Chassis No.</div>
+          <input type="text" class="form-input" placeholder="17-char VIN" id="truck-vin">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Insurance Expiry</div><input type="date" class="form-input" id="truck-ins"></div>
+        <div class="form-group"><div class="form-label">Permit Expiry</div><input type="date" class="form-input" id="truck-permit"></div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Upload Documents</div>
+        <div class="upload-zone" onclick="showToast('info','📎 File upload available in production build')">📎 Click to upload RC, Insurance, Fitness Cert...</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-truck')">Cancel</button>
+      <button class="btn btn-cyan" onclick="confirmAddTruck()">+ Add Truck</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRUCK DETAIL MODAL -->
+<div id="modal-truck-detail" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-truck-title">🚛 Truck Details</div>
+      <button class="modal-close" onclick="closeModal('modal-truck-detail')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-truck-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-truck-detail')">Close</button>
+      <button class="btn btn-cyan" onclick="closeModal('modal-truck-detail');openModal('modal-dispatch')">⚡ Dispatch</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOS DETAIL MODAL -->
+<div id="modal-hos" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⏱ Hours of Service Detail</div>
+      <button class="modal-close" onclick="closeModal('modal-hos')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-hos-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-hos')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT MODAL -->
+<div id="modal-contact" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-contact-title">📞 Contact Driver</div>
+      <button class="modal-close" onclick="closeModal('modal-contact')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-contact-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-contact')">Cancel</button>
+      <button class="btn btn-cyan" onclick="showToast('success','📞 Calling driver...');closeModal('modal-contact')">📞 Call Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div id="modal-chat" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">💬 Message Driver</div>
+      <button class="modal-close" onclick="closeModal('modal-chat')">✕</button>
+    </div>
+    <div class="modal-body" style="gap:8px;padding-bottom:0">
+      <div id="admin-chat-messages" style="background:var(--surface2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;height:220px;overflow-y:auto">
+        <div class="chat-msg recv"><div class="chat-bubble">Dispatcher, I'm 30 mins from Pune. Should I go to Gate 2?</div><div class="chat-msg-time">08:32 AM</div></div>
+        <div class="chat-msg sent"><div class="chat-bubble">Yes, Gate 2. Contact Ramesh at warehouse on arrival.</div><div class="chat-msg-time">08:34 AM</div></div>
+        <div class="chat-msg recv"><div class="chat-bubble">Got it. Will do. 🙏</div><div class="chat-msg-time">08:34 AM</div></div>
+      </div>
+    </div>
+    <div class="d-chat-input" style="border-radius:0 0 16px 16px">
+      <input type="text" id="admin-chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendAdminMsg()">
+      <button class="d-chat-send" onclick="sendAdminMsg()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI DETAIL MODAL -->
+<div id="modal-kpi" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-kpi-title">KPI Detail</div>
+      <button class="modal-close" onclick="closeModal('modal-kpi')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-kpi-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-kpi')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL (Account Settings section) -->
+<div id="modal-settings" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⚙️ Account Settings</div>
+      <button class="modal-close" onclick="closeModal('modal-settings')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Company Name</div><input type="text" class="form-input" value="Rahman Shipping"></div>
+      <div class="form-group"><div class="form-label">Owner Name</div><input type="text" class="form-input" value="Abdul Rahman"></div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Phone</div><input type="text" class="form-input" value="+91 98765 00000"></div>
+        <div class="form-group"><div class="form-label">GST Number</div><input type="text" class="form-input" value="27AAACR1234A1Z5"></div>
+      </div>
+      <div class="form-group"><div class="form-label">Plan</div>
+        <select class="form-select"><option>Pro (14 trucks)</option><option>Basic (5 trucks)</option><option>Enterprise (Unlimited)</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-settings')">Cancel</button>
+      <button class="btn btn-cyan" onclick="showToast('success','✅ Settings saved successfully');closeModal('modal-settings')">Save Changes</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// KPI panel toggle
+/* ═══════════════════════════════════════════
+   CORE UTILITIES
+═══════════════════════════════════════════ */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) { if (e.target === this) closeModal(this.id); });
+});
+
+function showToast(type, msg) {
+  if (typeof type === 'string' && !msg) { msg = type; type = 'info'; }
+  const icons = { success:'✅', warning:'⚠️', error:'❌', info:'ℹ️' };
+  const tc = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500);
+}
+
+/* ═══════════════════════════════════════════
+   KPI PANEL TOGGLE (existing dropdowns)
+═══════════════════════════════════════════ */
 const kpiPanels = [
   { panelId: 'hos-panel',     kpiId: 'kpi-y' },
   { panelId: 'summary-panel', kpiId: 'kpi-p' },
   { panelId: 'alerts-panel',  kpiId: 'kpi-r' },
 ];
 
-function closeAllPanels(exceptPanelId) {
+function closeAllKpiPanels(exceptPanelId) {
   kpiPanels.forEach(({ panelId, kpiId }) => {
     if (panelId === exceptPanelId) return;
     const p = document.getElementById(panelId);
@@ -1617,12 +2148,10 @@ function togglePanel(panelId, kpiId) {
   const panel = document.getElementById(panelId);
   const kpi   = document.getElementById(kpiId);
   const isHidden = panel.classList.contains('panel-hidden');
-
   if (isHidden) {
-    closeAllPanels(panelId);
-    panel.classList.remove('panel-hidden');
-    panel.classList.remove('panel-reveal');
-    void panel.offsetWidth; // reflow
+    closeAllKpiPanels(panelId);
+    panel.classList.remove('panel-hidden', 'panel-reveal');
+    void panel.offsetWidth;
     panel.classList.add('panel-reveal');
     kpi.classList.add('kpi-active');
   } else {
@@ -1632,7 +2161,6 @@ function togglePanel(panelId, kpiId) {
   }
 }
 
-// Close KPI panels when clicking outside
 document.addEventListener('click', function(e) {
   kpiPanels.forEach(({ panelId, kpiId }) => {
     const panel = document.getElementById(panelId);
@@ -1647,7 +2175,9 @@ document.addEventListener('click', function(e) {
   });
 });
 
-// Live clock
+/* ═══════════════════════════════════════════
+   LIVE CLOCK
+═══════════════════════════════════════════ */
 function updateClock() {
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
@@ -1658,65 +2188,607 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// Hamburger toggle (just visual)
+/* ═══════════════════════════════════════════
+   HAMBURGER / LEFT NAV DRAWER
+═══════════════════════════════════════════ */
 function toggleMenu(btn) {
   btn.classList.toggle('open');
+  const drawer = document.getElementById('leftNavDrawer');
+  const overlay = document.getElementById('navOverlay');
+  const isOpen = drawer.classList.toggle('open');
+  overlay.classList.toggle('open', isOpen);
 }
 
-// Notification panel
+function closeNav() {
+  document.getElementById('leftNavDrawer').classList.remove('open');
+  document.getElementById('navOverlay').classList.remove('open');
+  document.getElementById('menuBtn').classList.remove('open');
+}
+
+/* ═══════════════════════════════════════════
+   NOTIFICATION PANEL
+═══════════════════════════════════════════ */
 function toggleNotif() {
-  const panel = document.getElementById('notifPanel');
-  panel.classList.toggle('open');
+  document.getElementById('notifPanel').classList.toggle('open');
 }
 
-// Clear notifications
 function clearNotifs() {
-  document.querySelectorAll('.notif-item.unread').forEach(el => {
-    el.classList.remove('unread');
-  });
+  document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
   document.querySelectorAll('.notif-unread-dot').forEach(el => el.remove());
-  document.querySelector('.nb-dot').style.display = 'none';
+  const dot = document.querySelector('.nb-dot');
+  if (dot) dot.style.display = 'none';
+  showToast('success', '✅ All notifications marked as read');
 }
 
-// Close notif when clicking outside
 document.addEventListener('click', function(e) {
   const panel = document.getElementById('notifPanel');
   const btn = document.getElementById('notifBtn');
-  if (!panel.contains(e.target) && !btn.contains(e.target)) {
+  if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
     panel.classList.remove('open');
   }
 });
 
-// Assign Load Modal
-function openAssignLoad() {
-  document.getElementById('assignModal').style.display = 'flex';
+/* ═══════════════════════════════════════════
+   HOS DATA (shared)
+═══════════════════════════════════════════ */
+const hosData = [
+  { name:'Arjun Kumar',  truck:'MH-01-TK', hours:6.5,  limit:11, status:'On Road',              pct:59, color:'var(--green)',  trips:3 },
+  { name:'Rahul Singh',  truck:'MH-03-TK', hours:9.2,  limit:11, status:'On Road',              pct:84, color:'var(--yellow)', trips:5 },
+  { name:'Dinesh Joshi', truck:'MH-09-TK', hours:3.1,  limit:11, status:'On Road',              pct:28, color:'var(--green)',  trips:2 },
+  { name:'Suresh Patil', truck:'MH-07-TK', hours:10.8, limit:11, status:'Idle – Near Limit ⚠', pct:98, color:'var(--red)',    trips:7 },
+];
+
+/* ═══════════════════════════════════════════
+   BUILD SECTION PAGES DYNAMICALLY
+═══════════════════════════════════════════ */
+const adminBody = document.querySelector('.admin-body');
+
+// Wrap existing content in the livemap section
+const existingContent = [...adminBody.children];
+const defaultSection = document.createElement('div');
+defaultSection.id = 'section-livemap';
+defaultSection.className = 'section-page active';
+existingContent.forEach(el => defaultSection.appendChild(el));
+adminBody.appendChild(defaultSection);
+
+/* --- FLEET SECTION --- */
+const fleetSection = document.createElement('div');
+fleetSection.id = 'section-fleet';
+fleetSection.className = 'section-page';
+fleetSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Fleet Management <span>14 Trucks</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="openModal('modal-add-truck')">+ Add Truck</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Reg No.</th><th>Type</th><th>Capacity</th><th>Status</th><th>Driver</th><th>Insurance</th><th>Permit</th><th></th></tr></thead>
+      <tbody>
+        ${[
+          ['MH-01-TK','Flatbed','20T','Moving','Arjun Kumar','Dec 2026','Aug 2026'],
+          ['MH-03-TK','Container','30T','Moving','Rahul Singh','Sep 2026','Nov 2026'],
+          ['MH-05-TK','Flatbed','15T','Moving','Pending','Mar 2027','Jan 2027'],
+          ['MH-07-TK','Tanker','15T','Idle','Unassigned','Mar 2027','May 2026'],
+          ['MH-09-TK','Mini','5T','Moving','Dinesh Joshi','Oct 2026','Jul 2026'],
+          ['MH-11-TK','Trailer','30T','Maintenance','N/A','Feb 2027','Dec 2026'],
+          ['MH-13-TK','Container','25T','Idle','Unassigned','Jan 2027','Oct 2026'],
+          ['MH-15-TK','Flatbed','18T','Idle','Pending','Jun 2027','Mar 2027'],
+        ].map(([reg,type,cap,status,driver,ins,permit]) => `
+          <tr>
+            <td><div class="treg">${reg}</div></td>
+            <td style="font-size:12px">${type}</td>
+            <td style="font-size:12px;color:var(--text2)">${cap}</td>
+            <td><span class="status-pill ${status==='Moving'?'s-green':status==='Idle'?'s-yellow':'s-red'}"><span class="sp-dot"></span>${status}</span></td>
+            <td style="font-size:12px">${driver}</td>
+            <td style="font-size:11px;color:var(--text3)">${ins}</td>
+            <td style="font-size:11px;color:var(--text3)">${permit}</td>
+            <td><div class="action-row">
+              <button class="micro-btn" onclick="showToast('info','📝 Edit ${reg}')">✏️</button>
+              <button class="micro-btn" onclick="openModal('modal-dispatch')">⚡</button>
+            </div></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(fleetSection);
+
+/* --- DRIVERS SECTION --- */
+const driversSection = document.createElement('div');
+driversSection.id = 'section-drivers';
+driversSection.className = 'section-page';
+driversSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Drivers <span>16 Active</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="showToast('info','👤 Add Driver modal coming')">+ Add Driver</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Driver</th><th>Phone</th><th>License</th><th>Status</th><th>HOS Today</th><th>Rating</th><th>Trips</th><th></th></tr></thead>
+      <tbody>
+        ${[
+          ['AK','Arjun Kumar','+91 98765 00011','MH-5555-2020','On Road','6.5h',4.8,312,'var(--accent)'],
+          ['RS','Rahul Singh','+91 98765 00022','MH-6666-2019','On Road','9.2h',4.5,289,'var(--purple)'],
+          ['DJ','Dinesh Joshi','+91 98765 00033','MH-7777-2021','On Road','3.1h',4.9,198,'var(--green)'],
+          ['SP','Suresh Patil','+91 98765 00044','MH-8888-2018','Idle','10.8h ⚠',4.2,401,'var(--red)'],
+          ['VK','Vijay Kumar','+91 98765 00055','MH-9999-2020','Off Duty','0h',4.7,156,'var(--orange)'],
+          ['PJ','Pradeep Jain','+91 98765 00066','MH-1111-2022','Off Duty','0h',4.6,89,'var(--yellow)'],
+        ].map(([init,name,phone,lic,status,hos,rating,trips,clr]) => `
+          <tr>
+            <td><div class="driver-chip"><div class="chip-av" style="background:rgba(0,0,0,0.3);color:${clr}">${init}</div><span class="chip-name">${name}</span></div></td>
+            <td style="font-size:11px;color:var(--accent)">${phone}</td>
+            <td style="font-size:11px;font-family:var(--mono);color:var(--text3)">${lic}</td>
+            <td><span class="status-pill ${status==='On Road'?'s-green':status==='Idle'?'s-yellow':'s-blue'}"><span class="sp-dot"></span>${status}</span></td>
+            <td style="font-size:11px;${hos.includes('⚠')?'color:var(--red)':'color:var(--text2)'}">${hos}</td>
+            <td style="font-size:12px;color:var(--yellow)">★ ${rating}</td>
+            <td style="font-size:12px;color:var(--text2)">${trips}</td>
+            <td><div class="action-row">
+              <button class="micro-btn" onclick="showToast('info','📞 Calling ${name}')">📞</button>
+              <button class="micro-btn" onclick="openModal('modal-chat')">💬</button>
+            </div></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(driversSection);
+
+/* --- DOCUMENT VAULT SECTION --- */
+const docsSection = document.createElement('div');
+docsSection.id = 'section-docs';
+docsSection.className = 'section-page';
+docsSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Document Vault <span>2 Expiring Soon</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="showToast('info','📎 Upload document modal coming')">+ Upload Doc</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Document</th><th>Entity</th><th>Type</th><th>Expiry Date</th><th>Status</th></tr></thead>
+      <tbody>
+        ${[
+          ['🛡 Insurance','MH-01-TK','Truck','Dec 2026','Valid'],
+          ['📋 Fitness Cert.','MH-01-TK','Truck','Apr 2026','Renew Soon'],
+          ['🪪 Driving License','Arjun Kumar','Driver','Mar 2027','Valid'],
+          ['🚛 Permit','MH-07-TK','Truck','May 2026','Renew Soon'],
+          ['🛡 Insurance','MH-03-TK','Truck','Sep 2026','Valid'],
+          ['🛡 Insurance','MH-09-TK','Truck','Oct 2026','Valid'],
+          ['📋 Fitness Cert.','MH-03-TK','Truck','Nov 2026','Valid'],
+        ].map(([doc,entity,type,exp,status])=>`
+          <tr>
+            <td style="font-size:12px">${doc}</td>
+            <td><div class="treg" style="${type==='Driver'?'color:var(--orange)':''}">${entity}</div></td>
+            <td style="font-size:11px;color:var(--text3)">${type}</td>
+            <td style="font-size:12px;${status==='Renew Soon'?'color:var(--yellow);font-weight:600':''}">${exp}</td>
+            <td><span class="status-pill ${status==='Valid'?'s-green':'s-yellow'}"><span class="sp-dot"></span>${status}</span></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(docsSection);
+
+/* --- REVENUE SECTION --- */
+const revenueSection = document.createElement('div');
+revenueSection.id = 'section-revenue';
+revenueSection.className = 'section-page';
+revenueSection.innerHTML = `
+  <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi g" style="cursor:default"><div class="kpi-label">This Month</div><div class="kpi-val">₹18.4L</div><div class="kpi-sub">+12% vs Jan</div></div>
+    <div class="kpi c" style="cursor:default"><div class="kpi-label">Trips This Month</div><div class="kpi-val">142</div><div class="kpi-sub">Avg 4.7/day</div></div>
+    <div class="kpi o" style="cursor:default"><div class="kpi-label">Fuel Cost</div><div class="kpi-val">₹3.2L</div><div class="kpi-sub">17.4% of revenue</div></div>
+    <div class="kpi p" style="cursor:default"><div class="kpi-label">Net Profit</div><div class="kpi-val">₹15.2L</div><div class="kpi-sub">82.6% margin</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Daily Revenue — February 2026</div></div>
+    <div style="padding:20px">
+      <div class="rev-bars">
+        ${[42,58,63,71,55,82,48,90,76,68,82,0,0,0,0,0,0,0,0,0].map((v,i)=>`
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:${v||2}%;background:${v>80?'var(--green)':v>60?'var(--accent)':'var(--surface4)'}" onclick="showToast('info','Feb ${i+1}: ₹${Math.round(v*1500).toLocaleString()} revenue')"></div>
+            <div class="rev-bar-label">${i+1}</div>
+          </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:16px;margin-top:14px;font-size:11px;color:var(--text3)">
+        <span>● <span style="color:var(--green)">₹1.2L+</span> Days</span>
+        <span>● <span style="color:var(--accent)">₹90K–1.2L</span></span>
+        <span>● <span style="color:var(--text3)">Below ₹90K</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Top Revenue Drivers</div></div>
+    <div style="padding:14px;display:flex;flex-direction:column;gap:8px">
+      ${[['Suresh Patil','₹4.2L',401,'98%'],['Arjun Kumar','₹3.8L',312,'95%'],['Rahul Singh','₹3.6L',289,'92%'],['Dinesh Joshi','₹2.8L',198,'89%']].map(([n,rev,trips,eff])=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(31,40,64,0.4)">
+          <div style="flex:1;font-size:13px">${n}</div>
+          <div style="font-size:12px;color:var(--text3)">${trips} trips</div>
+          <div style="font-size:12px;color:var(--green);font-weight:600">${rev}</div>
+          <div style="font-size:11px;color:var(--accent)">${eff}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+adminBody.appendChild(revenueSection);
+
+/* --- HOS REPORTS SECTION --- */
+const hosSection = document.createElement('div');
+hosSection.id = 'section-hos';
+hosSection.className = 'section-page';
+hosSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Hours of Service Report <span>Today, 26 Feb 2026</span></div></div>
+    <div class="hos-list">
+      ${hosData.map(d=>`
+        <div class="hos-item" style="padding:14px 18px;cursor:pointer" onclick="openHosDetail(${hosData.indexOf(d)})">
+          <div class="hos-av" style="background:rgba(0,0,0,0.3);color:${d.color}">${d.name.split(' ').map(n=>n[0]).join('')}</div>
+          <div class="hos-info">
+            <div class="hos-name">${d.name}</div>
+            <div class="hos-sub">${d.hours}h driven • ${d.trips} trips today • ${d.status}</div>
+          </div>
+          <div style="width:140px">
+            <div class="hos-label" style="color:${d.color}">${d.pct}% (${d.hours}h / ${d.limit}h)</div>
+            <div class="hos-bar"><div class="hos-fill" style="width:${d.pct}%;background:${d.color}"></div></div>
+          </div>
+          ${d.pct>=90?'<span style="font-size:10px;background:var(--red-dim);color:var(--red);padding:3px 8px;border-radius:5px;font-weight:700;margin-left:8px">⚠ ALERT</span>':''}
+        </div>`).join('')}
+    </div>
+  </div>`;
+adminBody.appendChild(hosSection);
+
+/* --- MAINTENANCE SECTION --- */
+const maintSection = document.createElement('div');
+maintSection.id = 'section-maintenance';
+maintSection.className = 'section-page';
+maintSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Maintenance Tracker</div>
+      <button class="btn btn-ghost" style="font-size:11px" onclick="showToast('info','📋 Schedule maintenance modal coming')">+ Schedule</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Truck</th><th>Issue</th><th>Status</th><th>Workshop</th><th>Reported</th><th>Est. Return</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="treg">MH-11-TK</div><div style="font-size:10px;color:var(--text3)">Trailer 30T</div></td>
+          <td style="font-size:12px;color:var(--red)">Engine fault — reported by driver</td>
+          <td><span class="status-pill s-red"><span class="sp-dot"></span>In Service</span></td>
+          <td style="font-size:12px">Pune Auto Works</td>
+          <td style="font-size:11px;color:var(--text3)">Today 07:20 AM</td>
+          <td style="font-size:11px;color:var(--yellow)">2–3 days</td>
+        </tr>
+        <tr>
+          <td><div class="treg">MH-07-TK</div><div style="font-size:10px;color:var(--text3)">Tanker 15T</div></td>
+          <td style="font-size:12px;color:var(--yellow)">Permit expiring in 45 days</td>
+          <td><span class="status-pill s-yellow"><span class="sp-dot"></span>Pending</span></td>
+          <td style="font-size:12px;color:var(--text3)">—</td>
+          <td style="font-size:11px;color:var(--text3)">Yesterday</td>
+          <td style="font-size:11px;color:var(--text3)">Schedule renewal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(maintSection);
+
+/* --- COMMUNICATION HUB SECTION --- */
+const commsSection = document.createElement('div');
+commsSection.id = 'section-comms';
+commsSection.className = 'section-page';
+commsSection.innerHTML = `
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
+    <div class="panel" style="display:flex;flex-direction:column">
+      <div class="panel-head"><div class="panel-title">💬 Communication Hub</div></div>
+      <div id="comm-msgs" style="flex:1;padding:16px;display:flex;flex-direction:column;gap:8px;height:320px;overflow-y:auto">
+        <div class="chat-msg recv"><div class="chat-bubble">Dispatcher, at Mumbai warehouse, load confirmed.</div><div class="chat-msg-time">Arjun Kumar — 08:20 AM</div></div>
+        <div class="chat-msg sent"><div class="chat-bubble">Good. Proceed to Gate 2 Pune on arrival.</div><div class="chat-msg-time">Dispatcher — 08:21 AM</div></div>
+        <div class="chat-msg recv"><div class="chat-bubble">Engine light came on. Should I stop?</div><div class="chat-msg-time">MH-11-TK Driver — 07:15 AM</div></div>
+        <div class="chat-msg sent"><div class="chat-bubble">Yes, pull over safely. MH-11-TK being routed to Pune Auto Works.</div><div class="chat-msg-time">Dispatcher — 07:18 AM</div></div>
+      </div>
+      <div class="d-chat-input" style="border-radius:0 0 14px 14px">
+        <input type="text" id="comm-input" placeholder="Broadcast message or reply..." onkeydown="if(event.key==='Enter')sendCommMsg()">
+        <button class="d-chat-send" onclick="sendCommMsg()">➤</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Active Drivers</div></div>
+        ${hosData.map(d=>`
+          <div class="hos-item" onclick="openModal('modal-chat')" style="cursor:pointer">
+            <div class="hos-av" style="background:var(--surface3);color:var(--text)">${d.name.split(' ').map(n=>n[0]).join('')}</div>
+            <div class="hos-info"><div class="hos-name">${d.name}</div><div class="hos-sub">${d.status}</div></div>
+            <span style="font-size:16px;cursor:pointer">💬</span>
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+adminBody.appendChild(commsSection);
+
+/* --- DISPATCH SECTION --- */
+const dispatchSection = document.createElement('div');
+dispatchSection.id = 'section-dispatch';
+dispatchSection.className = 'section-page';
+dispatchSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Dispatch Board</div><button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="openModal('modal-dispatch')">⚡ New Dispatch</button></div>
+    <div style="padding:20px;color:var(--text3);font-size:13px">
+      Dispatch board showing all active and pending assignments.
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+        ${[
+          ['LD-2024','Mumbai → Pune','Steel Coils','18T','Today 6AM','Assigned'],
+          ['LD-2025','Nashik → Nagpur','FMCG Goods','22T','Today 7AM','Assigned'],
+          ['LD-2026','Kolhapur → Pune','Chemicals','12T','Today 9AM','Pending'],
+          ['LD-2027','Mumbai → Surat','Textiles','4T','Today 8AM','Assigned'],
+          ['LD-2028','Pune → Mumbai','Machine Parts','9T','Today 11AM','Pending'],
+        ].map(([id,route,cargo,wt,date,status])=>`
+          <div style="display:flex;align-items:center;gap:14px;padding:10px 14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)">
+            <span style="font-family:var(--mono);font-size:11px;color:var(--accent);min-width:60px">${id}</span>
+            <span style="font-size:12px;flex:1">${route}</span>
+            <span style="font-size:11px;color:var(--text3)">${cargo} · ${wt}</span>
+            <span style="font-size:11px;color:var(--text3)">${date}</span>
+            <span class="status-pill ${status==='Assigned'?'s-green':'s-yellow'}" style="font-size:10px"><span class="sp-dot"></span>${status}</span>
+            ${status==='Pending'?`<button class="btn btn-cyan" style="font-size:10px;padding:4px 10px" onclick="openModal('modal-dispatch')">Assign ⚡</button>`:''}
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+adminBody.appendChild(dispatchSection);
+
+/* --- LOAD BOARD SECTION --- */
+const loadBoardSection = document.createElement('div');
+loadBoardSection.id = 'section-loadboard';
+loadBoardSection.className = 'section-page';
+loadBoardSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Load Board <span>3 Pending</span></div>
+      <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px" onclick="openModal('modal-dispatch')">+ Post Load</button>
+    </div>
+    <table class="fleet-table">
+      <thead><tr><th>Load ID</th><th>Route</th><th>Cargo</th><th>Weight</th><th>Pickup Date</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        ${[
+          ['LD-2024','Mumbai → Pune','Steel Coils','18T','Today 6AM','Assigned'],
+          ['LD-2025','Nashik → Nagpur','FMCG Goods','22T','Today 7AM','Assigned'],
+          ['LD-2026','Kolhapur → Pune','Chemicals','12T','Today 9AM','Pending'],
+          ['LD-2027','Mumbai → Surat','Textiles','4T','Today 8AM','Assigned'],
+          ['LD-2028','Pune → Mumbai','Machine Parts','9T','Today 11AM','Pending'],
+          ['LD-2029','Nagpur → Nashik','Cement','28T','Tomorrow 6AM','Pending'],
+        ].map(([id,route,cargo,wt,date,status])=>`
+          <tr>
+            <td style="font-family:var(--mono);font-size:11px;color:var(--accent)">${id}</td>
+            <td style="font-size:12px">${route}</td>
+            <td style="font-size:11px;color:var(--text2)">${cargo}</td>
+            <td style="font-size:11px;color:var(--text3)">${wt}</td>
+            <td style="font-size:11px;color:var(--text3)">${date}</td>
+            <td><span class="status-pill ${status==='Assigned'?'s-green':'s-yellow'}"><span class="sp-dot"></span>${status}</span></td>
+            <td>${status==='Pending'?`<button class="btn btn-cyan" style="font-size:10px;padding:4px 10px" onclick="openModal('modal-dispatch')">Assign ⚡</button>`:'<span style="font-size:11px;color:var(--text3)">—</span>'}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+adminBody.appendChild(loadBoardSection);
+
+/* --- ACCOUNT SETTINGS SECTION --- */
+const settingsSection = document.createElement('div');
+settingsSection.id = 'section-settings';
+settingsSection.className = 'section-page';
+settingsSection.innerHTML = `
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Account Settings</div></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:16px;max-width:500px">
+      <div class="form-group"><div class="form-label">Company Name</div><input type="text" class="form-input" value="Rahman Shipping" id="setting-company"></div>
+      <div class="form-group"><div class="form-label">Owner Name</div><input type="text" class="form-input" value="Abdul Rahman" id="setting-owner"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><div class="form-label">Phone</div><input type="text" class="form-input" value="+91 98765 00000"></div>
+        <div class="form-group"><div class="form-label">GST Number</div><input type="text" class="form-input" value="27AAACR1234A1Z5"></div>
+      </div>
+      <div class="form-group"><div class="form-label">Plan</div>
+        <select class="form-select"><option>Pro (14 trucks)</option><option>Basic (5 trucks)</option><option>Enterprise (Unlimited)</option></select>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-cyan" onclick="showToast('success','✅ Settings saved successfully')">Save Changes</button>
+        <button class="btn btn-ghost" onclick="showToast('info','🔒 Change password flow coming')">Change Password</button>
+      </div>
+    </div>
+  </div>`;
+adminBody.appendChild(settingsSection);
+
+/* ═══════════════════════════════════════════
+   NAV SECTION SWITCHING
+═══════════════════════════════════════════ */
+const navSectionMap = {
+  'livemap':     'section-livemap',
+  'dispatch':    'section-dispatch',
+  'loadboard':   'section-loadboard',
+  'fleet':       'section-fleet',
+  'drivers':     'section-drivers',
+  'docs':        'section-docs',
+  'revenue':     'section-revenue',
+  'hos':         'section-hos',
+  'maintenance': 'section-maintenance',
+  'comms':       'section-comms',
+  'settings':    'section-settings',
+};
+
+const sectionHeadings = {
+  livemap:     'Live Dispatch <em>— Today, 26 Feb 2026 · 8 Active Loads</em>',
+  dispatch:    'Dispatch Board <em>— 8 Active, 3 Pending</em>',
+  loadboard:   'Load Board <em>— 3 Pending Assignments</em>',
+  fleet:       'Fleet Management <em>— 14 Trucks</em>',
+  drivers:     'Drivers <em>— 16 Active Drivers</em>',
+  docs:        'Document Vault <em>— 2 Expiring Soon</em>',
+  revenue:     'Revenue <em>— Feb 2026</em>',
+  hos:         'Hours of Service <em>— 2 Near Limit</em>',
+  maintenance: 'Maintenance <em>— 1 Truck In Service</em>',
+  comms:       'Communication Hub <em>— 3 Unread</em>',
+  settings:    'Account Settings',
+};
+
+function switchSection(sectionKey) {
+  document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(navSectionMap[sectionKey]);
+  if (target) target.classList.add('active');
+  const heading = sectionHeadings[sectionKey];
+  const titleEl = document.querySelector('.banner-title');
+  if (heading && titleEl) titleEl.innerHTML = heading;
 }
 
-function closeAssignLoad() {
-  document.getElementById('assignModal').style.display = 'none';
-}
-
-function dispatchLoad() {
-  closeAssignLoad();
-  // Show a brief success flash
-  const flash = document.createElement('div');
-  flash.style.cssText = `
-    position:fixed; bottom:24px; right:24px; z-index:300;
-    background:var(--green); color:#000;
-    font-family:var(--display); font-weight:700; font-size:13px;
-    padding:12px 20px; border-radius:10px;
-    box-shadow:0 8px 30px rgba(0,230,118,0.4);
-    animation:fadeUp 0.3s ease;
-  `;
-  flash.textContent = '✅ Load dispatched successfully!';
-  document.body.appendChild(flash);
-  setTimeout(() => flash.remove(), 3000);
-}
-
-// Close modal on backdrop click
-document.getElementById('assignModal').addEventListener('click', function(e) {
-  if (e.target === this) closeAssignLoad();
+document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+    switchSection(this.dataset.section);
+    closeNav();
+  });
 });
+
+/* ═══════════════════════════════════════════
+   TRUCK MARKER CLICKS (Live Map)
+═══════════════════════════════════════════ */
+const truckData = {
+  'MH-01-TK': { driver:'Arjun Kumar',  status:'Moving',      load:'Steel Coils / 18T', route:'Mumbai → Pune',  progress:'65%', eta:'2h 10m', type:'Flatbed 20T' },
+  'MH-03-TK': { driver:'Rahul Singh',  status:'Moving',      load:'FMCG / 22T',       route:'Nashik → Nagpur',progress:'34%', eta:'5h 40m', type:'Container 30T' },
+  'MH-05-TK': { driver:'Pending',      status:'Moving',      load:'Auto Parts / 15T', route:'Mumbai → Nashik',progress:'50%', eta:'3h 00m', type:'Flatbed 15T' },
+  'MH-07-TK': { driver:'Unassigned',   status:'Idle',        load:'—',                route:'Kolhapur Yard',  progress:'—',   eta:'—',      type:'Tanker 15T' },
+  'MH-09-TK': { driver:'Dinesh Joshi', status:'Moving',      load:'Textiles / 4T',    route:'Mumbai → Surat', progress:'88%', eta:'~25m',   type:'Mini 5T' },
+  'MH-11-TK': { driver:'N/A',          status:'Maintenance', load:'—',                route:'Pune Workshop',  progress:'—',   eta:'—',      type:'Trailer 30T' },
+};
+
+document.querySelectorAll('.truck-marker').forEach(marker => {
+  const idEl = marker.querySelector('.marker-id');
+  if (!idEl) return;
+  const truckId = idEl.textContent.trim();
+  const data = truckData[truckId];
+  if (!data) return;
+  marker.addEventListener('click', () => {
+    document.getElementById('modal-truck-title').textContent = `🚛 ${truckId} — ${data.type}`;
+    document.getElementById('modal-truck-body').innerHTML = `
+      <div class="info-box">
+        <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:${data.status==='Moving'?'var(--green)':data.status==='Idle'?'var(--yellow)':'var(--red)'}">${data.status}</span></div>
+        <div class="info-row"><span class="info-key">Driver</span><span class="info-val">${data.driver}</span></div>
+        <div class="info-row"><span class="info-key">Route</span><span class="info-val">${data.route}</span></div>
+        <div class="info-row"><span class="info-key">Load</span><span class="info-val">${data.load}</span></div>
+        <div class="info-row"><span class="info-key">Progress</span><span class="info-val">${data.progress}</span></div>
+        <div class="info-row"><span class="info-key">ETA</span><span class="info-val">${data.eta}</span></div>
+      </div>`;
+    openModal('modal-truck-detail');
+  });
+});
+
+/* ═══════════════════════════════════════════
+   HOS DETAIL
+═══════════════════════════════════════════ */
+function openHosDetail(i) {
+  const d = hosData[i];
+  document.getElementById('modal-hos-body').innerHTML = `
+    <div class="info-box">
+      <div class="info-row"><span class="info-key">Driver</span><span class="info-val">${d.name}</span></div>
+      <div class="info-row"><span class="info-key">Truck</span><span class="info-val" style="font-family:var(--mono);color:var(--accent)">${d.truck}</span></div>
+      <div class="info-row"><span class="info-key">Status</span><span class="info-val">${d.status}</span></div>
+      <div class="info-row"><span class="info-key">Hours Driven</span><span class="info-val" style="color:${d.color};font-weight:700">${d.hours}h / ${d.limit}h (${d.pct}%)</span></div>
+      <div class="info-row"><span class="info-key">Remaining</span><span class="info-val">${(d.limit-d.hours).toFixed(1)}h</span></div>
+      <div class="info-row"><span class="info-key">Trips Today</span><span class="info-val">${d.trips}</span></div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:12px">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:6px">HOS Progress</div>
+      <div style="height:8px;background:var(--surface3);border-radius:4px;overflow:hidden">
+        <div style="width:${d.pct}%;height:100%;background:${d.color};border-radius:4px"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px"><span>0h</span><span style="color:${d.color};font-weight:600">${d.hours}h driven</span><span>${d.limit}h limit</span></div>
+    </div>
+    ${d.pct>=90?'<div style="background:var(--red-dim);border:1px solid var(--red);border-radius:8px;padding:10px;font-size:12px;color:var(--red)">⚠️ This driver is near their daily HOS limit. Avoid assigning new loads.</div>':''}`;
+  openModal('modal-hos');
+}
+
+// Wire HOS items in the KPI dropdown too
+document.querySelectorAll('.hos-item').forEach((item, i) => {
+  if (!hosData[i]) return;
+  item.addEventListener('click', () => openHosDetail(i));
+});
+
+/* ═══════════════════════════════════════════
+   DISPATCH MODAL CONFIRM
+═══════════════════════════════════════════ */
+function confirmDispatch() {
+  const driver = document.getElementById('dispatch-driver').value;
+  const pickup = document.getElementById('dispatch-pickup').value;
+  const delivery = document.getElementById('dispatch-delivery').value;
+  if (!driver) { showToast('error','⚠️ Please select a driver'); return; }
+  if (!pickup || !delivery) { showToast('error','⚠️ Fill in pickup and delivery locations'); return; }
+  const driverMap = { sp:'Suresh Patil', ak:'Arjun Kumar', dj:'Dinesh Joshi', rs:'Rahul Singh' };
+  if (driver === 'sp') {
+    showToast('warning','⚠️ Suresh Patil is near HOS limit (10.8h). Consider another driver.');
+    setTimeout(() => { closeModal('modal-dispatch'); showToast('success',`⚡ Dispatch confirmed: MH-07-TK → ${driverMap[driver]}`); }, 1000);
+  } else {
+    closeModal('modal-dispatch');
+    showToast('success',`⚡ Dispatched MH-07-TK to ${driverMap[driver]}: ${pickup} → ${delivery}`);
+  }
+}
+
+function confirmAddTruck() {
+  const reg = document.getElementById('truck-reg').value;
+  const type = document.getElementById('truck-type').value;
+  const cap = document.getElementById('truck-capacity').value;
+  if (!reg) { showToast('error','⚠️ Enter registration number'); return; }
+  if (!cap) { showToast('error','⚠️ Enter truck capacity'); return; }
+  closeModal('modal-add-truck');
+  showToast('success',`🚛 ${reg} (${type}, ${cap}T) added to fleet`);
+}
+
+/* ═══════════════════════════════════════════
+   COMMUNICATION HUB SEND
+═══════════════════════════════════════════ */
+function sendCommMsg() {
+  const input = document.getElementById('comm-input');
+  if (!input) return;
+  const msg = input.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('comm-msgs');
+  const el = document.createElement('div');
+  el.className = 'chat-msg sent';
+  el.innerHTML = `<div class="chat-bubble">${msg}</div><div class="chat-msg-time">Dispatcher — Now</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+  showToast('success','📤 Message sent to fleet');
+}
+
+function sendAdminMsg() {
+  const input = document.getElementById('admin-chat-input');
+  if (!input) return;
+  const msg = input.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('admin-chat-messages');
+  const el = document.createElement('div');
+  el.className = 'chat-msg sent';
+  el.innerHTML = `<div class="chat-bubble">${msg}</div><div class="chat-msg-time">Now</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+  setTimeout(() => {
+    const reply = document.createElement('div');
+    reply.className = 'chat-msg recv';
+    reply.innerHTML = `<div class="chat-bubble">Acknowledged. Keep us posted. ✅</div><div class="chat-msg-time">Now</div>`;
+    msgs.appendChild(reply);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200);
+}
+
+/* ═══════════════════════════════════════════
+   GPS MARKER ANIMATION
+═══════════════════════════════════════════ */
+function animateMarkers() {
+  document.querySelectorAll('.truck-marker.m-active').forEach(marker => {
+    const baseLeft = parseFloat(marker.style.left);
+    const baseTop = parseFloat(marker.style.top);
+    marker.style.left = `${Math.max(5, Math.min(95, baseLeft + (Math.random()-0.5)*0.4))}%`;
+    marker.style.top  = `${Math.max(5, Math.min(90, baseTop  + (Math.random()-0.5)*0.2))}%`;
+  });
+}
+setInterval(animateMarkers, 3000);
+
+/* ═══════════════════════════════════════════
+   LEGACY: openAssignLoad kept for existing buttons
+═══════════════════════════════════════════ */
+function openAssignLoad() { openModal('modal-dispatch'); }
+function closeAssignLoad() { closeModal('modal-dispatch'); }
+function dispatchLoad() { confirmDispatch(); }
 </script>
 </body>
 </html>
