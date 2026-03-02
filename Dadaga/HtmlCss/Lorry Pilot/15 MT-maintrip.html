@@ -1137,7 +1137,7 @@
         </div>
         <!-- Page 3: Finish Loading -->
         <div class="bottom-buttons-row bnav-row" id="bn3">
-            <button id="finishLoadingBtn" onclick="goToPage(4)" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">FINISH LOADING</button>
+            <button id="finishLoadingBtn" onclick="finishLoading()" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">FINISH LOADING</button>
             <button id="digiBtn" onclick="goToPage(8)" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#b3adad,#999);display:flex;align-items:center;justify-content:center;gap:8px;">Digital BOL</button>
         </div>
         <!-- Page 4: In Transit -->
@@ -1151,7 +1151,7 @@
         </div>
         <!-- Page 6: Finish Unloading -->
         <div class="bottom-buttons-row bnav-row" id="bn6">
-            <button id="finishUnloadingBtn" onclick="goToPage(7)" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">FINISH UNLOADING</button>
+            <button id="finishUnloadingBtn" onclick="finishUnloading()" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">FINISH UNLOADING</button>
             <button onclick="goToPage(9)" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#b3adad,#999);display:flex;align-items:center;justify-content:center;gap:8px;">Digital BOL</button>
         </div>
         <!-- Page 7: Delivery Complete -->
@@ -1208,11 +1208,9 @@
         // Hide ride card on BOL pages (8,9)
         rideCard.style.display = (n===8||n===9) ? 'none' : '';
 
-        // Auto-start timers
+        // Auto-start timers (wait timers only; load/unload timers start on button click)
         if (n===2 && !timerStarted.wait)   { timerStarted.wait=true;   startCountUp('t_wait'); }
-        if (n===3 && !timerStarted.load)   { timerStarted.load=true;   startCountUp('t_load'); }
         if (n===5 && !timerStarted.uwait)  { timerStarted.uwait=true;  startCountUp('t_uwait'); }
-        if (n===6 && !timerStarted.unload) { timerStarted.unload=true; startCountUp('t_unload'); }
     }
 
     // ── TIMERS ──
@@ -1231,42 +1229,46 @@
         }, 1000);
     }
 
-    // Manual start loading timer (page 2 button)
+    // Manual start loading timer (page 2 button) — starts t_load timer and goes to page 3
     let loadingInterval = null, loadingRunning = false;
     function startLoadingTimer() {
-        const btn = document.getElementById('startLoadingBtn');
         if (!loadingRunning) {
             loadingRunning = true;
-            btn.textContent = '⏸️ PAUSE LOADING';
-            if (!timerStarted.load) { timerStarted.load = true; }
+            timerStarted.load = true;
             loadingInterval = setInterval(() => {
                 timerSecs['t_load']++;
                 document.getElementById('t_load').textContent = fmt(timerSecs['t_load']);
             }, 1000);
-        } else {
-            loadingRunning = false;
-            btn.textContent = '▶️ RESUME LOADING';
-            clearInterval(loadingInterval);
+            goToPage(3);
         }
     }
 
-    // Manual start unloading timer (page 5 button)
+    // Finish loading — stop t_load timer and go to page 4
+    function finishLoading() {
+        loadingRunning = false;
+        clearInterval(loadingInterval);
+        goToPage(4);
+    }
+
+    // Manual start unloading timer (page 5 button) — starts t_unload timer and goes to page 6
     let unloadingInterval = null, unloadingRunning = false;
     function startUnloadingTimer() {
-        const btn = document.getElementById('startUnloadingBtn');
         if (!unloadingRunning) {
             unloadingRunning = true;
-            btn.textContent = '⏸️ PAUSE UNLOADING';
-            if (!timerStarted.unload) { timerStarted.unload = true; }
+            timerStarted.unload = true;
             unloadingInterval = setInterval(() => {
                 timerSecs['t_unload']++;
                 document.getElementById('t_unload').textContent = fmt(timerSecs['t_unload']);
             }, 1000);
-        } else {
-            unloadingRunning = false;
-            btn.textContent = '▶️ RESUME UNLOADING';
-            clearInterval(unloadingInterval);
+            goToPage(6);
         }
+    }
+
+    // Finish unloading — stop t_unload timer and go to page 7
+    function finishUnloading() {
+        unloadingRunning = false;
+        clearInterval(unloadingInterval);
+        goToPage(7);
     }
 
     // ETA countdown (page 1)
