@@ -522,7 +522,7 @@ body {
 /* KPI Row */
 .kpi-row {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   overflow: visible;
   position: relative;
@@ -1227,11 +1227,11 @@ body {
   <!-- Fleet Stats: Total Trucks & Drivers -->
   <div class="banner-stats">
     <div class="bstat">
-      <div class="bstat-val trucks" id="totalTrucks">14</div>
+      <div class="bstat-val trucks" id="totalTrucks">6</div>
       <div class="bstat-label">Total Trucks</div>
     </div>
     <div class="bstat">
-      <div class="bstat-val drivers" id="totalDrivers">16</div>
+      <div class="bstat-val drivers" id="totalDrivers">8</div>
       <div class="bstat-label">Total Drivers</div>
     </div>
   </div>
@@ -1313,22 +1313,29 @@ body {
 
       <div class="kpi c">
         <div class="kpi-label">Active Loads</div>
-        <div class="kpi-val">8</div>
-        <div class="kpi-sub">↑ 2 from yesterday</div>
+        <div class="kpi-val">5</div>
+        <div class="kpi-sub">↑ 1 from yesterday</div>
         <div class="kpi-stripe"></div>
       </div>
 
       <div class="kpi g">
         <div class="kpi-label">On Road</div>
-        <div class="kpi-val">8</div>
+        <div class="kpi-val">4</div>
         <div class="kpi-sub">Trucks moving now</div>
         <div class="kpi-stripe"></div>
       </div>
 
       <div class="kpi o">
         <div class="kpi-label">Idle</div>
-        <div class="kpi-val">4</div>
+        <div class="kpi-val">1</div>
         <div class="kpi-sub">Ready to assign</div>
+        <div class="kpi-stripe"></div>
+      </div>
+
+      <div class="kpi p">
+        <div class="kpi-label">Maintenance</div>
+        <div class="kpi-val">1</div>
+        <div class="kpi-sub">working under repair</div>
         <div class="kpi-stripe"></div>
       </div>
 
