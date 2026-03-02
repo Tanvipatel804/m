@@ -197,7 +197,7 @@ body {
 
 .banner-loads {
   font-size: 10px;
-  color: var(--text3);
+  color: var(--text);
   font-family: var(--mono);
 }
 
@@ -1176,11 +1176,11 @@ body {
     </div>
     <div class="t-stats">
       <div class="t-stat">
-        <div class="t-stat-val">14</div>
+        <div class="t-stat-val">6</div>
         <div class="t-stat-label">Trucks</div>
       </div>
       <div class="t-stat">
-        <div class="t-stat-val">16</div>
+        <div class="t-stat-val">8</div>
         <div class="t-stat-label">Drivers</div>
       </div>
     </div>
@@ -1247,7 +1247,7 @@ body {
   <!-- Right Actions -->
   <div class="banner-actions">
     <!-- Assign Load Button -->
-    <button class="btn btn-cyan" onclick="openAssignLoad()">⚡ Assign Load</button>
+    <!-- <button class="btn btn-cyan" onclick="openAssignLoad()">⚡ Assign Load</button> -->
 
     <!-- Notification Bell -->
     <div class="notif-btn" id="notifBtn" onclick="toggleNotif()" title="Notifications">
@@ -1313,7 +1313,7 @@ body {
 
       <div class="kpi c">
         <div class="kpi-label">Active Loads</div>
-        <div class="kpi-val">5</div>
+        <div class="kpi-val">4</div>
         <div class="kpi-sub">↑ 1 from yesterday</div>
         <div class="kpi-stripe"></div>
       </div>
@@ -1486,9 +1486,9 @@ body {
           <div class="panel-head">
             <div class="panel-title">Live Fleet Map <span>GPS updated 14s ago</span></div>
             <div style="display:flex;gap:8px;align-items:center;">
-              <span style="font-size:10px;color:var(--green);font-weight:600">● 8 Active</span>
-              <span style="font-size:10px;color:var(--yellow);font-weight:600">● 4 Idle</span>
-              <span style="font-size:10px;color:var(--red);font-weight:600">● 2 Maint.</span>
+              <span style="font-size:10px;color:var(--green);font-weight:600">● 4 Active</span>
+              <span style="font-size:10px;color:var(--yellow);font-weight:600">● 1 Idle</span>
+              <span style="font-size:10px;color:var(--red);font-weight:600">● 1 Maint.</span>
             </div>
           </div>
           <div class="live-map">
@@ -1541,8 +1541,8 @@ body {
         <!-- DISPATCH TABLE -->
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">Freight Dispatches <span>8 loads today</span></div>
-            <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px;" onclick="openAssignLoad()">⚡ New Dispatch</button>
+            <div class="panel-title">Freight Dispatches <span>4 loads today</span></div>
+            <button class="btn btn-cyan" style="font-size:11px;padding:6px 12px;" onclick="openAssignLoad()">⚡ Assign load</button>
           </div>
           <table class="dispatch-table">
             <thead>
@@ -2251,7 +2251,7 @@ function updateClock() {
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
   const timeStr = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
-  document.getElementById('bannerDate').innerHTML = dateStr + '<em id="bannerLoads"> · 8 Active Loads</em>';
+  document.getElementById('bannerDate').innerHTML = dateStr + '<em id="bannerLoads"></em>';
   document.getElementById('bannerTime').textContent = timeStr;
 }
 updateClock();
