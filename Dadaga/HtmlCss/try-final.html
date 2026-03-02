@@ -1501,31 +1501,31 @@ body {
             <div class="map-tag" style="left:22%;top:75%">Kolhapur</div>
             <!-- Truck markers -->
             <div class="truck-marker m-active" style="left:20%;top:46%">
-              <div class="marker-id">MH-01-TK</div>
+              <div class="marker-id">MH-01-AB-1234</div>
               <div class="marker-body">🚛</div>
               <div class="marker-ring" style="border-color:var(--green)"></div>
             </div>
             <div class="truck-marker m-active" style="left:48%;top:48%">
-              <div class="marker-id">MH-03-TK</div>
+              <div class="marker-id">MH-03-CD-5678</div>
               <div class="marker-body">🚛</div>
               <div class="marker-ring" style="border-color:var(--green)"></div>
             </div>
             <div class="truck-marker m-active" style="left:68%;top:28%">
-              <div class="marker-id">MH-05-TK</div>
+              <div class="marker-id">MH-05-GH-3456</div>
               <div class="marker-body">🚛</div>
               <div class="marker-ring" style="border-color:var(--green)"></div>
             </div>
             <div class="truck-marker m-idle" style="left:33%;top:72%">
-              <div class="marker-id">MH-07-TK</div>
+              <div class="marker-id">MH-07-EF-9012</div>
               <div class="marker-body">🚛</div>
             </div>
             <div class="truck-marker m-active" style="left:80%;top:55%">
-              <div class="marker-id">MH-09-TK</div>
+              <div class="marker-id">MH-09-KL-1234</div>
               <div class="marker-body">🚛</div>
               <div class="marker-ring" style="border-color:var(--green)"></div>
             </div>
             <div class="truck-marker m-maintenance" style="left:55%;top:35%">
-              <div class="marker-id">MH-11-TK</div>
+              <div class="marker-id">MH-11-IJ-7890</div>
               <div class="marker-body">🔧</div>
             </div>
           </div>
@@ -1582,7 +1582,9 @@ body {
                     <div class="load-weight">18.0 T</div>
                   </div>
                 </td>
-                <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
+                <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span>
+                <div class="trip-route" style="margin-top: 5px"> TRP#S0001</div>
+                </td>
                 <td>
                   <div class="progress-cell">
                     <div class="prog-row">
@@ -1638,7 +1640,9 @@ body {
                     <div class="load-weight">22.0 T</div>
                   </div>
                 </td>
-                <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
+                <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span>
+                <div class="trip-route" style="margin-top: 5px"> TRP#S0002</div>
+                </td>
                 <td>
                   <div class="progress-cell">
                     <div class="prog-row">
@@ -1750,7 +1754,9 @@ body {
                     <div class="load-weight">14.5 T</div>
                   </div>
                 </td>
-                <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span></td>
+                <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span>
+                <div class="trip-route" style="margin-top: 5px"> TRP#S0003</div>
+                </td>
                 <td>
                   <div class="progress-cell">
                     <div class="prog-row">
@@ -1831,7 +1837,63 @@ body {
                   </div>
                 </td>
               </tr>
-
+<!-- Row - 6 Active -->
+  <tr>
+                <td>
+                  <div class="truck-info">
+                    <div class="truck-icon-box" style="background:rgba(0,230,118,0.1)">🚛</div>
+                    <div>
+                      <div class="truck-plate">MH-09-KL-1234</div>
+                      <div class="truck-name">Tata Prima 5530.S</div>
+                                          </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="route-cell">
+                    <div class="route-type-badge rt-flatbed">Flatbed · 20T</div>
+                    <div class="trip-route">Mumbai <span>→</span> Pune</div>
+                    <!-- <div class="trip-truck">MH-01-TK</div> -->
+                  </div>
+                </td>
+                <td>
+                  <div class="driver-cell">
+                    <div class="mini-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2)">AK</div>
+                    <div class="driver-name">Arjun Kumar</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="load-cell">
+                    <div class="load-cargo">Steel Coils</div>
+                    <div class="load-weight">18.0 T</div>
+                  </div>
+                </td>
+                <td><span class="status-pill s-green"><span class="sp-dot"></span>Moving</span>
+                 <div class="trip-route" style="margin-top: 5px"> TRP#S0004</div>
+                </td>
+                <td>
+                  <div class="progress-cell">
+                    <div class="prog-row">
+                      <div class="mini-bar"><div class="mini-fill" style="width:65%;background:var(--green)"></div></div>
+                      <span class="pct">65%</span>
+                    </div>
+                    <div class="prog-km">127 km left</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="eta-cell">
+                    <div class="eta-clock">16:45</div>
+                    <div class="eta-remaining">2h 10m away</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-row" style="justify-content:center">
+                    <button class="act-btn loc" data-tip="Location">📍</button>
+                    <button class="act-btn call" data-tip="Call">📞</button>
+                    <button class="act-btn msg" data-tip="Message">💬</button>
+                    <button class="act-btn edit" data-tip="Edit">✏️</button>
+                  </div>
+                </td>
+              </tr> 
             </tbody>
           </table>
         </div>
