@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚚 Lorry — Delivery Tracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            padding-bottom: 80px;
+            width: 100%;
+        }
+
+        .container { max-width: 1500px; margin: 0 auto; width: 100%; }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .menu-icon { font-size: 24px; cursor: pointer; padding: 8px; border-radius: 8px; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .menu-icon:hover { background: rgba(255,255,255,0.1); }
+        .logo { font-size: 25px; font-weight: bold; white-space: nowrap; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .status-toggle { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.15); padding: 8px 15px; border-radius: 25px; }
+        .status-text { font-weight: bold; font-size: 14px; }
+        .toggle { width: 50px; height: 26px; background: white; border-radius: 13px; position: relative; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
+        .toggle-slider { width: 22px; height: 22px; background: #4CAF50; border-radius: 50%; position: absolute; top: 2px; right: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        /* ── TABS ── */
+        .status-tabs {
+            display: flex; gap: 10px; margin-bottom: 15px;
+            overflow-x: auto; padding: 10px 0;
+            -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+        }
+        .status-tabs::-webkit-scrollbar { height: 6px; }
+        .status-tabs::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .status-tabs::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 3px; }
+        .tab {
+            min-width: fit-content; padding: 10px 20px;
+            border: 2px solid white; border-radius: 25px; background: white;
+            cursor: pointer; white-space: nowrap; font-size: 15px;
+            text-align: center; transition: 0.3s; color: #333;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1); flex: 1;
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600;
+        }
+        .tab .tab-icon { font-size: 20px; }
+        .tab .tab-text { font-size: 17px; }
+        .tab:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+        .tab.active { background: #4CAF50; color: white; border-color: #4CAF50; }
+
+        /* ── MAIN CONTENT AREA ── */
+        .main-content {
+            position: relative;
+            height: calc(100vh - 220px);
+            min-height: 400px;
+        }
+
+        /* ── PAGE PANELS (shown/hidden by JS) ── */
+        .page-panel { display: none; width: 100%; height: 100%; }
+        .page-panel.active { display: flex; flex-direction: column; }
+
+        /* ── MAP SECTION (pages 1, 4) ── */
+        .map-section {
+            background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15); height: 100%; position: relative;
+        }
+        .map-bg {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f0f4ff 100%);
+            position: relative; overflow: hidden;
+        }
+        .map-bg::before {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(100,120,255,0.03) 35px, rgba(100,120,255,0.03) 36px),
+                repeating-linear-gradient(90deg, transparent, transparent 35px, rgba(100,120,255,0.03) 35px, rgba(100,120,255,0.03) 36px);
+        }
+        .route { position: absolute; top: 25%; left: 15%; width: 70%; height: 50%; pointer-events: none; }
+        .route-line { position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #4CAF50, #45a049, #4CAF50); border-radius: 2px; transform: translateY(-50%); box-shadow: 0 2px 10px rgba(76,175,80,0.3); }
+        .route-line::before, .route-line::after { content: ''; position: absolute; width: 8px; height: 8px; background: white; border: 2px solid #4CAF50; border-radius: 50%; top: 50%; transform: translateY(-50%); }
+        .route-line::before { left: -4px; }
+        .route-line::after { right: -4px; }
+        .map-marker { position: absolute; width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .map-marker:hover { transform: scale(1.15); }
+        .map-marker.start { top: 50%; left: 10%; transform: translate(-50%,-50%); background: #4CAF50; }
+        .map-marker.end   { top: 50%; right: 10%; transform: translate(50%,-50%); background: #e74c3c; }
+        .map-marker i { font-size: 20px; color: white; }
+        .map-eta-bar { position: absolute; bottom: 16px; left: 16px; right: 16px; display: flex; gap: 10px; }
+        .map-eta-card {
+            flex: 1; background: rgba(255,255,255,0.93); backdrop-filter: blur(8px);
+            padding: 10px 14px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .meta-label { font-size: 10px; text-transform: uppercase; color: #666; font-weight: 700; margin-bottom: 2px; }
+        .meta-value { font-size: 18px; font-weight: 800; color: #1e293b; }
+
+        /* In Transit map info blocks */
+        .map-info-blocks {
+            position: absolute; bottom: 16px; left: 16px; right: 16px;
+            display: flex; gap: 10px;
+        }
+        .info-block {
+            flex: 1; background: rgba(255,255,255,0.93); backdrop-filter: blur(8px);
+            padding: 10px 14px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .info-block-label { font-size: 10px; text-transform: uppercase; color: #666; font-weight: 700; margin-bottom: 2px; }
+        .info-block-value { font-size: 18px; font-weight: 800; color: #1e293b; }
+
+        /* ── TIMER SECTION (pages 2, 3, 5, 6) ── */
+        .timer-panel {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start;
+        }
+        .timer-section { text-align: center; margin-bottom: 28px; }
+        .timer {
+            font-size: 64px; font-weight: bold; letter-spacing: 3px;
+            margin-bottom: 10px; font-variant-numeric: tabular-nums; color: #1e293b;
+        }
+        .timer-status { color: #4a6cf7; font-size: 16px; font-weight: 600; }
+        .info-cards { display: flex; justify-content: center; gap: 20px; padding: 0 20px; }
+        .card { background: white; border-radius: 12px; padding: 16px 24px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-width: 110px; }
+        .icon { font-size: 28px; margin-bottom: 6px; }
+        .label { font-size: 10px; text-transform: uppercase; color: #666; font-weight: 700; margin-bottom: 4px; }
+        .card h3 { font-size: 15px; font-weight: 800; color: #1e293b; }
+        .card img { width: 130px; height: 80px; object-fit: cover; border-radius: 6px; }
+
+        /* ── DELIVERY COMPLETE (page 7) ── */
+        .delivery-panel {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: 12px; overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start; padding: 20px;
+            text-align: center;
+        }
+        .checkmark { font-size: 50px; margin-bottom: 7px; color: #10b981; }
+        .delivery-title { font-size: 30px; font-weight: 700; color: #10b981; letter-spacing: 3px; margin-bottom: 8px; }
+        .trip-info { font-size: 15px; color: #64748b; margin-bottom: 14px; }
+        .delivery-cards-row { display: flex; gap: 16px; margin-bottom: 10px; }
+        .delivery-card { background: white; border-radius: 12px; padding: 16px 24px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-width: 110px; }
+        .card-icon { font-size: 28px; margin-bottom: 6px; }
+        .card-label { font-size: 10px; text-transform: uppercase; color: #666; font-weight: 700; margin-bottom: 4px; }
+        .card-value { font-size: 16px; font-weight: 800; color: #1e293b; }
+        .bol-btns-row { display: flex; gap: 10px; margin-bottom: 5px; }
+        .bol-go-btn { flex: 1; padding: 13px 20px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .bol-go-btn.blue { background: linear-gradient(135deg,#2563eb,#1d4ed8); color: white; }
+        .bol-go-btn.gray { background: #5eef3a; color: white; }
+        .bol-go-btn:hover { transform: translateY(-1px); }
+        .rating-section { margin-bottom: 25px; }
+        .rating-title { font-size: 15px; font-weight: 700; margin-bottom: 1px; }
+        .stars { display: flex; justify-content: center; gap: 10px; }
+        .star { font-size: 34px; cursor: pointer; color: #d1d5db; transition: 0.2s; }
+        .star.active { color: #fbbf24; }
+        .star:hover { transform: scale(1.15); }
+        .feedback-section { margin-bottom: 16px; width: 100%; max-width: 400px; text-align: left; }
+        .feedback-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+        .feedback-section textarea { width: 100%; padding: 10px 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 90px; }
+        .feedback-section textarea:focus { outline: none; border-color: #4CAF50; }
+
+        /* ── BOL PANEL (pages 8, 9) ── */
+        .bol-panel {
+            width: 100%; height: 100%;
+            background: #111827;
+            border-radius: 12px; overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            color: white;
+        }
+        .bol-wrap { padding: 16px; }
+        .bol-back-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.12); border: none; color: white;
+            border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600;
+            cursor: pointer; margin-bottom: 14px; transition: 0.2s;
+        }
+        .bol-back-btn:hover { background: rgba(255,255,255,0.22); }
+        .bol-title { font-size: 17px; font-weight: 800; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+        .bol-sub { font-size: 12px; color: #9ca3af; margin-bottom: 14px; }
+        .bol-card { background: #1f2937; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+        .bol-card h2 { font-size: 14px; font-weight: 700; color: #e5e7eb; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .bol-card h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #9ca3af; margin-bottom: 10px; }
+        .ship-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #374151; font-size: 13px; }
+        .ship-row:last-child { border-bottom: none; }
+        .sdot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; margin-right: 8px; }
+        .photo-bol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .photo-ph { aspect-ratio: 4/3; background: #374151; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; border: 2px dashed #4b5563; transition: 0.2s; }
+        .photo-ph:hover { border-color: #10b981; }
+        .contact-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+        .c-info p { font-size: 13px; margin-bottom: 2px; }
+        .c-info .addr { font-size: 11px; color: #9ca3af; }
+        .c-info .po   { font-size: 11px; color: #6b7280; }
+        .c-btns { display: flex; gap: 8px; }
+        .cbtn { width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: 0.2s; }
+        .cbtn.call { background: #10b981; color: white; }
+        .cbtn.msg  { background: #2563eb; color: white; }
+        .cbtn:hover { transform: scale(1.1); }
+        .special-box { background: #374151; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+        .special-box .note-sm { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+        .sig-box { border: 2px dashed #4b5563; border-radius: 10px; overflow: hidden; background: #1f2937; margin-bottom: 10px; }
+        .sig-box canvas { width: 100%; display: block; height: 130px; cursor: crosshair; }
+        .bol-clear-btn { background: #374151; color: #e5e7eb; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 12px; }
+        .bol-approve-btn { width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-bottom: 6px; }
+        .bol-approve-btn:hover { background: #059669; transform: translateY(-1px); }
+        .cond-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .cond-btn { flex: 1; padding: 11px; border-radius: 10px; border: 2px solid #4b5563; background: #374151; color: #e5e7eb; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
+        .cond-btn.good-on   { border-color: #10b981; background: rgba(16,185,129,0.15); color: #10b981; }
+        .cond-btn.damage-on { border-color: #ef4444; background: rgba(239,68,68,0.15); color: #ef4444; }
+        .damage-report { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 10px; margin-bottom: 12px; display: none; }
+        .damage-report.show { display: block; }
+        .damage-report textarea { width: 100%; background: #374151; color: white; border: 1px solid #4b5563; border-radius: 8px; padding: 8px; font-size: 13px; min-height: 70px; resize: none; margin-top: 6px; }
+        .receipt-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #374151; font-size: 13px; }
+        .receipt-row:last-child { border-bottom: none; }
+        .receipt-val { font-weight: 700; color: #10b981; }
+
+        /* ── BOTTOM NAV ── */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; z-index: 1000;
+        }
+        .bottom-buttons-row {
+            width: 100%; display: flex; gap: 10px; padding: 5px;
+        }
+        #startUberBtn, #openNavBtn,
+        #startLoadingBtn, #startUnloadingBtn,
+        #finishLoadingBtn, #finishUnloadingBtn,
+        #confirmPayBtn, #digiBtn,
+        #customerBolBtn, #receiverBolBtn {
+            flex: 1; padding: 15px; border: none; font-size: 15px;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; border-radius: 10px; color: white;
+        }
+        #startUberBtn, #finishLoadingBtn, #startLoadingBtn, #startUnloadingBtn, #finishUnloadingBtn, #confirmPayBtn, #customerBolBtn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+        #startUberBtn:hover, #finishLoadingBtn:hover, #startLoadingBtn:hover, #startUnloadingBtn:hover, #finishUnloadingBtn:hover, #confirmPayBtn:hover, #customerBolBtn:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+        }
+        #openNavBtn, #digiBtn, #receiverBolBtn { background: linear-gradient(135deg, #b3adad, #999); }
+        #openNavBtn:hover, #digiBtn:hover, #receiverBolBtn:hover { background: linear-gradient(135deg, #999, #888); }
+
+        .nav-items-row {
+            width: 100%; display: flex; justify-content: space-around;
+            align-items: center; padding: 1px 0;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            cursor: pointer; padding: 5px 20px; transition: 0.3s; flex: 1;
+            border: none; background: none;
+        }
+        .nav-item:hover { background: rgba(76,175,80,0.1); }
+        .nav-item.active { color: #4CAF50; }
+        .nav-item i { font-size: 24px; }
+        .nav-item span { font-size: 12px; font-weight: 600; }
+
+        /* ── RIDE CARD (DRAGGABLE BOTTOM SHEET) ── */
+        .ride-card {
+            position: fixed; bottom: 65px; left: 0; right: 0;
+            background: white; border-radius: 20px 20px 0 0;
+            box-shadow: 0 -5px 30px rgba(0,0,0,0.2);
+            height: 180px; transition: height 0.3s ease;
+            z-index: 999; overflow: hidden;
+        }
+        .ride-card.expanded { height: 680px; overflow-y: scroll; }
+        .ride-card.dragging  { transition: none; }
+
+        /* Drag handle */
+        .drag-handle { width: 100%; padding: 5px 0; cursor: grab; display: flex; justify-content: center; align-items: center; background: white; position: sticky; top: 0; z-index: 10; }
+        .drag-handle:active { cursor: grabbing; }
+        .drag-bar { width: 50px; height: 5px; background: #ccc; border-radius: 3px; }
+
+        /* Preview strip */
+        .preview-section { padding: 0 20px 10px; opacity: 1; transition: opacity 0.3s ease; }
+        .ride-card.expanded .preview-section { opacity: 0; position: absolute; pointer-events: none; }
+        .preview-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+        .preview-left-btn, .preview-right-btn { width: 40px; height: 40px; border-radius: 50%; background: #F3F4F6; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .preview-left-btn:hover, .preview-right-btn:hover { background: #E5E7EB; transform: scale(1.05); }
+        .preview-left-btn i,.preview-right-btn i { font-size: 18px; color: #333; }
+        .preview-center-text { flex: 1; text-align: center; font-size: 14px; color: #666; font-weight: 500; }
+        .preview-center-text span { border: 2px solid darkgoldenrod; border-radius: 85%; font-weight: bolder; padding: 0 5px; }
+        .divider { height: 1px; background-color: #ddd; margin: 10px 0; }
+        .preview-name-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .preview-name { flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: #333; }
+        .preview-call-btn { width: 40px; height: 40px; border-radius: 50%; background: #4CAF50; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .preview-call-btn:hover { background: #45a049; transform: scale(1.05); }
+        .preview-call-btn i { font-size: 18px; color: white; }
+        .preview-profile-btn { width: 40px; height: 40px; border-radius: 50%; background: #E5E7EB; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; transition: 0.3s; }
+        .preview-profile-btn:hover { transform: scale(1.05); }
+        .preview-profile-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Ride content (expanded) */
+        .ride-content { padding: 0 20px 20px; opacity: 0; transition: opacity 0.3s ease; }
+        .ride-card.expanded .ride-content { opacity: 1; }
+
+        /* Per-page ride-content sections — only active page's content shown */
+        .rc-page { display: none; }
+        .rc-page.active { display: block; }
+
+        /* Destination/payment sections inside ride card */
+        .destination-section { background: #F9FAFB; padding: 15px; border-radius: 10px; margin-bottom: 16px; }
+        .destination-header { display: flex; align-items: center; gap: 10px; }
+        .destination-icon { font-size: 24px; color: #e74c3c; }
+        .destination-info { flex: 1; }
+        .destination-name { font-size: 17px; font-weight: bold; color: #333; margin-bottom: 3px; }
+        .destination-eta  { font-size: 13px; color: #4CAF50; font-weight: 600; }
+        .destination-address { font-size: 13px; color: #666; margin-top: 4px; line-height: 1.4; }
+        .load-info { text-align: right; flex-shrink: 0; }
+        .load-weight { font-size: 17px; font-weight: bold; color: #333; }
+        .load-type   { font-size: 12px; color: #666; }
+        .supplier-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+        .action-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: none; }
+        .action-icon.call { background: #4CAF50; color: white; }
+        .action-icon.profile { background: #E5E7EB; overflow: hidden; }
+        .action-icon.profile img { width: 100%; height: 100%; object-fit: cover; }
+        .action-icon:hover { transform: scale(1.1); }
+        .payment-section { background: #F9FAFB; padding: 15px; border-radius: 10px; margin-bottom: 16px; }
+        .payment-details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .payment-item { text-align: center; }
+        .payment-label { font-size: 12px; color: #666; margin-bottom: 5px; }
+        .payment-value { font-size: 16px; font-weight: bold; color: #333; }
+        .note-section { margin-bottom: 16px; }
+        .note-section textarea { width: 100%; min-height: 70px; padding: 10px 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; transition: border-color 0.3s; }
+        .note-section textarea:focus { outline: none; border-color: #4CAF50; }
+        .report-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .report-btn { padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 13px; }
+        .report-btn.breakdown { background: #FEE2E2; color: #DC2626; }
+        .report-btn.issue     { background: #FEF3C7; color: #D97706; }
+        .report-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+
+        /* profile svg shorthand */
+        .profile-src { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E"); background-size: cover; }
+
+        /* Per-page bottom-nav row visibility */
+        .bnav-row { display: none; }
+        .bnav-row.active { display: flex; }
+
+        @media (max-width: 768px) {
+            .payment-details { grid-template-columns: 1fr; gap: 8px; }
+            .payment-item { text-align: left; }
+            .report-buttons { grid-template-columns: 1fr; }
+            .info-cards { flex-direction: column; gap: 15px; padding: 0 15px; }
+            .card { width: 100%; }
+            .timer { font-size: 48px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ══ HEADER ══ -->
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon"><i class="fas fa-bars"></i></div>
+            <div class="logo">🚚 Lorry (Trip ID: TRPS#0001)</div>
+        </div>
+        <div class="header-right">
+            <div class="status-toggle">
+                <span class="status-text" id="statusTxt">ONLINE</span>
+                <div class="toggle" id="toggleBtn">
+                    <div class="toggle-slider" id="toggleSlider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ TABS ══ -->
+    <div class="status-tabs" id="tabStrip">
+        <div class="tab active" onclick="goToPage(1)"><span class="tab-icon">📋</span><span class="tab-text">To pick up</span></div>
+        <div class="tab" onclick="goToPage(2)"><span class="tab-icon">⏳</span><span class="tab-text">Wait to load</span></div>
+        <div class="tab" onclick="goToPage(3)"><span class="tab-icon">⌛</span><span class="tab-text">Finish loading</span></div>
+        <div class="tab" onclick="goToPage(4)"><span class="tab-icon">🔄</span><span class="tab-text">In Transit</span></div>
+        <div class="tab" onclick="goToPage(5)"><span class="tab-icon">⏳</span><span class="tab-text">Wait to Unload</span></div>
+        <div class="tab" onclick="goToPage(6)"><span class="tab-icon">⌛</span><span class="tab-text">Finish Unloading</span></div>
+        <div class="tab" onclick="goToPage(7)"><span class="tab-icon">✅</span><span class="tab-text">Delivery Completed</span></div>
+    </div>
+
+    <!-- ══ MAIN CONTENT AREA ══ -->
+    <div class="main-content">
+
+        <!-- PAGE 1 — To Pickup: MAP -->
+        <div id="page1" class="page-panel active">
+            <div class="map-section">
+                <div class="map-bg">
+                    <div class="route"><div class="route-line"></div></div>
+                    <div class="map-marker start"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="map-marker end"><i class="fas fa-flag-checkered"></i></div>
+                    <div class="map-eta-bar">
+                        <div class="map-eta-card"><div class="meta-label">ETA</div><div class="meta-value" id="etaVal">12 mins</div></div>
+                        <div class="map-eta-card"><div class="meta-label">Distance</div><div class="meta-value" id="distVal">7.8 KM</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2 — Wait to Load: TIMER -->
+        <div id="page2" class="page-panel">
+            <div class="timer-panel">
+                <div class="timer-section">
+                    <div class="timer" id="t_wait">00:00:00</div>
+                    <p class="timer-status">Waiting for supplier...</p>
+                </div>
+                <div class="info-cards">
+                    <div class="card"><div class="icon">📍</div><p class="label">LOCATION</p><h3>Zone A</h3></div>
+                    <div class="card"><div class="icon">⏰</div><p class="label">SCHEDULED</p><h3>08:00 AM</h3></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3 — Finish Loading: TIMER -->
+        <div id="page3" class="page-panel">
+            <div class="timer-panel">
+                <div class="timer-section">
+                    <div class="timer" id="t_load">00:00:00</div>
+                    <p class="timer-status">⏱️ Running Time for Loading</p>
+                </div>
+                <div class="info-cards">
+                     <!-- <div class="card"><p class="label">After Loading</p><div class="icon">📋</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg"></div>
+                    <div class="card"><p class="label">WEIGHT SLIP</p><div class="icon">⚖️</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\weight-slip.png"></div> -->
+                    <div class="card">AFTER LOADING<div class="icon">📸</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg"></div>
+                    <div class="card">WEIGHT SLIP<div class="icon">📸</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\weight-slip.png"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 4 — In Transit: MAP -->
+        <div id="page4" class="page-panel">
+            <div class="map-section">
+                <div class="map-bg">
+                    <div class="route"><div class="route-line"></div></div>
+                    <div class="map-marker start"><i class="fas fa-truck"></i></div>
+                    <div class="map-marker end"><i class="fas fa-industry"></i></div>
+                    <div class="map-info-blocks">
+                        <div class="info-block"><div class="info-block-label">ETA</div><div class="info-block-value">45 mins</div></div>
+                        <div class="info-block"><div class="info-block-label">Distance</div><div class="info-block-value">32 KM</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 5 — Wait to Unload: TIMER -->
+        <div id="page5" class="page-panel">
+            <div class="timer-panel">
+                <div class="timer-section">
+                    <div class="timer" id="t_uwait">00:00:00</div>
+                    <p class="timer-status">Waiting for receiver.....</p>
+                </div>
+                <div class="info-cards">
+                    <div class="card">LOADED TRUCK<div class="icon">📸</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\close box truck.jpg"></div>
+                    <div class="card">CURRENT STATE<div class="icon">📸</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\dump truck.jpg"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 6 — Finish Unloading: TIMER -->
+        <div id="page6" class="page-panel">
+            <div class="timer-panel">
+                <div class="timer-section">
+                    <div class="timer" id="t_unload">00:00:00</div>
+                    <p class="timer-status">⏱️ Time remaining for UnLoading.....</p>
+                </div>
+                <div class="info-cards">
+                   <div class="card">During Unload<div class="icon">📸</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\stake truck.jpg"></div>
+                    <div class="card">Empty Truck<div class="icon">📸</div><img src="C:\Users\DADAGA\Pictures\Saved Pictures\truckpool.jpg"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 7 — Delivery Complete -->
+        <div id="page7" class="page-panel">
+            <div class="delivery-panel">
+                <div class="checkmark">✓</div>
+                <h1 class="delivery-title">DELIVERY COMPLETE</h1>
+                <p class="trip-info">Trip #TRP-12345 finished successfully</p>
+                <div class="delivery-cards-row">
+                    <div class="delivery-card"><div class="card-icon">💰</div><div class="card-label">Total Fare</div><div class="card-value">₹5,500</div></div>
+                    <div class="delivery-card"><div class="card-icon">⏱</div><div class="card-label">Duration</div><div class="card-value">4h 25m</div></div>
+                </div>
+                <div class="bol-btns-row">
+                    <button class="bol-go-btn blue" onclick="goToPage(8)">📦 Customer BOL</button>
+                    <button class="bol-go-btn gray" onclick="goToPage(9)">📄 Receiver BOL</button>
+                </div>
+                <div class="rating-section">
+                    <div class="rating-title">Rate Receiving Site</div>
+                    <div class="stars">
+                        <span class="star" onclick="setRating(1)">★</span>
+                        <span class="star" onclick="setRating(2)">★</span>
+                        <span class="star" onclick="setRating(3)">★</span>
+                        <span class="star" onclick="setRating(4)">★</span>
+                        <span class="star" onclick="setRating(5)">★</span>
+                    </div>
+                </div>
+                <div class="feedback-section">
+                    <div class="feedback-title">How was your freight experience?</div>
+                    <textarea placeholder="Share your feedback here..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 8 — Pickup BOL -->
+        <div id="page8" class="page-panel">
+            <div class="bol-panel">
+                <div class="bol-wrap">
+                    <button class="bol-back-btn" onclick="goToPage(3)">← Back to Finish Loading</button>
+                    <div class="bol-title">📦 Pickup BOL: #ALC-9982</div>
+                    <div class="bol-sub">📍 Oakland, CA → Fresno, CA</div>
+                    <div class="bol-card">
+                        <h2>📋 Shipment Details</h2>
+                        <div class="ship-row"><span><span class="sdot"></span>50 Crates – Grade A Almonds</span><span style="color:#10b981">✓</span></div>
+                        <div class="ship-row"><span><span class="sdot"></span>Total Weight: 2,500 lbs</span><span style="color:#10b981">✓</span></div>
+                        <div class="ship-row"><span><span class="sdot"></span>5 Pallets (Shrink-wrapped)</span><span style="color:#10b981">✓</span></div>
+                    </div>
+                    <div class="bol-card">
+                        <h2>📸 Loading Photo</h2>
+                        <div class="photo-bol-grid">
+                            <div class="photo-ph" onclick="capturePhoto('Loading')">📸</div>
+                            <div class="photo-ph" onclick="capturePhoto('Weight Slip')">⚖️</div>
+                        </div>
+                    </div>
+                    <div class="bol-card">
+                        <h3>SHIPPER</h3>
+                        <div class="contact-row">
+                            <div class="c-info"><p>California Almond Growers</p><p class="addr">1250 Harvest Lane, Oakland, CA 94607</p><p class="po">PO#: AG-2025-0126</p></div>
+                            <div class="c-btns"><button class="cbtn call" onclick="alert('Calling shipper...')"><i class="fas fa-phone"></i></button><button class="cbtn msg" onclick="alert('Message shipper...')"><i class="fas fa-comment"></i></button></div>
+                        </div>
+                        <h3 style="margin-top:10px">RECEIVER</h3>
+                        <div class="contact-row">
+                            <div class="c-info"><p>Fresno Food Distributors</p><p class="addr">3400 Market Way, Fresno, CA 93710</p><p class="po">PO#: FFD-2025-0089</p></div>
+                            <div class="c-btns"><button class="cbtn call" onclick="alert('Calling receiver...')"><i class="fas fa-phone"></i></button><button class="cbtn msg" onclick="alert('Message receiver...')"><i class="fas fa-comment"></i></button></div>
+                        </div>
+                    </div>
+                    <div class="bol-card">
+                        <h2>❄️ Special Instructions</h2>
+                        <div class="special-box">Keep Refrigerated: 34°F<div class="note-sm">Temperature-sensitive cargo. Must maintain cold chain.</div></div>
+                    </div>
+                    <div class="bol-card">
+                        <h2>✍️ Shipper Signature</h2>
+                        <p style="font-size:12px;color:#9ca3af;margin-bottom:8px;">By signing, shipper confirms the accuracy of this BOL.</p>
+                        <div class="sig-box"><canvas id="cvPickup" width="600" height="130"></canvas></div>
+                        <button class="bol-clear-btn" onclick="clearSig('cvPickup')">Clear Signature</button>
+                    </div>
+                    <button class="bol-approve-btn" onclick="approvePickup()">✓ Approve &amp; Start Trip</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 9 — Delivery BOL -->
+        <div id="page9" class="page-panel">
+            <div class="bol-panel">
+                <div class="bol-wrap">
+                    <button class="bol-back-btn" onclick="goToPage(7)">← Back to Delivery</button>
+                    <div class="bol-title">📄 Delivery BOL: #ALC-9982</div>
+                    <div class="bol-sub">📍 Oakland, CA → Fresno, CA</div>
+                    <div class="bol-card">
+                        <h2>📋 Receipt Details</h2>
+                        <div class="receipt-row"><span>Cargo Description</span><span class="receipt-val">Grade A Almonds</span></div>
+                        <div class="receipt-row"><span>Quantity Received</span><span class="receipt-val">50 Crates</span></div>
+                        <div class="receipt-row"><span>Total Weight</span><span class="receipt-val">2,500 lbs</span></div>
+                        <div class="receipt-row"><span>Delivery Date</span><span class="receipt-val">Today</span></div>
+                    </div>
+                    <div class="bol-card">
+                        <h2>📸 Unloading Photo</h2>
+                        <div class="photo-bol-grid">
+                            <div class="photo-ph" onclick="capturePhoto('Unloading')">📸</div>
+                            <div class="photo-ph" onclick="capturePhoto('Empty Truck')">🚛</div>
+                        </div>
+                    </div>
+                    <div class="bol-card">
+                        <h3>SHIPPER</h3>
+                        <div class="contact-row">
+                            <div class="c-info"><p>California Almond Growers</p><p class="addr">1250 Harvest Lane, Oakland, CA</p></div>
+                            <div class="c-btns"><button class="cbtn call" onclick="alert('Calling...')"><i class="fas fa-phone"></i></button><button class="cbtn msg" onclick="alert('Message...')"><i class="fas fa-comment"></i></button></div>
+                        </div>
+                        <h3 style="margin-top:10px">RECEIVER</h3>
+                        <div class="contact-row">
+                            <div class="c-info"><p>Fresno Food Distributors</p><p class="addr">3400 Market Way, Fresno, CA</p></div>
+                            <div class="c-btns"><button class="cbtn call" onclick="alert('Calling...')"><i class="fas fa-phone"></i></button><button class="cbtn msg" onclick="alert('Message...')"><i class="fas fa-comment"></i></button></div>
+                        </div>
+                    </div>
+                    <div class="bol-card">
+                        <h2>📦 Condition of Goods</h2>
+                        <div class="cond-row">
+                            <button class="cond-btn good-on" id="goodBtn" onclick="setCondition('good')">✓ Good Condition</button>
+                            <button class="cond-btn" id="damageBtn" onclick="setCondition('damage')">⚠️ Damage</button>
+                        </div>
+                        <div class="damage-report" id="damageBox"><p style="font-size:13px;color:#fca5a5;font-weight:700">Describe Damage:</p><textarea placeholder="Describe damage observed..."></textarea></div>
+                    </div>
+                    <div class="bol-card">
+                        <h2>✍️ Receiver Signature</h2>
+                        <p style="font-size:12px;color:#9ca3af;margin-bottom:8px;">By signing, receiver confirms receipt in stated condition.</p>
+                        <div class="sig-box"><canvas id="cvDelivery" width="600" height="130"></canvas></div>
+                        <button class="bol-clear-btn" onclick="clearSig('cvDelivery')">Clear Signature</button>
+                    </div>
+                    <button class="bol-approve-btn" onclick="approveDelivery()">✓ Confirm Delivery Receipt</button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end main-content -->
+
+    <!-- ══ RIDE CARD (DRAGGABLE) ══ -->
+    <div class="ride-card" id="rideCard">
+        <div class="drag-handle" id="dragHandle">
+            <div class="drag-bar"></div>
+        </div>
+
+        <!-- Preview Section (always visible when collapsed) — changes per page -->
+        <div class="preview-section" id="previewSection">
+            <!-- Page 1 Preview -->
+            <div id="pv1" class="pv-panel">
+                <div class="preview-row">
+                    <button class="preview-left-btn" onclick="alert('Opening preferences...')"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">freight notified<br><span>00:00</span></div>
+                    <button class="preview-right-btn" onclick="alert('Opening trip sequence...')"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row">
+                    <button class="preview-profile-btn" onclick="alert('Viewing profile...')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn" onclick="alert('Calling John Deo...')"><i class="fas fa-phone"></i></button>
+                </div>
+            </div>
+            <!-- Page 2 Preview -->
+            <div id="pv2" class="pv-panel" style="display:none">
+                <div class="preview-row">
+                    <button class="preview-left-btn" onclick="alert('Opening preferences...')"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">Wait to Load<br><span>01:30</span></div>
+                    <button class="preview-right-btn" onclick="alert('Opening trip sequence...')"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row">
+                    <button class="preview-profile-btn" onclick="alert('Viewing profile...')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn" onclick="alert('Calling John Deo...')"><i class="fas fa-phone"></i></button>
+                </div>
+            </div>
+            <!-- Page 3 Preview -->
+            <div id="pv3" class="pv-panel" style="display:none">
+                <div class="preview-row">
+                    <button class="preview-left-btn" onclick="alert('Opening preferences...')"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">Loading in Progress<br><span>02:30</span></div>
+                    <button class="preview-right-btn" onclick="alert('Opening trip sequence...')"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row">
+                    <button class="preview-profile-btn" onclick="alert('Viewing profile...')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn" onclick="alert('Calling John Deo...')"><i class="fas fa-phone"></i></button>
+                </div>
+            </div>
+            <!-- Page 4 Preview -->
+            <div id="pv4" class="pv-panel" style="display:none">
+                <div class="preview-row">
+                    <button class="preview-left-btn" onclick="alert('Opening preferences...')"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">Driving to Destination<br><span>02:30</span></div>
+                    <button class="preview-right-btn" onclick="alert('Opening trip sequence...')"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row">
+                    <button class="preview-profile-btn" onclick="alert('Viewing profile...')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn" onclick="alert('Calling John Deo...')"><i class="fas fa-phone"></i></button>
+                </div>
+            </div>
+            <!-- Page 5 Preview -->
+            <div id="pv5" class="pv-panel" style="display:none">
+                <div class="preview-row">
+                    <button class="preview-left-btn" onclick="alert('Opening preferences...')"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">At Drop-off<br><span>3:30</span></div>
+                    <button class="preview-right-btn" onclick="alert('Opening trip sequence...')"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row">
+                    <button class="preview-call-btn" onclick="alert('Calling John Deo...')"><i class="fas fa-phone"></i></button>
+                    <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-profile-btn" onclick="alert('Viewing profile...')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                </div>
+            </div>
+            <!-- Page 6 Preview -->
+            <div id="pv6" class="pv-panel" style="display:none">
+                <div class="preview-row">
+                    <button class="preview-left-btn" onclick="alert('Opening preferences...')"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">UnLoading in Progress<br><span>3:30</span></div>
+                    <button class="preview-right-btn" onclick="alert('Opening trip sequence...')"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row">
+                    <button class="preview-profile-btn" onclick="alert('Viewing profile...')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn" onclick="alert('Calling John Deo...')"><i class="fas fa-phone"></i></button>
+                </div>
+            </div>
+            <!-- Page 7 Preview -->
+            <div id="pv7" class="pv-panel" style="display:none">
+                <div class="preview-row">
+                    <button class="preview-left-btn" onclick="alert('Opening preferences...')"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">delivery completion<br><span>06:30</span></div>
+                    <button class="preview-right-btn" onclick="alert('Opening trip sequence...')"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row">
+                    <button class="preview-call-btn" onclick="alert('Calling John Deo...')"><i class="fas fa-phone"></i></button>
+                    <div class="preview-name">John Deo<br><span style="font-size: smaller; font-weight: lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-profile-btn" onclick="alert('Viewing profile...')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                </div>
+            </div>
+            <!-- Pages 8 & 9: no preview needed (BOL takes full screen) -->
+            <div id="pv8" class="pv-panel" style="display:none"></div>
+            <div id="pv9" class="pv-panel" style="display:none"></div>
+        </div>
+
+        <!-- Ride Content (expanded) — per page -->
+        <div class="ride-content">
+
+            <!-- ── PAGE 1 RIDE CONTENT ── -->
+            <div id="rc1" class="rc-page active">
+                <div class="preview-row">
+                    <button class="preview-left-btn"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">freight notified<br><span>01:30</span></div>
+                    <button class="preview-right-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row" style="background-color:#F9FAFB;border-radius:10px;padding:15px;">
+                    <button class="preview-profile-btn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn"><i class="fas fa-phone"></i></button>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-map-marker-alt destination-icon"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                            <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                            <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001</div>
+                        </div>
+                        <div class="supplier-actions">
+                            <button class="action-icon call" onclick="alert('Calling supplier...')"><i class="fas fa-phone"></i></button>
+                            <div class="action-icon profile"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-clock"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Schedule Time</div>
+                            <div class="destination-eta">• ETA: 12:00pm</div>
+                            <div class="destination-address">Duration 2:30 hrs • Distance: 21.5 Miles</div>
+                        </div>
+                        <div class="load-info">
+                            <div class="load-weight">5000 KG</div>
+                            <div class="load-type">Cement (Packaged)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-section">
+                    <div class="payment-details">
+                        <div class="payment-item"><div class="payment-label">Amount</div><div class="payment-value">₹20,000</div></div>
+                        <div class="payment-item"><div class="payment-label">Method</div><div class="payment-value">CASH</div></div>
+                        <div class="payment-item"><div class="payment-label">By</div><div class="payment-value">Receiver</div></div>
+                    </div>
+                </div>
+                <div class="note-section"><textarea placeholder="Note here...">Please...submit proof photo copy.</textarea></div>
+                <div class="report-buttons">
+                    <button class="report-btn breakdown" onclick="reportBreakdown()">🚨 REPORT BREAKDOWN</button>
+                    <button class="report-btn issue" onclick="reportIssue()">⚠️ REPORT ISSUE</button>
+                </div>
+            </div>
+
+            <!-- ── PAGE 2 RIDE CONTENT ── -->
+            <div id="rc2" class="rc-page">
+                <div class="preview-row">
+                    <button class="preview-left-btn"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">Wait to Load<br><span>00:30</span></div>
+                    <button class="preview-right-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row" style="background-color:#F9FAFB;border-radius:10px;padding:15px;">
+                    <button class="preview-profile-btn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn"><i class="fas fa-phone"></i></button>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-map-marker-alt destination-icon"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                            <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                            <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001</div>
+                        </div>
+                        <div class="supplier-actions">
+                            <button class="action-icon call" onclick="alert('Calling supplier...')"><i class="fas fa-phone"></i></button>
+                            <div class="action-icon profile"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-clock"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Schedule Time</div>
+                            <div class="destination-eta">ETA: 12:00pm</div>
+                            <div class="destination-address">Duration 2:30 hrs • Distance: 21.5 Miles</div>
+                        </div>
+                        <div class="load-info">
+                            <div class="load-weight">5000 KG</div>
+                            <div class="load-type">Cement (Packaged)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-section">
+                    <div class="payment-details">
+                        <div class="payment-item"><div class="payment-label">Amount</div><div class="payment-value">₹20,000</div></div>
+                        <div class="payment-item"><div class="payment-label">Method</div><div class="payment-value">CASH</div></div>
+                        <div class="payment-item"><div class="payment-label">By</div><div class="payment-value">Receiver</div></div>
+                    </div>
+                </div>
+                <div class="note-section"><textarea placeholder="Note here...">Please...submit proof photo copy.</textarea></div>
+                <div class="report-buttons">
+                    <button class="report-btn breakdown" onclick="reportBreakdown()">🚨 REPORT BREAKDOWN</button>
+                    <button class="report-btn issue" onclick="reportIssue()">⚠️ REPORT ISSUE</button>
+                </div>
+            </div>
+
+            <!-- ── PAGE 3 RIDE CONTENT ── -->
+            <div id="rc3" class="rc-page">
+                <div class="preview-row">
+                    <button class="preview-left-btn"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">Loading in Progress<br><span>02:30</span></div>
+                    <button class="preview-right-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row" style="background-color:#F9FAFB;border-radius:10px;padding:15px;">
+                    <button class="preview-profile-btn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn"><i class="fas fa-phone"></i></button>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-map-marker-alt destination-icon"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                            <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                            <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001</div>
+                        </div>
+                        <div class="supplier-actions">
+                            <button class="action-icon call" onclick="alert('Calling supplier...')"><i class="fas fa-phone"></i></button>
+                            <div class="action-icon profile"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-clock"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Schedule Time</div>
+                            <div class="destination-eta">ETA: 12:00pm</div>
+                            <div class="destination-address">Duration 2:30 hrs • Distance: 21.5 Miles</div>
+                        </div>
+                        <div class="load-info">
+                            <div class="load-weight">5000 KG</div>
+                            <div class="load-type">Cement (Packaged)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-section">
+                    <div class="payment-details">
+                        <div class="payment-item"><div class="payment-label">Amount</div><div class="payment-value">₹20,000</div></div>
+                        <div class="payment-item"><div class="payment-label">Method</div><div class="payment-value">CASH</div></div>
+                        <div class="payment-item"><div class="payment-label">By</div><div class="payment-value">Receiver</div></div>
+                    </div>
+                </div>
+                <div class="note-section"><textarea placeholder="Note here...">Please...submit proof photo copy.</textarea></div>
+                <div class="report-buttons">
+                    <button class="report-btn breakdown" onclick="reportBreakdown()">🚨 REPORT BREAKDOWN</button>
+                    <button class="report-btn issue" onclick="reportIssue()">⚠️ REPORT ISSUE</button>
+                </div>
+            </div>
+
+            <!-- ── PAGE 4 RIDE CONTENT ── -->
+            <div id="rc4" class="rc-page">
+                <div class="preview-row">
+                    <button class="preview-left-btn"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">Driving to Destination<br><span>02:30</span></div>
+                    <button class="preview-right-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row" style="background-color:#F9FAFB;border-radius:10px;padding:15px;">
+                    <button class="preview-profile-btn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn"><i class="fas fa-phone"></i></button>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-map-marker-alt destination-icon"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                            <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                            <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001</div>
+                        </div>
+                        <div class="supplier-actions">
+                            <button class="action-icon call" onclick="alert('Calling supplier...')"><i class="fas fa-phone"></i></button>
+                            <div class="action-icon profile"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-clock"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Schedule Time</div>
+                            <div class="destination-eta">• ETA: 12:00pm</div>
+                            <div class="destination-address">Duration 2:30 hrs • Distance: 21.5 Miles</div>
+                        </div>
+                        <div class="load-info">
+                            <div class="load-weight">5000 KG</div>
+                            <div class="load-type">Cement (Packaged)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-section">
+                    <div class="payment-details">
+                        <div class="payment-item"><div class="payment-label">Amount</div><div class="payment-value">₹20,000</div></div>
+                        <div class="payment-item"><div class="payment-label">Method</div><div class="payment-value">CASH</div></div>
+                        <div class="payment-item"><div class="payment-label">By</div><div class="payment-value">Receiver</div></div>
+                    </div>
+                </div>
+                <div class="note-section"><textarea placeholder="Note here...">Please...submit proof photo copy.</textarea></div>
+                <div class="report-buttons">
+                    <button class="report-btn breakdown" onclick="reportBreakdown()">🚨 REPORT BREAKDOWN</button>
+                    <button class="report-btn issue" onclick="reportIssue()">⚠️ REPORT ISSUE</button>
+                </div>
+            </div>
+
+            <!-- ── PAGE 5 RIDE CONTENT ── -->
+            <div id="rc5" class="rc-page">
+                <div class="preview-row">
+                    <button class="preview-left-btn"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">At Drop-off<br><span>03:30</span></div>
+                    <button class="preview-right-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row" style="background-color:#F9FAFB;border-radius:10px;padding:15px;">
+                    <button class="preview-call-btn"><i class="fas fa-phone"></i></button>
+                    <div class="preview-name">John Deo<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-profile-btn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-map-marker-alt destination-icon"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                            <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                            <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001</div>
+                        </div>
+                        <div class="supplier-actions">
+                            <button class="action-icon call" onclick="alert('Calling supplier...')"><i class="fas fa-phone"></i></button>
+                            <div class="action-icon profile"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-clock"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Schedule Time</div>
+                            <div class="destination-eta">ETA: 12:00pm</div>
+                            <div class="destination-address">Duration 2:30 hrs • Distance: 21.5 Miles</div>
+                        </div>
+                        <div class="load-info">
+                            <div class="load-weight">5000 KG</div>
+                            <div class="load-type">Cement (Packaged)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-section">
+                    <div class="payment-details">
+                        <div class="payment-item"><div class="payment-label">Amount</div><div class="payment-value">₹20,000</div></div>
+                        <div class="payment-item"><div class="payment-label">Method</div><div class="payment-value">CASH</div></div>
+                        <div class="payment-item"><div class="payment-label">By</div><div class="payment-value">Receiver</div></div>
+                    </div>
+                </div>
+                <div class="note-section"><textarea placeholder="Note here...">Please...submit proof photo copy.</textarea></div>
+                <div class="report-buttons">
+                    <button class="report-btn breakdown" onclick="reportBreakdown()">🚨 REPORT BREAKDOWN</button>
+                    <button class="report-btn issue" onclick="reportIssue()">⚠️ REPORT ISSUE</button>
+                </div>
+            </div>
+
+            <!-- ── PAGE 6 RIDE CONTENT ── -->
+            <div id="rc6" class="rc-page">
+                <div class="preview-row">
+                    <button class="preview-left-btn"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">UnLoading in Progress<br><span>3:30</span></div>
+                    <button class="preview-right-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row" style="background-color:#F9FAFB;border-radius:10px;padding:15px;">
+                    <button class="preview-profile-btn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                    <div class="preview-name">John Deo<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-call-btn"><i class="fas fa-phone"></i></button>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-map-marker-alt destination-icon"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                            <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                            <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001</div>
+                        </div>
+                        <div class="supplier-actions">
+                            <button class="action-icon call" onclick="alert('Calling supplier...')"><i class="fas fa-phone"></i></button>
+                            <div class="action-icon profile"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-clock"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Schedule Time</div>
+                            <div class="destination-eta">ETA: 12:00pm</div>
+                            <div class="destination-address">Duration 2:30 hrs • Distance: 21.5 Miles</div>
+                        </div>
+                        <div class="load-info">
+                            <div class="load-weight">5000 KG</div>
+                            <div class="load-type">Cement (Packaged)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-section">
+                    <div class="payment-details">
+                        <div class="payment-item"><div class="payment-label">Amount</div><div class="payment-value">₹20,000</div></div>
+                        <div class="payment-item"><div class="payment-label">Method</div><div class="payment-value">CASH</div></div>
+                        <div class="payment-item"><div class="payment-label">By</div><div class="payment-value">Receiver</div></div>
+                    </div>
+                </div>
+                <div class="note-section"><textarea placeholder="Note here...">Please...submit proof photo copy.</textarea></div>
+                <div class="report-buttons">
+                    <button class="report-btn breakdown" onclick="reportBreakdown()">🚨 REPORT BREAKDOWN</button>
+                    <button class="report-btn issue" onclick="reportIssue()">⚠️ REPORT ISSUE</button>
+                </div>
+            </div>
+
+            <!-- ── PAGE 7 RIDE CONTENT ── -->
+            <div id="rc7" class="rc-page">
+                <div class="preview-row">
+                    <button class="preview-left-btn"><i class="fas fa-sliders-h"></i></button>
+                    <div class="preview-center-text">delivery completion<br><span>06:30</span></div>
+                    <button class="preview-right-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="preview-name-row" style="background-color:#F9FAFB;border-radius:10px;padding:15px;">
+                    <button class="preview-call-btn"><i class="fas fa-phone"></i></button>
+                    <div class="preview-name">John Deo<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200loads)</span></div>
+                    <button class="preview-profile-btn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></button>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-map-marker-alt destination-icon"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Jio-Swift Logistics PVT Ltd.</div>
+                            <div class="destination-eta">Downtown Distribution Center ● ETA: 1:47</div>
+                            <div class="destination-address">123 Ash Street, Industrial Area, Mumbai, Maharashtra 400001</div>
+                        </div>
+                        <div class="supplier-actions">
+                            <button class="action-icon call" onclick="alert('Calling supplier...')"><i class="fas fa-phone"></i></button>
+                            <div class="action-icon profile"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%234CAF50'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E" alt="Profile"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-section">
+                    <div class="destination-header">
+                        <i class="fas fa-clock"></i>
+                        <div class="destination-info">
+                            <div class="destination-name">Schedule Time</div>
+                            <div class="destination-eta">ETA: 12:00pm</div>
+                            <div class="destination-address">Duration 2:30 hrs • Distance: 21.5 Miles</div>
+                        </div>
+                        <div class="load-info">
+                            <div class="load-weight">5000 KG</div>
+                            <div class="load-type">Cement (Packaged)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-section">
+                    <div class="payment-details">
+                        <div class="payment-item"><div class="payment-label">Amount</div><div class="payment-value">₹20,000</div></div>
+                        <div class="payment-item"><div class="payment-label">Method</div><div class="payment-value">CASH</div></div>
+                        <div class="payment-item"><div class="payment-label">By</div><div class="payment-value">Receiver</div></div>
+                    </div>
+                </div>
+                <div class="note-section"><textarea placeholder="Note here...">Please...submit proof photo copy.</textarea></div>
+                <div class="report-buttons">
+                    <button class="report-btn breakdown" onclick="reportBreakdown()">🚨 REPORT BREAKDOWN</button>
+                    <button class="report-btn issue" onclick="reportIssue()">⚠️ REPORT ISSUE</button>
+                </div>
+            </div>
+
+            <!-- Pages 8 & 9: no expanded ride content (BOL is fullscreen) -->
+            <div id="rc8" class="rc-page"></div>
+            <div id="rc9" class="rc-page"></div>
+
+        </div><!-- end ride-content -->
+    </div><!-- end ride-card -->
+
+    <!-- ══ BOTTOM NAV ══ -->
+    <div class="bottom-nav">
+        <!-- Page 1: To Pickup -->
+        <div class="bottom-buttons-row bnav-row active" id="bn1">
+            <button id="startUberBtn" onclick="goToPage(2)"><i class="fas fa-arrow-right"></i><span>Start to pick-up</span></button>
+            <button id="openNavBtn" onclick="alert('Opening navigation...')"><i class="fas fa-map-marked-alt"></i><span>Open Navigation</span></button>
+        </div>
+        <!-- Page 2: Wait to Load -->
+        <div class="bottom-buttons-row bnav-row" id="bn2">
+            <button id="startLoadingBtn" onclick="startLoadingTimer()" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">START LOADING</button>
+        </div>
+        <!-- Page 3: Finish Loading -->
+        <div class="bottom-buttons-row bnav-row" id="bn3">
+            <button id="finishLoadingBtn" onclick="finishLoading()" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">FINISH LOADING</button>
+            <button id="digiBtn" onclick="goToPage(8)" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#b3adad,#999);display:flex;align-items:center;justify-content:center;gap:8px;">Digital BOL</button>
+        </div>
+        <!-- Page 4: In Transit -->
+        <div class="bottom-buttons-row bnav-row" id="bn4">
+            <button onclick="goToPage(5)" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;"><i class="fas fa-arrow-right"></i><span>Reached Drop-off</span></button>
+            <button onclick="alert('Opening navigation...')" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#2196F3,#1976D2);display:flex;align-items:center;justify-content:center;gap:8px;"><i class="fas fa-map-marked-alt"></i><span>Open Navigation</span></button>
+        </div>
+        <!-- Page 5: Wait to Unload -->
+        <div class="bottom-buttons-row bnav-row" id="bn5">
+            <button id="startUnloadingBtn" onclick="startUnloadingTimer()" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">START UNLOADING</button>
+        </div>
+        <!-- Page 6: Finish Unloading -->
+        <div class="bottom-buttons-row bnav-row" id="bn6">
+            <button id="finishUnloadingBtn" onclick="finishUnloading()" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#4CAF50,#45a049);display:flex;align-items:center;justify-content:center;gap:8px;">FINISH UNLOADING</button>
+            <button onclick="goToPage(9)" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#b3adad,#999);display:flex;align-items:center;justify-content:center;gap:8px;">Digital BOL</button>
+        </div>
+        <!-- Page 7: Delivery Complete -->
+        <div class="bottom-buttons-row bnav-row" id="bn7">
+            <button id="confirmPayBtn" onclick="confirmDelivery()" style="flex:1;padding:15px;border:none;font-size:15px;font-weight:bold;cursor:pointer;border-radius:10px;color:white;background:linear-gradient(135deg,#2563eb,#1d4ed8);display:flex;align-items:center;justify-content:center;gap:8px;">Confirm Payment</button>
+        </div>
+        <!-- Pages 8, 9: BOL — no extra buttons -->
+        <div class="bottom-buttons-row bnav-row" id="bn8"></div>
+        <div class="bottom-buttons-row bnav-row" id="bn9"></div>
+
+        <!-- Common nav icons -->
+        <!-- <div class="nav-items-row">
+            <button class="nav-item" onclick="alert('Message')"><i class="fas fa-message"></i><span>Message</span></button>
+            <button class="nav-item" onclick="alert('Wallet')"><i class="fas fa-wallet"></i><span>Wallet</span></button>
+            <button class="nav-item active"><i class="fas fa-route"></i><span>Trip</span></button>
+            <button class="nav-item" onclick="alert('Home')"><i class="fas fa-home"></i><span>Home</span></button>
+        </div> -->
+    </div>
+
+</div><!-- end container -->
+
+<script>
+    let cur = 1;
+
+    // Tab → page mapping (tabs 0-6 → pages 1-7; pages 8&9 not in tabs)
+    const TAB_MAP = { 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 7:6 };
+    const tabs = document.querySelectorAll('.tab');
+
+    function goToPage(n) {
+        // Hide current
+        document.getElementById('page'+cur).classList.remove('active');
+        document.getElementById('pv'+cur).style.display = 'none';
+        document.getElementById('rc'+cur).classList.remove('active');
+        document.getElementById('bn'+cur).classList.remove('active');
+        if (TAB_MAP[cur] !== undefined) tabs[TAB_MAP[cur]].classList.remove('active');
+
+        cur = n;
+
+        // Show new
+        document.getElementById('page'+cur).classList.add('active');
+        document.getElementById('pv'+cur).style.display = '';
+        document.getElementById('rc'+cur).classList.add('active');
+        document.getElementById('bn'+cur).classList.add('active');
+        if (TAB_MAP[cur] !== undefined) {
+            tabs[TAB_MAP[cur]].classList.add('active');
+            tabs[TAB_MAP[cur]].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+        }
+
+        // Collapse ride card on page change
+        rideCard.style.transition = 'height 0.3s ease';
+        rideCard.style.height = minH + 'px';
+        rideCard.classList.remove('expanded');
+
+        // Hide ride card on BOL pages (8,9)
+        rideCard.style.display = (n===8||n===9) ? 'none' : '';
+
+        // Auto-start timers (wait timers only; load/unload timers start on button click)
+        if (n===2 && !timerStarted.wait)   { timerStarted.wait=true;   startCountUp('t_wait'); }
+        if (n===5 && !timerStarted.uwait)  { timerStarted.uwait=true;  startCountUp('t_uwait'); }
+    }
+
+    // ── TIMERS ──
+    const timerStarted = { wait:false, load:false, uwait:false, unload:false };
+    const timerSecs    = { t_wait:0, t_load:0, t_uwait:0, t_unload:0 };
+
+    function fmt(s) {
+        return [Math.floor(s/3600), Math.floor((s%3600)/60), s%60]
+            .map(v => String(v).padStart(2,'0')).join(':');
+    }
+
+    function startCountUp(id) {
+        setInterval(() => {
+            timerSecs[id]++;
+            document.getElementById(id).textContent = fmt(timerSecs[id]);
+        }, 1000);
+    }
+
+    // Manual start loading timer (page 2 button) — starts t_load timer and goes to page 3
+    let loadingInterval = null, loadingRunning = false;
+    function startLoadingTimer() {
+        if (!loadingRunning) {
+            loadingRunning = true;
+            timerStarted.load = true;
+            loadingInterval = setInterval(() => {
+                timerSecs['t_load']++;
+                document.getElementById('t_load').textContent = fmt(timerSecs['t_load']);
+            }, 1000);
+            goToPage(3);
+        }
+    }
+
+    // Finish loading — stop t_load timer and go to page 4
+    function finishLoading() {
+        loadingRunning = false;
+        clearInterval(loadingInterval);
+        goToPage(4);
+    }
+
+    // Manual start unloading timer (page 5 button) — starts t_unload timer and goes to page 6
+    let unloadingInterval = null, unloadingRunning = false;
+    function startUnloadingTimer() {
+        if (!unloadingRunning) {
+            unloadingRunning = true;
+            timerStarted.unload = true;
+            unloadingInterval = setInterval(() => {
+                timerSecs['t_unload']++;
+                document.getElementById('t_unload').textContent = fmt(timerSecs['t_unload']);
+            }, 1000);
+            goToPage(6);
+        }
+    }
+
+    // Finish unloading — stop t_unload timer and go to page 7
+    function finishUnloading() {
+        unloadingRunning = false;
+        clearInterval(unloadingInterval);
+        goToPage(7);
+    }
+
+    // ETA countdown (page 1)
+    let eta=12, dist=7.8;
+    setInterval(() => {
+        if (cur===1 && eta>0) {
+            eta-=0.1; dist-=0.065;
+            document.getElementById('etaVal').textContent = Math.ceil(eta)+' mins';
+            document.getElementById('distVal').textContent = Math.max(0,dist).toFixed(1)+' KM';
+        }
+    }, 6000);
+
+    // ── ONLINE TOGGLE ──
+    document.getElementById('toggleBtn').addEventListener('click', () => {
+        const sl=document.getElementById('toggleSlider'), st=document.getElementById('statusTxt');
+        const on = sl.style.right==='2px' || !sl.style.right;
+        sl.style.right = on ? 'calc(100% - 28px)' : '2px';
+        sl.style.background = on ? '#e74c3c' : '#4CAF50';
+        st.textContent = on ? 'OFFLINE' : 'ONLINE';
+    });
+
+    // ── DRAG RIDE CARD ──
+    const rideCard = document.getElementById('rideCard');
+    const dragHandle = document.getElementById('dragHandle');
+    let isDragging=false, startY=0, startH=0;
+    const minH=200, maxH=650, threshold=350;
+
+    function startDrag(e) {
+        isDragging=true;
+        startY = e.type==='touchstart'?e.touches[0].clientY:e.clientY;
+        startH = rideCard.offsetHeight;
+        rideCard.classList.add('dragging');
+        rideCard.style.transition='none';
+        e.preventDefault(); e.stopPropagation();
+    }
+    function onDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const y = e.type==='touchmove'?e.touches[0].clientY:e.clientY;
+        const h = Math.max(minH, Math.min(maxH, startH+(startY-y)));
+        rideCard.style.height = h+'px';
+        rideCard.classList.toggle('expanded', h>threshold);
+    }
+    function stopDrag() {
+        if (!isDragging) return;
+        isDragging=false;
+        rideCard.classList.remove('dragging');
+        const h = rideCard.offsetHeight;
+        rideCard.style.transition = 'height 0.3s ease';
+        if (h < (minH+maxH)/2) { rideCard.style.height=minH+'px'; rideCard.classList.remove('expanded'); }
+        else                    { rideCard.style.height=maxH+'px'; rideCard.classList.add('expanded'); }
+    }
+    dragHandle.addEventListener('mousedown', startDrag);
+    rideCard.addEventListener('mousedown', e => { if(!rideCard.classList.contains('expanded')) startDrag(e); });
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', stopDrag);
+    dragHandle.addEventListener('touchstart', startDrag, {passive:false});
+    rideCard.addEventListener('touchstart', e => { if(!rideCard.classList.contains('expanded')) startDrag(e); }, {passive:false});
+    document.addEventListener('touchmove', onDrag, {passive:false});
+    document.addEventListener('touchend', stopDrag);
+    dragHandle.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        rideCard.style.transition='height 0.3s ease';
+        rideCard.classList.toggle('expanded');
+        rideCard.style.height = rideCard.classList.contains('expanded') ? maxH+'px' : minH+'px';
+    });
+
+    // ── ACTIONS ──
+    function capturePhoto(t) { alert('📸 Opening camera: '+t); }
+    function reportBreakdown() { if(confirm('Report a truck breakdown?')) alert('🚨 Breakdown reported! Support team notified.'); }
+    function reportIssue()     { if(confirm('Report an issue?')) alert('⚠️ Issue reported. Our team will contact you.'); }
+    function confirmDelivery() { alert('✅ Delivery confirmed! Payment of ₹20,000 received.'); }
+    function setRating(n) { document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<n)); }
+
+    // ── BOL ──
+    function setCondition(type) {
+        document.getElementById('goodBtn').className   = 'cond-btn'+(type==='good'?' good-on':'');
+        document.getElementById('damageBtn').className = 'cond-btn'+(type==='damage'?' damage-on':'');
+        document.getElementById('damageBox').className = 'damage-report'+(type==='damage'?' show':'');
+    }
+
+    // Canvas signatures
+    function initCanvas(id) {
+        const c = document.getElementById(id); if(!c) return;
+        const ctx = c.getContext('2d');
+        ctx.strokeStyle='#2563eb'; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
+        let drawing=false;
+        function getPos(e) {
+            const r=c.getBoundingClientRect(), sx=c.width/r.width, sy=c.height/r.height;
+            const src=e.touches?e.touches[0]:e;
+            return { x:(src.clientX-r.left)*sx, y:(src.clientY-r.top)*sy };
+        }
+        c.addEventListener('mousedown',  e=>{e.preventDefault();drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+        c.addEventListener('mousemove',  e=>{if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+        c.addEventListener('mouseup',    ()=>drawing=false);
+        c.addEventListener('touchstart', e=>{e.preventDefault();drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+        c.addEventListener('touchmove',  e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+        c.addEventListener('touchend',   ()=>drawing=false);
+    }
+    function clearSig(id) { const c=document.getElementById(id); c.getContext('2d').clearRect(0,0,c.width,c.height); }
+    function approvePickup() {
+        const c=document.getElementById('cvPickup');
+        const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
+        if(!Array.from(d).some(v=>v!==0)){alert('Please sign before approving.');return;}
+        alert('✅ Pickup BOL approved! Trip started.');
+        goToPage(4);
+    }
+    function approveDelivery() { alert('✅ Delivery receipt confirmed!'); goToPage(7); }
+
+    window.addEventListener('load', () => {
+        initCanvas('cvPickup');
+        initCanvas('cvDelivery');
+        // Init bottom nav — only page 1 active
+        document.getElementById('bn1').classList.add('active');
+    });
+</script>
+</body>
+</html>
