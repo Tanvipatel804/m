@@ -806,15 +806,124 @@
         .settings-modal-overlay .smo-submodal-body p  { color: #666; margin-bottom: 10px; }
         .settings-modal-overlay .smo-submodal-body ul { margin-left: 20px; margin-bottom: 12px; }
         .settings-modal-overlay .smo-submodal-body li { color: #666; margin-bottom: 6px; }
+
+        /* ═══════════════════════════════════════════════
+           SIDEBAR MENU (from 10practice.html)
+        ═══════════════════════════════════════════════ */
+        .sidebar-menu {
+            position: fixed;
+            top: 0; left: -280px;
+            width: 280px; height: 100vh;
+            background: linear-gradient(180deg, #1a1d29 0%, #2c3e50 100%);
+            z-index: 6000;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+        .sidebar-menu.open { left: 0; }
+        .sidebar-menu-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 5999;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .sidebar-menu-overlay.open { opacity: 1; visibility: visible; }
+        .sidebar-menu-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .close-menu-btn {
+            position: absolute; top: 15px; right: 15px;
+            background: transparent; border: none; color: #fff;
+            font-size: 24px; cursor: pointer;
+            width: 35px; height: 35px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: background 0.2s;
+        }
+        .close-menu-btn:hover { background: rgba(255,255,255,0.1); }
+        .profile-avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 35px; color: white;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+        .profile-name  { color: white; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .profile-rating{ color: #bbb; font-size: 13px; }
+        .sidebar-menu-items { padding: 10px 0; }
+        .sidebar-menu-item {
+            padding: 16px 25px; color: #e0e0e0; font-size: 15px;
+            cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 12px;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-menu-item a { margin-left: 10px; color: inherit; text-decoration: none; }
+        .sidebar-menu-item:hover { background: rgba(255,255,255,0.05); border-left-color: #667eea; color: white; }
+        .sidebar-menu-item i { width: 20px; font-size: 16px; }
     </style>
 </head>
 <body>
+
+<!-- Sidebar Menu Overlay -->
+<div class="sidebar-menu-overlay" id="menuOverlay"></div>
+
+<!-- Sidebar Menu -->
+<div class="sidebar-menu" id="sidebarMenu">
+    <div class="sidebar-menu-header">
+        <button class="close-menu-btn" id="closeMenuBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="profile-avatar"><i class="fas fa-user"></i></div>
+        <div class="profile-name">Profile Name</div>
+        <div class="profile-rating">Rating &#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    </div>
+    <div class="sidebar-menu-items">
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.1 inbox.html">
+                <i class="fas fa-inbox"></i><span>Inbox</span></a>
+        </div>
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.2 earning.html">
+                <i class="fas fa-dollar-sign"></i><span>Earning</span></a>
+        </div>
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.3 opportunity.html">
+                <i class="fas fa-briefcase"></i><span>Opportunities</span></a>
+        </div>
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.4 poolmember.html">
+                <i class="fas fa-users"></i><span>Pool Members</span></a>
+        </div>
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.5 wallet.html">
+                <i class="fas fa-wallet"></i><span>Wallet</span></a>
+        </div>
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.6 account.html">
+                <i class="fas fa-user-circle"></i><span>Account</span></a>
+        </div>
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.7 vehicle recovery.html">
+                <i class="fas fa-car"></i><span>Vehicle Recovery</span></a>
+        </div>
+        <div class="sidebar-menu-item">
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.8 invitefrds.html">
+                <i class="fas fa-user-plus"></i><span>Refer Friends</span></a>
+        </div>
+    </div>
+</div>
+
 <div class="container">
 
     <!-- ══ HEADER ══ -->
     <div class="header">
         <div class="header-left">
-            <div class="menu-icon"><i class="fas fa-bars"></i></div>
+            <div class="menu-icon" id="menuIconBtn" onclick="openSidebarMenu()" style="cursor:pointer;"><i class="fas fa-bars"></i></div>
             <div class="logo">🚚 Lorry (Trip ID: TRPS#0001)</div>
         </div>
         <div class="header-right">
@@ -1687,7 +1796,7 @@
                     <h4>How do I stop sharing my location?</h4><p>Return to the Share Live Location page and tap "Stop Sharing" at any time.</p>
                     <h3>Contact Support</h3>
                     <p>📞 Call: +1-800-DRIVER-HELP (24/7)</p>
-                    <p>✉️ Email: support@driversafety.com</p>
+                    <p>✉️ Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e99a9c9999869b9da98d9b809f8c9b9a888f8c9d90c78a8684">[email&#160;protected]</a></p>
                 </div>
             </div>
         </div>
@@ -1711,7 +1820,7 @@
 </div><!-- /settingsModal -->
 
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     /* ══════════════════════════════
        MAIN TRIP PAGE LOGIC (unchanged from original)
     ══════════════════════════════ */
@@ -1893,7 +2002,29 @@
         if(on){txt.textContent='ON';txt.style.color='#4CAF50';el.classList.remove('inactive');alert('📍 Location sharing started!');}
         else{txt.textContent='OFF';txt.style.color='#ff5252';el.classList.add('inactive');alert('❌ Location sharing stopped.');}
     }
-    function smo_sosAlert(){if(confirm('🚨 EMERGENCY ALERT\n\nThis will call emergency services and notify your contacts.\n\nProceed?')){alert('🆘 Emergency services contacted!\n📍 Location shared\n📱 Contacts notified');}}
+    function smo_sosAlert() {
+        if (confirm('🆘 EMERGENCY! Call police and alert contacts?')) {
+            alert('🚨 SOS activated! Police notified. Emergency contacts alerted with your location.');
+        }
+    }
+
+    /* ══════════════════════════════
+       SIDEBAR MENU JS (from 10practice.html)
+    ══════════════════════════════ */
+    function openSidebarMenu() {
+        document.getElementById('sidebarMenu').classList.add('open');
+        document.getElementById('menuOverlay').classList.add('open');
+    }
+    function closeSidebarMenu() {
+        document.getElementById('sidebarMenu').classList.remove('open');
+        document.getElementById('menuOverlay').classList.remove('open');
+    }
+    document.getElementById('closeMenuBtn').addEventListener('click', closeSidebarMenu);
+    document.getElementById('menuOverlay').addEventListener('click', closeSidebarMenu);
+    document.querySelectorAll('.sidebar-menu-item').forEach(function(item) {
+        item.addEventListener('click', function() { closeSidebarMenu(); });
+    });
+
 </script>
 </body>
 </html>

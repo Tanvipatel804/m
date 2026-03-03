@@ -764,6 +764,86 @@
             }
         }
 
+        /* ── Sidebar Menu (from 10practice) ── */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1d29 0%, #2c3e50 100%);
+            z-index: 2000;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+        .sidebar-menu.open { left: 0; }
+        .sidebar-menu-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .sidebar-menu-overlay.open { opacity: 1; visibility: visible; }
+        .sidebar-menu-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        .close-menu-btn {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            width: 35px; height: 35px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .close-menu-btn:hover { background: rgba(255, 255, 255, 0.1); }
+        .profile-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 35px; color: white;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        .profile-name { color: white; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .profile-rating { color: #bbb; font-size: 13px; }
+        .sidebar-menu-items { padding: 10px 0; }
+        .sidebar-menu-item {
+            padding: 16px 25px;
+            color: #e0e0e0;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-menu-item a {
+            margin-left: 10px;
+            color: inherit;
+            text-decoration: none;
+        }
+        .sidebar-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: #667eea;
+            color: white;
+        }
+        .sidebar-menu-item i { width: 20px; font-size: 16px; }
+
         /* ═══════════════════════════════════════════════
            FULL-SCREEN PREFERENCE PAGE  —  DARK THEME
         ═══════════════════════════════════════════════ */
@@ -1037,6 +1117,66 @@
     </style>
 </head>
 <body>
+
+    <!-- Sidebar Menu Overlay -->
+    <div class="sidebar-menu-overlay" id="menuOverlay"></div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-menu-header">
+            <button class="close-menu-btn" id="closeMenuBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-name">Profile Name</div>
+            <div class="profile-rating">Rating ★★★★★</div>
+        </div>
+        <div class="sidebar-menu-items">
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.1 inbox.html">
+                    <i class="fas fa-inbox"></i>
+                    <span>Inbox</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.2 earning.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Earning</span></a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.3 opportunity.html">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Opportunities</span></a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.4 poolmember.html">
+                    <i class="fas fa-users"></i>
+                    <span>Pool Members</span></a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.5 wallet.html">
+                    <i class="fas fa-wallet"></i>
+                    <span>Wallet</span></a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.6 account.html">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Account</span></a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.7 vehicle recovery.html">
+                    <i class="fas fa-car"></i>
+                    <span>Vehicle Recovery</span></a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.8 invitefrds.html">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Refer Friends</span></a>
+            </div>
+        </div>
+    </div>
 
     <!-- MAP -->
     <div class="map-section">
@@ -2063,6 +2203,29 @@
 
     /* Init */
     renderTransactions();
+
+    /* Sidebar Menu */
+    const menuBtn      = document.querySelector('.menu-btn');
+    const sidebarMenu  = document.getElementById('sidebarMenu');
+    const menuOverlay  = document.getElementById('menuOverlay');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+    function openMenu() {
+        sidebarMenu.classList.add('open');
+        menuOverlay.classList.add('open');
+    }
+    function closeMenu() {
+        sidebarMenu.classList.remove('open');
+        menuOverlay.classList.remove('open');
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    closeMenuBtn.addEventListener('click', closeMenu);
+    menuOverlay.addEventListener('click', closeMenu);
+
+    document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+        item.addEventListener('click', function () { closeMenu(); });
+    });
     </script>
 
 <!-- ═══════════════════════════════════════════════
