@@ -258,6 +258,30 @@
             width: 50px;
         }
 
+        .select-field {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f9f9f9;
+            color: #333;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237cb342' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .select-field:focus {
+            outline: none;
+            border-color: #7cb342;
+            box-shadow: 0 0 0 3px rgba(124, 179, 66, 0.15);
+        }
+
         /* Single-row horizontal scroll for Truck Type & Kind of Load */
         .scroll-row {
             display: flex;
@@ -306,152 +330,126 @@
     <!-- <div class="container"> --> 
     <div class="section">
         <h2 class="section-title">What is Your Truck Type?</h2>
-        <div class="grid scroll-row">
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed Isolated</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div class="icon"><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Open Box</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Close Box</div>
-            </button>
-            <button class="option-btn selected" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Stack</div>
-                <span class="checkmark">✓</span>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\reefer truck.jpg"><br>Reefer</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div class="icon"><image src="C:\Users\DADAGA\Pictures\Saved Pictures\dump truck.jpg"><br>Dump</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\Concrete transport truck.jpg"><br>Concrete Transport</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fly ash transport truck.jpg"><br>Fly Ash Transport</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\tanker truck.jpg"><br>Tanker </div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\car transport truck.jpg"><br>Car Transport</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fixed crane truck.jpg"><br>Fixed Crane</div>
-            </button>
-            <button class="option-btn" onclick="selectOption(this, 'truck-type')">
-                <div>Special...</div>
-            </button>
-        </div> 
+        <select class="select-field" id="truck-type-select">
+            <option value="" disabled selected>-- Select Truck Type --</option>
+            <option value="flatbed">🚛 Flatbed</option>
+            <option value="flatbed-isolated">🚛 Flatbed Isolated</option>
+            <option value="open-box">📦 Open Box</option>
+            <option value="close-box">📦 Close Box</option>
+            <option value="stack">🗂️ Stack</option>
+            <option value="reefer">❄️ Reefer</option>
+            <option value="dump">🏗️ Dump</option>
+            <option value="concrete-transport">🏗️ Concrete Transport</option>
+            <option value="fly-ash-transport">🏭 Fly Ash Transport</option>
+            <option value="tanker">🛢️ Tanker</option>
+            <option value="car-transport">🚗 Car Transport</option>
+            <option value="fixed-crane">🏗️ Fixed Crane</option>
+            <option value="special">⭐ Special...</option>
+        </select> 
 
         <!-- Section 2: Load Details --> 
         <h2 class="section-title">How Heavy & What Kind of Load?</h2>
 
         <h3 class="subtitle">Maximum Load Weight (KG)</h3>
-        <div class="grid">
-            <button class="option-btn" onclick="selectOption(this, 'weight')">
-                < 1000 KG </button>
-                    <button class="option-btn selected" onclick="selectOption(this, 'weight')">
-                        1000 - 3000 KG
-                        <span class="checkmark">✓</span>
-                    </button>
-                    <button class="option-btn" onclick="selectOption(this, 'weight')">
-                        3000 - 6000 KG
-                    </button>
-                    <button class="option-btn" onclick="selectOption(this, 'weight')">
-                        6000 - 10000 KG
-                    </button>
-                    <button class="option-btn" onclick="selectOption(this, 'weight')">
-                        10000 - 15000 KG
-                    </button>
-                    <button class="option-btn" onclick="selectOption(this, 'weight')">
-                        15000 - 20000 KG
-                    </button>
-                    <button class="option-btn" onclick="selectOption(this, 'weight')">
-                        20000 - 30000 KG
-                    </button>
-                    <button class="option-btn" onclick="selectOption(this, 'weight')">
-                        30000 - 40000 KG
-                    </button>
-                    <button class="option-btn" onclick="selectOption(this, 'weight')">
-                        > 40000 KG
-                    </button>
-        </div>
+        <select class="select-field" id="weight-select">
+            <option value="" disabled selected>-- Select Weight Range --</option>
+            <option value="lt1000">&lt; 1000 KG</option>
+            <option value="1000-3000">1000 - 3000 KG</option>
+            <option value="3000-6000">3000 - 6000 KG</option>
+            <option value="6000-10000">6000 - 10000 KG</option>
+            <option value="10000-15000">10000 - 15000 KG</option>
+            <option value="15000-20000">15000 - 20000 KG</option>
+            <option value="20000-30000">20000 - 30000 KG</option>
+            <option value="30000-40000">30000 - 40000 KG</option>
+            <option value="gt40000">&gt; 40000 KG</option>
+        </select>
 
-        <h3 class="subtitle">What Kind of Load?</h3>
+        <h3 class="subtitle">What Kind of Load? <span style="font-size:13px; font-weight:normal; color:#7cb342;">(Select multiple)</span></h3>
         <div class="grid scroll-row">
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">📦</div>
                 <div>Packaged / Bags</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">⛰️</div>
                 <div>Powdered / Grain</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🛢️</div>
                 <div>Liquid / Gas</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">❄️</div>
                 <div>Frozen / Food</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🧱</div>
                 <div>Solid</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🧻</div>
                 <div>Bulky</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🍽️</div>
                 <div>Fragile</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🚪🛏️</div>
                 <div>Furniture</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">⚒️</div>
                 <div>fragmented / Scrap</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">⚛︎ 🧬 🧫 🧪</div>
                 <div>Hazardous</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🖥️</div>
                 <div>Electrical</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🏗️</div>
                 <div>Equipments</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🚢</div>
                 <div>Containers</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">💉</div>
                 <div>Medical</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🎻</div>
                 <div>Instrument</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🐘🦏🦒🦁🦓</div>
                 <div>Living Beings</div>
+                <span class="checkmark">✓</span>
             </button>
-            <button class="option-btn" onclick="selectOption(this, 'load-type')">
+            <button class="option-btn" onclick="toggleOption(this)">
                 <div class="icon">🌱🌱</div>
                 <div>Others</div>
+                <span class="checkmark">✓</span>
             </button>
         </div> 
 
@@ -581,6 +579,12 @@
             if (checkmark) checkmark.style.display = 'flex';
         }
 
+        function toggleOption(btn) {
+            btn.classList.toggle('selected');
+            const checkmark = btn.querySelector('.checkmark');
+            if (checkmark) checkmark.style.display = btn.classList.contains('selected') ? 'flex' : 'none';
+        }
+
         function goBack() {
             if (confirm('Are you sure you want to go back? Your progress will be lost.')) {
                 window.history.back();
@@ -588,12 +592,13 @@
         }
 
         function submitForm() {
-            const formData = {
-                truckType: document.querySelector('.option-btn.selected[onclick*="truck-type"]')?.textContent.trim(),
-                weight: document.querySelector('.option-btn.selected[onclick*="weight"]')?.textContent.trim(),
-                loadType: document.querySelector('.option-btn.selected[onclick*="load-type"]')?.textContent.trim(),
-            };
+            const truckType = document.getElementById('truck-type-select')?.value || '';
+            const weight = document.getElementById('weight-select')?.value || '';
+            const loadTypes = [...document.querySelectorAll('.option-btn.selected[onclick*="toggleOption"]')]
+                .map(b => b.querySelector('div:last-of-type')?.textContent.trim())
+                .filter(Boolean);
 
+            const formData = { truckType, weight, loadTypes };
             console.log('Form submitted:', formData);
             alert('Trip posted successfully! 🎉');
         }
