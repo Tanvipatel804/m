@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+ <!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -120,6 +120,444 @@
   <script>
     function goBack() {
       history.back(); // Uncomment for real back navigation
+    }
+  </script>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Truck Management Inbox</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0e0e;
+      --surface: #1a1a1a;
+      --surface2: #242424;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f0f0;
+      --muted: #888;
+      --gold: #f5c518;
+      --trip: #3b9eff;
+      --opportunity: #2ecc71;
+      --service: #ff6b35;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 32px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .back-btn {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.18s;
+      flex-shrink: 0;
+    }
+    .back-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
+
+    .header-info { flex: 1; }
+    .inbox-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .inbox-subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .unread-badge {
+      background: var(--gold);
+      color: #000;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ── TABS ── */
+    .tabs-wrap {
+      position: sticky;
+      top: 69px;
+      z-index: 40;
+      background: var(--bg);
+      padding: 12px 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab {
+      position: relative;
+      padding: 9px 16px 11px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      user-select: none;
+      background: transparent;
+      border: none;
+    }
+    .tab:hover { color: var(--text); background: var(--surface2); }
+    .tab.active { color: var(--text); background: var(--surface); }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .tab[data-tab="all"].active::after        { background: var(--gold); }
+    .tab[data-tab="trip"].active::after       { background: var(--trip); }
+    .tab[data-tab="opportunity"].active::after{ background: var(--opportunity); }
+    .tab[data-tab="service"].active::after    { background: var(--service); }
+
+    .tab-count {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: 100px;
+      background: var(--surface2);
+      color: var(--muted);
+      transition: all 0.18s;
+    }
+    .tab[data-tab="all"].active    .tab-count { background: rgba(245,197,24,0.15);  color: var(--gold); }
+    .tab[data-tab="trip"].active   .tab-count { background: rgba(59,158,255,0.15);  color: var(--trip); }
+    .tab[data-tab="opportunity"].active .tab-count { background: rgba(46,204,113,0.15); color: var(--opportunity); }
+    .tab[data-tab="service"].active .tab-count { background: rgba(255,107,53,0.15); color: var(--service); }
+
+    /* ── MESSAGES ── */
+    .inbox {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-left: 4px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      animation: slideIn 0.28s ease both;
+    }
+    .message:hover { background: var(--surface2); transform: translateX(2px); }
+
+    .message[data-type="trip"]        { border-left-color: var(--trip); }
+    .message[data-type="opportunity"] { border-left-color: var(--opportunity); }
+    .message[data-type="service"]     { border-left-color: var(--service); }
+    .message[data-type="trip"].unread,
+    .message[data-type="opportunity"].unread,
+    .message[data-type="service"].unread { border: none;/* handled by dot */ }
+
+    .message.hidden {
+      display: none;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .msg-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+
+    .msg-icon {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .msg-icon.trip        { background: rgba(59,158,255,0.12); }
+    .msg-icon.opportunity { background: rgba(46,204,113,0.12); }
+    .msg-icon.service     { background: rgba(255,107,53,0.12); }
+
+    .msg-meta { flex: 1; min-width: 0; }
+
+    .msg-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .msg-tag {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 1px 7px;
+      border-radius: 100px;
+      margin-top: 3px;
+    }
+    .msg-tag.trip        { background: rgba(59,158,255,0.15);  color: var(--trip); }
+    .msg-tag.opportunity { background: rgba(46,204,113,0.15); color: var(--opportunity); }
+    .msg-tag.service     { background: rgba(255,107,53,0.15);  color: var(--service); }
+
+    .msg-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+
+    .msg-time {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .unread-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: none;
+    }
+    .message.unread .unread-dot { display: block; }
+
+    .msg-body {
+      font-size: 13.5px;
+      color: #b0b0b0;
+      line-height: 1.55;
+      margin-top: 4px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      gap: 10px;
+      text-align: center;
+    }
+    .empty-state.show { display: flex; }
+    .empty-icon { font-size: 40px; opacity: 0.4; }
+    .empty-text { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .empty-sub { font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="header-info">
+      <div class="inbox-title">Inbox</div>
+      <div class="inbox-subtitle">Truck Management Notifications</div>
+    </div>
+    <div class="unread-badge" id="unread-count">5 New</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab active" data-tab="all"         onclick="filterTab(this)">All         <span class="tab-count" id="count-all">5</span></button>
+      <button class="tab"        data-tab="trip"        onclick="filterTab(this)">Trip        <span class="tab-count" id="count-trip">1</span></button>
+      <button class="tab"        data-tab="opportunity" onclick="filterTab(this)">Opportunity <span class="tab-count" id="count-opportunity">2</span></button>
+      <button class="tab"        data-tab="service"     onclick="filterTab(this)">Service     <span class="tab-count" id="count-service">2</span></button>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="inbox" id="inbox">
+
+    <div class="message unread" data-type="trip">
+      <div class="msg-header">
+        <div class="msg-left">
+          <div class="msg-icon trip">🚚</div>
+          <div class="msg-meta">
+            <div class="msg-title">New Delivery Assigned</div>
+            <span class="msg-tag trip">Trip</span>
+          </div>
+        </div>
+        <div class="msg-right">
+          <div class="msg-time">10 mins ago</div>
+          <div class="unread-dot"></div>
+        </div>
+      </div>
+      <div class="msg-body">Your truck has been assigned to a new route from Dubai to Abu Dhabi.</div>
+    </div>
+
+    <div class="message unread" data-type="service">
+      <div class="msg-header">
+        <div class="msg-left">
+          <div class="msg-icon service">🔧</div>
+          <div class="msg-meta">
+            <div class="msg-title">Maintenance Reminder</div>
+            <span class="msg-tag service">Service</span>
+          </div>
+        </div>
+        <div class="msg-right">
+          <div class="msg-time">1 hour ago</div>
+          <div class="unread-dot"></div>
+        </div>
+      </div>
+      <div class="msg-body">Truck #TX204 needs scheduled maintenance tomorrow.</div>
+    </div>
+
+    <div class="message unread" data-type="service">
+      <div class="msg-header">
+        <div class="msg-left">
+          <div class="msg-icon service">📄</div>
+          <div class="msg-meta">
+            <div class="msg-title">Document Expiry Alert</div>
+            <span class="msg-tag service">Service</span>
+          </div>
+        </div>
+        <div class="msg-right">
+          <div class="msg-time">3 hours ago</div>
+          <div class="unread-dot"></div>
+        </div>
+      </div>
+      <div class="msg-body">Registration document for Truck #TX101 expires in 3 days.</div>
+    </div>
+
+    <div class="message unread" data-type="opportunity">
+      <div class="msg-header">
+        <div class="msg-left">
+          <div class="msg-icon opportunity">⛽</div>
+          <div class="msg-meta">
+            <div class="msg-title">Fuel Card Issued</div>
+            <span class="msg-tag opportunity">Opportunity</span>
+          </div>
+        </div>
+        <div class="msg-right">
+          <div class="msg-time">Yesterday</div>
+          <div class="unread-dot"></div>
+        </div>
+      </div>
+      <div class="msg-body">Your new Plus Card is ready for use at approved fuel stations.</div>
+    </div>
+
+    <div class="message unread" data-type="opportunity">
+      <div class="msg-header">
+        <div class="msg-left">
+          <div class="msg-icon opportunity">💳</div>
+          <div class="msg-meta">
+            <div class="msg-title">Payment Processed</div>
+            <span class="msg-tag opportunity">Opportunity</span>
+          </div>
+        </div>
+        <div class="msg-right">
+          <div class="msg-time">2 days ago</div>
+          <div class="unread-dot"></div>
+        </div>
+      </div>
+      <div class="msg-body">Payment for trip ID #8752 has been processed successfully.</div>
+    </div>
+
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">📭</div>
+    <div class="empty-text">No Messages</div>
+    <div class="empty-sub">Nothing in this category yet.</div>
+  </div>
+
+  <script>
+    function goBack() { history.back(); }
+
+    function filterTab(el) {
+      // update active tab
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+
+      const selected = el.dataset.tab;
+      const messages = document.querySelectorAll('.message');
+      let visible = 0;
+
+      messages.forEach((msg, i) => {
+        const match = selected === 'all' || msg.dataset.type === selected;
+        if (match) {
+          msg.classList.remove('hidden');
+          // re-trigger slide animation
+          msg.style.animation = 'none';
+          msg.offsetHeight; // reflow
+          msg.style.animation = `slideIn 0.28s ease ${i * 0.04}s both`;
+          visible++;
+        } else {
+          msg.classList.add('hidden');
+        }
+      });
+
+      // empty state
+      const empty = document.getElementById('empty-state');
+      empty.classList.toggle('show', visible === 0);
+    }
+
+    // Mark messages read on click
+    document.querySelectorAll('.message').forEach(msg => {
+      msg.addEventListener('click', () => {
+        msg.classList.remove('unread');
+        updateUnreadCount();
+      });
+    });
+
+    function updateUnreadCount() {
+      const count = document.querySelectorAll('.message.unread').length;
+      const badge = document.getElementById('unread-count');
+      badge.textContent = count > 0 ? `${count} New` : 'All Read';
+      badge.style.background = count > 0 ? 'var(--gold)' : 'rgba(46,204,113,0.2)';
+      badge.style.color = count > 0 ? '#000' : 'var(--opportunity)';
     }
   </script>
 
