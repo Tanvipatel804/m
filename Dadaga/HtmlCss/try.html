@@ -198,6 +198,7 @@
 </style>
 </head>
 <body>
+<div id="toast"></div>
 
 <!-- TOP BAR -->
 <header class="topbar">
@@ -320,12 +321,12 @@
           <div class="cost-row"><span class="cost-name">Shop Fees</span><span class="cost-amount">$125</span></div>
         </div>
         <div class="cost-total" style="margin-top:12px">
-          <div><div class="cost-total-label">Total Estimated Cost</div><a href="#" style="font-size:11px;color:var(--muted);text-decoration:none">SERVICE HISTORY LINK →</a></div>
+          <div><div class="cost-total-label">Total Estimated Cost</div><a href="#" data-action="service-history" style="font-size:11px;color:var(--muted);text-decoration:none">SERVICE HISTORY LINK →</a></div>
           <span class="cost-total-value">$1,525</span>
         </div>
         <div style="display:flex;gap:10px;margin-top:14px">
-          <button class="approve-btn" style="flex:1">APPROVE QUOTE</button>
-          <button style="flex:1;background:transparent;border:2px solid var(--gold);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:2px;cursor:pointer;border-radius:4px;transition:all 0.2s" onmouseover="this.style.background='rgba(245,197,24,0.1)'" onmouseout="this.style.background='transparent'">DECLINE</button>
+          <button class="approve-btn" data-action="approve-quote" style="flex:1">APPROVE QUOTE</button>
+          <button data-action="decline-quote" style="flex:1;background:transparent;border:2px solid var(--gold);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:2px;cursor:pointer;border-radius:4px;transition:all 0.2s" onmouseover="this.style.background='rgba(245,197,24,0.1)'" onmouseout="this.style.background='transparent'">DECLINE</button>
         </div>
       </div>
     </div>
@@ -335,7 +336,7 @@
       <div class="work-order-card">
         <div class="wo-header">
           <span class="wo-header-title">APPROVE REPAIR WORK ORDER #402</span>
-          <button class="approve-btn">✓ APPROVE</button>
+          <button class="approve-btn" data-action="approve-wo-header">✓ APPROVE</button>
         </div>
         <div class="wo-body">
           <div class="wo-line-items">
@@ -355,7 +356,7 @@
         <div class="wo-signature">
           <div class="sig-box"><div class="sig-text">Digital Signature</div><div class="sig-label">Digital Signature</div></div>
           <span class="validity-note">⏱ Estimate valid for 48 hours</span>
-          <button class="approve-btn" style="padding:12px 32px;font-size:16px">✓ APPROVE &amp; SIGN</button>
+          <button class="approve-btn" data-action="approve-sign" style="padding:12px 32px;font-size:16px">✓ APPROVE &amp; SIGN</button>
         </div>
       </div>
     </div>
@@ -472,6 +473,9 @@
         </tbody>
       </table>
     </div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:16px">
+      <button class="approve-btn" data-action="approve-finance">APPROVE QUOTE</button>
+    </div>
   </div><!-- /finance -->
 
 
@@ -533,7 +537,7 @@
         <div class="profile-role">Fleet Manager · Chicago Division</div>
       </div>
       <div style="margin-left:auto">
-        <button class="save-btn" style="padding:8px 20px;font-size:13px">EDIT PROFILE</button>
+        <button class="save-btn" data-action="edit-profile" style="padding:8px 20px;font-size:13px">EDIT PROFILE</button>
       </div>
     </div>
 
@@ -562,7 +566,7 @@
     </div>
 
     <div style="display:flex;justify-content:flex-end">
-      <button class="save-btn" onclick="this.textContent='✓ SAVED!';setTimeout(()=>this.textContent='SAVE CHANGES',2000)">SAVE CHANGES</button>
+      <button class="save-btn" data-action="save-settings">SAVE CHANGES</button>
     </div>
   </div><!-- /settings -->
 
@@ -570,10 +574,86 @@
 
 <style>
   @keyframes ripple { 0%{opacity:1} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)} }
+
+  /* ── TOAST ── */
+  #toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--navy-light); border:1px solid var(--gold); color:var(--white); font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; padding:14px 28px; border-radius:10px; z-index:9999; opacity:0; transition:all 0.35s cubic-bezier(.4,0,.2,1); pointer-events:none; box-shadow:0 8px 32px rgba(0,0,0,0.5); }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* ── MODAL OVERLAY ── */
+  #modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:8000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+  #modal-overlay.open { display:flex; }
+  .modal-box { background:var(--navy-mid); border:1px solid var(--border); border-radius:16px; padding:36px; max-width:460px; width:90%; box-shadow:0 32px 80px rgba(0,0,0,0.6); animation:fadeUp 0.3s ease both; text-align:center; }
+  .modal-icon { font-size:48px; margin-bottom:16px; }
+  .modal-title { font-family:'Barlow Condensed',sans-serif; font-size:26px; font-weight:900; margin-bottom:8px; }
+  .modal-sub { font-size:14px; color:var(--muted); margin-bottom:28px; line-height:1.6; }
+  .modal-actions { display:flex; gap:12px; justify-content:center; }
+  .modal-confirm { background:var(--gold); color:var(--navy); border:none; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:800; letter-spacing:2px; padding:12px 32px; cursor:pointer; border-radius:8px; transition:all 0.2s; }
+  .modal-confirm:hover { background:var(--gold-dark); }
+  .modal-cancel { background:transparent; color:var(--muted); border:1px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; padding:12px 24px; cursor:pointer; border-radius:8px; transition:all 0.2s; }
+  .modal-cancel:hover { border-color:var(--muted); color:var(--white); }
+
+  /* ── NOTIFICATION DROPDOWN ── */
+  #notif-dropdown { position:absolute; top:52px; right:0; width:320px; background:var(--navy-mid); border:1px solid var(--border); border-radius:12px; box-shadow:0 16px 48px rgba(0,0,0,0.5); z-index:500; display:none; overflow:hidden; }
+  #notif-dropdown.open { display:block; animation:fadeUp 0.25s ease both; }
+  .notif-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .notif-header-title { font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; }
+  .notif-clear { font-size:11px; color:var(--gold); cursor:pointer; font-weight:600; letter-spacing:1px; }
+  .notif-item { padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; display:flex; gap:12px; align-items:flex-start; }
+  .notif-item:hover { background:var(--navy-light); }
+  .notif-item:last-child { border-bottom:none; }
+  .notif-dot { width:8px; height:8px; border-radius:50%; background:var(--danger); flex-shrink:0; margin-top:5px; }
+  .notif-dot.warn { background:var(--gold); }
+  .notif-dot.ok { background:var(--success); }
+  .notif-text { font-size:13px; line-height:1.5; }
+  .notif-time { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  /* ── PROFILE EDIT ── */
+  .edit-input { background:var(--navy); border:1px solid rgba(245,197,24,0.4); color:var(--white); font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; padding:6px 12px; border-radius:6px; outline:none; width:100%; }
+  .edit-input:focus { border-color:var(--gold); }
+
+  /* ── DIAG CODE EXPAND ── */
+  .diag-detail { display:none; padding:12px 16px; background:var(--navy); border-radius:8px; margin-top:8px; font-size:13px; color:#c8d8e8; line-height:1.7; border-left:3px solid var(--gold); }
+  .diag-detail.open { display:block; animation:fadeUp 0.2s ease both; }
+  .diag-code.expanded { background:#233a55; }
+
+  /* Approved state */
+  .approved-banner { background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.4); border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:12px; }
+  .approved-banner-icon { font-size:28px; }
+  .approved-banner-text { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:var(--success); }
+  .approved-banner-sub { font-size:12px; color:var(--muted); margin-top:2px; }
 </style>
 
+<!-- NOTIFICATION DROPDOWN (attached to topbar) -->
+<div id="notif-dropdown">
+  <div class="notif-header">
+    <span class="notif-header-title">Notifications</span>
+    <span class="notif-clear" onclick="clearNotifs()">CLEAR ALL</span>
+  </div>
+  <div class="notif-item" onclick="goToNotif('diagnostics')">
+    <div class="notif-dot"></div>
+    <div><div class="notif-text">⚠️ Critical fault P0299 — Turbocharger underboost detected on Truck #402</div><div class="notif-time">2 hours ago</div></div>
+  </div>
+  <div class="notif-item" onclick="goToNotif('finance')">
+    <div class="notif-dot warn"></div>
+    <div><div class="notif-text">💰 Repair quote #402 is awaiting your approval — $1,573.25</div><div class="notif-time">4 hours ago</div></div>
+  </div>
+  <div class="notif-item" onclick="goToNotif('finance')">
+    <div class="notif-dot warn"></div>
+    <div><div class="notif-text">📦 Turbocharger Kit backordered — ETA updated to 24h</div><div class="notif-time">Yesterday</div></div>
+  </div>
+</div>
+
+<!-- MODAL OVERLAY -->
+<div id="modal-overlay">
+  <div class="modal-box" id="modal-box">
+    <!-- content injected by JS -->
+  </div>
+</div>
+
 <script>
-  // Downtime clock
+  /* ════════════════════════════════
+     CLOCK
+  ════════════════════════════════ */
   let totalSeconds = 52*3600 + 14*60 + 37;
   setInterval(() => {
     totalSeconds++;
@@ -584,7 +664,9 @@
     if (el) el.textContent = `${h}:${m}:${s}`;
   }, 1000);
 
-  // Sidebar navigation
+  /* ════════════════════════════════
+     SIDEBAR NAV
+  ════════════════════════════════ */
   const labels = {
     dashboard:   'VEHICLE HEALTH CENTER – TRUCK #402',
     diagnostics: 'DIAGNOSTICS – TRUCK #402',
@@ -592,15 +674,265 @@
     map:         'LOCATION – TRUCK #402',
     settings:    'SETTINGS & PREFERENCES'
   };
-
-  function switchView(el) {
-    const id = el.dataset.view;
+  function switchView(el, noScroll) {
+    const id = typeof el === 'string' ? el : el.dataset.view;
+    const icon = typeof el === 'string' ? document.querySelector(`[data-view="${id}"]`) : el;
     document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
+    if (icon) icon.classList.add('active');
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-' + id).classList.add('active');
     document.getElementById('topbar-label').textContent = labels[id] || '';
+    if (!noScroll) window.scrollTo({top:0, behavior:'smooth'});
   }
+
+  /* ════════════════════════════════
+     TOAST
+  ════════════════════════════════ */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ════════════════════════════════
+     MODAL
+  ════════════════════════════════ */
+  function showModal({icon, title, sub, confirmText, onConfirm, cancelText}) {
+    const box = document.getElementById('modal-box');
+    box.innerHTML = `
+      <div class="modal-icon">${icon||'❓'}</div>
+      <div class="modal-title">${title}</div>
+      <div class="modal-sub">${sub||''}</div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal()">${cancelText||'CANCEL'}</button>
+        <button class="modal-confirm" id="modal-confirm-btn">${confirmText||'CONFIRM'}</button>
+      </div>`;
+    document.getElementById('modal-confirm-btn').onclick = () => { closeModal(); if(onConfirm) onConfirm(); };
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+  document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+  /* ════════════════════════════════
+     NOTIFICATION BELL
+  ════════════════════════════════ */
+  const bellBtn = document.querySelector('.icon-btn[style*="position:relative"]');
+  const notifDD = document.getElementById('notif-dropdown');
+  // position dropdown relative to topbar-right
+  document.querySelector('.topbar-right').style.position = 'relative';
+  document.querySelector('.topbar-right').appendChild(notifDD);
+
+  bellBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    notifDD.classList.toggle('open');
+  });
+  document.addEventListener('click', () => notifDD.classList.remove('open'));
+  notifDD.addEventListener('click', e => e.stopPropagation());
+
+  function clearNotifs() {
+    notifDD.querySelectorAll('.notif-item').forEach(i => i.remove());
+    // clear badge
+    const badge = bellBtn.querySelector('span');
+    if (badge) badge.remove();
+    notifDD.classList.remove('open');
+    showToast('✓ All notifications cleared');
+  }
+  function goToNotif(view) {
+    notifDD.classList.remove('open');
+    switchView(view);
+  }
+
+  /* ════════════════════════════════
+     DASHBOARD — VIEW FULL WORK ORDER
+  ════════════════════════════════ */
+  document.querySelector('.work-order-btn').addEventListener('click', () => {
+    const wo = document.querySelector('.work-order-card');
+    wo.scrollIntoView({behavior:'smooth', block:'center'});
+    wo.style.transition = 'box-shadow 0.4s';
+    wo.style.boxShadow = '0 0 0 3px var(--gold)';
+    setTimeout(() => wo.style.boxShadow = '0 24px 60px rgba(0,0,0,0.4)', 1600);
+  });
+
+  /* ════════════════════════════════
+     DASHBOARD — APPROVE QUOTE
+  ════════════════════════════════ */
+  document.querySelector('[data-action="approve-quote"]').addEventListener('click', function() {
+    showModal({
+      icon: '💰',
+      title: 'Approve Repair Quote?',
+      sub: 'You are approving the repair quote of <strong style="color:var(--gold)">$1,525.00</strong> for Truck #402.<br>Parts will be ordered immediately.',
+      confirmText: 'YES, APPROVE',
+      onConfirm: () => {
+        this.textContent = '✓ APPROVED';
+        this.style.background = 'var(--success)';
+        this.style.clipPath = 'none';
+        this.style.borderRadius = '6px';
+        this.disabled = true;
+        document.querySelector('[data-action="decline-quote"]').style.display = 'none';
+        showToast('✅ Quote approved — Parts order initiated');
+      }
+    });
+  });
+
+  /* ════════════════════════════════
+     DASHBOARD — DECLINE QUOTE
+  ════════════════════════════════ */
+  document.querySelector('[data-action="decline-quote"]').addEventListener('click', function() {
+    showModal({
+      icon: '🚫',
+      title: 'Decline Quote?',
+      sub: 'Are you sure you want to decline this repair quote?<br>The mechanic will be notified to re-evaluate.',
+      confirmText: 'YES, DECLINE',
+      cancelText: 'GO BACK',
+      onConfirm: () => {
+        this.textContent = '✗ DECLINED';
+        this.style.background = 'rgba(255,69,69,0.15)';
+        this.style.color = 'var(--danger)';
+        this.style.border = '2px solid var(--danger)';
+        this.disabled = true;
+        document.querySelector('[data-action="approve-quote"]').style.display = 'none';
+        showToast('✗ Quote declined — Mechanic notified');
+      }
+    });
+  });
+
+  /* ════════════════════════════════
+     DASHBOARD — APPROVE (WO header)
+  ════════════════════════════════ */
+  document.querySelector('[data-action="approve-wo-header"]').addEventListener('click', function() {
+    document.querySelector('[data-action="approve-sign"]').click();
+  });
+
+  /* ════════════════════════════════
+     DASHBOARD — APPROVE & SIGN
+  ════════════════════════════════ */
+  document.querySelector('[data-action="approve-sign"]').addEventListener('click', function() {
+    showModal({
+      icon: '✍️',
+      title: 'Sign & Approve Work Order?',
+      sub: 'Digitally signing this work order authorizes repairs for Truck #402.<br>Total: <strong style="color:var(--gold)">$1,573.25</strong> · Valid for 48 hours.',
+      confirmText: 'SIGN & APPROVE',
+      onConfirm: () => {
+        const woCard = document.querySelector('.work-order-card');
+        const sig = document.querySelector('.sig-box');
+        sig.innerHTML = `<div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--success);margin-bottom:4px">✓ DIGITALLY SIGNED</div><div style="font-size:11px;color:#8099b5">James Kowalski · ${new Date().toLocaleString()}</div>`;
+        document.querySelector('[data-action="approve-sign"]').textContent = '✓ SIGNED';
+        document.querySelector('[data-action="approve-sign"]').style.background = 'var(--success)';
+        document.querySelector('[data-action="approve-sign"]').disabled = true;
+        document.querySelector('[data-action="approve-wo-header"]').textContent = '✓ APPROVED';
+        document.querySelector('[data-action="approve-wo-header"]').style.background = 'var(--success)';
+        document.querySelector('[data-action="approve-wo-header"]').disabled = true;
+        showToast('✅ Work Order #402 approved & signed');
+      }
+    });
+  });
+
+  /* ════════════════════════════════
+     DASHBOARD — SERVICE HISTORY LINK
+  ════════════════════════════════ */
+  document.querySelector('[data-action="service-history"]').addEventListener('click', e => {
+    e.preventDefault();
+    switchView('finance');
+  });
+
+  /* ════════════════════════════════
+     DASHBOARD — MAP MINI PANEL (clickable)
+  ════════════════════════════════ */
+  document.querySelector('.map-panel').style.cursor = 'pointer';
+  document.querySelector('.map-panel').addEventListener('click', () => switchView('map'));
+  document.querySelector('.map-panel').title = 'View full map';
+
+  /* ════════════════════════════════
+     DIAGNOSTICS — EXPAND CODE ROWS
+  ════════════════════════════════ */
+  const diagDetails = {
+    'P0299': 'Turbocharger/Supercharger Underboost. ECM detected boost pressure below threshold. Root cause confirmed as failed turbocharger unit and blown gasket. Recommend full turbocharger replacement.',
+    'P0401': 'EGR flow is insufficient. Likely related to turbocharger failure causing abnormal exhaust backpressure. Should clear after turbocharger replacement.',
+    'P0087': 'Fuel rail pressure is too low. Possible fuel pump wear or partially clogged fuel filter. Monitor after turbocharger repair — may resolve under normal load.',
+    'B1045': 'Coolant temp sensor reading outside expected range. Sensor drift detected; may require recalibration or replacement. Low priority.',
+    'U0100': 'Lost CAN bus communication with ECM. Code was triggered during diagnostic procedure and has been resolved. No action required.',
+  };
+  document.querySelectorAll('.diag-code').forEach(row => {
+    const id = row.querySelector('.diag-code-id').textContent.trim();
+    const detail = document.createElement('div');
+    detail.className = 'diag-detail';
+    detail.textContent = diagDetails[id] || 'No additional details available.';
+    row.appendChild(detail);
+    row.addEventListener('click', () => {
+      const isOpen = detail.classList.contains('open');
+      // close all others
+      document.querySelectorAll('.diag-detail').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.diag-code').forEach(r => r.classList.remove('expanded'));
+      if (!isOpen) { detail.classList.add('open'); row.classList.add('expanded'); }
+    });
+  });
+
+  /* ════════════════════════════════
+     FINANCE — APPROVE QUOTE buttons
+  ════════════════════════════════ */
+  document.querySelectorAll('[data-action="approve-finance"]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      showModal({
+        icon: '💰',
+        title: 'Approve Repair Quote?',
+        sub: 'Approving quote of <strong style="color:var(--gold)">$1,573.25</strong> for Truck #402. Parts order will be initiated immediately.',
+        confirmText: 'YES, APPROVE',
+        onConfirm: () => {
+          document.querySelectorAll('[data-action="approve-finance"]').forEach(b => {
+            b.textContent = '✓ APPROVED';
+            b.style.background = 'var(--success)';
+            b.style.clipPath = 'none';
+            b.style.borderRadius = '6px';
+            b.disabled = true;
+          });
+          // update invoice row status
+          const pendingTag = document.querySelector('.invoice-table .tag-warn');
+          if (pendingTag) { pendingTag.className = 'tag tag-success'; pendingTag.textContent = 'Approved'; }
+          showToast('✅ Quote approved — Parts order initiated');
+        }
+      });
+    });
+  });
+
+  /* ════════════════════════════════
+     SETTINGS — EDIT PROFILE
+  ════════════════════════════════ */
+  const editBtn = document.querySelector('[data-action="edit-profile"]');
+  let editMode = false;
+  editBtn.addEventListener('click', function() {
+    const nameEl = document.querySelector('.profile-name');
+    const roleEl = document.querySelector('.profile-role');
+    if (!editMode) {
+      nameEl.innerHTML = `<input class="edit-input" id="edit-name" value="${nameEl.textContent}" style="font-size:18px">`;
+      roleEl.innerHTML = `<input class="edit-input" id="edit-role" value="${roleEl.textContent}" style="font-size:13px;margin-top:4px">`;
+      this.textContent = 'SAVE PROFILE';
+      this.style.background = 'var(--success)';
+      editMode = true;
+      document.getElementById('edit-name').focus();
+    } else {
+      const newName = document.getElementById('edit-name').value || 'James Kowalski';
+      const newRole = document.getElementById('edit-role').value || 'Fleet Manager';
+      nameEl.textContent = newName;
+      roleEl.textContent = newRole;
+      this.textContent = 'EDIT PROFILE';
+      this.style.background = 'var(--gold)';
+      editMode = false;
+      showToast('✓ Profile updated');
+    }
+  });
+
+  /* ════════════════════════════════
+     SETTINGS — SAVE CHANGES
+  ════════════════════════════════ */
+  document.querySelector('[data-action="save-settings"]').addEventListener('click', function() {
+    this.textContent = '✓ SAVED!';
+    this.style.background = 'var(--success)';
+    showToast('✓ Settings saved successfully');
+    setTimeout(() => { this.textContent = 'SAVE CHANGES'; this.style.background = 'var(--gold)'; }, 2500);
+  });
 </script>
 </body>
 </html>
