@@ -1,938 +1,2496 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vehicle Health Center – Truck #402</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --navy: #0d1b2e; --navy-mid: #142238; --navy-light: #1c2f48;
-    --gold: #f5c518; --gold-dark: #d4a800; --white: #ffffff;
-    --muted: #8099b5; --danger: #ff4545; --success: #2ecc71;
-    --border: rgba(255,255,255,0.07);
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--navy); font-family:'Barlow',sans-serif; color:var(--white); min-height:100vh; overflow-x:hidden; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Health Center – Truck #402</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0d1b2e;
+      --navy-mid: #142238;
+      --navy-light: #1c2f48;
+      --gold: #f5c518;
+      --gold-dark: #d4a800;
+      --white: #ffffff;
+      --muted: #8099b5;
+      --danger: #ff4545;
+      --success: #2ecc71;
+      --border: rgba(255, 255, 255, 0.07);
+    }
 
-  /* TOP BAR */
-  .topbar { background:var(--navy-mid); border-bottom:1px solid var(--border); padding:0 32px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
-  .topbar-left { display:flex; align-items:center; gap:16px; }
-  .topbar-title { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:600; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
-  .topbar-truck { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; letter-spacing:1px; }
-  .status-badge { background:var(--gold); color:var(--navy); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:2px; padding:5px 14px; display:flex; align-items:center; gap:6px; clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%); }
-  .topbar-right { display:flex; align-items:center; gap:20px; }
-  .icon-btn { width:32px; height:32px; border-radius:50%; background:var(--navy-light); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); font-size:14px; transition:all 0.2s; }
-  .icon-btn:hover { background:var(--gold); color:var(--navy); }
-  .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#4e8fd4,#2c5f8a); border:2px solid var(--gold); }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  /* MAIN */
-  .main { display:grid; grid-template-columns:64px 1fr; min-height:calc(100vh - 56px); }
+    body {
+      background: var(--navy);
+      font-family: 'Barlow', sans-serif;
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-  /* SIDEBAR */
-  .sidebar { background:var(--navy-mid); border-right:1px solid var(--border); display:flex; flex-direction:column; align-items:center; padding:24px 0; gap:8px; position:sticky; top:56px; height:calc(100vh - 56px); }
-  .nav-icon { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); font-size:18px; transition:all 0.2s; position:relative; }
-  .nav-icon:hover { background:rgba(245,197,24,0.15); color:var(--gold); }
-  .nav-icon.active { background:var(--gold); color:var(--navy); }
-  .nav-icon.active::after { content:''; position:absolute; right:-12px; width:3px; height:24px; background:var(--gold); border-radius:2px 0 0 2px; }
-  .nav-icon::before { content:attr(data-tip); position:absolute; left:52px; background:var(--navy-light); color:var(--white); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:5px 10px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 0.2s; border:1px solid var(--border); z-index:200; }
-  .nav-icon:hover::before { opacity:1; }
-  .nav-spacer { flex:1; }
+    /* TOP BAR */
+    .topbar {
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-  /* VIEWS */
-  .view { display:none; padding:28px 32px; flex-direction:column; gap:24px; animation:fadeUp 0.35s ease both; }
-  .view.active { display:flex; }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
 
-  /* COMMON */
-  .section-header { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; letter-spacing:1px; text-transform:uppercase; border-left:4px solid var(--gold); padding-left:12px; margin-bottom:16px; }
-  .panel { background:var(--navy-mid); border:1px solid var(--border); border-radius:12px; padding:28px; }
-  .tag { display:inline-block; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:100px; }
-  .tag-warn { background:rgba(245,197,24,0.15); color:var(--gold); border:1px solid rgba(245,197,24,0.3); }
-  .tag-danger { background:rgba(255,69,69,0.1); color:var(--danger); border:1px solid rgba(255,69,69,0.3); }
-  .tag-success { background:rgba(46,204,113,0.1); color:var(--success); border:1px solid rgba(46,204,113,0.3); }
-  .approve-btn { background:var(--gold); color:var(--navy); border:none; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; padding:10px 24px; cursor:pointer; text-transform:uppercase; clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%); transition:all 0.2s; }
-  .approve-btn:hover { background:var(--gold-dark); transform:scale(1.03); }
+    .topbar-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
 
-  /* ── DASHBOARD ── */
-  .overview-card { background:var(--navy-mid); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  .overview-inner { display:grid; grid-template-columns:1fr auto auto; align-items:stretch; }
-  .overview-info { padding:28px 32px; }
-  .overview-title { font-family:'Barlow Condensed',sans-serif; font-size:28px; font-weight:900; letter-spacing:1px; margin-bottom:20px; }
-  .overview-fields { display:flex; gap:40px; flex-wrap:wrap; }
-  .field { display:flex; flex-direction:column; gap:4px; }
-  .field-label { font-size:11px; font-weight:600; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
-  .field-value { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; }
-  .downtime-panel { background:var(--danger); padding:28px 32px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; min-width:220px; }
-  .downtime-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; opacity:0.85; }
-  .downtime-sub { font-size:11px; letter-spacing:2px; opacity:0.7; text-transform:uppercase; }
-  .clock-digits { font-family:'Share Tech Mono',monospace; font-size:40px; font-weight:400; line-height:1; letter-spacing:2px; }
-  .map-panel { background:#1a2e45; min-width:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; gap:6px; position:relative; overflow:hidden; }
-  .map-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px); background-size:20px 20px; }
-  .map-road-h { position:absolute; width:100%; height:3px; background:rgba(255,255,255,0.12); }
-  .map-road-v { position:absolute; width:3px; height:100%; background:rgba(255,255,255,0.12); }
-  .map-pin { font-size:22px; position:relative; z-index:2; filter:drop-shadow(0 2px 6px rgba(245,197,24,0.8)); }
-  .map-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; color:var(--gold); text-align:center; position:relative; z-index:2; text-transform:uppercase; }
-  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-  .tracker-timeline { display:flex; flex-direction:column; }
-  .tracker-step { display:flex; align-items:flex-start; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); position:relative; }
-  .tracker-step:last-child { border-bottom:none; }
-  .step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; margin-top:2px; position:relative; z-index:1; }
-  .step-dot.done { background:var(--gold); color:var(--navy); }
-  .step-dot.active { background:transparent; border:3px solid var(--gold); color:var(--gold); animation:pulse 1.5s ease infinite; }
-  .step-dot.pending { background:var(--navy-light); border:2px solid var(--border); color:var(--muted); }
-  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,197,24,0.4)} 50%{box-shadow:0 0 0 8px rgba(245,197,24,0)} }
-  .step-connector { position:absolute; left:13px; top:42px; width:2px; height:28px; background:var(--border); }
-  .step-connector.done { background:var(--gold); }
-  .step-body { flex:1; }
-  .step-title { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; color:var(--muted); }
-  .step-title.active { color:var(--white); font-size:18px; }
-  .diagnosis-card { background:var(--navy); border:1px solid var(--border); border-radius:8px; padding:12px 16px; margin-top:6px; }
-  .diagnosis-title { font-size:10px; font-weight:700; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:6px; }
-  .diagnosis-text { font-size:13px; color:#c8d8e8; line-height:1.5; }
-  .boost-chart { margin-top:8px; height:36px; }
-  .boost-chart svg { width:100%; height:100%; }
-  .truck-visual { float:right; width:200px; height:120px; margin:-10px -10px 0 16px; }
-  .truck-body { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:60px; position:relative; }
-  .fault-glow { position:absolute; width:40px; height:40px; background:radial-gradient(circle,rgba(255,69,69,0.8) 0%,transparent 70%); top:20px; left:60px; border-radius:50%; animation:glow 1s ease infinite alternate; }
-  @keyframes glow { from{transform:scale(1);opacity:0.6} to{transform:scale(1.3);opacity:1} }
-  .work-order-btn { margin-top:16px; padding:10px 20px; border:2px solid var(--muted); background:transparent; color:var(--white); font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
-  .work-order-btn:hover { border-color:var(--gold); color:var(--gold); }
-  .cost-list { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
-  .cost-row { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:var(--navy-light); border-radius:8px; border:1px solid var(--border); transition:all 0.2s; }
-  .cost-row:hover { border-color:rgba(245,197,24,0.3); }
-  .cost-name { font-size:14px; font-weight:500; }
-  .cost-badge { font-size:10px; color:var(--danger); background:rgba(255,69,69,0.1); border:1px solid rgba(255,69,69,0.3); padding:2px 8px; border-radius:100px; margin-left:8px; }
-  .cost-amount { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; }
-  .cost-total { display:flex; justify-content:space-between; align-items:center; padding:16px; background:var(--navy); border-radius:8px; border:1px solid rgba(245,197,24,0.3); margin-top:4px; }
-  .cost-total-label { font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
-  .cost-total-value { font-family:'Barlow Condensed',sans-serif; font-size:28px; font-weight:900; color:var(--gold); }
-  .mini-chart { height:80px; margin-bottom:16px; }
-  .mini-chart svg { width:100%; height:100%; }
-  .work-order-card { background:var(--white); color:var(--navy); border-radius:12px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.4); }
-  .wo-header { background:var(--navy); color:var(--white); padding:20px 28px; display:flex; justify-content:space-between; align-items:center; }
-  .wo-header-title { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; letter-spacing:1px; }
-  .wo-body { padding:28px; display:grid; grid-template-columns:1fr 1fr; gap:28px; }
-  .wo-line-items { display:flex; flex-direction:column; }
-  .wo-item { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid #e8eef4; font-size:15px; }
-  .wo-item:last-child { border-bottom:none; }
-  .wo-item-name { font-weight:500; color:#2c3e50; }
-  .wo-item-price { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--navy); }
-  .wo-totals { background:#f8fafc; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px; justify-content:space-between; }
-  .wo-subtotal-row { display:flex; justify-content:space-between; font-size:14px; color:#5a6a7a; }
-  .wo-grand-total { background:var(--navy); color:var(--white); border-radius:8px; padding:16px 20px; text-align:center; }
-  .wo-grand-label { font-size:11px; letter-spacing:2px; opacity:0.7; text-transform:uppercase; }
-  .wo-grand-value { font-family:'Barlow Condensed',sans-serif; font-size:36px; font-weight:900; color:var(--gold); }
-  .wo-signature { padding:16px 28px 24px; border-top:1px solid #e8eef4; display:flex; align-items:center; justify-content:space-between; }
-  .sig-box { border:1px solid #ccd6e0; border-radius:8px; padding:12px 24px; min-width:200px; text-align:center; }
-  .sig-text { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:600; font-style:italic; color:var(--navy); border-bottom:1px solid #ccd6e0; padding-bottom:6px; margin-bottom:4px; }
-  .sig-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#8099b5; }
-  .validity-note { font-size:12px; color:#8099b5; font-style:italic; }
+    .topbar-truck {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
 
-  /* ── DIAGNOSTICS ── */
-  .diag-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-  .diag-stat { background:var(--navy-mid); border:1px solid var(--border); border-radius:10px; padding:20px; text-align:center; }
-  .diag-stat-val { font-family:'Barlow Condensed',sans-serif; font-size:32px; font-weight:900; }
-  .diag-stat-lbl { font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-top:4px; }
-  .gauge-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-  .gauge { background:var(--navy-mid); border:1px solid var(--border); border-radius:10px; padding:20px; text-align:center; }
-  .gauge-ring { width:80px; height:80px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:800; }
-  .gauge-name { font-size:12px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
-  .diag-code-list { display:flex; flex-direction:column; gap:10px; }
-  .diag-code { display:flex; align-items:center; gap:16px; padding:16px; background:var(--navy-light); border-radius:10px; border-left:4px solid var(--danger); transition:all 0.2s; cursor:pointer; }
-  .diag-code:hover { background:#233a55; }
-  .diag-code.warn { border-left-color:var(--gold); }
-  .diag-code.ok { border-left-color:var(--success); }
-  .diag-code-id { font-family:'Share Tech Mono',monospace; font-size:14px; color:var(--gold); min-width:80px; }
-  .diag-code-desc { font-size:14px; flex:1; }
-  .diag-code-time { font-size:11px; color:var(--muted); margin-top:2px; }
+    .status-badge {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      padding: 5px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
 
-  /* ── FINANCE ── */
-  .finance-kpi { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-  .kpi-card { background:var(--navy-mid); border:1px solid var(--border); border-radius:10px; padding:20px; }
-  .kpi-val { font-family:'Barlow Condensed',sans-serif; font-size:30px; font-weight:900; }
-  .kpi-lbl { font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-top:4px; }
-  .kpi-trend { font-size:12px; margin-top:6px; }
-  .kpi-trend.up { color:var(--danger); }
-  .kpi-trend.down { color:var(--success); }
-  .invoice-table { width:100%; border-collapse:collapse; }
-  .invoice-table th { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
-  .invoice-table td { padding:14px; font-size:14px; border-bottom:1px solid var(--border); }
-  .invoice-table tr:last-child td { border-bottom:none; }
-  .invoice-table tr:hover td { background:var(--navy-light); }
-  .big-chart { height:160px; margin:8px 0 16px; }
-  .big-chart svg { width:100%; height:100%; }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-  /* ── MAP ── */
-  .map-full { background:#1a2e45; border-radius:12px; height:380px; position:relative; overflow:hidden; border:1px solid var(--border); }
-  .map-full-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px); background-size:40px 40px; }
-  .map-full-road-h { position:absolute; width:100%; background:rgba(255,255,255,0.15); }
-  .map-full-road-v { position:absolute; height:100%; background:rgba(255,255,255,0.15); }
-  .map-full-pin { position:absolute; font-size:36px; transform:translate(-50%,-100%); filter:drop-shadow(0 4px 12px rgba(245,197,24,1)); animation:bounce 2s ease infinite; }
-  @keyframes bounce { 0%,100%{transform:translate(-50%,-100%)} 50%{transform:translate(-50%,-115%)} }
-  .map-full-label { position:absolute; background:var(--gold); color:var(--navy); font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; padding:4px 12px; border-radius:4px; transform:translateX(-50%); white-space:nowrap; }
-  .map-info-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-  .map-info-card { background:var(--navy-mid); border:1px solid var(--border); border-radius:10px; padding:20px; }
-  .map-info-title { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:10px; }
-  .map-info-val { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; }
-  .map-info-sub { font-size:12px; color:var(--muted); margin-top:4px; }
-  @keyframes ripple { 0%{opacity:1} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)} }
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
 
-  /* ── SETTINGS ── */
-  .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-  .setting-group { display:flex; flex-direction:column; gap:12px; }
-  .setting-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:var(--navy-light); border-radius:8px; border:1px solid var(--border); }
-  .setting-label { font-size:14px; font-weight:500; }
-  .setting-sub { font-size:11px; color:var(--muted); margin-top:2px; }
-  .toggle { width:44px; height:24px; background:var(--navy); border-radius:100px; position:relative; cursor:pointer; border:1px solid var(--border); transition:background 0.3s; flex-shrink:0; }
-  .toggle.on { background:var(--gold); }
-  .toggle::after { content:''; position:absolute; width:18px; height:18px; background:var(--white); border-radius:50%; top:2px; left:2px; transition:left 0.3s; }
-  .toggle.on::after { left:22px; }
-  .select-input { background:var(--navy); border:1px solid var(--border); color:var(--white); font-family:'Barlow',sans-serif; font-size:13px; padding:6px 12px; border-radius:6px; cursor:pointer; outline:none; }
-  .profile-card { display:flex; align-items:center; gap:16px; padding:20px; background:var(--navy-light); border-radius:10px; border:1px solid var(--border); }
-  .profile-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#4e8fd4,#2c5f8a); border:3px solid var(--gold); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
-  .profile-name { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:800; }
-  .profile-role { font-size:12px; color:var(--muted); margin-top:2px; }
-  .save-btn { background:var(--gold); color:var(--navy); border:none; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:800; letter-spacing:2px; padding:12px 32px; cursor:pointer; border-radius:6px; transition:all 0.2s; }
-  .save-btn:hover { background:var(--gold-dark); }
-</style>
+    .icon-btn:hover {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4e8fd4, #2c5f8a);
+      border: 2px solid var(--gold);
+    }
+
+    /* MAIN */
+    .main {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: var(--navy-mid);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+      gap: 8px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+    }
+
+    .nav-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 18px;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-icon:hover {
+      background: rgba(245, 197, 24, 0.15);
+      color: var(--gold);
+    }
+
+    .nav-icon.active {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .nav-icon.active::after {
+      content: '';
+      position: absolute;
+      right: -12px;
+      width: 3px;
+      height: 24px;
+      background: var(--gold);
+      border-radius: 2px 0 0 2px;
+    }
+
+    .nav-icon::before {
+      content: attr(data-tip);
+      position: absolute;
+      left: 52px;
+      background: var(--navy-light);
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      border: 1px solid var(--border);
+      z-index: 200;
+    }
+
+    .nav-icon:hover::before {
+      opacity: 1;
+    }
+
+    .nav-spacer {
+      flex: 1;
+    }
+
+    /* VIEWS */
+    .view {
+      display: none;
+      padding: 28px 32px;
+      flex-direction: column;
+      gap: 24px;
+      animation: fadeUp 0.35s ease both;
+    }
+
+    .view.active {
+      display: flex;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* COMMON */
+    .section-header {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-left: 4px solid var(--gold);
+      padding-left: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    .tag-warn {
+      background: rgba(245, 197, 24, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(245, 197, 24, 0.3);
+    }
+
+    .tag-danger {
+      background: rgba(255, 69, 69, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(255, 69, 69, 0.3);
+    }
+
+    .tag-success {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .approve-btn {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      padding: 10px 24px;
+      cursor: pointer;
+      text-transform: uppercase;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      transition: all 0.2s;
+    }
+
+    .approve-btn:hover {
+      background: var(--gold-dark);
+      transform: scale(1.03);
+    }
+
+    /* ── DASHBOARD ── */
+    .overview-card {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .overview-inner {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: stretch;
+    }
+
+    .overview-info {
+      padding: 28px 32px;
+    }
+
+    .overview-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .overview-fields {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .field-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .downtime-panel {
+      background: var(--danger);
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      min-width: 220px;
+    }
+
+    .downtime-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .downtime-sub {
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    .clock-digits {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+
+    .map-panel {
+      background: #1a2e45;
+      min-width: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .map-road-h {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .map-road-v {
+      position: absolute;
+      width: 3px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .map-pin {
+      font-size: 22px;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 2px 6px rgba(245, 197, 24, 0.8));
+    }
+
+    .map-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--gold);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      text-transform: uppercase;
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .tracker-timeline {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tracker-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .tracker-step:last-child {
+      border-bottom: none;
+    }
+
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-dot.done {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .step-dot.active {
+      background: transparent;
+      border: 3px solid var(--gold);
+      color: var(--gold);
+      animation: pulse 1.5s ease infinite;
+    }
+
+    .step-dot.pending {
+      background: var(--navy-light);
+      border: 2px solid var(--border);
+      color: var(--muted);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 197, 24, 0.4)
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(245, 197, 24, 0)
+      }
+    }
+
+    .step-connector {
+      position: absolute;
+      left: 13px;
+      top: 42px;
+      width: 2px;
+      height: 28px;
+      background: var(--border);
+    }
+
+    .step-connector.done {
+      background: var(--gold);
+    }
+
+    .step-body {
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .step-title.active {
+      color: var(--white);
+      font-size: 18px;
+    }
+
+    .diagnosis-card {
+      background: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 6px;
+    }
+
+    .diagnosis-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .diagnosis-text {
+      font-size: 13px;
+      color: #c8d8e8;
+      line-height: 1.5;
+    }
+
+    .boost-chart {
+      margin-top: 8px;
+      height: 36px;
+    }
+
+    .boost-chart svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .truck-visual {
+      float: right;
+      width: 200px;
+      height: 120px;
+      margin: -10px -10px 0 16px;
+    }
+
+    .truck-body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      position: relative;
+    }
+
+    .fault-glow {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, rgba(255, 69, 69, 0.8) 0%, transparent 70%);
+      top: 20px;
+      left: 60px;
+      border-radius: 50%;
+      animation: glow 1s ease infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        transform: scale(1);
+        opacity: 0.6
+      }
+
+      to {
+        transform: scale(1.3);
+        opacity: 1
+      }
+    }
+
+    .work-order-btn {
+      margin-top: 16px;
+      padding: 10px 20px;
+      border: 2px solid var(--muted);
+      background: transparent;
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .work-order-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .cost-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--navy-light);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .cost-row:hover {
+      border-color: rgba(245, 197, 24, 0.3);
+    }
+
+    .cost-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .cost-badge {
+      font-size: 10px;
+      color: var(--danger);
+      background: rgba(255, 69, 69, 0.1);
+      border: 1px solid rgba(255, 69, 69, 0.3);
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-left: 8px;
+    }
+
+    .cost-amount {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .cost-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: var(--navy);
+      border-radius: 8px;
+      border: 1px solid rgba(245, 197, 24, 0.3);
+      margin-top: 4px;
+    }
+
+    .cost-total-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .cost-total-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .mini-chart {
+      height: 80px;
+      margin-bottom: 16px;
+    }
+
+    .mini-chart svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .work-order-card {
+      background: var(--white);
+      color: var(--navy);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .wo-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wo-header-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .wo-body {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .wo-line-items {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #e8eef4;
+      font-size: 15px;
+    }
+
+    .wo-item:last-child {
+      border-bottom: none;
+    }
+
+    .wo-item-name {
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    .wo-item-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .wo-totals {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .wo-subtotal-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #5a6a7a;
+    }
+
+    .wo-grand-total {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .wo-grand-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    .wo-grand-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .wo-signature {
+      padding: 16px 28px 24px;
+      border-top: 1px solid #e8eef4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sig-box {
+      border: 1px solid #ccd6e0;
+      border-radius: 8px;
+      padding: 12px 24px;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .sig-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--navy);
+      border-bottom: 1px solid #ccd6e0;
+      padding-bottom: 6px;
+      margin-bottom: 4px;
+    }
+
+    .sig-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8099b5;
+    }
+
+    .validity-note {
+      font-size: 12px;
+      color: #8099b5;
+      font-style: italic;
+    }
+
+    /* ── DIAGNOSTICS ── */
+    .diag-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .diag-stat {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .diag-stat-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+    }
+
+    .diag-stat-lbl {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .gauge-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .gauge {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .gauge-ring {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .gauge-name {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .diag-code-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .diag-code {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--navy-light);
+      border-radius: 10px;
+      border-left: 4px solid var(--danger);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .diag-code:hover {
+      background: #233a55;
+    }
+
+    .diag-code.warn {
+      border-left-color: var(--gold);
+    }
+
+    .diag-code.ok {
+      border-left-color: var(--success);
+    }
+
+    .diag-code-id {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px;
+      color: var(--gold);
+      min-width: 80px;
+    }
+
+    .diag-code-desc {
+      font-size: 14px;
+      flex: 1;
+    }
+
+    .diag-code-time {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── FINANCE ── */
+    .finance-kpi {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .kpi-card {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .kpi-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .kpi-lbl {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .kpi-trend {
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .kpi-trend.up {
+      color: var(--danger);
+    }
+
+    .kpi-trend.down {
+      color: var(--success);
+    }
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .invoice-table th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .invoice-table td {
+      padding: 14px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .invoice-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .invoice-table tr:hover td {
+      background: var(--navy-light);
+    }
+
+    .big-chart {
+      height: 160px;
+      margin: 8px 0 16px;
+    }
+
+    .big-chart svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── MAP ── */
+    .map-full {
+      background: #1a2e45;
+      border-radius: 12px;
+      height: 380px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .map-full-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .map-full-road-h {
+      position: absolute;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .map-full-road-v {
+      position: absolute;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .map-full-pin {
+      position: absolute;
+      font-size: 36px;
+      transform: translate(-50%, -100%);
+      filter: drop-shadow(0 4px 12px rgba(245, 197, 24, 1));
+      animation: bounce 2s ease infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translate(-50%, -100%)
+      }
+
+      50% {
+        transform: translate(-50%, -115%)
+      }
+    }
+
+    .map-full-label {
+      position: absolute;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 4px;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .map-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .map-info-card {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .map-info-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .map-info-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .map-info-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    @keyframes ripple {
+      0% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5)
+      }
+    }
+
+    /* ── SETTINGS ── */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--navy-light);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .setting-label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .setting-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: var(--navy);
+      border-radius: 100px;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+
+    .toggle.on {
+      background: var(--gold);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: var(--white);
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: left 0.3s;
+    }
+
+    .toggle.on::after {
+      left: 22px;
+    }
+
+    .select-input {
+      background: var(--navy);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: var(--navy-light);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4e8fd4, #2c5f8a);
+      border: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .profile-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .profile-role {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .save-btn {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      padding: 12px 32px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .save-btn:hover {
+      background: var(--gold-dark);
+    }
+  </style>
 </head>
+
 <body>
-<div id="toast"></div>
+  <div id="toast"></div>
 
-<!-- TOP BAR -->
-<header class="topbar">
-  <div class="topbar-left">
-    <span class="topbar-title">Fleet Management</span>
-    <span style="color:var(--border)">|</span>
-    <span class="topbar-truck" id="topbar-label">VEHICLE HEALTH CENTER – TRUCK #402</span>
-  </div>
-  <div class="topbar-right">
-    <div class="status-badge">🔧 STATUS: IN MAINTENANCE</div>
-    <div class="icon-btn" style="position:relative">
-      🔔
-      <span style="position:absolute;top:-4px;right:-4px;background:var(--danger);color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1">3</span>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-title">Fleet Management</span>
+      <span style="color:var(--border)">|</span>
+      <span class="topbar-truck" id="topbar-label">VEHICLE HEALTH CENTER – TRUCK #402</span>
     </div>
-    <div class="avatar"></div>
-  </div>
-</header>
+    <div class="topbar-right">
+      <div class="status-badge">🔧 STATUS: IN MAINTENANCE</div>
+      <div class="icon-btn" style="position:relative">
+        🔔
+        <span
+          style="position:absolute;top:-4px;right:-4px;background:var(--danger);color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1">3</span>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </header>
 
-<div class="main">
+  <div class="main">
 
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="nav-icon active" data-view="dashboard"    data-tip="Dashboard"   onclick="switchView(this)">⊞</div>
-    <div class="nav-icon"        data-view="diagnostics"  data-tip="Diagnostics" onclick="switchView(this)">🔧</div>
-    <div class="nav-icon"        data-view="finance"      data-tip="Finance"     onclick="switchView(this)">💰</div>
-    <div class="nav-icon"        data-view="map"          data-tip="Location"    onclick="switchView(this)">📍</div>
-    <div class="nav-spacer"></div>
-    <div class="nav-icon"        data-view="settings"     data-tip="Settings"    onclick="switchView(this)">⚙️</div>
-  </nav>
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="nav-icon active" data-view="dashboard" data-tip="Dashboard" onclick="switchView(this)">⊞</div>
+      <div class="nav-icon" data-view="diagnostics" data-tip="Diagnostics" onclick="switchView(this)">🔧</div>
+      <div class="nav-icon" data-view="finance" data-tip="Finance" onclick="switchView(this)">💰</div>
+      <div class="nav-icon" data-view="map" data-tip="Location" onclick="switchView(this)">📍</div>
+      <div class="nav-spacer"></div>
+      <div class="nav-icon" data-view="settings" data-tip="Settings" onclick="switchView(this)">⚙️</div>
+    </nav>
 
-  <!-- ═══════════════════════════════════════
+    <!-- ═══════════════════════════════════════
        VIEW 1 — DASHBOARD
   ═══════════════════════════════════════ -->
-  <div class="view active" id="view-dashboard">
+    <div class="view active" id="view-dashboard">
 
-    <div class="overview-card">
-      <div class="overview-inner">
-        <div class="overview-info">
-          <div class="overview-title">VEHICLE HEALTH CENTER – TRUCK #402</div>
-          <div class="overview-fields">
-            <div class="field"><span class="field-label">Model</span><span class="field-value">Freightliner Cascadia</span></div>
-            <div class="field"><span class="field-label">Type</span><span class="field-value">Sleeper Cab</span></div>
-            <div class="field"><span class="field-label">Fuel</span><span class="field-value">Diesel</span></div>
-            <div class="field"><span class="field-label">Started By</span><span class="field-value" style="font-size:14px;margin-top:4px"><span class="tag tag-warn">Clocked</span></span></div>
-            <div class="field"><span class="field-label">Location</span><span class="field-value" style="font-size:15px;color:var(--gold)">Chicago Service Center</span></div>
+      <div class="overview-card">
+        <div class="overview-inner">
+          <div class="overview-info">
+            <div class="overview-title">VEHICLE HEALTH CENTER – TRUCK #402</div>
+            <div class="overview-fields">
+              <div class="field"><span class="field-label">Model</span><span class="field-value">Freightliner
+                  Cascadia</span></div>
+              <div class="field"><span class="field-label">Type</span><span class="field-value">Sleeper Cab</span></div>
+              <div class="field"><span class="field-label">Fuel</span><span class="field-value">Diesel</span></div>
+              <div class="field"><span class="field-label">Started By</span><span class="field-value"
+                  style="font-size:14px;margin-top:4px"><span class="tag tag-warn">Clocked</span></span></div>
+              <div class="field"><span class="field-label">Location</span><span class="field-value"
+                  style="font-size:15px;color:var(--gold)">Chicago Service Center</span></div>
+            </div>
+          </div>
+          <div class="downtime-panel">
+            <span class="downtime-label">⏱ Downtime Clock</span>
+            <span class="clock-digits" id="clock">52:14:37</span>
+            <span class="downtime-sub">Counting</span>
+            <div style="margin-top:8px;font-size:11px;opacity:0.9;font-weight:600">2 DAYS, 4 HOURS+</div>
+          </div>
+          <div class="map-panel">
+            <div class="map-grid"></div>
+            <div class="map-road-h" style="top:30%"></div>
+            <div class="map-road-h" style="top:60%"></div>
+            <div class="map-road-v" style="left:40%"></div>
+            <div class="map-pin">📍</div>
+            <div class="map-label">Chicago<br>Service Ctr</div>
           </div>
         </div>
-        <div class="downtime-panel">
-          <span class="downtime-label">⏱ Downtime Clock</span>
-          <span class="clock-digits" id="clock">52:14:37</span>
-          <span class="downtime-sub">Counting</span>
-          <div style="margin-top:8px;font-size:11px;opacity:0.9;font-weight:600">2 DAYS, 4 HOURS+</div>
-        </div>
-        <div class="map-panel">
-          <div class="map-grid"></div>
-          <div class="map-road-h" style="top:30%"></div>
-          <div class="map-road-h" style="top:60%"></div>
-          <div class="map-road-v" style="left:40%"></div>
-          <div class="map-pin">📍</div>
-          <div class="map-label">Chicago<br>Service Ctr</div>
-        </div>
       </div>
-    </div>
 
-    <div class="row2">
-      <div class="panel">
-        <div class="section-header">Diagnostic &amp; Repair Tracker</div>
-        <div style="overflow:hidden">
-          <div class="truck-visual"><div class="truck-body">🚛<div class="fault-glow"></div></div></div>
-          <div class="tracker-timeline">
-            <div class="tracker-step">
-              <div><div class="step-dot done">✓</div><div class="step-connector done"></div></div>
-              <div class="step-body"><div class="step-title" style="color:var(--gold)">1. Diagnostic Scan (Complete)</div></div>
+      <div class="row2">
+        <div class="panel">
+          <div class="section-header">Diagnostic &amp; Repair Tracker</div>
+          <div style="overflow:hidden">
+            <div class="truck-visual">
+              <div class="truck-body">🚛<div class="fault-glow"></div>
+              </div>
             </div>
-            <div class="tracker-step">
-              <div><div class="step-dot active">2</div><div class="step-connector"></div></div>
-              <div class="step-body">
-                <div class="step-title active">2. Issue Identified: <span style="color:var(--danger)">Turbocharger Failure</span></div>
-                <div class="diagnosis-card">
-                  <div class="diagnosis-title">🔍 Mechanic Diagnosis</div>
-                  <div class="diagnosis-text">Low Boost Pressure detected; Gasket blown.</div>
-                  <div class="boost-chart"><svg viewBox="0 0 200 36" preserveAspectRatio="none">
-                    <polyline points="0,28 20,24 40,22 60,18 80,20 100,14 120,8 140,12 160,6 180,10 200,4" fill="none" stroke="rgba(255,69,69,0.6)" stroke-width="2"/>
-                    <polyline points="0,20 20,18 40,20 60,22 80,18 100,20 120,22 140,20 160,18 180,20 200,18" fill="none" stroke="rgba(245,197,24,0.4)" stroke-width="1.5" stroke-dasharray="4,2"/>
-                  </svg></div>
+            <div class="tracker-timeline">
+              <div class="tracker-step">
+                <div>
+                  <div class="step-dot done">✓</div>
+                  <div class="step-connector done"></div>
+                </div>
+                <div class="step-body">
+                  <div class="step-title" style="color:var(--gold)">1. Diagnostic Scan (Complete)</div>
+                </div>
+              </div>
+              <div class="tracker-step">
+                <div>
+                  <div class="step-dot active">2</div>
+                  <div class="step-connector"></div>
+                </div>
+                <div class="step-body">
+                  <div class="step-title active">2. Issue Identified: <span style="color:var(--danger)">Turbocharger
+                      Failure</span></div>
+                  <div class="diagnosis-card">
+                    <div class="diagnosis-title">🔍 Mechanic Diagnosis</div>
+                    <div class="diagnosis-text">Low Boost Pressure detected; Gasket blown.</div>
+                    <div class="boost-chart"><svg viewBox="0 0 200 36" preserveAspectRatio="none">
+                        <polyline points="0,28 20,24 40,22 60,18 80,20 100,14 120,8 140,12 160,6 180,10 200,4"
+                          fill="none" stroke="rgba(255,69,69,0.6)" stroke-width="2" />
+                        <polyline points="0,20 20,18 40,20 60,22 80,18 100,20 120,22 140,20 160,18 180,20 200,18"
+                          fill="none" stroke="rgba(245,197,24,0.4)" stroke-width="1.5" stroke-dasharray="4,2" />
+                      </svg></div>
+                  </div>
+                </div>
+              </div>
+              <div class="tracker-step">
+                <div>
+                  <div class="step-dot pending">3</div>
+                  <div class="step-connector"></div>
+                </div>
+                <div class="step-body">
+                  <div class="step-title">3. Parts Ordered <span style="color:var(--gold)">(ETA: 24h)</span></div>
+                </div>
+              </div>
+              <div class="tracker-step">
+                <div>
+                  <div class="step-dot pending">4</div>
+                </div>
+                <div class="step-body">
+                  <div class="step-title">4. Labor Scheduled</div>
                 </div>
               </div>
             </div>
-            <div class="tracker-step">
-              <div><div class="step-dot pending">3</div><div class="step-connector"></div></div>
-              <div class="step-body"><div class="step-title">3. Parts Ordered <span style="color:var(--gold)">(ETA: 24h)</span></div></div>
-            </div>
-            <div class="tracker-step">
-              <div><div class="step-dot pending">4</div></div>
-              <div class="step-body"><div class="step-title">4. Labor Scheduled</div></div>
-            </div>
           </div>
+          <button class="work-order-btn">VIEW FULL WORK ORDER ↓</button>
         </div>
-        <button class="work-order-btn">VIEW FULL WORK ORDER ↓</button>
-      </div>
 
-      <div class="panel">
-        <div class="section-header">Financial &amp; Cost Tracking</div>
-        <div class="mini-chart"><svg viewBox="0 0 400 80" preserveAspectRatio="none">
-          <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(245,197,24,0.3)"/><stop offset="100%" stop-color="rgba(245,197,24,0)"/></linearGradient></defs>
-          <polygon points="0,70 50,60 100,55 150,45 200,50 250,35 300,25 350,15 400,10 400,80 0,80" fill="url(#ag)"/>
-          <polyline points="0,70 50,60 100,55 150,45 200,50 250,35 300,25 350,15 400,10" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <circle cx="400" cy="10" r="5" fill="var(--gold)"/>
-          <text x="0" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">JAN</text>
-          <text x="70" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">FEB</text>
-          <text x="140" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">MAR</text>
-          <text x="210" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">APR</text>
-          <text x="280" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">MAY</text>
-          <text x="360" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">JUN</text>
-        </svg></div>
-        <div class="cost-list">
-          <div class="cost-row"><span class="cost-name">Diagnostic Fee</span><span class="cost-amount">$150</span></div>
-          <div class="cost-row"><div><span class="cost-name">Turbocharger Kit</span><span class="cost-badge">Backordered – ETA 24h</span></div><span class="cost-amount">$850</span></div>
-          <div class="cost-row"><span class="cost-name">Labor <span style="font-size:12px;color:var(--muted)">(Est. 4h)</span></span><span class="cost-amount">$400</span></div>
-          <div class="cost-row"><span class="cost-name">Shop Fees</span><span class="cost-amount">$125</span></div>
-        </div>
-        <div class="cost-total" style="margin-top:12px">
-          <div><div class="cost-total-label">Total Estimated Cost</div><a href="#" data-action="service-history" style="font-size:11px;color:var(--muted);text-decoration:none">SERVICE HISTORY LINK →</a></div>
-          <span class="cost-total-value">$1,525</span>
-        </div>
-        <div style="display:flex;gap:10px;margin-top:14px">
-          <button class="approve-btn" data-action="approve-quote" style="flex:1">APPROVE QUOTE</button>
-          <button data-action="decline-quote" style="flex:1;background:transparent;border:2px solid var(--gold);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:2px;cursor:pointer;border-radius:4px;transition:all 0.2s" onmouseover="this.style.background='rgba(245,197,24,0.1)'" onmouseout="this.style.background='transparent'">DECLINE</button>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="section-header">Approve Repair Work Order #402</div>
-      <div class="work-order-card">
-        <div class="wo-header">
-          <span class="wo-header-title">APPROVE REPAIR WORK ORDER #402</span>
-          <button class="approve-btn" data-action="approve-wo-header">✓ APPROVE</button>
-        </div>
-        <div class="wo-body">
-          <div class="wo-line-items">
-            <div class="wo-item"><span class="wo-item-name">Replace Turbocharger Unit</span><span class="wo-item-price">$850.00</span></div>
-            <div class="wo-item"><span class="wo-item-name">New Gasket Kit</span><span class="wo-item-price">$125.00</span></div>
-            <div class="wo-item"><span class="wo-item-name">Labor (Est. 4 hours)</span><span class="wo-item-price">$400.00</span></div>
-            <div class="wo-item"><span class="wo-item-name">Shop Fees</span><span class="wo-item-price">$75.00</span></div>
+        <div class="panel">
+          <div class="section-header">Financial &amp; Cost Tracking</div>
+          <div class="mini-chart"><svg viewBox="0 0 400 80" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(245,197,24,0.3)" />
+                  <stop offset="100%" stop-color="rgba(245,197,24,0)" />
+                </linearGradient>
+              </defs>
+              <polygon points="0,70 50,60 100,55 150,45 200,50 250,35 300,25 350,15 400,10 400,80 0,80"
+                fill="url(#ag)" />
+              <polyline points="0,70 50,60 100,55 150,45 200,50 250,35 300,25 350,15 400,10" fill="none"
+                stroke="var(--gold)" stroke-width="2" />
+              <circle cx="400" cy="10" r="5" fill="var(--gold)" />
+              <text x="0" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">JAN</text>
+              <text x="70" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">FEB</text>
+              <text x="140" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">MAR</text>
+              <text x="210" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">APR</text>
+              <text x="280" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">MAY</text>
+              <text x="360" y="78" font-size="9" fill="#5a7090" font-family="Barlow,sans-serif">JUN</text>
+            </svg></div>
+          <div class="cost-list">
+            <div class="cost-row"><span class="cost-name">Diagnostic Fee</span><span class="cost-amount">$150</span>
+            </div>
+            <div class="cost-row">
+              <div><span class="cost-name">Turbocharger Kit</span><span class="cost-badge">Backordered – ETA 24h</span>
+              </div><span class="cost-amount">$850</span>
+            </div>
+            <div class="cost-row"><span class="cost-name">Labor <span style="font-size:12px;color:var(--muted)">(Est.
+                  4h)</span></span><span class="cost-amount">$400</span></div>
+            <div class="cost-row"><span class="cost-name">Shop Fees</span><span class="cost-amount">$125</span></div>
           </div>
-          <div class="wo-totals">
+          <div class="cost-total" style="margin-top:12px">
             <div>
-              <div class="wo-subtotal-row"><span>Subtotal</span><strong style="color:var(--navy)">$1,450.00</strong></div>
-              <div class="wo-subtotal-row" style="margin-top:6px"><span>Tax (8.5%)</span><strong style="color:var(--navy)">$123.25</strong></div>
+              <div class="cost-total-label">Total Estimated Cost</div><a href="#" data-action="service-history"
+                style="font-size:11px;color:var(--muted);text-decoration:none">SERVICE HISTORY LINK →</a>
             </div>
-            <div class="wo-grand-total"><div class="wo-grand-label">Total Estimated Cost</div><div class="wo-grand-value">$1,573.25</div></div>
+            <span class="cost-total-value">$1,525</span>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px">
+            <button class="approve-btn" data-action="approve-quote" style="flex:1">APPROVE QUOTE</button>
+            <button data-action="decline-quote"
+              style="flex:1;background:transparent;border:2px solid var(--gold);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:2px;cursor:pointer;border-radius:4px;transition:all 0.2s"
+              onmouseover="this.style.background='rgba(245,197,24,0.1)'"
+              onmouseout="this.style.background='transparent'">DECLINE</button>
           </div>
         </div>
-        <div class="wo-signature">
-          <div class="sig-box"><div class="sig-text">Digital Signature</div><div class="sig-label">Digital Signature</div></div>
-          <span class="validity-note">⏱ Estimate valid for 48 hours</span>
-          <button class="approve-btn" data-action="approve-sign" style="padding:12px 32px;font-size:16px">✓ APPROVE &amp; SIGN</button>
+      </div>
+
+      <div>
+        <div class="section-header">Approve Repair Work Order #402</div>
+        <div class="work-order-card">
+          <div class="wo-header">
+            <span class="wo-header-title">APPROVE REPAIR WORK ORDER #402</span>
+            <button class="approve-btn" data-action="approve-wo-header">✓ APPROVE</button>
+          </div>
+          <div class="wo-body">
+            <div class="wo-line-items">
+              <div class="wo-item"><span class="wo-item-name">Replace Turbocharger Unit</span><span
+                  class="wo-item-price">$850.00</span></div>
+              <div class="wo-item"><span class="wo-item-name">New Gasket Kit</span><span
+                  class="wo-item-price">$125.00</span></div>
+              <div class="wo-item"><span class="wo-item-name">Labor (Est. 4 hours)</span><span
+                  class="wo-item-price">$400.00</span></div>
+              <div class="wo-item"><span class="wo-item-name">Shop Fees</span><span class="wo-item-price">$75.00</span>
+              </div>
+            </div>
+            <div class="wo-totals">
+              <div>
+                <div class="wo-subtotal-row"><span>Subtotal</span><strong style="color:var(--navy)">$1,450.00</strong>
+                </div>
+                <div class="wo-subtotal-row" style="margin-top:6px"><span>Tax (8.5%)</span><strong
+                    style="color:var(--navy)">$123.25</strong></div>
+              </div>
+              <div class="wo-grand-total">
+                <div class="wo-grand-label">Total Estimated Cost</div>
+                <div class="wo-grand-value">$1,573.25</div>
+              </div>
+            </div>
+          </div>
+          <div class="wo-signature">
+            <div class="sig-box">
+              <div class="sig-text">Digital Signature</div>
+              <div class="sig-label">Digital Signature</div>
+            </div>
+            <span class="validity-note">⏱ Estimate valid for 48 hours</span>
+            <button class="approve-btn" data-action="approve-sign" style="padding:12px 32px;font-size:16px">✓ APPROVE
+              &amp; SIGN</button>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div><!-- /dashboard -->
+    </div><!-- /dashboard -->
 
 
-  <!-- ═══════════════════════════════════════
+    <!-- ═══════════════════════════════════════
        VIEW 2 — DIAGNOSTICS
   ═══════════════════════════════════════ -->
-  <div class="view" id="view-diagnostics">
-    <div class="section-header">Diagnostics Overview</div>
+    <div class="view" id="view-diagnostics">
+      <div class="section-header">Diagnostics Overview</div>
 
-    <div class="diag-grid">
-      <div class="diag-stat"><div class="diag-stat-val" style="color:var(--danger)">3</div><div class="diag-stat-lbl">Active Fault Codes</div></div>
-      <div class="diag-stat"><div class="diag-stat-val" style="color:var(--gold)">2</div><div class="diag-stat-lbl">Warnings</div></div>
-      <div class="diag-stat"><div class="diag-stat-val" style="color:var(--success)">11</div><div class="diag-stat-lbl">Systems OK</div></div>
-    </div>
-
-    <div class="gauge-row">
-      <div class="gauge">
-        <div class="gauge-ring" style="background:conic-gradient(#ff4545 0% 28%,#233a55 28% 100%);color:var(--danger)">28%</div>
-        <div class="gauge-name">Boost Pressure</div>
-      </div>
-      <div class="gauge">
-        <div class="gauge-ring" style="background:conic-gradient(#f5c518 0% 72%,#233a55 72% 100%);color:var(--gold)">72%</div>
-        <div class="gauge-name">Engine Temp</div>
-      </div>
-      <div class="gauge">
-        <div class="gauge-ring" style="background:conic-gradient(#2ecc71 0% 91%,#233a55 91% 100%);color:var(--success)">91%</div>
-        <div class="gauge-name">Oil Pressure</div>
-      </div>
-      <div class="gauge">
-        <div class="gauge-ring" style="background:conic-gradient(#2ecc71 0% 85%,#233a55 85% 100%);color:var(--success)">85%</div>
-        <div class="gauge-name">Transmission</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="section-header">Active Diagnostic Codes</div>
-      <div class="diag-code-list">
-        <div class="diag-code">
-          <span class="diag-code-id">P0299</span>
-          <div><div class="diag-code-desc">Turbocharger Underboost Condition</div><div class="diag-code-time">Triggered: 2 days ago · 47 occurrences</div></div>
-          <span class="tag tag-danger">Critical</span>
+      <div class="diag-grid">
+        <div class="diag-stat">
+          <div class="diag-stat-val" style="color:var(--danger)">3</div>
+          <div class="diag-stat-lbl">Active Fault Codes</div>
         </div>
-        <div class="diag-code">
-          <span class="diag-code-id">P0401</span>
-          <div><div class="diag-code-desc">Exhaust Gas Recirculation Flow Insufficient</div><div class="diag-code-time">Triggered: 2 days ago · 12 occurrences</div></div>
-          <span class="tag tag-danger">Critical</span>
+        <div class="diag-stat">
+          <div class="diag-stat-val" style="color:var(--gold)">2</div>
+          <div class="diag-stat-lbl">Warnings</div>
         </div>
-        <div class="diag-code warn">
-          <span class="diag-code-id">P0087</span>
-          <div><div class="diag-code-desc">Fuel Rail/System Pressure Too Low</div><div class="diag-code-time">Triggered: 3 days ago · 5 occurrences</div></div>
-          <span class="tag tag-warn">Warning</span>
-        </div>
-        <div class="diag-code warn">
-          <span class="diag-code-id">B1045</span>
-          <div><div class="diag-code-desc">Coolant Temperature Sensor Drift</div><div class="diag-code-time">Triggered: 5 days ago · 2 occurrences</div></div>
-          <span class="tag tag-warn">Warning</span>
-        </div>
-        <div class="diag-code ok">
-          <span class="diag-code-id" style="color:var(--success)">U0100</span>
-          <div><div class="diag-code-desc">Lost Communication with ECM/PCM — Cleared</div><div class="diag-code-time">Resolved: 1 day ago</div></div>
-          <span class="tag tag-success">Cleared</span>
+        <div class="diag-stat">
+          <div class="diag-stat-val" style="color:var(--success)">11</div>
+          <div class="diag-stat-lbl">Systems OK</div>
         </div>
       </div>
-    </div>
-  </div><!-- /diagnostics -->
+
+      <div class="gauge-row">
+        <div class="gauge">
+          <div class="gauge-ring"
+            style="background:conic-gradient(#ff4545 0% 28%,#233a55 28% 100%);color:var(--danger)">28%</div>
+          <div class="gauge-name">Boost Pressure</div>
+        </div>
+        <div class="gauge">
+          <div class="gauge-ring" style="background:conic-gradient(#f5c518 0% 72%,#233a55 72% 100%);color:var(--gold)">
+            72%</div>
+          <div class="gauge-name">Engine Temp</div>
+        </div>
+        <div class="gauge">
+          <div class="gauge-ring"
+            style="background:conic-gradient(#2ecc71 0% 91%,#233a55 91% 100%);color:var(--success)">91%</div>
+          <div class="gauge-name">Oil Pressure</div>
+        </div>
+        <div class="gauge">
+          <div class="gauge-ring"
+            style="background:conic-gradient(#2ecc71 0% 85%,#233a55 85% 100%);color:var(--success)">85%</div>
+          <div class="gauge-name">Transmission</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-header">Active Diagnostic Codes</div>
+        <div class="diag-code-list">
+          <div class="diag-code">
+            <span class="diag-code-id">P0299</span>
+            <div>
+              <div class="diag-code-desc">Turbocharger Underboost Condition</div>
+              <div class="diag-code-time">Triggered: 2 days ago · 47 occurrences</div>
+            </div>
+            <span class="tag tag-danger">Critical</span>
+          </div>
+          <div class="diag-code">
+            <span class="diag-code-id">P0401</span>
+            <div>
+              <div class="diag-code-desc">Exhaust Gas Recirculation Flow Insufficient</div>
+              <div class="diag-code-time">Triggered: 2 days ago · 12 occurrences</div>
+            </div>
+            <span class="tag tag-danger">Critical</span>
+          </div>
+          <div class="diag-code warn">
+            <span class="diag-code-id">P0087</span>
+            <div>
+              <div class="diag-code-desc">Fuel Rail/System Pressure Too Low</div>
+              <div class="diag-code-time">Triggered: 3 days ago · 5 occurrences</div>
+            </div>
+            <span class="tag tag-warn">Warning</span>
+          </div>
+          <div class="diag-code warn">
+            <span class="diag-code-id">B1045</span>
+            <div>
+              <div class="diag-code-desc">Coolant Temperature Sensor Drift</div>
+              <div class="diag-code-time">Triggered: 5 days ago · 2 occurrences</div>
+            </div>
+            <span class="tag tag-warn">Warning</span>
+          </div>
+          <div class="diag-code ok">
+            <span class="diag-code-id" style="color:var(--success)">U0100</span>
+            <div>
+              <div class="diag-code-desc">Lost Communication with ECM/PCM — Cleared</div>
+              <div class="diag-code-time">Resolved: 1 day ago</div>
+            </div>
+            <span class="tag tag-success">Cleared</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- /diagnostics -->
 
 
-  <!-- ═══════════════════════════════════════
+    <!-- ═══════════════════════════════════════
        VIEW 3 — FINANCE
   ═══════════════════════════════════════ -->
-  <div class="view" id="view-finance">
-    <div class="section-header">Financial Overview</div>
+    <div class="view" id="view-finance">
+      <div class="section-header">Financial Overview</div>
 
-    <div class="finance-kpi">
-      <div class="kpi-card"><div class="kpi-val" style="color:var(--gold)">$1,573</div><div class="kpi-lbl">Current Repair Est.</div><div class="kpi-trend up">↑ +12% vs avg</div></div>
-      <div class="kpi-card"><div class="kpi-val">$8,240</div><div class="kpi-lbl">YTD Maintenance</div><div class="kpi-trend up">↑ +8% YoY</div></div>
-      <div class="kpi-card"><div class="kpi-val" style="color:var(--danger)">$3,120</div><div class="kpi-lbl">Downtime Loss Est.</div><div class="kpi-trend up">↑ 52h × $60/hr</div></div>
-      <div class="kpi-card"><div class="kpi-val" style="color:var(--success)">$450</div><div class="kpi-lbl">Warranty Credit</div><div class="kpi-trend down">↓ Applied to quote</div></div>
-    </div>
+      <div class="finance-kpi">
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--gold)">$1,573</div>
+          <div class="kpi-lbl">Current Repair Est.</div>
+          <div class="kpi-trend up">↑ +12% vs avg</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">$8,240</div>
+          <div class="kpi-lbl">YTD Maintenance</div>
+          <div class="kpi-trend up">↑ +8% YoY</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--danger)">$3,120</div>
+          <div class="kpi-lbl">Downtime Loss Est.</div>
+          <div class="kpi-trend up">↑ 52h × $60/hr</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--success)">$450</div>
+          <div class="kpi-lbl">Warranty Credit</div>
+          <div class="kpi-trend down">↓ Applied to quote</div>
+        </div>
+      </div>
 
-    <div class="panel">
-      <div class="section-header">Monthly Maintenance Spend</div>
-      <div class="big-chart"><svg viewBox="0 0 600 160" preserveAspectRatio="none">
-        <defs><linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(245,197,24,0.25)"/><stop offset="100%" stop-color="rgba(245,197,24,0)"/></linearGradient></defs>
-        <polygon points="0,140 75,120 150,110 225,90 300,100 375,70 450,50 525,30 600,20 600,160 0,160" fill="url(#bg2)"/>
-        <polyline points="0,140 75,120 150,110 225,90 300,100 375,70 450,50 525,30 600,20" fill="none" stroke="var(--gold)" stroke-width="2.5"/>
-        <circle cx="600" cy="20" r="6" fill="var(--gold)"/>
-        <circle cx="525" cy="30" r="4" fill="var(--gold)" opacity="0.6"/>
-        <circle cx="450" cy="50" r="4" fill="var(--gold)" opacity="0.6"/>
-        <text x="10" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">JAN</text>
-        <text x="85" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">FEB</text>
-        <text x="160" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">MAR</text>
-        <text x="235" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">APR</text>
-        <text x="310" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">MAY</text>
-        <text x="385" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">JUN</text>
-        <text x="460" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">JUL</text>
-        <text x="535" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">AUG</text>
-      </svg></div>
-    </div>
+      <div class="panel">
+        <div class="section-header">Monthly Maintenance Spend</div>
+        <div class="big-chart"><svg viewBox="0 0 600 160" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(245,197,24,0.25)" />
+                <stop offset="100%" stop-color="rgba(245,197,24,0)" />
+              </linearGradient>
+            </defs>
+            <polygon points="0,140 75,120 150,110 225,90 300,100 375,70 450,50 525,30 600,20 600,160 0,160"
+              fill="url(#bg2)" />
+            <polyline points="0,140 75,120 150,110 225,90 300,100 375,70 450,50 525,30 600,20" fill="none"
+              stroke="var(--gold)" stroke-width="2.5" />
+            <circle cx="600" cy="20" r="6" fill="var(--gold)" />
+            <circle cx="525" cy="30" r="4" fill="var(--gold)" opacity="0.6" />
+            <circle cx="450" cy="50" r="4" fill="var(--gold)" opacity="0.6" />
+            <text x="10" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">JAN</text>
+            <text x="85" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">FEB</text>
+            <text x="160" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">MAR</text>
+            <text x="235" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">APR</text>
+            <text x="310" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">MAY</text>
+            <text x="385" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">JUN</text>
+            <text x="460" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">JUL</text>
+            <text x="535" y="155" font-size="11" fill="#5a7090" font-family="Barlow,sans-serif">AUG</text>
+          </svg></div>
+      </div>
 
-    <div class="panel">
-      <div class="section-header">Service Invoice History</div>
-      <table class="invoice-table">
-        <thead><tr><th>Date</th><th>Description</th><th>Vendor</th><th>Status</th><th style="text-align:right">Amount</th></tr></thead>
-        <tbody>
-          <tr><td>Mar 04, 2026</td><td>Turbocharger Repair (Pending)</td><td>Chicago Service Ctr.</td><td><span class="tag tag-warn">Pending</span></td><td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">$1,573.25</td></tr>
-          <tr><td>Jan 12, 2026</td><td>Brake System Overhaul</td><td>Midwest Fleet Pro</td><td><span class="tag tag-success">Paid</span></td><td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">$2,110.00</td></tr>
-          <tr><td>Nov 28, 2025</td><td>Scheduled 100k Mile Service</td><td>Chicago Service Ctr.</td><td><span class="tag tag-success">Paid</span></td><td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">$890.00</td></tr>
-          <tr><td>Sep 05, 2025</td><td>Tire Replacement (6 units)</td><td>Fleet Tire Wholesale</td><td><span class="tag tag-success">Paid</span></td><td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">$3,667.00</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:16px">
-      <button class="approve-btn" data-action="approve-finance">APPROVE QUOTE</button>
-    </div>
-  </div><!-- /finance -->
+      <div class="panel">
+        <div class="section-header">Service Invoice History</div>
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Vendor</th>
+              <th>Status</th>
+              <th style="text-align:right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mar 04, 2026</td>
+              <td>Turbocharger Repair (Pending)</td>
+              <td>Chicago Service Ctr.</td>
+              <td><span class="tag tag-warn">Pending</span></td>
+              <td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">
+                $1,573.25</td>
+            </tr>
+            <tr>
+              <td>Jan 12, 2026</td>
+              <td>Brake System Overhaul</td>
+              <td>Midwest Fleet Pro</td>
+              <td><span class="tag tag-success">Paid</span></td>
+              <td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">
+                $2,110.00</td>
+            </tr>
+            <tr>
+              <td>Nov 28, 2025</td>
+              <td>Scheduled 100k Mile Service</td>
+              <td>Chicago Service Ctr.</td>
+              <td><span class="tag tag-success">Paid</span></td>
+              <td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">
+                $890.00</td>
+            </tr>
+            <tr>
+              <td>Sep 05, 2025</td>
+              <td>Tire Replacement (6 units)</td>
+              <td>Fleet Tire Wholesale</td>
+              <td><span class="tag tag-success">Paid</span></td>
+              <td style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">
+                $3,667.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:16px">
+        <button class="approve-btn" data-action="approve-finance">APPROVE QUOTE</button>
+      </div>
+    </div><!-- /finance -->
 
 
-  <!-- ═══════════════════════════════════════
+    <!-- ═══════════════════════════════════════
        VIEW 4 — MAP
   ═══════════════════════════════════════ -->
-  <div class="view" id="view-map">
-    <div class="section-header">Vehicle Location</div>
+    <div class="view" id="view-map">
+      <div class="section-header">Vehicle Location</div>
 
-    <div class="map-full">
-      <div class="map-full-grid"></div>
-      <div class="map-full-road-h" style="top:35%;height:5px"></div>
-      <div class="map-full-road-h" style="top:62%;height:3px;opacity:0.6"></div>
-      <div class="map-full-road-h" style="top:80%;height:4px"></div>
-      <div class="map-full-road-v" style="left:28%;width:5px"></div>
-      <div class="map-full-road-v" style="left:55%;width:3px;opacity:0.6"></div>
-      <div class="map-full-road-v" style="left:74%;width:4px"></div>
-      <div style="position:absolute;top:36%;left:4%;font-size:10px;color:rgba(255,255,255,0.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transform:translateY(-100%)">W CHICAGO AVE</div>
-      <div style="position:absolute;top:63%;left:4%;font-size:10px;color:rgba(255,255,255,0.25);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transform:translateY(-100%)">W GRAND AVE</div>
-      <div style="position:absolute;top:5%;left:29%;font-size:10px;color:rgba(255,255,255,0.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;writing-mode:vertical-rl">N WESTERN AVE</div>
-      <!-- ripple rings -->
-      <div style="position:absolute;top:40%;left:55%;width:70px;height:70px;border:2px solid rgba(245,197,24,0.25);border-radius:50%;transform:translate(-50%,-50%);animation:ripple 2.5s ease infinite"></div>
-      <div style="position:absolute;top:40%;left:55%;width:130px;height:130px;border:1px solid rgba(245,197,24,0.12);border-radius:50%;transform:translate(-50%,-50%);animation:ripple 2.5s 0.6s ease infinite"></div>
-      <!-- pin -->
-      <div class="map-full-pin" style="top:40%;left:55%">📍</div>
-      <div class="map-full-label" style="top:calc(40% + 10px);left:55%">Chicago Service Center</div>
-    </div>
-
-    <div class="map-info-grid">
-      <div class="map-info-card">
-        <div class="map-info-title">📍 Current Location</div>
-        <div class="map-info-val">Chicago, IL</div>
-        <div class="map-info-sub">2847 W Chicago Ave · Bay 3</div>
+      <div class="map-full">
+        <div class="map-full-grid"></div>
+        <div class="map-full-road-h" style="top:35%;height:5px"></div>
+        <div class="map-full-road-h" style="top:62%;height:3px;opacity:0.6"></div>
+        <div class="map-full-road-h" style="top:80%;height:4px"></div>
+        <div class="map-full-road-v" style="left:28%;width:5px"></div>
+        <div class="map-full-road-v" style="left:55%;width:3px;opacity:0.6"></div>
+        <div class="map-full-road-v" style="left:74%;width:4px"></div>
+        <div
+          style="position:absolute;top:36%;left:4%;font-size:10px;color:rgba(255,255,255,0.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transform:translateY(-100%)">
+          W CHICAGO AVE</div>
+        <div
+          style="position:absolute;top:63%;left:4%;font-size:10px;color:rgba(255,255,255,0.25);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transform:translateY(-100%)">
+          W GRAND AVE</div>
+        <div
+          style="position:absolute;top:5%;left:29%;font-size:10px;color:rgba(255,255,255,0.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;writing-mode:vertical-rl">
+          N WESTERN AVE</div>
+        <!-- ripple rings -->
+        <div
+          style="position:absolute;top:40%;left:55%;width:70px;height:70px;border:2px solid rgba(245,197,24,0.25);border-radius:50%;transform:translate(-50%,-50%);animation:ripple 2.5s ease infinite">
+        </div>
+        <div
+          style="position:absolute;top:40%;left:55%;width:130px;height:130px;border:1px solid rgba(245,197,24,0.12);border-radius:50%;transform:translate(-50%,-50%);animation:ripple 2.5s 0.6s ease infinite">
+        </div>
+        <!-- pin -->
+        <div class="map-full-pin" style="top:40%;left:55%">📍</div>
+        <div class="map-full-label" style="top:calc(40% + 10px);left:55%">Chicago Service Center</div>
       </div>
-      <div class="map-info-card">
-        <div class="map-info-title">🏠 Home Depot</div>
-        <div class="map-info-val">Milwaukee, WI</div>
-        <div class="map-info-sub">92 miles north · ~1h 34m</div>
+
+      <div class="map-info-grid">
+        <div class="map-info-card">
+          <div class="map-info-title">📍 Current Location</div>
+          <div class="map-info-val">Chicago, IL</div>
+          <div class="map-info-sub">2847 W Chicago Ave · Bay 3</div>
+        </div>
+        <div class="map-info-card">
+          <div class="map-info-title">🏠 Home Depot</div>
+          <div class="map-info-val">Milwaukee, WI</div>
+          <div class="map-info-sub">92 miles north · ~1h 34m</div>
+        </div>
+        <div class="map-info-card">
+          <div class="map-info-title">🛣️ Last Route</div>
+          <div class="map-info-val">428 miles</div>
+          <div class="map-info-sub">Detroit → Chicago · Mar 01</div>
+        </div>
       </div>
-      <div class="map-info-card">
-        <div class="map-info-title">🛣️ Last Route</div>
-        <div class="map-info-val">428 miles</div>
-        <div class="map-info-sub">Detroit → Chicago · Mar 01</div>
-      </div>
-    </div>
-  </div><!-- /map -->
+    </div><!-- /map -->
 
 
-  <!-- ═══════════════════════════════════════
+    <!-- ═══════════════════════════════════════
        VIEW 5 — SETTINGS
   ═══════════════════════════════════════ -->
-  <div class="view" id="view-settings">
-    <div class="section-header">Settings &amp; Preferences</div>
+    <div class="view" id="view-settings">
+      <div class="section-header">Settings &amp; Preferences</div>
 
-    <div class="profile-card">
-      <div class="profile-avatar">👤</div>
+      <div class="profile-card">
+        <div class="profile-avatar">👤</div>
+        <div>
+          <div class="profile-name">James Kowalski</div>
+          <div class="profile-role">Fleet Manager · Chicago Division</div>
+        </div>
+        <div style="margin-left:auto">
+          <button class="save-btn" data-action="edit-profile" style="padding:8px 20px;font-size:13px">EDIT
+            PROFILE</button>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <div class="panel">
+          <div class="section-header" style="font-size:16px;margin-bottom:20px">Notifications</div>
+          <div class="setting-group">
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Downtime Alerts</div>
+                <div class="setting-sub">Alert when downtime exceeds threshold</div>
+              </div>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Cost Approval Requests</div>
+                <div class="setting-sub">Push notification on new quotes</div>
+              </div>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Parts Delivery Updates</div>
+                <div class="setting-sub">Track backordered parts ETA</div>
+              </div>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Diagnostic Code Alerts</div>
+                <div class="setting-sub">Real-time fault code notifications</div>
+              </div>
+              <div class="toggle" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Weekly Report Digest</div>
+                <div class="setting-sub">Summary email every Monday</div>
+              </div>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-header" style="font-size:16px;margin-bottom:20px">Display &amp; System</div>
+          <div class="setting-group">
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Currency</div>
+                <div class="setting-sub">Display format for cost tracking</div>
+              </div><select class="select-input">
+                <option>USD ($)</option>
+                <option>EUR (€)</option>
+                <option>GBP (£)</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Time Zone</div>
+                <div class="setting-sub">Used for clock &amp; scheduling</div>
+              </div><select class="select-input">
+                <option>US/Chicago (CT)</option>
+                <option>US/Eastern (ET)</option>
+                <option>US/Pacific (PT)</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Downtime Alert Threshold</div>
+                <div class="setting-sub">Trigger alert after N hours</div>
+              </div><select class="select-input">
+                <option>4 hours</option>
+                <option>8 hours</option>
+                <option>24 hours</option>
+                <option>48 hours</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Auto-Approve Under</div>
+                <div class="setting-sub">Skip approval for small quotes</div>
+              </div><select class="select-input">
+                <option>Disabled</option>
+                <option>Under $200</option>
+                <option>Under $500</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Dark Mode</div>
+                <div class="setting-sub">Interface color scheme</div>
+              </div>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end">
+        <button class="save-btn" data-action="save-settings">SAVE CHANGES</button>
+      </div>
+    </div><!-- /settings -->
+
+  </div><!-- /main -->
+
+  <style>
+    @keyframes ripple {
+      0% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.6)
+      }
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--navy-light);
+      border: 1px solid var(--gold);
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── MODAL OVERLAY ── */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 8000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    #modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 460px;
+      width: 90%;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+      animation: fadeUp 0.3s ease both;
+      text-align: center;
+    }
+
+    .modal-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .modal-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .modal-confirm {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      padding: 12px 32px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .modal-confirm:hover {
+      background: var(--gold-dark);
+    }
+
+    .modal-cancel {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .modal-cancel:hover {
+      border-color: var(--muted);
+      color: var(--white);
+    }
+
+    /* ── NOTIFICATION DROPDOWN ── */
+    #notif-dropdown {
+      position: absolute;
+      top: 52px;
+      right: 0;
+      width: 320px;
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+      z-index: 500;
+      display: none;
+      overflow: hidden;
+    }
+
+    #notif-dropdown.open {
+      display: block;
+      animation: fadeUp 0.25s ease both;
+    }
+
+    .notif-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notif-header-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .notif-clear {
+      font-size: 11px;
+      color: var(--gold);
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .notif-item {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .notif-item:hover {
+      background: var(--navy-light);
+    }
+
+    .notif-item:last-child {
+      border-bottom: none;
+    }
+
+    .notif-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--danger);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .notif-dot.warn {
+      background: var(--gold);
+    }
+
+    .notif-dot.ok {
+      background: var(--success);
+    }
+
+    .notif-text {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notif-time {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── PROFILE EDIT ── */
+    .edit-input {
+      background: var(--navy);
+      border: 1px solid rgba(245, 197, 24, 0.4);
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      outline: none;
+      width: 100%;
+    }
+
+    .edit-input:focus {
+      border-color: var(--gold);
+    }
+
+    /* ── DIAG CODE EXPAND ── */
+    .diag-detail {
+      display: none;
+      padding: 12px 16px;
+      background: var(--navy);
+      border-radius: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #c8d8e8;
+      line-height: 1.7;
+      border-left: 3px solid var(--gold);
+    }
+
+    .diag-detail.open {
+      display: block;
+      animation: fadeUp 0.2s ease both;
+    }
+
+    .diag-code.expanded {
+      background: #233a55;
+    }
+
+    /* Approved state */
+    .approved-banner {
+      background: rgba(46, 204, 113, 0.1);
+      border: 1px solid rgba(46, 204, 113, 0.4);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .approved-banner-icon {
+      font-size: 28px;
+    }
+
+    .approved-banner-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--success);
+    }
+
+    .approved-banner-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+  </style>
+
+  <!-- NOTIFICATION DROPDOWN (attached to topbar) -->
+  <div id="notif-dropdown">
+    <div class="notif-header">
+      <span class="notif-header-title">Notifications</span>
+      <span class="notif-clear" onclick="clearNotifs()">CLEAR ALL</span>
+    </div>
+    <div class="notif-item" onclick="goToNotif('diagnostics')">
+      <div class="notif-dot"></div>
       <div>
-        <div class="profile-name">James Kowalski</div>
-        <div class="profile-role">Fleet Manager · Chicago Division</div>
-      </div>
-      <div style="margin-left:auto">
-        <button class="save-btn" data-action="edit-profile" style="padding:8px 20px;font-size:13px">EDIT PROFILE</button>
+        <div class="notif-text">⚠️ Critical fault P0299 — Turbocharger underboost detected on Truck #402</div>
+        <div class="notif-time">2 hours ago</div>
       </div>
     </div>
-
-    <div class="settings-grid">
-      <div class="panel">
-        <div class="section-header" style="font-size:16px;margin-bottom:20px">Notifications</div>
-        <div class="setting-group">
-          <div class="setting-row"><div><div class="setting-label">Downtime Alerts</div><div class="setting-sub">Alert when downtime exceeds threshold</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-          <div class="setting-row"><div><div class="setting-label">Cost Approval Requests</div><div class="setting-sub">Push notification on new quotes</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-          <div class="setting-row"><div><div class="setting-label">Parts Delivery Updates</div><div class="setting-sub">Track backordered parts ETA</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-          <div class="setting-row"><div><div class="setting-label">Diagnostic Code Alerts</div><div class="setting-sub">Real-time fault code notifications</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
-          <div class="setting-row"><div><div class="setting-label">Weekly Report Digest</div><div class="setting-sub">Summary email every Monday</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="section-header" style="font-size:16px;margin-bottom:20px">Display &amp; System</div>
-        <div class="setting-group">
-          <div class="setting-row"><div><div class="setting-label">Currency</div><div class="setting-sub">Display format for cost tracking</div></div><select class="select-input"><option>USD ($)</option><option>EUR (€)</option><option>GBP (£)</option></select></div>
-          <div class="setting-row"><div><div class="setting-label">Time Zone</div><div class="setting-sub">Used for clock &amp; scheduling</div></div><select class="select-input"><option>US/Chicago (CT)</option><option>US/Eastern (ET)</option><option>US/Pacific (PT)</option></select></div>
-          <div class="setting-row"><div><div class="setting-label">Downtime Alert Threshold</div><div class="setting-sub">Trigger alert after N hours</div></div><select class="select-input"><option>4 hours</option><option>8 hours</option><option>24 hours</option><option>48 hours</option></select></div>
-          <div class="setting-row"><div><div class="setting-label">Auto-Approve Under</div><div class="setting-sub">Skip approval for small quotes</div></div><select class="select-input"><option>Disabled</option><option>Under $200</option><option>Under $500</option></select></div>
-          <div class="setting-row"><div><div class="setting-label">Dark Mode</div><div class="setting-sub">Interface color scheme</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-        </div>
+    <div class="notif-item" onclick="goToNotif('finance')">
+      <div class="notif-dot warn"></div>
+      <div>
+        <div class="notif-text">💰 Repair quote #402 is awaiting your approval — $1,573.25</div>
+        <div class="notif-time">4 hours ago</div>
       </div>
     </div>
-
-    <div style="display:flex;justify-content:flex-end">
-      <button class="save-btn" data-action="save-settings">SAVE CHANGES</button>
+    <div class="notif-item" onclick="goToNotif('finance')">
+      <div class="notif-dot warn"></div>
+      <div>
+        <div class="notif-text">📦 Turbocharger Kit backordered — ETA updated to 24h</div>
+        <div class="notif-time">Yesterday</div>
+      </div>
     </div>
-  </div><!-- /settings -->
-
-</div><!-- /main -->
-
-<style>
-  @keyframes ripple { 0%{opacity:1} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)} }
-
-  /* ── TOAST ── */
-  #toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--navy-light); border:1px solid var(--gold); color:var(--white); font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; padding:14px 28px; border-radius:10px; z-index:9999; opacity:0; transition:all 0.35s cubic-bezier(.4,0,.2,1); pointer-events:none; box-shadow:0 8px 32px rgba(0,0,0,0.5); }
-  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-  /* ── MODAL OVERLAY ── */
-  #modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:8000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
-  #modal-overlay.open { display:flex; }
-  .modal-box { background:var(--navy-mid); border:1px solid var(--border); border-radius:16px; padding:36px; max-width:460px; width:90%; box-shadow:0 32px 80px rgba(0,0,0,0.6); animation:fadeUp 0.3s ease both; text-align:center; }
-  .modal-icon { font-size:48px; margin-bottom:16px; }
-  .modal-title { font-family:'Barlow Condensed',sans-serif; font-size:26px; font-weight:900; margin-bottom:8px; }
-  .modal-sub { font-size:14px; color:var(--muted); margin-bottom:28px; line-height:1.6; }
-  .modal-actions { display:flex; gap:12px; justify-content:center; }
-  .modal-confirm { background:var(--gold); color:var(--navy); border:none; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:800; letter-spacing:2px; padding:12px 32px; cursor:pointer; border-radius:8px; transition:all 0.2s; }
-  .modal-confirm:hover { background:var(--gold-dark); }
-  .modal-cancel { background:transparent; color:var(--muted); border:1px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; padding:12px 24px; cursor:pointer; border-radius:8px; transition:all 0.2s; }
-  .modal-cancel:hover { border-color:var(--muted); color:var(--white); }
-
-  /* ── NOTIFICATION DROPDOWN ── */
-  #notif-dropdown { position:absolute; top:52px; right:0; width:320px; background:var(--navy-mid); border:1px solid var(--border); border-radius:12px; box-shadow:0 16px 48px rgba(0,0,0,0.5); z-index:500; display:none; overflow:hidden; }
-  #notif-dropdown.open { display:block; animation:fadeUp 0.25s ease both; }
-  .notif-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-  .notif-header-title { font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; }
-  .notif-clear { font-size:11px; color:var(--gold); cursor:pointer; font-weight:600; letter-spacing:1px; }
-  .notif-item { padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; display:flex; gap:12px; align-items:flex-start; }
-  .notif-item:hover { background:var(--navy-light); }
-  .notif-item:last-child { border-bottom:none; }
-  .notif-dot { width:8px; height:8px; border-radius:50%; background:var(--danger); flex-shrink:0; margin-top:5px; }
-  .notif-dot.warn { background:var(--gold); }
-  .notif-dot.ok { background:var(--success); }
-  .notif-text { font-size:13px; line-height:1.5; }
-  .notif-time { font-size:11px; color:var(--muted); margin-top:2px; }
-
-  /* ── PROFILE EDIT ── */
-  .edit-input { background:var(--navy); border:1px solid rgba(245,197,24,0.4); color:var(--white); font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; padding:6px 12px; border-radius:6px; outline:none; width:100%; }
-  .edit-input:focus { border-color:var(--gold); }
-
-  /* ── DIAG CODE EXPAND ── */
-  .diag-detail { display:none; padding:12px 16px; background:var(--navy); border-radius:8px; margin-top:8px; font-size:13px; color:#c8d8e8; line-height:1.7; border-left:3px solid var(--gold); }
-  .diag-detail.open { display:block; animation:fadeUp 0.2s ease both; }
-  .diag-code.expanded { background:#233a55; }
-
-  /* Approved state */
-  .approved-banner { background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.4); border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:12px; }
-  .approved-banner-icon { font-size:28px; }
-  .approved-banner-text { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:var(--success); }
-  .approved-banner-sub { font-size:12px; color:var(--muted); margin-top:2px; }
-</style>
-
-<!-- NOTIFICATION DROPDOWN (attached to topbar) -->
-<div id="notif-dropdown">
-  <div class="notif-header">
-    <span class="notif-header-title">Notifications</span>
-    <span class="notif-clear" onclick="clearNotifs()">CLEAR ALL</span>
   </div>
-  <div class="notif-item" onclick="goToNotif('diagnostics')">
-    <div class="notif-dot"></div>
-    <div><div class="notif-text">⚠️ Critical fault P0299 — Turbocharger underboost detected on Truck #402</div><div class="notif-time">2 hours ago</div></div>
+
+  <!-- MODAL OVERLAY -->
+  <div id="modal-overlay">
+    <div class="modal-box" id="modal-box">
+      <!-- content injected by JS -->
+    </div>
   </div>
-  <div class="notif-item" onclick="goToNotif('finance')">
-    <div class="notif-dot warn"></div>
-    <div><div class="notif-text">💰 Repair quote #402 is awaiting your approval — $1,573.25</div><div class="notif-time">4 hours ago</div></div>
-  </div>
-  <div class="notif-item" onclick="goToNotif('finance')">
-    <div class="notif-dot warn"></div>
-    <div><div class="notif-text">📦 Turbocharger Kit backordered — ETA updated to 24h</div><div class="notif-time">Yesterday</div></div>
-  </div>
-</div>
 
-<!-- MODAL OVERLAY -->
-<div id="modal-overlay">
-  <div class="modal-box" id="modal-box">
-    <!-- content injected by JS -->
-  </div>
-</div>
+  <script>
+    /* ════════════════════════════════
+       CLOCK
+    ════════════════════════════════ */
+    let totalSeconds = 52 * 3600 + 14 * 60 + 37;
+    setInterval(() => {
+      totalSeconds++;
+      const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const s = String(totalSeconds % 60).padStart(2, '0');
+      const el = document.getElementById('clock');
+      if (el) el.textContent = `${h}:${m}:${s}`;
+    }, 1000);
 
-<script>
-  /* ════════════════════════════════
-     CLOCK
-  ════════════════════════════════ */
-  let totalSeconds = 52*3600 + 14*60 + 37;
-  setInterval(() => {
-    totalSeconds++;
-    const h = String(Math.floor(totalSeconds/3600)).padStart(2,'0');
-    const m = String(Math.floor((totalSeconds%3600)/60)).padStart(2,'0');
-    const s = String(totalSeconds%60).padStart(2,'0');
-    const el = document.getElementById('clock');
-    if (el) el.textContent = `${h}:${m}:${s}`;
-  }, 1000);
+    /* ════════════════════════════════
+       SIDEBAR NAV
+    ════════════════════════════════ */
+    const labels = {
+      dashboard: 'VEHICLE HEALTH CENTER – TRUCK #402',
+      diagnostics: 'DIAGNOSTICS – TRUCK #402',
+      finance: 'FINANCIAL TRACKING – TRUCK #402',
+      map: 'LOCATION – TRUCK #402',
+      settings: 'SETTINGS & PREFERENCES'
+    };
+    function switchView(el, noScroll) {
+      const id = typeof el === 'string' ? el : el.dataset.view;
+      const icon = typeof el === 'string' ? document.querySelector(`[data-view="${id}"]`) : el;
+      document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
+      if (icon) icon.classList.add('active');
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + id).classList.add('active');
+      document.getElementById('topbar-label').textContent = labels[id] || '';
+      if (!noScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-  /* ════════════════════════════════
-     SIDEBAR NAV
-  ════════════════════════════════ */
-  const labels = {
-    dashboard:   'VEHICLE HEALTH CENTER – TRUCK #402',
-    diagnostics: 'DIAGNOSTICS – TRUCK #402',
-    finance:     'FINANCIAL TRACKING – TRUCK #402',
-    map:         'LOCATION – TRUCK #402',
-    settings:    'SETTINGS & PREFERENCES'
-  };
-  function switchView(el, noScroll) {
-    const id = typeof el === 'string' ? el : el.dataset.view;
-    const icon = typeof el === 'string' ? document.querySelector(`[data-view="${id}"]`) : el;
-    document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
-    if (icon) icon.classList.add('active');
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + id).classList.add('active');
-    document.getElementById('topbar-label').textContent = labels[id] || '';
-    if (!noScroll) window.scrollTo({top:0, behavior:'smooth'});
-  }
+    /* ════════════════════════════════
+       TOAST
+    ════════════════════════════════ */
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
 
-  /* ════════════════════════════════
-     TOAST
-  ════════════════════════════════ */
-  let toastTimer;
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  /* ════════════════════════════════
-     MODAL
-  ════════════════════════════════ */
-  function showModal({icon, title, sub, confirmText, onConfirm, cancelText}) {
-    const box = document.getElementById('modal-box');
-    box.innerHTML = `
-      <div class="modal-icon">${icon||'❓'}</div>
+    /* ════════════════════════════════
+       MODAL
+    ════════════════════════════════ */
+    function showModal({ icon, title, sub, confirmText, onConfirm, cancelText }) {
+      const box = document.getElementById('modal-box');
+      box.innerHTML = `
+      <div class="modal-icon">${icon || '❓'}</div>
       <div class="modal-title">${title}</div>
-      <div class="modal-sub">${sub||''}</div>
+      <div class="modal-sub">${sub || ''}</div>
       <div class="modal-actions">
-        <button class="modal-cancel" onclick="closeModal()">${cancelText||'CANCEL'}</button>
-        <button class="modal-confirm" id="modal-confirm-btn">${confirmText||'CONFIRM'}</button>
+        <button class="modal-cancel" onclick="closeModal()">${cancelText || 'CANCEL'}</button>
+        <button class="modal-confirm" id="modal-confirm-btn">${confirmText || 'CONFIRM'}</button>
       </div>`;
-    document.getElementById('modal-confirm-btn').onclick = () => { closeModal(); if(onConfirm) onConfirm(); };
-    document.getElementById('modal-overlay').classList.add('open');
-  }
-  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-  document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+      document.getElementById('modal-confirm-btn').onclick = () => { closeModal(); if (onConfirm) onConfirm(); };
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+    function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+    document.getElementById('modal-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
 
-  /* ════════════════════════════════
-     NOTIFICATION BELL
-  ════════════════════════════════ */
-  const bellBtn = document.querySelector('.icon-btn[style*="position:relative"]');
-  const notifDD = document.getElementById('notif-dropdown');
-  // position dropdown relative to topbar-right
-  document.querySelector('.topbar-right').style.position = 'relative';
-  document.querySelector('.topbar-right').appendChild(notifDD);
+    /* ════════════════════════════════
+       NOTIFICATION BELL
+    ════════════════════════════════ */
+    const bellBtn = document.querySelector('.icon-btn[style*="position:relative"]');
+    const notifDD = document.getElementById('notif-dropdown');
+    // position dropdown relative to topbar-right
+    document.querySelector('.topbar-right').style.position = 'relative';
+    document.querySelector('.topbar-right').appendChild(notifDD);
 
-  bellBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    notifDD.classList.toggle('open');
-  });
-  document.addEventListener('click', () => notifDD.classList.remove('open'));
-  notifDD.addEventListener('click', e => e.stopPropagation());
-
-  function clearNotifs() {
-    notifDD.querySelectorAll('.notif-item').forEach(i => i.remove());
-    // clear badge
-    const badge = bellBtn.querySelector('span');
-    if (badge) badge.remove();
-    notifDD.classList.remove('open');
-    showToast('✓ All notifications cleared');
-  }
-  function goToNotif(view) {
-    notifDD.classList.remove('open');
-    switchView(view);
-  }
-
-  /* ════════════════════════════════
-     DASHBOARD — VIEW FULL WORK ORDER
-  ════════════════════════════════ */
-  document.querySelector('.work-order-btn').addEventListener('click', () => {
-    const wo = document.querySelector('.work-order-card');
-    wo.scrollIntoView({behavior:'smooth', block:'center'});
-    wo.style.transition = 'box-shadow 0.4s';
-    wo.style.boxShadow = '0 0 0 3px var(--gold)';
-    setTimeout(() => wo.style.boxShadow = '0 24px 60px rgba(0,0,0,0.4)', 1600);
-  });
-
-  /* ════════════════════════════════
-     DASHBOARD — APPROVE QUOTE
-  ════════════════════════════════ */
-  document.querySelector('[data-action="approve-quote"]').addEventListener('click', function() {
-    showModal({
-      icon: '💰',
-      title: 'Approve Repair Quote?',
-      sub: 'You are approving the repair quote of <strong style="color:var(--gold)">$1,525.00</strong> for Truck #402.<br>Parts will be ordered immediately.',
-      confirmText: 'YES, APPROVE',
-      onConfirm: () => {
-        this.textContent = '✓ APPROVED';
-        this.style.background = 'var(--success)';
-        this.style.clipPath = 'none';
-        this.style.borderRadius = '6px';
-        this.disabled = true;
-        document.querySelector('[data-action="decline-quote"]').style.display = 'none';
-        showToast('✅ Quote approved — Parts order initiated');
-      }
+    bellBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      notifDD.classList.toggle('open');
     });
-  });
+    document.addEventListener('click', () => notifDD.classList.remove('open'));
+    notifDD.addEventListener('click', e => e.stopPropagation());
 
-  /* ════════════════════════════════
-     DASHBOARD — DECLINE QUOTE
-  ════════════════════════════════ */
-  document.querySelector('[data-action="decline-quote"]').addEventListener('click', function() {
-    showModal({
-      icon: '🚫',
-      title: 'Decline Quote?',
-      sub: 'Are you sure you want to decline this repair quote?<br>The mechanic will be notified to re-evaluate.',
-      confirmText: 'YES, DECLINE',
-      cancelText: 'GO BACK',
-      onConfirm: () => {
-        this.textContent = '✗ DECLINED';
-        this.style.background = 'rgba(255,69,69,0.15)';
-        this.style.color = 'var(--danger)';
-        this.style.border = '2px solid var(--danger)';
-        this.disabled = true;
-        document.querySelector('[data-action="approve-quote"]').style.display = 'none';
-        showToast('✗ Quote declined — Mechanic notified');
-      }
+    function clearNotifs() {
+      notifDD.querySelectorAll('.notif-item').forEach(i => i.remove());
+      // clear badge
+      const badge = bellBtn.querySelector('span');
+      if (badge) badge.remove();
+      notifDD.classList.remove('open');
+      showToast('✓ All notifications cleared');
+    }
+    function goToNotif(view) {
+      notifDD.classList.remove('open');
+      switchView(view);
+    }
+
+    /* ════════════════════════════════
+       DASHBOARD — VIEW FULL WORK ORDER
+    ════════════════════════════════ */
+    document.querySelector('.work-order-btn').addEventListener('click', () => {
+      const wo = document.querySelector('.work-order-card');
+      wo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      wo.style.transition = 'box-shadow 0.4s';
+      wo.style.boxShadow = '0 0 0 3px var(--gold)';
+      setTimeout(() => wo.style.boxShadow = '0 24px 60px rgba(0,0,0,0.4)', 1600);
     });
-  });
 
-  /* ════════════════════════════════
-     DASHBOARD — APPROVE (WO header)
-  ════════════════════════════════ */
-  document.querySelector('[data-action="approve-wo-header"]').addEventListener('click', function() {
-    document.querySelector('[data-action="approve-sign"]').click();
-  });
-
-  /* ════════════════════════════════
-     DASHBOARD — APPROVE & SIGN
-  ════════════════════════════════ */
-  document.querySelector('[data-action="approve-sign"]').addEventListener('click', function() {
-    showModal({
-      icon: '✍️',
-      title: 'Sign & Approve Work Order?',
-      sub: 'Digitally signing this work order authorizes repairs for Truck #402.<br>Total: <strong style="color:var(--gold)">$1,573.25</strong> · Valid for 48 hours.',
-      confirmText: 'SIGN & APPROVE',
-      onConfirm: () => {
-        const woCard = document.querySelector('.work-order-card');
-        const sig = document.querySelector('.sig-box');
-        sig.innerHTML = `<div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--success);margin-bottom:4px">✓ DIGITALLY SIGNED</div><div style="font-size:11px;color:#8099b5">James Kowalski · ${new Date().toLocaleString()}</div>`;
-        document.querySelector('[data-action="approve-sign"]').textContent = '✓ SIGNED';
-        document.querySelector('[data-action="approve-sign"]').style.background = 'var(--success)';
-        document.querySelector('[data-action="approve-sign"]').disabled = true;
-        document.querySelector('[data-action="approve-wo-header"]').textContent = '✓ APPROVED';
-        document.querySelector('[data-action="approve-wo-header"]').style.background = 'var(--success)';
-        document.querySelector('[data-action="approve-wo-header"]').disabled = true;
-        showToast('✅ Work Order #402 approved & signed');
-      }
-    });
-  });
-
-  /* ════════════════════════════════
-     DASHBOARD — SERVICE HISTORY LINK
-  ════════════════════════════════ */
-  document.querySelector('[data-action="service-history"]').addEventListener('click', e => {
-    e.preventDefault();
-    switchView('finance');
-  });
-
-  /* ════════════════════════════════
-     DASHBOARD — MAP MINI PANEL (clickable)
-  ════════════════════════════════ */
-  document.querySelector('.map-panel').style.cursor = 'pointer';
-  document.querySelector('.map-panel').addEventListener('click', () => switchView('map'));
-  document.querySelector('.map-panel').title = 'View full map';
-
-  /* ════════════════════════════════
-     DIAGNOSTICS — EXPAND CODE ROWS
-  ════════════════════════════════ */
-  const diagDetails = {
-    'P0299': 'Turbocharger/Supercharger Underboost. ECM detected boost pressure below threshold. Root cause confirmed as failed turbocharger unit and blown gasket. Recommend full turbocharger replacement.',
-    'P0401': 'EGR flow is insufficient. Likely related to turbocharger failure causing abnormal exhaust backpressure. Should clear after turbocharger replacement.',
-    'P0087': 'Fuel rail pressure is too low. Possible fuel pump wear or partially clogged fuel filter. Monitor after turbocharger repair — may resolve under normal load.',
-    'B1045': 'Coolant temp sensor reading outside expected range. Sensor drift detected; may require recalibration or replacement. Low priority.',
-    'U0100': 'Lost CAN bus communication with ECM. Code was triggered during diagnostic procedure and has been resolved. No action required.',
-  };
-  document.querySelectorAll('.diag-code').forEach(row => {
-    const id = row.querySelector('.diag-code-id').textContent.trim();
-    const detail = document.createElement('div');
-    detail.className = 'diag-detail';
-    detail.textContent = diagDetails[id] || 'No additional details available.';
-    row.appendChild(detail);
-    row.addEventListener('click', () => {
-      const isOpen = detail.classList.contains('open');
-      // close all others
-      document.querySelectorAll('.diag-detail').forEach(d => d.classList.remove('open'));
-      document.querySelectorAll('.diag-code').forEach(r => r.classList.remove('expanded'));
-      if (!isOpen) { detail.classList.add('open'); row.classList.add('expanded'); }
-    });
-  });
-
-  /* ════════════════════════════════
-     FINANCE — APPROVE QUOTE buttons
-  ════════════════════════════════ */
-  document.querySelectorAll('[data-action="approve-finance"]').forEach(btn => {
-    btn.addEventListener('click', function() {
+    /* ════════════════════════════════
+       DASHBOARD — APPROVE QUOTE
+    ════════════════════════════════ */
+    document.querySelector('[data-action="approve-quote"]').addEventListener('click', function () {
       showModal({
         icon: '💰',
         title: 'Approve Repair Quote?',
-        sub: 'Approving quote of <strong style="color:var(--gold)">$1,573.25</strong> for Truck #402. Parts order will be initiated immediately.',
+        sub: 'You are approving the repair quote of <strong style="color:var(--gold)">$1,525.00</strong> for Truck #402.<br>Parts will be ordered immediately.',
         confirmText: 'YES, APPROVE',
         onConfirm: () => {
-          document.querySelectorAll('[data-action="approve-finance"]').forEach(b => {
-            b.textContent = '✓ APPROVED';
-            b.style.background = 'var(--success)';
-            b.style.clipPath = 'none';
-            b.style.borderRadius = '6px';
-            b.disabled = true;
-          });
-          // update invoice row status
-          const pendingTag = document.querySelector('.invoice-table .tag-warn');
-          if (pendingTag) { pendingTag.className = 'tag tag-success'; pendingTag.textContent = 'Approved'; }
+          this.textContent = '✓ APPROVED';
+          this.style.background = 'var(--success)';
+          this.style.clipPath = 'none';
+          this.style.borderRadius = '6px';
+          this.disabled = true;
+          document.querySelector('[data-action="decline-quote"]').style.display = 'none';
           showToast('✅ Quote approved — Parts order initiated');
         }
       });
     });
-  });
 
-  /* ════════════════════════════════
-     SETTINGS — EDIT PROFILE
-  ════════════════════════════════ */
-  const editBtn = document.querySelector('[data-action="edit-profile"]');
-  let editMode = false;
-  editBtn.addEventListener('click', function() {
-    const nameEl = document.querySelector('.profile-name');
-    const roleEl = document.querySelector('.profile-role');
-    if (!editMode) {
-      nameEl.innerHTML = `<input class="edit-input" id="edit-name" value="${nameEl.textContent}" style="font-size:18px">`;
-      roleEl.innerHTML = `<input class="edit-input" id="edit-role" value="${roleEl.textContent}" style="font-size:13px;margin-top:4px">`;
-      this.textContent = 'SAVE PROFILE';
+    /* ════════════════════════════════
+       DASHBOARD — DECLINE QUOTE
+    ════════════════════════════════ */
+    document.querySelector('[data-action="decline-quote"]').addEventListener('click', function () {
+      showModal({
+        icon: '🚫',
+        title: 'Decline Quote?',
+        sub: 'Are you sure you want to decline this repair quote?<br>The mechanic will be notified to re-evaluate.',
+        confirmText: 'YES, DECLINE',
+        cancelText: 'GO BACK',
+        onConfirm: () => {
+          this.textContent = '✗ DECLINED';
+          this.style.background = 'rgba(255,69,69,0.15)';
+          this.style.color = 'var(--danger)';
+          this.style.border = '2px solid var(--danger)';
+          this.disabled = true;
+          document.querySelector('[data-action="approve-quote"]').style.display = 'none';
+          showToast('✗ Quote declined — Mechanic notified');
+        }
+      });
+    });
+
+    /* ════════════════════════════════
+       DASHBOARD — APPROVE (WO header)
+    ════════════════════════════════ */
+    document.querySelector('[data-action="approve-wo-header"]').addEventListener('click', function () {
+      document.querySelector('[data-action="approve-sign"]').click();
+    });
+
+    /* ════════════════════════════════
+       DASHBOARD — APPROVE & SIGN
+    ════════════════════════════════ */
+    document.querySelector('[data-action="approve-sign"]').addEventListener('click', function () {
+      showModal({
+        icon: '✍️',
+        title: 'Sign & Approve Work Order?',
+        sub: 'Digitally signing this work order authorizes repairs for Truck #402.<br>Total: <strong style="color:var(--gold)">$1,573.25</strong> · Valid for 48 hours.',
+        confirmText: 'SIGN & APPROVE',
+        onConfirm: () => {
+          const woCard = document.querySelector('.work-order-card');
+          const sig = document.querySelector('.sig-box');
+          sig.innerHTML = `<div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--success);margin-bottom:4px">✓ DIGITALLY SIGNED</div><div style="font-size:11px;color:#8099b5">James Kowalski · ${new Date().toLocaleString()}</div>`;
+          document.querySelector('[data-action="approve-sign"]').textContent = '✓ SIGNED';
+          document.querySelector('[data-action="approve-sign"]').style.background = 'var(--success)';
+          document.querySelector('[data-action="approve-sign"]').disabled = true;
+          document.querySelector('[data-action="approve-wo-header"]').textContent = '✓ APPROVED';
+          document.querySelector('[data-action="approve-wo-header"]').style.background = 'var(--success)';
+          document.querySelector('[data-action="approve-wo-header"]').disabled = true;
+          showToast('✅ Work Order #402 approved & signed');
+        }
+      });
+    });
+
+    /* ════════════════════════════════
+       DASHBOARD — SERVICE HISTORY LINK
+    ════════════════════════════════ */
+    document.querySelector('[data-action="service-history"]').addEventListener('click', e => {
+      e.preventDefault();
+      switchView('finance');
+    });
+
+    /* ════════════════════════════════
+       DASHBOARD — MAP MINI PANEL (clickable)
+    ════════════════════════════════ */
+    document.querySelector('.map-panel').style.cursor = 'pointer';
+    document.querySelector('.map-panel').addEventListener('click', () => switchView('map'));
+    document.querySelector('.map-panel').title = 'View full map';
+
+    /* ════════════════════════════════
+       DIAGNOSTICS — EXPAND CODE ROWS
+    ════════════════════════════════ */
+    const diagDetails = {
+      'P0299': 'Turbocharger/Supercharger Underboost. ECM detected boost pressure below threshold. Root cause confirmed as failed turbocharger unit and blown gasket. Recommend full turbocharger replacement.',
+      'P0401': 'EGR flow is insufficient. Likely related to turbocharger failure causing abnormal exhaust backpressure. Should clear after turbocharger replacement.',
+      'P0087': 'Fuel rail pressure is too low. Possible fuel pump wear or partially clogged fuel filter. Monitor after turbocharger repair — may resolve under normal load.',
+      'B1045': 'Coolant temp sensor reading outside expected range. Sensor drift detected; may require recalibration or replacement. Low priority.',
+      'U0100': 'Lost CAN bus communication with ECM. Code was triggered during diagnostic procedure and has been resolved. No action required.',
+    };
+    document.querySelectorAll('.diag-code').forEach(row => {
+      const id = row.querySelector('.diag-code-id').textContent.trim();
+      const detail = document.createElement('div');
+      detail.className = 'diag-detail';
+      detail.textContent = diagDetails[id] || 'No additional details available.';
+      row.appendChild(detail);
+      row.addEventListener('click', () => {
+        const isOpen = detail.classList.contains('open');
+        // close all others
+        document.querySelectorAll('.diag-detail').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('.diag-code').forEach(r => r.classList.remove('expanded'));
+        if (!isOpen) { detail.classList.add('open'); row.classList.add('expanded'); }
+      });
+    });
+
+    /* ════════════════════════════════
+       FINANCE — APPROVE QUOTE buttons
+    ════════════════════════════════ */
+    document.querySelectorAll('[data-action="approve-finance"]').forEach(btn => {
+      btn.addEventListener('click', function () {
+        showModal({
+          icon: '💰',
+          title: 'Approve Repair Quote?',
+          sub: 'Approving quote of <strong style="color:var(--gold)">$1,573.25</strong> for Truck #402. Parts order will be initiated immediately.',
+          confirmText: 'YES, APPROVE',
+          onConfirm: () => {
+            document.querySelectorAll('[data-action="approve-finance"]').forEach(b => {
+              b.textContent = '✓ APPROVED';
+              b.style.background = 'var(--success)';
+              b.style.clipPath = 'none';
+              b.style.borderRadius = '6px';
+              b.disabled = true;
+            });
+            // update invoice row status
+            const pendingTag = document.querySelector('.invoice-table .tag-warn');
+            if (pendingTag) { pendingTag.className = 'tag tag-success'; pendingTag.textContent = 'Approved'; }
+            showToast('✅ Quote approved — Parts order initiated');
+          }
+        });
+      });
+    });
+
+    /* ════════════════════════════════
+       SETTINGS — EDIT PROFILE
+    ════════════════════════════════ */
+    const editBtn = document.querySelector('[data-action="edit-profile"]');
+    let editMode = false;
+    editBtn.addEventListener('click', function () {
+      const nameEl = document.querySelector('.profile-name');
+      const roleEl = document.querySelector('.profile-role');
+      if (!editMode) {
+        nameEl.innerHTML = `<input class="edit-input" id="edit-name" value="${nameEl.textContent}" style="font-size:18px">`;
+        roleEl.innerHTML = `<input class="edit-input" id="edit-role" value="${roleEl.textContent}" style="font-size:13px;margin-top:4px">`;
+        this.textContent = 'SAVE PROFILE';
+        this.style.background = 'var(--success)';
+        editMode = true;
+        document.getElementById('edit-name').focus();
+      } else {
+        const newName = document.getElementById('edit-name').value || 'James Kowalski';
+        const newRole = document.getElementById('edit-role').value || 'Fleet Manager';
+        nameEl.textContent = newName;
+        roleEl.textContent = newRole;
+        this.textContent = 'EDIT PROFILE';
+        this.style.background = 'var(--gold)';
+        editMode = false;
+        showToast('✓ Profile updated');
+      }
+    });
+
+    /* ════════════════════════════════
+       SETTINGS — SAVE CHANGES
+    ════════════════════════════════ */
+    document.querySelector('[data-action="save-settings"]').addEventListener('click', function () {
+      this.textContent = '✓ SAVED!';
       this.style.background = 'var(--success)';
-      editMode = true;
-      document.getElementById('edit-name').focus();
-    } else {
-      const newName = document.getElementById('edit-name').value || 'James Kowalski';
-      const newRole = document.getElementById('edit-role').value || 'Fleet Manager';
-      nameEl.textContent = newName;
-      roleEl.textContent = newRole;
-      this.textContent = 'EDIT PROFILE';
-      this.style.background = 'var(--gold)';
-      editMode = false;
-      showToast('✓ Profile updated');
-    }
-  });
-
-  /* ════════════════════════════════
-     SETTINGS — SAVE CHANGES
-  ════════════════════════════════ */
-  document.querySelector('[data-action="save-settings"]').addEventListener('click', function() {
-    this.textContent = '✓ SAVED!';
-    this.style.background = 'var(--success)';
-    showToast('✓ Settings saved successfully');
-    setTimeout(() => { this.textContent = 'SAVE CHANGES'; this.style.background = 'var(--gold)'; }, 2500);
-  });
-</script>
+      showToast('✓ Settings saved successfully');
+      setTimeout(() => { this.textContent = 'SAVE CHANGES'; this.style.background = 'var(--gold)'; }, 2500);
+    });
+  </script>
 </body>
+
 </html>
