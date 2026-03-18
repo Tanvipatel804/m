@@ -1,0 +1,4223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚚 Lorry — Allotment Trip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            padding: 10px;
+            padding-bottom: 30px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, #1565C0, #0D47A1);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .trip-type-badge {
+            background: linear-gradient(135deg, #FF6F00, #E65100);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(255, 111, 0, 0.4);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+
+        .status-text {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 26px;
+            background: white;
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+
+        .toggle-slider {
+            width: 22px;
+            height: 22px;
+            background: #1565C0;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ── TABS ── */
+        .status-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding: 10px 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .status-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .status-tabs::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .status-tabs::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .tab {
+            min-width: fit-content;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 15px;
+            text-align: center;
+            transition: 0.3s;
+            color: #333;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .tab .tab-icon {
+            font-size: 20px;
+        }
+
+        .tab .tab-text {
+            font-size: 17px;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .tab.active {
+            background: #1565C0;
+            color: white;
+            border-color: #1565C0;
+        }
+
+        /* ── MAP SECTION ── */
+        .map-section {
+            background: #0d1829;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .map-section.visible {
+            display: block;
+        }
+
+        .map-bg {
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #101e33 0%, #162a44 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-bg::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(100, 181, 246, 0.04) 40px, rgba(100, 181, 246, 0.04) 41px),
+                repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(100, 181, 246, 0.04) 40px, rgba(100, 181, 246, 0.04) 41px);
+        }
+
+        .route-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .map-center-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .map-marker:hover {
+            transform: scale(1.15);
+        }
+
+        .m-pickup {
+            background: #1565C0;
+            top: 48%;
+            left: 12%;
+        }
+
+        .m-drop1 {
+            background: #2E7D32;
+            top: 30%;
+            left: 35%;
+        }
+
+        .m-fuel {
+            background: #E65100;
+            top: 55%;
+            left: 58%;
+        }
+
+        .m-drop2 {
+            background: #1B5E20;
+            top: 40%;
+            right: 12%;
+        }
+
+        .m-drop3 {
+            background: #0D47A1;
+            bottom: 22%;
+            left: 50%;
+        }
+
+        .m-drop4 {
+            background: #7B1FA2;
+            top: 20%;
+            left: 70%;
+        }
+
+        .map-info-blocks {
+            display: flex;
+            gap: 10px;
+            padding: 12px 16px;
+            background: #0d1829;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .info-block {
+            flex: 1;
+            background: rgba(13, 24, 41, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 10px 14px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .info-block-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #5a6a88;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .info-block-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* ── TRIPS SECTION ── */
+        .trips-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .trip-card {
+            background: #0d1829;
+            border-radius: 14px;
+            border: 1px solid #1e2c48;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .trip-card-header {
+            background: linear-gradient(90deg, #1565C0, #0D47A1);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trip-card-header .trip-id {
+            font-size: 13px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.06em;
+        }
+
+        .trip-card-header .trip-badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        .badge-pending {
+            background: rgba(255, 152, 0, 0.2);
+            color: #FFA726;
+            border: 1px solid rgba(255, 152, 0, 0.4);
+        }
+
+        .badge-inprogress {
+            background: rgba(33, 150, 243, 0.2);
+            color: #64B5F6;
+            border: 1px solid rgba(33, 150, 243, 0.4);
+        }
+
+        .badge-completed {
+            background: rgba(76, 175, 80, 0.2);
+            color: #66BB6A;
+            border: 1px solid rgba(76, 175, 80, 0.4);
+        }
+
+        .badge-incomplete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .badge-loading {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .badge-unloading {
+            background: rgba(139, 92, 246, 0.2);
+            color: #A78BFA;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        /* Party row */
+        .party-row {
+            display: grid;
+            grid-template-columns: 1fr 56px 90px;
+            align-items: center;
+            padding: 14px 16px;
+            gap: 12px;
+        }
+
+        /* Info column */
+        .party-info {
+            color: #203a43;
+        }
+
+        .party-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 5px;
+        }
+
+        .party-label.sender-label {
+            color: #64B5F6;
+        }
+
+        .party-label.receiver-label {
+            color: #66BB6A;
+        }
+
+        .party-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stars {
+            font-size: 11px;
+            color: #FFA726;
+        }
+
+        .party-address {
+            font-size: 12px;
+            color: #8899bb;
+            margin-bottom: 3px;
+        }
+
+        .party-eta {
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .party-eta.blue {
+            color: #64B5F6;
+        }
+
+        .party-eta.green {
+            color: #66BB6A;
+        }
+
+        /* Action column */
+        .party-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .call-btn {
+            background: rgba(76, 175, 80, 0.15);
+            color: #66BB6A;
+            border: 1.5px solid rgba(76, 175, 80, 0.4);
+        }
+
+        .call-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: scale(1.1);
+        }
+
+        .msg-btn {
+            background: rgba(33, 150, 243, 0.15);
+            color: #64B5F6;
+            border: 1.5px solid rgba(33, 150, 243, 0.4);
+        }
+
+        .msg-btn:hover {
+            background: rgba(33, 150, 243, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Status column */
+        .party-status-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-align: center;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dot-pending {
+            background: #FFA726;
+            box-shadow: 0 0 6px rgba(255, 152, 0, 0.6);
+        }
+
+        .dot-inprogress {
+            background: #64B5F6;
+            box-shadow: 0 0 6px rgba(33, 150, 243, 0.6);
+        }
+
+        .dot-completed {
+            background: #66BB6A;
+            box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+        }
+
+        .status-label-text {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        .status-label-text.pending {
+            color: #FFA726;
+        }
+
+        .status-label-text.inprogress {
+            color: #64B5F6;
+        }
+
+        .status-label-text.completed {
+            color: #66BB6A;
+        }
+
+        .status-label-text.loading {
+            color: #FBBF24;
+        }
+
+        .status-label-text.unloading {
+            color: #A78BFA;
+        }
+
+        .dot-loading {
+            background: #FBBF24;
+            box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+        }
+
+        .dot-unloading {
+            background: #A78BFA;
+            box-shadow: 0 0 6px rgba(139, 92, 246, 0.6);
+        }
+
+        /* Divider */
+        .trip-divider {
+            margin: 0 16px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #1e2c48 20%, #2a3c5a 50%, #1e2c48 80%, transparent);
+            position: relative;
+        }
+
+        .trip-divider::before {
+            content: '↓';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #0d1829;
+            color: #5a6a88;
+            font-size: 13px;
+            padding: 0 6px;
+            font-weight: 700;
+        }
+
+        /* Sidebar */
+        .sidebar-menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 998;
+        }
+
+        .sidebar-menu-overlay.open {
+            display: block;
+        }
+
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: #0d1829;
+            z-index: 999;
+            transition: left 0.3s ease;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-menu.open {
+            left: 0;
+        }
+
+        .sidebar-menu-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .close-menu-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #1565C0, #0D47A1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .profile-name {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .profile-rating {
+            color: #5a6a88;
+            font-size: 13px;
+        }
+
+        .sidebar-menu-items {
+            padding: 10px 0;
+        }
+
+        .sidebar-menu-item {
+            padding: 16px 25px;
+            color: #8899bb;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-left-color: #1565C0;
+            color: white;
+        }
+
+        .sidebar-menu-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .party-row {
+                grid-template-columns: 1fr 48px 70px;
+                padding: 12px 12px;
+                gap: 8px;
+            }
+
+            .party-name {
+                font-size: 14px;
+            }
+
+            .info-block-value {
+                font-size: 14px;
+            }
+        }
+
+        /* ══════════════════════════════════════
+       RIDE CARD — fixed bottom sheet
+    ══════════════════════════════════════ */
+        body {
+            padding-bottom: 260px;
+            /* space for ride card */
+        }
+
+        .ride-card {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.35);
+            height: 215px;
+            transition: height 0.3s ease;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .ride-card.expanded {
+            height: 600px;
+            overflow-y: auto;
+        }
+
+        .ride-card.dragging {
+            transition: none;
+        }
+
+        /* drag handle */
+        .drag-handle {
+            width: 100%;
+            padding: 8px 0 4px;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .drag-bar {
+            width: 44px;
+            height: 5px;
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        /* ── preview section (collapsed state) ── */
+        .preview-section {
+            padding: 10px 18px 8px;
+            opacity: 1;
+            transition: opacity 0.25s ease;
+        }
+
+        .ride-card.expanded .preview-section {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .preview-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .preview-left-btn,
+        .preview-right-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #F3F4F6;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .preview-left-btn:hover,
+        .preview-right-btn:hover {
+            background: #E5E7EB;
+            transform: scale(1.05);
+        }
+
+        .preview-left-btn i,
+        .preview-right-btn i {
+            font-size: 16px;
+            color: #374151;
+        }
+
+        .preview-center-text {
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .preview-center-text .pv-timer {
+            display: inline-block;
+            border: 2px solid #B45309;
+            border-radius: 50px;
+            font-weight: 800;
+            padding: 1px 8px;
+            color: #B45309;
+            font-size: 13px;
+        }
+
+        .rc-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 6px 0;
+        }
+
+        /* stat blocks in preview */
+        .pv-stat-blocks {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .pv-stat-block {
+            flex: 1;
+            background: #F3F4F6;
+            border-radius: 10px;
+            padding: 8px 6px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .pv-stat-icon {
+            font-size: 15px;
+        }
+
+        .pv-stat-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #9ca3af;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .pv-stat-value {
+            font-size: 13px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        /* ── ride content (expanded state) ── */
+        .ride-content {
+            padding: 0 18px 24px;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            pointer-events: none;
+        }
+
+        .ride-card.expanded .ride-content {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* stat blocks in expanded */
+        .rc-stat-blocks {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .rc-stat-block {
+            flex: 1;
+            background: #F3F4F6;
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .rc-stat-icon {
+            font-size: 20px;
+        }
+
+        .rc-stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #9ca3af;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .rc-stat-value {
+            font-size: 15px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        /* ── STOPS: vertical timeline ── */
+        .stops-section {
+            margin-bottom: 6px;
+        }
+
+        .stops-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #374151;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .stops-timeline {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* vertical connector — gray dashed line between all stops */
+        .stops-timeline::before {
+            display: none;
+        }
+
+        .stop-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 6px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* gray dashed connector drawn downward from every non-last stop */
+        .stop-row:not(:last-child) .stop-dot-wrap::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 14px;
+            width: 2px;
+            bottom: -6px;
+            background: repeating-linear-gradient(to bottom,
+                    #c4c9d4 0px,
+                    #c4c9d4 4px,
+                    transparent 4px,
+                    transparent 8px);
+        }
+
+        /* trip-pair dot colors */
+        .dot-pair1 {
+            background: #f59e0b;
+            color: #f59e0b;
+        }
+
+        /* Trip1: Stop1 & Stop4 — orange  */
+        .dot-pair2 {
+            background: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        /* Trip2: Stop2 & Stop5 — purple  */
+        .dot-pair3 {
+            background: #ec4899;
+            color: #ec4899;
+        }
+
+        /* Trip3: Stop3 & Stop6 — pink    */
+
+        .stop-dot-wrap {
+            width: 14px;
+            flex-shrink: 0;
+            margin-top: 3px;
+            position: relative;
+            z-index: 2;
+            align-self: stretch;
+        }
+
+        .stop-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2.5px solid white;
+            box-shadow: 0 0 0 2px currentColor;
+            display: block;
+        }
+
+        .dot-pickup {
+            background: #64B5F6;
+            color: #64B5F6;
+        }
+
+        .dot-dest {
+            background: #66BB6A;
+            color: #66BB6A;
+        }
+
+        .dot-green {
+            background: #10b981;
+            color: #10b981;
+        }
+
+        .dot-orange {
+            background: #f59e0b;
+            color: #f59e0b;
+        }
+
+        .dot-blue {
+            background: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .dot-purple {
+            background: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        .dot-red {
+            background: #ef4444;
+            color: #ef4444;
+        }
+
+        .stop-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stop-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #111827;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* stop-name colors matching trip pair */
+        .stop-row.pair1 .stop-name {
+            color: #f59e0b;
+        }
+
+        .stop-row.pair2 .stop-name {
+            color: #8b5cf6;
+        }
+
+        .stop-row.pair3 .stop-name {
+            color: #ec4899;
+        }
+
+        /* completed stop ETA always green */
+        .stop-row.stop-done .stop-eta-text {
+            color: #10b981 !important;
+        }
+
+        .stop-addr {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .stop-eta-text {
+            font-size: 11px;
+            color: #111827;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .stop-badge {
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 20px;
+            white-space: nowrap;
+            align-self: flex-start;
+            margin-top: 3px;
+            flex-shrink: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-done {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-active {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-pending {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        /* schedule + notif in expanded */
+        .schedule-eta-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .schedule-box {
+            flex: 1;
+            background: #F9FAFB;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .schedule-box.green-border {
+            border-left: 4px solid #10b981;
+        }
+
+        .schedule-box.amber-border {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .schedule-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #9ca3af;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .schedule-time {
+            font-size: 20px;
+            font-weight: 900;
+            color: #111827;
+            margin-bottom: 5px;
+        }
+
+        .schedule-meta {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 600;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .notif-section {
+            margin-bottom: 10px;
+        }
+
+        .notif-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #374151;
+            margin-bottom: 7px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notif-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .notif-textarea {
+            flex: 1;
+            min-height: 56px;
+            padding: 9px 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .notif-textarea:focus {
+            border-color: #1565C0;
+        }
+
+        .notif-send-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #1565C0;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 15px;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+
+        .notif-send-btn:hover {
+            background: #0D47A1;
+            transform: scale(1.05);
+        }
+
+        .rc-report-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .rc-report-btn {
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .rc-report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .rc-report-btn.breakdown {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .rc-report-btn.issue {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-menu-overlay" id="menuOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-menu-header">
+            <button class="close-menu-btn" id="closeMenuBtn"><i class="fas fa-times"></i></button>
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <div class="profile-name">Profile Name</div>
+            <div class="profile-rating">Rating ★★★★★</div>
+        </div>
+        <div class="sidebar-menu-items">
+            <div class="sidebar-menu-item"><i class="fas fa-inbox"></i><span>Inbox</span></div>
+            <div class="sidebar-menu-item"><i class="fas fa-dollar-sign"></i><span>Earning</span></div>
+            <div class="sidebar-menu-item"><i class="fas fa-briefcase"></i><span>Opportunities</span></div>
+            <div class="sidebar-menu-item"><i class="fas fa-users"></i><span>Pool Members</span></div>
+            <div class="sidebar-menu-item"><i class="fas fa-wallet"></i><span>Wallet</span></div>
+            <div class="sidebar-menu-item"><i class="fas fa-user-circle"></i><span>Account</span></div>
+            <div class="sidebar-menu-item"><i class="fas fa-car"></i><span>Vehicle Recovery</span></div>
+            <div class="sidebar-menu-item"><i class="fas fa-user-plus"></i><span>Refer Friends</span></div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- ══ HEADER ══ -->
+        <div class="header">
+            <div class="header-left">
+                <div class="menu-icon" onclick="openSidebarMenu()"><i class="fas fa-bars"></i></div>
+                <div class="logo">🚚 Lorry (Trip ID: TRPA#0001)</div>
+                <div class="trip-type-badge">⚡ Allotment Trip</div>
+            </div>
+            <div class="header-right">
+                <div class="status-toggle">
+                    <span class="status-text" id="statusTxt">ONLINE</span>
+                    <div class="toggle" id="toggleBtn">
+                        <div class="toggle-slider" id="toggleSlider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ TABS ══ -->
+        <!-- <div class="status-tabs">
+      <div class="tab" id="tabManifest" onclick="switchTab('manifest')"><span class="tab-icon">📋</span><span
+          class="tab-text">Manifest</span></div>
+      <div class="tab active" id="tabMap" onclick="switchTab('map')"><span class="tab-icon">🗺️</span><span
+          class="tab-text">Map</span></div>
+      <div class="tab" id="tabLoading" onclick="switchTab('loading')"><span class="tab-icon">⏳</span><span
+          class="tab-text">Loading</span></div>
+      <div class="tab" id="tabTransit" onclick="switchTab('transit')"><span class="tab-icon">🔄</span><span
+          class="tab-text">In Transit</span></div>
+      <div class="tab" id="tabUnloading" onclick="switchTab('unloading')"><span class="tab-icon">⌛</span><span
+          class="tab-text">Unloading</span></div>
+      <div class="tab" id="tabCompleted" onclick="switchTab('completed')"><span class="tab-icon">✅</span><span
+          class="tab-text">Completed</span></div>
+    </div> -->
+
+        <!-- ══ MAP SECTION (shown when Map tab active) ══ -->
+        <div class="map-section visible" id="mapSection">
+            <div class="map-bg">
+                <svg class="route-svg" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                    <polyline points="120,240 220,200 350,150 470,190 580,275 660,230 700,200 780,170 880,200"
+                        fill="none" stroke="rgba(100,181,246,0.5)" stroke-width="4" stroke-dasharray="12,6"
+                        stroke-linecap="round" />
+                    <polyline points="120,240 220,200 350,150" fill="none" stroke="#66BB6A" stroke-width="5"
+                        stroke-linecap="round" />
+                </svg>
+
+                <div class="map-center-label">Route Map — Allotment Trip</div>
+
+                <div class="map-marker m-pickup" title="Amazon Fulfillment (Origin)">📦</div>
+                <div class="map-marker m-drop1" title="Raj Enterprises — Stop 1">🏭</div>
+                <div class="map-marker m-fuel" title="Pilot Travel Center — Stop 2">⛽</div>
+                <div class="map-marker m-drop2" title="Mehta Warehouse — Stop 3">🏭</div>
+                <div class="map-marker m-drop3" title="Kumar Logistics — Stop 4">🚛</div>
+                <div class="map-marker m-drop4" title="Singh Distribution — Stop 5">🏬</div>
+
+            </div>
+            <div class="map-info-blocks">
+                <div class="info-block">
+                    <div class="info-block-label">Total Distance</div>
+                    <div class="info-block-value">483 km</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-block-label">ETA (Final Stop)</div>
+                    <div class="info-block-value">6:00 PM</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-block-label">Next Stop</div>
+                    <div class="info-block-value">Raj Ent.</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-block-label">Stops Done</div>
+                    <div class="info-block-value">1 / 6</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ TRIPS DETAIL SECTION ══ -->
+        <div class="trips-section" id="tripsSection">
+
+            <!-- ─── TRIP 1 ─── -->
+            <div class="trip-card">
+                <div class="trip-card-header">
+                    <i class="fas fa-truck" style="color:rgba(255,255,255,0.7);font-size:14px;"></i>
+                    <span class="trip-id">Trip #001 — Allotment</span>
+                    <span class="trip-badge badge-inprogress">In Progress</span>
+                </div>
+
+                <!-- Sender / Pickup -->
+                <div class="party-row">
+                    <div class="party-info">
+                        <div class="party-label sender-label">📦 Sender / Pickup</div>
+                        <div class="party-name">
+                            Rajesh Kumar
+                            <span class="stars">★★★★★</span>
+                        </div>
+                        <div class="party-address"><i class="fas fa-map-marker-alt"
+                                style="color:#f59e0b;font-size:10px;"></i> 12,
+                            Industrial Area, Sector 5, Mumbai — 400001</div>
+                        <div class="party-eta" style="color:#f59e0b;"><i class="fas fa-clock"></i> ETA Pickup: 10:30 AM
+                            · Arriving in 12
+                            min</div>
+                    </div>
+                    <div class="party-actions">
+                        <button class="action-btn call-btn" onclick="makeCall('Rajesh Kumar','9876543210')"
+                            title="Call Rajesh Kumar">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="action-btn msg-btn" onclick="sendMsg('Rajesh Kumar','9876543210')"
+                            title="Message Rajesh Kumar">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                    <div class="party-status-col">
+                        <div class="status-dot dot-loading"></div>
+                        <div class="status-label-text loading">Loading</div>
+                    </div>
+                </div>
+
+                <div class="trip-divider"></div>
+
+                <!-- Receiver / Destination -->
+                <div class="party-row">
+                    <div class="party-info">
+                        <div class="party-label receiver-label">🏭 Receiver / Destination</div>
+                        <div class="party-name">
+                            Suresh Mehta
+                            <!-- <span class="stars">★★★★☆</span> -->
+                        </div>
+                        <div class="party-address"><i class="fas fa-map-marker-alt"
+                                style="color:#f59e0b;font-size:10px;"></i> Mehta
+                            Warehouse, NH-48, Pune — 411001</div>
+                        <div class="party-eta" style="color:#f59e0b;"><i class="fas fa-clock"></i> ETA Delivery: 1:45 PM
+                            · 86 km away
+                        </div>
+                    </div>
+                    <div class="party-actions">
+                        <button class="action-btn call-btn" onclick="makeCall('Suresh Mehta','9123456780')"
+                            title="Call Suresh Mehta">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="action-btn msg-btn" onclick="sendMsg('Suresh Mehta','9123456780')"
+                            title="Message Suresh Mehta">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                    <div class="party-status-col">
+                        <div class="status-dot dot-inprogress"></div>
+                        <div class="status-label-text inprogress">In Progress</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── TRIP 2 ─── -->
+            <div class="trip-card">
+                <div class="trip-card-header">
+                    <i class="fas fa-truck" style="color:rgba(255,255,255,0.7);font-size:14px;"></i>
+                    <span class="trip-id">Trip #002 — Allotment</span>
+                    <span class="trip-badge badge-incomplete">Incomplete</span>
+                </div>
+
+                <!-- Sender / Pickup -->
+                <div class="party-row">
+                    <div class="party-info">
+                        <div class="party-label sender-label">📦 Sender / Pickup</div>
+                        <div class="party-name">
+                            Anita Singh
+                            <span class="stars">★★★★★</span>
+                        </div>
+                        <div class="party-address"><i class="fas fa-map-marker-alt"
+                                style="color:#8b5cf6;font-size:10px;"></i> Plot
+                            7, MIDC, Nashik Road, Nashik — 422101</div>
+                        <div class="party-eta" style="color:#8b5cf6;"><i class="fas fa-clock"></i> ETA Pickup: 2:00 PM ·
+                            Scheduled</div>
+                    </div>
+                    <div class="party-actions">
+                        <button class="action-btn call-btn" onclick="makeCall('Anita Singh','9988776655')"
+                            title="Call Anita Singh">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="action-btn msg-btn" onclick="sendMsg('Anita Singh','9988776655')"
+                            title="Message Anita Singh">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                    <div class="party-status-col">
+                        <div class="status-dot dot-pending"></div>
+                        <div class="status-label-text pending">Pending</div>
+                    </div>
+                </div>
+
+                <div class="trip-divider"></div>
+
+                <!-- Receiver / Destination -->
+                <div class="party-row">
+                    <div class="party-info">
+                        <div class="party-label receiver-label">🏭 Receiver / Destination</div>
+                        <div class="party-name">
+                            Kumar Logistics
+                            <!-- <span class="stars">★★★☆☆</span> -->
+                        </div>
+                        <div class="party-address"><i class="fas fa-map-marker-alt"
+                                style="color:#8b5cf6;font-size:10px;"></i> Kumar
+                            Cold Storage, Aurangabad — 431001</div>
+                        <div class="party-eta" style="color:#8b5cf6;"><i class="fas fa-clock"></i> ETA Delivery: 5:30 PM
+                            · 142 km away
+                        </div>
+                    </div>
+                    <div class="party-actions">
+                        <button class="action-btn call-btn" onclick="makeCall('Kumar Logistics','9112233445')"
+                            title="Call Kumar Logistics">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="action-btn msg-btn" onclick="sendMsg('Kumar Logistics','9112233445')"
+                            title="Message Kumar Logistics">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                    <div class="party-status-col">
+                        <div class="status-dot dot-pending"></div>
+                        <div class="status-label-text pending">Pending</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── TRIP 3 ─── -->
+            <div class="trip-card">
+                <div class="trip-card-header">
+                    <i class="fas fa-truck" style="color:rgba(255,255,255,0.7);font-size:14px;"></i>
+                    <span class="trip-id">Trip #003 — Allotment</span>
+                    <span class="trip-badge badge-completed">Completed</span>
+                </div>
+
+                <!-- Sender / Pickup -->
+                <div class="party-row">
+                    <div class="party-info">
+                        <div class="party-label sender-label">📦 Sender / Pickup</div>
+                        <div class="party-name">
+                            Deepak Sharma
+                            <span class="stars">★★★★★</span>
+                        </div>
+                        <div class="party-address"><i class="fas fa-map-marker-alt"
+                                style="color:#ec4899;font-size:10px;"></i> 45,
+                            Logistics Park, Bhiwandi — 421302</div>
+                        <div class="party-eta" style="color:#ec4899;"><i class="fas fa-clock"></i> Picked up at: 7:15 AM
+                            ✓</div>
+                    </div>
+                    <div class="party-actions">
+                        <button class="action-btn call-btn" onclick="makeCall('Deepak Sharma','9001122334')"
+                            title="Call Deepak Sharma">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="action-btn msg-btn" onclick="sendMsg('Deepak Sharma','9001122334')"
+                            title="Message Deepak Sharma">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                    <div class="party-status-col">
+                        <div class="status-dot dot-completed"></div>
+                        <div class="status-label-text completed">Completed</div>
+                    </div>
+                </div>
+
+                <div class="trip-divider"></div>
+
+                <!-- Receiver / Destination -->
+                <div class="party-row">
+                    <div class="party-info">
+                        <div class="party-label receiver-label">🏭 Receiver / Destination</div>
+                        <div class="party-name">
+                            Singh Distribution
+                            <!-- <span class="stars">★★★★☆</span> -->
+                        </div>
+                        <div class="party-address"><i class="fas fa-map-marker-alt"
+                                style="color:#ec4899;font-size:10px;"></i> Singh
+                            DC, Thane West, Mumbai — 400601</div>
+                        <div class="party-eta" style="color:#ec4899;"><i class="fas fa-clock"></i> Delivered at: 9:40 AM
+                            ✓</div>
+                    </div>
+                    <div class="party-actions">
+                        <button class="action-btn call-btn" onclick="makeCall('Singh Distribution','9776655443')"
+                            title="Call Singh Distribution">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="action-btn msg-btn" onclick="sendMsg('Singh Distribution','9776655443')"
+                            title="Message Singh Distribution">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                    <div class="party-status-col">
+                        <div class="status-dot dot-completed"></div>
+                        <div class="status-label-text completed">Completed</div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /trips-section -->
+    </div><!-- /container -->
+
+    <!-- ══ RIDE CARD ══ -->
+    <div class="ride-card" id="rideCard">
+
+        <!-- Drag Handle -->
+        <div class="drag-handle" id="dragHandle">
+            <div class="drag-bar"></div>
+        </div>
+
+        <!-- ── PREVIEW SECTION (visible when collapsed) ── -->
+        <div class="preview-section" id="previewSection">
+            <div class="preview-row">
+                <button class="preview-left-btn" title="Preferences"><i class="fas fa-sliders-h"></i></button>
+                <div class="preview-center-text">
+                    Allotment Trip Active<br>
+                    <span class="pv-timer" id="pvTimer">00:00</span>
+                </div>
+                <button class="preview-right-btn" title="More options"><i class="fas fa-ellipsis-vertical"></i></button>
+            </div>
+            <div class="rc-divider"></div>
+            <div class="pv-stat-blocks">
+                <div class="pv-stat-block">
+                    <div class="pv-stat-icon">💰</div>
+                    <div class="pv-stat-label">Total Payment</div>
+                    <div class="pv-stat-value">₹58,000</div>
+                </div>
+                <div class="pv-stat-block">
+                    <div class="pv-stat-icon">⚖️</div>
+                    <div class="pv-stat-label">Total Weight</div>
+                    <div class="pv-stat-value">12,400 KG</div>
+                </div>
+                <div class="pv-stat-block">
+                    <div class="pv-stat-icon">⏱️</div>
+                    <div class="pv-stat-label">Est. Total</div>
+                    <div class="pv-stat-value">~9.5 hrs</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RIDE CONTENT (visible when expanded) ── -->
+        <div class="ride-content" id="rideContent">
+
+            <!-- Top row in expanded -->
+            <div class="preview-row" style="margin-bottom:10px;">
+                <button class="preview-left-btn" title="Preferences"><i class="fas fa-sliders-h"></i></button>
+                <div class="preview-center-text">
+                    Allotment Trip Active<br>
+                    <span class="pv-timer" id="rcTimer">00:00</span>
+                </div>
+                <button class="preview-right-btn" title="More options"><i class="fas fa-ellipsis-vertical"></i></button>
+            </div>
+            <div class="rc-divider"></div>
+
+            <!-- Stat Blocks -->
+            <div class="rc-stat-blocks" style="margin-bottom:12px;">
+                <div class="rc-stat-block">
+                    <div class="rc-stat-icon">💰</div>
+                    <div class="rc-stat-label">Total Payment</div>
+                    <div class="rc-stat-value">₹58,000</div>
+                </div>
+                <div class="rc-stat-block">
+                    <div class="rc-stat-icon">⚖️</div>
+                    <div class="rc-stat-label">Total Weight</div>
+                    <div class="rc-stat-value">12,400 KG</div>
+                </div>
+                <div class="rc-stat-block">
+                    <div class="rc-stat-icon">⏱️</div>
+                    <div class="rc-stat-label">Est. Total</div>
+                    <div class="rc-stat-value">~9.5 hrs</div>
+                </div>
+            </div>
+            <div class="rc-divider"></div>
+
+            <!-- ── STOPS: vertical timeline ── -->
+            <div class="stops-section">
+                <div class="stops-title"><i class="fas fa-route"></i> Trip Stops</div>
+                <div class="stops-timeline">
+
+                    <!-- Stop 1 — Origin / Pickup (Trip 1) -->
+                    <div class="stop-row pair1 stop-done">
+                        <div class="stop-dot-wrap"><span class="stop-dot dot-pair1"></span></div>
+                        <div class="stop-body">
+                            <div class="stop-name">Stop 1 — Amazon Fulfillment (Origin)</div>
+                            <div class="stop-addr">12, Industrial Area, Sector 5, Mumbai — 400001</div>
+                            <div class="stop-eta-text"><i class="fas fa-check-circle"></i> Departed: 08:00 AM</div>
+                        </div>
+                        <span class="stop-badge badge-done">Done</span>
+                    </div>
+
+                    <!-- Stop 2 — Pickup (Trip 2) -->
+                    <div class="stop-row pair2">
+                        <div class="stop-dot-wrap"><span class="stop-dot dot-pair2"></span></div>
+                        <div class="stop-body">
+                            <div class="stop-name">Stop 2 — Raj Enterprises</div>
+                            <div class="stop-addr">Plot 7, MIDC, Nashik Road, Nashik — 422101</div>
+                            <div class="stop-eta-text"><i class="fas fa-clock"></i> ETA: 10:30 AM · Arriving in 12 min
+                            </div>
+                        </div>
+                        <span class="stop-badge badge-active">Active</span>
+                    </div>
+
+                    <!-- Stop 3 — Pickup (Trip 3) -->
+                    <div class="stop-row pair3">
+                        <div class="stop-dot-wrap"><span class="stop-dot dot-pair3"></span></div>
+                        <div class="stop-body">
+                            <div class="stop-name">Stop 3 — Pilot Travel Center ⛽</div>
+                            <div class="stop-addr">NH-48, Khopoli Toll, Pune Highway</div>
+                            <div class="stop-eta-text"><i class="fas fa-clock"></i> ETA: 12:00 PM · 54 km away</div>
+                        </div>
+                        <span class="stop-badge badge-pending">Pending</span>
+                    </div>
+
+                    <!-- Stop 4 — Delivery (Trip 1) -->
+                    <div class="stop-row pair1">
+                        <div class="stop-dot-wrap"><span class="stop-dot dot-pair1"></span></div>
+                        <div class="stop-body">
+                            <div class="stop-name">Stop 4 — Mehta Warehouse</div>
+                            <div class="stop-addr">Mehta Warehouse, NH-48, Pune — 411001</div>
+                            <div class="stop-eta-text"><i class="fas fa-clock"></i> ETA: 1:45 PM · 86 km away</div>
+                        </div>
+                        <span class="stop-badge badge-pending">Pending</span>
+                    </div>
+
+                    <!-- Stop 5 — Delivery (Trip 2) -->
+                    <div class="stop-row pair2">
+                        <div class="stop-dot-wrap"><span class="stop-dot dot-pair2"></span></div>
+                        <div class="stop-body">
+                            <div class="stop-name">Stop 5 — Kumar Logistics</div>
+                            <div class="stop-addr">Kumar Cold Storage, Aurangabad — 431001</div>
+                            <div class="stop-eta-text"><i class="fas fa-clock"></i> ETA: 3:30 PM · 142 km away</div>
+                        </div>
+                        <span class="stop-badge badge-pending">Pending</span>
+                    </div>
+
+                    <!-- Stop 6 — Final Delivery (Trip 3) -->
+                    <div class="stop-row pair3">
+                        <div class="stop-dot-wrap"><span class="stop-dot dot-pair3"></span></div>
+                        <div class="stop-body">
+                            <div class="stop-name">Stop 6 — Singh Distribution 🏁</div>
+                            <div class="stop-addr">Singh DC, Thane West, Mumbai — 400601</div>
+                            <div class="stop-eta-text"><i class="fas fa-flag-checkered"></i> Final ETA: 6:00 PM · 483 km
+                                total</div>
+                        </div>
+                        <span class="stop-badge badge-pending">Pending</span>
+                    </div>
+
+                </div><!-- /stops-timeline -->
+            </div>
+            <div class="rc-divider"></div>
+
+            <!-- Schedule & ETA -->
+            <div class="schedule-eta-section" style="margin-bottom:12px;">
+                <div class="schedule-box green-border">
+                    <div class="schedule-label"><i class="fas fa-flag-checkered"></i> Last Stop ETA</div>
+                    <div class="schedule-time">05-02-2025 · 6:00 PM</div>
+                    <div class="schedule-meta"><span><i class="fas fa-road"></i> 483 KM</span><span><i
+                                class="fas fa-clock"></i>
+                            ~9.5 hrs</span></div>
+                </div>
+                <div class="schedule-box amber-border">
+                    <div class="schedule-label"><i class="fas fa-calendar-alt"></i> Scheduled</div>
+                    <div class="schedule-time">05-02-2025 · 4:00 PM</div>
+                    <div class="schedule-meta"><span style="color:#DC2626"><i class="fas fa-exclamation-circle"></i> 2h
+                            delayed</span></div>
+                </div>
+            </div>
+            <div class="rc-divider"></div>
+
+            <!-- Notification -->
+            <div class="notif-section">
+                <div class="notif-title"><i class="fas fa-bell"></i> Notification</div>
+                <div class="notif-row">
+                    <textarea class="notif-textarea" placeholder="Write any notification or update here..."></textarea>
+                    <button class="notif-send-btn" onclick="alert('Notification sent!')"><i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <!-- Report Buttons -->
+            <div class="rc-report-btns">
+                <button class="rc-report-btn breakdown" onclick="alert('Breakdown reported!')">🚨 REPORT
+                    BREAKDOWN</button>
+                <button class="rc-report-btn issue" onclick="alert('Issue reported.')">⚠️ REPORT ISSUE</button>
+            </div>
+
+        </div><!-- /ride-content -->
+    </div><!-- /ride-card -->
+
+    <!-- ══════════════════════════════════════════════════
+         TRIP DETAIL OVERLAY — opens when a trip-card is clicked
+    ══════════════════════════════════════════════════ -->
+    <div id="tripDetailOverlay"
+        style="display:none;position:fixed;inset:0;z-index:2000;background:linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%);overflow:hidden;flex-direction:column;">
+
+        <style>
+            /* ── Trip Detail Page Styles ── */
+            #tripDetailOverlay {
+                display: none;
+            }
+
+            #tripDetailOverlay.open {
+                display: flex !important;
+            }
+
+            .td-header {
+                background: linear-gradient(135deg, #1565C0, #0D47A1);
+                color: white;
+                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-shrink: 0;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .td-back-btn {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.15);
+                border: none;
+                color: white;
+                font-size: 18px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                transition: 0.2s;
+            }
+
+            .td-back-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
+            }
+
+            .td-title {
+                font-size: 16px;
+                font-weight: 800;
+                flex: 1;
+            }
+
+            .td-trip-badge {
+                font-size: 10px;
+                font-weight: 800;
+                padding: 3px 10px;
+                border-radius: 20px;
+                text-transform: uppercase;
+                letter-spacing: 0.07em;
+            }
+
+            /* ── Step Tabs ── */
+            .td-tabs {
+                display: flex;
+                overflow-x: auto;
+                padding: 8px 10px;
+                gap: 6px;
+                background: rgba(0, 0, 0, 0.25);
+                flex-shrink: 0;
+                scrollbar-width: none;
+            }
+
+            .td-tabs::-webkit-scrollbar {
+                display: none;
+            }
+
+            .td-tab {
+                min-width: fit-content;
+                padding: 7px 14px;
+                border-radius: 20px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1.5px solid rgba(255, 255, 255, 0.2);
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                white-space: nowrap;
+                transition: 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .td-tab.active {
+                background: #1565C0;
+                border-color: #1565C0;
+                color: white;
+                box-shadow: 0 2px 10px rgba(21, 101, 192, 0.5);
+            }
+
+            /* ── Map area ── */
+            .td-map-wrap {
+                flex: 1;
+                position: relative;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .td-map-bg {
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #101e33 0%, #162a44 100%);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .td-map-bg::before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-image:
+                    repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(100, 181, 246, 0.04) 40px, rgba(100, 181, 246, 0.04) 41px),
+                    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(100, 181, 246, 0.04) 40px, rgba(100, 181, 246, 0.04) 41px);
+            }
+
+            .td-route-svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+
+            .td-map-marker {
+                position: absolute;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                cursor: pointer;
+                transition: transform 0.2s;
+            }
+
+            .td-map-marker:hover {
+                transform: scale(1.15);
+            }
+
+            .td-map-eta-bar {
+                position: absolute;
+                bottom: 12px;
+                left: 12px;
+                right: 12px;
+                display: flex;
+                gap: 8px;
+            }
+
+            .td-eta-card {
+                flex: 1;
+                background: rgba(13, 24, 41, 0.92);
+                backdrop-filter: blur(10px);
+                padding: 8px 12px;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.07);
+            }
+
+            .td-eta-label {
+                font-size: 9px;
+                text-transform: uppercase;
+                color: #5a6a88;
+                font-weight: 700;
+                margin-bottom: 2px;
+            }
+
+            .td-eta-value {
+                font-size: 16px;
+                font-weight: 800;
+                color: #fff;
+            }
+
+            /* timer panels */
+            .td-timer-panel {
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #101e33 0%, #162a44 100%);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .td-timer-clock {
+                font-size: 58px;
+                font-weight: 900;
+                color: #fff;
+                letter-spacing: 3px;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .td-timer-label {
+                font-size: 14px;
+                color: #64B5F6;
+                font-weight: 600;
+            }
+
+            .td-timer-cards {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .td-timer-card {
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                padding: 14px 20px;
+                text-align: center;
+                min-width: 100px;
+            }
+
+            .td-timer-card .tci {
+                font-size: 24px;
+                margin-bottom: 4px;
+            }
+
+            .td-timer-card .tcl {
+                font-size: 9px;
+                text-transform: uppercase;
+                color: #5a6a88;
+                font-weight: 700;
+                margin-bottom: 3px;
+            }
+
+            .td-timer-card .tcv {
+                font-size: 14px;
+                font-weight: 800;
+                color: #fff;
+            }
+
+            .td-photo-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                width: 100%;
+                max-width: 340px;
+            }
+
+            .td-photo-ph {
+                aspect-ratio: 4/3;
+                background: rgba(255, 255, 255, 0.07);
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-size: 26px;
+                cursor: pointer;
+                border: 2px dashed rgba(255, 255, 255, 0.15);
+                transition: 0.2s;
+                color: #8899bb;
+                gap: 6px;
+            }
+
+            .td-photo-ph:hover {
+                border-color: #64B5F6;
+                color: #64B5F6;
+            }
+
+            .td-photo-ph span {
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+            /* delivery complete panel */
+            .td-delivery-panel {
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                background: linear-gradient(135deg, #101e33, #162a44);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 24px 20px;
+                gap: 16px;
+            }
+
+            .td-checkmark {
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                background: #10b981;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 34px;
+                color: white;
+                box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+            }
+
+            .td-del-title {
+                font-size: 22px;
+                font-weight: 900;
+                color: #fff;
+            }
+
+            .td-del-sub {
+                font-size: 13px;
+                color: #8899bb;
+            }
+
+            .td-del-cards {
+                display: flex;
+                gap: 12px;
+            }
+
+            .td-del-card {
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                padding: 14px 20px;
+                text-align: center;
+                min-width: 110px;
+            }
+
+            .td-del-card .dci {
+                font-size: 24px;
+                margin-bottom: 4px;
+            }
+
+            .td-del-card .dcl {
+                font-size: 10px;
+                text-transform: uppercase;
+                color: #5a6a88;
+                font-weight: 700;
+                margin-bottom: 3px;
+            }
+
+            .td-del-card .dcv {
+                font-size: 16px;
+                font-weight: 800;
+                color: #fff;
+            }
+
+            .td-bol-btns {
+                display: flex;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .td-bol-btn {
+                flex: 1;
+                padding: 13px;
+                border: none;
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .td-bol-btn.blue {
+                background: rgba(33, 150, 243, 0.2);
+                color: #64B5F6;
+                border: 1px solid rgba(33, 150, 243, 0.4);
+            }
+
+            .td-bol-btn.gray {
+                background: rgba(255, 255, 255, 0.1);
+                color: #8899bb;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+            }
+
+            .td-bol-btn:hover {
+                transform: translateY(-1px);
+            }
+
+            .td-rating-section {
+                text-align: center;
+            }
+
+            .td-rating-title {
+                font-size: 13px;
+                font-weight: 700;
+                color: #e5e7eb;
+                margin-bottom: 8px;
+            }
+
+            .td-stars .td-star {
+                font-size: 28px;
+                color: #4b5563;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .td-stars .td-star.active,
+            .td-stars .td-star:hover {
+                color: #f59e0b;
+            }
+
+            .td-feedback textarea {
+                width: 100%;
+                padding: 10px 12px;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1.5px solid rgba(255, 255, 255, 0.12);
+                border-radius: 10px;
+                color: #fff;
+                font-family: inherit;
+                font-size: 13px;
+                resize: none;
+                min-height: 80px;
+                outline: none;
+            }
+
+            .td-feedback textarea:focus {
+                border-color: #1565C0;
+            }
+
+            /* BOL panel */
+            .td-bol-panel {
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                background: #111827;
+                color: white;
+                padding: 16px;
+            }
+
+            .td-bol-back {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: rgba(255, 255, 255, 0.1);
+                border: none;
+                color: white;
+                border-radius: 8px;
+                padding: 8px 14px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-bottom: 14px;
+                transition: 0.2s;
+            }
+
+            .td-bol-back:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .td-bol-title {
+                font-size: 16px;
+                font-weight: 800;
+                margin-bottom: 3px;
+            }
+
+            .td-bol-sub {
+                font-size: 12px;
+                color: #9ca3af;
+                margin-bottom: 14px;
+            }
+
+            .td-bol-card {
+                background: #1f2937;
+                border-radius: 12px;
+                padding: 14px;
+                margin-bottom: 12px;
+            }
+
+            .td-bol-card h2 {
+                font-size: 13px;
+                font-weight: 700;
+                color: #e5e7eb;
+                margin-bottom: 10px;
+            }
+
+            .td-bol-card h3 {
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: #9ca3af;
+                margin-bottom: 8px;
+            }
+
+            .td-ship-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid #374151;
+                font-size: 13px;
+            }
+
+            .td-ship-row:last-child {
+                border-bottom: none;
+            }
+
+            .td-photo-bol-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .td-photo-bol-ph {
+                aspect-ratio: 4/3;
+                background: #374151;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 26px;
+                cursor: pointer;
+                border: 2px dashed #4b5563;
+                transition: 0.2s;
+            }
+
+            .td-photo-bol-ph:hover {
+                border-color: #10b981;
+            }
+
+            .td-contact-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 7px 0;
+            }
+
+            .td-c-info p {
+                font-size: 13px;
+                margin-bottom: 2px;
+            }
+
+            .td-c-info .addr {
+                font-size: 11px;
+                color: #9ca3af;
+            }
+
+            .td-c-btns {
+                display: flex;
+                gap: 8px;
+            }
+
+            .td-cbtn {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                transition: 0.2s;
+            }
+
+            .td-cbtn.call {
+                background: #10b981;
+                color: white;
+            }
+
+            .td-cbtn.msg {
+                background: #2563eb;
+                color: white;
+            }
+
+            .td-cbtn:hover {
+                transform: scale(1.1);
+            }
+
+            .td-sig-box {
+                border: 2px dashed #4b5563;
+                border-radius: 10px;
+                overflow: hidden;
+                background: #1f2937;
+                margin-bottom: 8px;
+            }
+
+            .td-sig-box canvas {
+                width: 100%;
+                display: block;
+                height: 120px;
+                cursor: crosshair;
+            }
+
+            .td-bol-clear {
+                background: #374151;
+                color: #e5e7eb;
+                border: none;
+                border-radius: 8px;
+                padding: 6px 12px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+
+            .td-bol-approve {
+                width: 100%;
+                padding: 13px;
+                background: #10b981;
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 700;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                transition: 0.2s;
+            }
+
+            .td-bol-approve:hover {
+                background: #059669;
+            }
+
+            .td-cond-row {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .td-cond-btn {
+                flex: 1;
+                padding: 10px;
+                border-radius: 10px;
+                border: 2px solid #4b5563;
+                background: #374151;
+                color: #e5e7eb;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+
+            .td-cond-btn.good-on {
+                border-color: #10b981;
+                background: rgba(16, 185, 129, 0.15);
+                color: #10b981;
+            }
+
+            .td-cond-btn.damage-on {
+                border-color: #ef4444;
+                background: rgba(239, 68, 68, 0.15);
+                color: #ef4444;
+            }
+
+            .td-damage-box {
+                background: rgba(239, 68, 68, 0.08);
+                border: 1px solid rgba(239, 68, 68, 0.25);
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 10px;
+                display: none;
+            }
+
+            .td-damage-box.show {
+                display: block;
+            }
+
+            .td-damage-box textarea {
+                width: 100%;
+                background: #374151;
+                color: white;
+                border: 1px solid #4b5563;
+                border-radius: 8px;
+                padding: 8px;
+                font-size: 13px;
+                min-height: 60px;
+                resize: none;
+            }
+
+            /* ── RIDE CARD inside overlay ── */
+            .td-ride-card {
+                position: absolute;
+                bottom: 58px;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                border-radius: 20px 20px 0 0;
+                box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.35);
+                height: 210px;
+                transition: height 0.3s ease;
+                z-index: 10;
+                overflow: hidden;
+            }
+
+            .td-ride-card.expanded {
+                height: 600px;
+                overflow-y: auto;
+            }
+
+            .td-ride-card.dragging {
+                transition: none;
+            }
+
+            .td-drag-handle {
+                width: 100%;
+                padding: 8px 0 4px;
+                cursor: grab;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #fff;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .td-drag-handle:active {
+                cursor: grabbing;
+            }
+
+            .td-drag-bar {
+                width: 44px;
+                height: 5px;
+                background: #d1d5db;
+                border-radius: 3px;
+            }
+
+            /* preview section — same style as allotment file */
+            .td-preview-section {
+                padding: 10px 18px 8px;
+                opacity: 1;
+                transition: opacity 0.25s ease;
+            }
+
+            .td-ride-card.expanded .td-preview-section {
+                opacity: 0;
+                pointer-events: none;
+                position: absolute;
+            }
+
+            .td-preview-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+
+            .td-pv-left-btn,
+            .td-pv-right-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background: #F3F4F6;
+                border: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: 0.2s;
+                flex-shrink: 0;
+            }
+
+            .td-pv-left-btn:hover,
+            .td-pv-right-btn:hover {
+                background: #E5E7EB;
+                transform: scale(1.05);
+            }
+
+            .td-pv-left-btn i,
+            .td-pv-right-btn i {
+                font-size: 16px;
+                color: #374151;
+            }
+
+            .td-pv-center {
+                flex: 1;
+                text-align: center;
+                font-size: 13px;
+                color: #6b7280;
+                font-weight: 500;
+                line-height: 1.4;
+            }
+
+            .td-pv-timer {
+                display: inline-block;
+                border: 2px solid #B45309;
+                border-radius: 50px;
+                font-weight: 800;
+                padding: 1px 8px;
+                color: #B45309;
+                font-size: 13px;
+            }
+
+            .td-rc-divider {
+                height: 1px;
+                background: #e5e7eb;
+                margin: 6px 0;
+            }
+
+            .td-pv-stat-blocks {
+                display: flex;
+                gap: 8px;
+                margin-top: 6px;
+            }
+
+            .td-pv-stat-block {
+                flex: 1;
+                background: #F3F4F6;
+                border-radius: 10px;
+                padding: 8px 6px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+            }
+
+            .td-pv-stat-icon {
+                font-size: 15px;
+            }
+
+            .td-pv-stat-label {
+                font-size: 9px;
+                text-transform: uppercase;
+                color: #9ca3af;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+            }
+
+            .td-pv-stat-value {
+                font-size: 13px;
+                font-weight: 800;
+                color: #111827;
+            }
+
+            /* ride content — same style as MT file */
+            .td-ride-content {
+                padding: 0 18px 24px;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+                pointer-events: none;
+            }
+
+            .td-ride-card.expanded .td-ride-content {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .td-rc-page {
+                display: none;
+            }
+
+            .td-rc-page.active {
+                display: block;
+            }
+
+            .td-dest-section {
+                background: #F9FAFB;
+                padding: 14px;
+                border-radius: 10px;
+                margin-bottom: 14px;
+            }
+
+            .td-dest-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .td-dest-icon {
+                font-size: 22px;
+                color: #e74c3c;
+            }
+
+            .td-dest-info {
+                flex: 1;
+            }
+
+            .td-dest-name {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 2px;
+            }
+
+            .td-dest-eta {
+                font-size: 12px;
+                color: #4CAF50;
+                font-weight: 600;
+            }
+
+            .td-dest-addr {
+                font-size: 12px;
+                color: #666;
+                margin-top: 3px;
+                line-height: 1.4;
+            }
+
+            .td-load-info {
+                text-align: right;
+                flex-shrink: 0;
+            }
+
+            .td-load-weight {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .td-load-type {
+                font-size: 11px;
+                color: #666;
+            }
+
+            .td-supp-actions {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                flex-shrink: 0;
+            }
+
+            .td-action-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: 0.3s;
+                border: none;
+            }
+
+            .td-action-icon.call {
+                background: #4CAF50;
+                color: white;
+            }
+
+            .td-action-icon.profile {
+                background: #E5E7EB;
+                overflow: hidden;
+            }
+
+            .td-action-icon:hover {
+                transform: scale(1.1);
+            }
+
+            .td-pay-section {
+                background: #F9FAFB;
+                padding: 14px;
+                border-radius: 10px;
+                margin-bottom: 14px;
+            }
+
+            .td-pay-details {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 12px;
+            }
+
+            .td-pay-item {
+                text-align: center;
+            }
+
+            .td-pay-label {
+                font-size: 11px;
+                color: #666;
+                margin-bottom: 4px;
+            }
+
+            .td-pay-value {
+                font-size: 15px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .td-note-section {
+                margin-bottom: 14px;
+            }
+
+            .td-note-section textarea {
+                width: 100%;
+                min-height: 60px;
+                padding: 9px 12px;
+                border: 2px solid #E5E7EB;
+                border-radius: 8px;
+                font-family: inherit;
+                font-size: 13px;
+                resize: vertical;
+                transition: border-color 0.3s;
+            }
+
+            .td-note-section textarea:focus {
+                outline: none;
+                border-color: #4CAF50;
+            }
+
+            .td-report-btns {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+
+            .td-report-btn {
+                padding: 13px;
+                border: none;
+                border-radius: 10px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: 0.3s;
+                font-size: 12px;
+            }
+
+            .td-report-btn.breakdown {
+                background: #FEE2E2;
+                color: #DC2626;
+            }
+
+            .td-report-btn.issue {
+                background: #FEF3C7;
+                color: #D97706;
+            }
+
+            .td-report-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            }
+
+            /* bottom action bar */
+            .td-bottom-nav {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 11;
+                padding: 0;
+            }
+
+            .td-bn-row {
+                display: none;
+                width: 100%;
+                padding: 6px;
+                gap: 8px;
+            }
+
+            .td-bn-row.active {
+                display: flex;
+            }
+
+            .td-bn-btn {
+                flex: 1;
+                padding: 14px;
+                border: none;
+                border-radius: 10px;
+                font-size: 14px;
+                font-weight: 700;
+                cursor: pointer;
+                color: white;
+                transition: 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 7px;
+            }
+
+            .td-bn-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .td-bn-btn.green {
+                background: linear-gradient(135deg, #4CAF50, #45a049);
+            }
+
+            .td-bn-btn.blue {
+                background: linear-gradient(135deg, #1565C0, #0D47A1);
+            }
+
+            .td-bn-btn.gray {
+                background: linear-gradient(135deg, #9ca3af, #6b7280);
+            }
+
+            .td-bn-btn.amber {
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+            }
+
+            /* page panels inside overlay */
+            .td-page-panel {
+                display: none;
+                position: absolute;
+                inset: 0;
+                bottom: 0;
+            }
+
+            .td-page-panel.active {
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* ── Customer / Receiver party card (replaces preview-name-row) ── */
+            .td-party-card {
+                background: #F9FAFB;
+                border-radius: 10px;
+                padding: 10px 12px;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .td-party-card.sender-card {
+                border-left: 3px solid #1565C0;
+            }
+
+            .td-party-card.receiver-card {
+                border-left: 3px solid #10b981;
+            }
+
+            .td-party-icon-btn {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                border: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 17px;
+                flex-shrink: 0;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .td-party-icon-btn.sender-btn {
+                background: rgba(21, 101, 192, 0.12);
+                color: #1565C0;
+            }
+
+            .td-party-icon-btn.receiver-btn {
+                background: rgba(16, 185, 129, 0.12);
+                color: #10b981;
+                font-size: 18px;
+            }
+
+            .td-party-icon-btn:hover {
+                transform: scale(1.08);
+            }
+
+            .td-party-body {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .td-party-name-line {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                flex-wrap: wrap;
+            }
+
+            .td-party-name {
+                font-size: 14px;
+                font-weight: 800;
+                color: #111827;
+            }
+
+            .td-party-dot {
+                color: #9ca3af;
+                font-size: 10px;
+            }
+
+            .td-party-rating {
+                font-size: 12px;
+                color: #f59e0b;
+                font-weight: 700;
+            }
+
+            .td-party-addr {
+                font-size: 11px;
+                color: #6b7280;
+                margin-top: 2px;
+            }
+
+            .td-party-eta {
+                font-size: 11px;
+                font-weight: 700;
+                color: #1565C0;
+                margin-top: 3px;
+            }
+
+            .td-party-eta.green {
+                color: #10b981;
+            }
+
+            .td-party-call-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: rgba(76, 175, 80, 0.12);
+                border: 1.5px solid rgba(76, 175, 80, 0.35);
+                color: #4CAF50;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                cursor: pointer;
+                flex-shrink: 0;
+                transition: 0.2s;
+            }
+
+            .td-party-call-btn:hover {
+                background: rgba(76, 175, 80, 0.25);
+                transform: scale(1.1);
+            }
+        </style>
+
+        <!-- Header -->
+        <div class="td-header">
+            <button class="td-back-btn" onclick="closeTripDetail()"><i class="fas fa-arrow-left"></i></button>
+            <div class="td-title" id="tdTitle">Trip #001 — Allotment</div>
+            <span class="td-trip-badge badge-inprogress" id="tdBadge">In Progress</span>
+        </div>
+
+        <!-- Step Tabs -->
+        <div class="td-tabs" id="tdTabs">
+            <div class="td-tab active" id="tdTab1" onclick="tdGoTo(1)"><span>📋</span>To Pick-up</div>
+            <div class="td-tab" id="tdTab2" onclick="tdGoTo(2)"><span>⏳</span>Wait to Load</div>
+            <div class="td-tab" id="tdTab3" onclick="tdGoTo(3)"><span>⌛</span>Finish Loading</div>
+            <div class="td-tab" id="tdTab4" onclick="tdGoTo(4)"><span>🔄</span>In Transit</div>
+            <div class="td-tab" id="tdTab5" onclick="tdGoTo(5)"><span>⏳</span>Wait to Unload</div>
+            <div class="td-tab" id="tdTab6" onclick="tdGoTo(6)"><span>⌛</span>Finish Unloading</div>
+            <div class="td-tab" id="tdTab7" onclick="tdGoTo(7)"><span>✅</span>Delivery Completed</div>
+        </div>
+
+        <!-- Map / Content Area — pages sit here, ride card overlaid on top -->
+        <div style="flex:1;position:relative;min-height:0;">
+
+            <!-- PAGE 1: Map to Pickup -->
+            <div id="tdPage1" class="td-page-panel active">
+                <div style="flex:1;position:relative;overflow:hidden;">
+                    <div class="td-map-bg">
+                        <svg class="td-route-svg" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                            <polyline points="120,250 350,180 580,240 880,200" fill="none"
+                                stroke="rgba(100,181,246,0.4)" stroke-width="4" stroke-dasharray="10,5"
+                                stroke-linecap="round" />
+                            <polyline points="120,250 350,180" fill="none" stroke="#4CAF50" stroke-width="5"
+                                stroke-linecap="round" />
+                        </svg>
+                        <div class="td-map-marker" style="background:#1565C0;top:46%;left:11%" title="Current Location">
+                            📍</div>
+                        <div class="td-map-marker" style="background:#f59e0b;top:33%;left:34%" title="Pickup">📦</div>
+                        <div class="td-map-marker" style="background:#ef4444;top:37%;right:11%" title="Delivery">🏭
+                        </div>
+                        <div class="td-map-eta-bar">
+                            <div class="td-eta-card">
+                                <div class="td-eta-label">ETA to Pickup</div>
+                                <div class="td-eta-value" id="tdEtaVal">12 mins</div>
+                            </div>
+                            <div class="td-eta-card">
+                                <div class="td-eta-label">Distance</div>
+                                <div class="td-eta-value" id="tdDistVal">7.8 KM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: Wait to Load -->
+            <div id="tdPage2" class="td-page-panel">
+                <div class="td-timer-panel">
+                    <div class="td-timer-clock" id="tdT_wait">00:00:00</div>
+                    <div class="td-timer-label">⏳ Waiting for Loading to Begin</div>
+                    <div class="td-timer-cards">
+                        <div class="td-timer-card">
+                            <div class="tci">📍</div>
+                            <div class="tcl">Location</div>
+                            <div class="tcv" id="tdPickupName">Pickup Stop</div>
+                        </div>
+                        <div class="td-timer-card">
+                            <div class="tci">⏰</div>
+                            <div class="tcl">Scheduled</div>
+                            <div class="tcv">10:30 AM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: Finish Loading (photos) -->
+            <div id="tdPage3" class="td-page-panel">
+                <div class="td-timer-panel">
+                    <div class="td-timer-clock" id="tdT_load">00:00:00</div>
+                    <div class="td-timer-label">⏱️ Loading in Progress</div>
+                    <div class="td-photo-grid">
+                        <div class="td-photo-ph" onclick="alert('📸 Camera: After Loading')">📸<span>After
+                                Loading</span></div>
+                        <div class="td-photo-ph" onclick="alert('⚖️ Camera: Weight Slip')">⚖️<span>Weight Slip</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 4: In Transit Map -->
+            <div id="tdPage4" class="td-page-panel">
+                <div style="flex:1;position:relative;overflow:hidden;">
+                    <div class="td-map-bg">
+                        <svg class="td-route-svg" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                            <polyline points="120,250 350,180 580,240 880,200" fill="none"
+                                stroke="rgba(100,181,246,0.4)" stroke-width="4" stroke-dasharray="10,5"
+                                stroke-linecap="round" />
+                            <polyline points="120,250 350,180 580,240" fill="none" stroke="#1565C0" stroke-width="5"
+                                stroke-linecap="round" />
+                        </svg>
+                        <div class="td-map-marker" style="background:#1565C0;top:45%;left:56%" title="Truck">🚛</div>
+                        <div class="td-map-marker" style="background:#ef4444;top:37%;right:11%" title="Delivery">🏭
+                        </div>
+                        <div class="td-map-eta-bar">
+                            <div class="td-eta-card">
+                                <div class="td-eta-label">ETA to Delivery</div>
+                                <div class="td-eta-value">45 mins</div>
+                            </div>
+                            <div class="td-eta-card">
+                                <div class="td-eta-label">Distance Left</div>
+                                <div class="td-eta-value">32 KM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 5: Wait to Unload -->
+            <div id="tdPage5" class="td-page-panel">
+                <div class="td-timer-panel">
+                    <div class="td-timer-clock" id="tdT_uwait">00:00:00</div>
+                    <div class="td-timer-label">⏳ Waiting for Unloading to Begin</div>
+                    <div class="td-photo-grid">
+                        <div class="td-photo-ph" onclick="alert('📸 Loaded Truck')">🚛<span>Loaded Truck</span></div>
+                        <div class="td-photo-ph" onclick="alert('📸 Current State')">📸<span>Current State</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 6: Finish Unloading -->
+            <div id="tdPage6" class="td-page-panel">
+                <div class="td-timer-panel">
+                    <div class="td-timer-clock" id="tdT_unload">00:00:00</div>
+                    <div class="td-timer-label">⏱️ Unloading in Progress</div>
+                    <div class="td-photo-grid">
+                        <div class="td-photo-ph" onclick="alert('📸 During Unload')">📸<span>During Unload</span></div>
+                        <div class="td-photo-ph" onclick="alert('🚛 Empty Truck')">🚛<span>Empty Truck</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 7: Delivery Completed -->
+            <div id="tdPage7" class="td-page-panel">
+                <div class="td-delivery-panel">
+                    <div class="td-checkmark">✓</div>
+                    <div class="td-del-title">DELIVERY COMPLETE</div>
+                    <div class="td-del-sub" id="tdDelTripId">Trip #001 finished successfully</div>
+                    <div class="td-del-cards">
+                        <div class="td-del-card">
+                            <div class="dci">💰</div>
+                            <div class="dcl">Total Fare</div>
+                            <div class="dcv" id="tdDelFare">₹20,000</div>
+                        </div>
+                        <div class="td-del-card">
+                            <div class="dci">⏱</div>
+                            <div class="dcl">Duration</div>
+                            <div class="dcv" id="tdDelDur">—</div>
+                        </div>
+                    </div>
+                    <div class="td-bol-btns">
+                        <button class="td-bol-btn blue" onclick="tdGoTo(8)">📦 Pickup BOL</button>
+                        <button class="td-bol-btn gray" onclick="tdGoTo(9)">📄 Delivery BOL</button>
+                    </div>
+                    <div class="td-rating-section">
+                        <div class="td-rating-title">Rate Receiving Site</div>
+                        <div class="td-stars">
+                            <span class="td-star" onclick="tdSetRating(1)">★</span>
+                            <span class="td-star" onclick="tdSetRating(2)">★</span>
+                            <span class="td-star" onclick="tdSetRating(3)">★</span>
+                            <span class="td-star" onclick="tdSetRating(4)">★</span>
+                            <span class="td-star" onclick="tdSetRating(5)">★</span>
+                        </div>
+                    </div>
+                    <div class="td-feedback" style="width:100%;">
+                        <textarea placeholder="Share your freight experience..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 8: Pickup BOL -->
+            <div id="tdPage8" class="td-page-panel">
+                <div class="td-bol-panel">
+                    <button class="td-bol-back" onclick="tdGoTo(3)">← Back to Finish Loading</button>
+                    <div class="td-bol-title">📦 Pickup BOL</div>
+                    <div class="td-bol-sub" id="tdBolRoute8">— → —</div>
+                    <div class="td-bol-card">
+                        <h2>📋 Shipment Details</h2>
+                        <div class="td-ship-row"><span>Cargo</span><span style="color:#10b981" id="tdBolCargo">—</span>
+                        </div>
+                        <div class="td-ship-row"><span>Weight</span><span style="color:#10b981"
+                                id="tdBolWeight">—</span></div>
+                        <div class="td-ship-row"><span>Payment</span><span style="color:#10b981" id="tdBolPay">—</span>
+                        </div>
+                    </div>
+                    <div class="td-bol-card">
+                        <h2>📸 Loading Photos</h2>
+                        <div class="td-photo-bol-grid">
+                            <div class="td-photo-bol-ph" onclick="alert('📸 Loading photo')">📸</div>
+                            <div class="td-photo-bol-ph" onclick="alert('⚖️ Weight slip')">⚖️</div>
+                        </div>
+                    </div>
+                    <div class="td-bol-card">
+                        <h3>SHIPPER</h3>
+                        <div class="td-contact-row">
+                            <div class="td-c-info">
+                                <p id="tdShipperName">—</p>
+                                <p class="addr" id="tdShipperAddr">—</p>
+                            </div>
+                            <div class="td-c-btns">
+                                <button class="td-cbtn call" onclick="alert('Calling shipper...')"><i
+                                        class="fas fa-phone"></i></button>
+                                <button class="td-cbtn msg" onclick="alert('Message shipper...')"><i
+                                        class="fas fa-comment"></i></button>
+                            </div>
+                        </div>
+                        <h3 style="margin-top:8px">RECEIVER</h3>
+                        <div class="td-contact-row">
+                            <div class="td-c-info">
+                                <p id="tdReceiverName">—</p>
+                                <p class="addr" id="tdReceiverAddr">—</p>
+                            </div>
+                            <div class="td-c-btns">
+                                <button class="td-cbtn call" onclick="alert('Calling receiver...')"><i
+                                        class="fas fa-phone"></i></button>
+                                <button class="td-cbtn msg" onclick="alert('Message receiver...')"><i
+                                        class="fas fa-comment"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="td-bol-card">
+                        <h2>✍️ Shipper Signature</h2>
+                        <div class="td-sig-box"><canvas id="tdCvPickup" width="600" height="120"></canvas></div>
+                        <button class="td-bol-clear" onclick="tdClearSig('tdCvPickup')">Clear Signature</button>
+                    </div>
+                    <button class="td-bol-approve" onclick="tdApprovePickup()">✓ Approve & Start Trip</button>
+                </div>
+            </div>
+
+            <!-- PAGE 9: Delivery BOL -->
+            <div id="tdPage9" class="td-page-panel">
+                <div class="td-bol-panel">
+                    <button class="td-bol-back" onclick="tdGoTo(7)">← Back to Delivery</button>
+                    <div class="td-bol-title">📄 Delivery BOL</div>
+                    <div class="td-bol-sub" id="tdBolRoute9">— → —</div>
+                    <div class="td-bol-card">
+                        <h2>📋 Receipt Details</h2>
+                        <div class="td-ship-row"><span>Cargo</span><span style="color:#10b981" id="tdBolCargo9">—</span>
+                        </div>
+                        <div class="td-ship-row"><span>Weight</span><span style="color:#10b981"
+                                id="tdBolWeight9">—</span></div>
+                        <div class="td-ship-row"><span>Delivery Date</span><span style="color:#10b981">Today</span>
+                        </div>
+                    </div>
+                    <div class="td-bol-card">
+                        <h2>📸 Unloading Photos</h2>
+                        <div class="td-photo-bol-grid">
+                            <div class="td-photo-bol-ph" onclick="alert('📸 Unloading photo')">📸</div>
+                            <div class="td-photo-bol-ph" onclick="alert('🚛 Empty truck')">🚛</div>
+                        </div>
+                    </div>
+                    <div class="td-bol-card">
+                        <h3>SHIPPER</h3>
+                        <div class="td-contact-row">
+                            <div class="td-c-info">
+                                <p id="tdShipperName9">—</p>
+                                <p class="addr" id="tdShipperAddr9">—</p>
+                            </div>
+                            <div class="td-c-btns">
+                                <button class="td-cbtn call" onclick="alert('Calling...')"><i
+                                        class="fas fa-phone"></i></button>
+                                <button class="td-cbtn msg" onclick="alert('Message...')"><i
+                                        class="fas fa-comment"></i></button>
+                            </div>
+                        </div>
+                        <h3 style="margin-top:8px">RECEIVER</h3>
+                        <div class="td-contact-row">
+                            <div class="td-c-info">
+                                <p id="tdReceiverName9">—</p>
+                                <p class="addr" id="tdReceiverAddr9">—</p>
+                            </div>
+                            <div class="td-c-btns">
+                                <button class="td-cbtn call" onclick="alert('Calling...')"><i
+                                        class="fas fa-phone"></i></button>
+                                <button class="td-cbtn msg" onclick="alert('Message...')"><i
+                                        class="fas fa-comment"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="td-bol-card">
+                        <h2>📦 Condition of Goods</h2>
+                        <div class="td-cond-row">
+                            <button class="td-cond-btn good-on" id="tdGoodBtn" onclick="tdSetCondition('good')">✓ Good
+                                Condition</button>
+                            <button class="td-cond-btn" id="tdDamageBtn" onclick="tdSetCondition('damage')">⚠️
+                                Damage</button>
+                        </div>
+                        <div class="td-damage-box" id="tdDamageBox"><textarea
+                                placeholder="Describe damage..."></textarea></div>
+                    </div>
+                    <div class="td-bol-card">
+                        <h2>✍️ Receiver Signature</h2>
+                        <div class="td-sig-box"><canvas id="tdCvDelivery" width="600" height="120"></canvas></div>
+                        <button class="td-bol-clear" onclick="tdClearSig('tdCvDelivery')">Clear Signature</button>
+                    </div>
+                    <button class="td-bol-approve" onclick="tdApproveDelivery()">✓ Confirm Delivery Receipt</button>
+                </div>
+            </div>
+
+            <!-- RIDE CARD (overlaid on pages 1–7) -->
+            <div class="td-ride-card" id="tdRideCard">
+                <div class="td-drag-handle" id="tdDragHandle">
+                    <div class="td-drag-bar"></div>
+                </div>
+
+                <!-- Preview Section (allotment style) -->
+                <div class="td-preview-section" id="tdPreviewSection">
+                    <div class="td-preview-row">
+                        <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                class="fas fa-sliders-h"></i></button>
+                        <div class="td-pv-center">
+                            <span id="tdPvLabel">To Pick-up</span><br>
+                            <span class="td-pv-timer" id="tdPvTimer">00:00</span>
+                        </div>
+                        <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                class="fas fa-ellipsis-vertical"></i></button>
+                    </div>
+                    <div class="td-rc-divider"></div>
+                    <div class="td-pv-stat-blocks">
+                        <div class="td-pv-stat-block">
+                            <div class="td-pv-stat-icon">💰</div>
+                            <div class="td-pv-stat-label">Payment</div>
+                            <div class="td-pv-stat-value" id="tdPvPayment">₹20,000</div>
+                        </div>
+                        <div class="td-pv-stat-block">
+                            <div class="td-pv-stat-icon">⚖️</div>
+                            <div class="td-pv-stat-label">Weight</div>
+                            <div class="td-pv-stat-value" id="tdPvWeight">5,000 KG</div>
+                        </div>
+                        <div class="td-pv-stat-block">
+                            <div class="td-pv-stat-icon">⏱️</div>
+                            <div class="td-pv-stat-label">Est. Total</div>
+                            <div class="td-pv-stat-value" id="tdPvEst">~2.5 hrs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ride Content (MT style — per page) -->
+                <div class="td-ride-content" id="tdRideContent">
+
+                    <!-- RC1: To Pick-up -->
+                    <div id="tdRc1" class="td-rc-page active">
+                        <div class="td-preview-row" style="margin-bottom:10px;">
+                            <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                    class="fas fa-sliders-h"></i></button>
+                            <div class="td-pv-center">freight notified<br><span class="td-pv-timer"
+                                    id="tdRcTimer1">00:00</span></div>
+                            <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                    class="fas fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName1">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr1">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta1">● ETA: 12 mins</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName1">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr1">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta1">● ETA: —</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <div class="td-dest-section">
+                            <div class="td-dest-header">
+                                <i class="fas fa-clock" style="font-size:20px;color:#666;"></i>
+                                <div class="td-dest-info">
+                                    <div class="td-dest-name" id="tdRcSchedSenderName1"
+                                        style="font-size:14px;font-weight:800;">Sender Name</div>
+                                    <div class="td-dest-eta" id="tdRcSchedEta">ETA: —</div>
+                                    <div class="td-dest-addr" id="tdRcSchedInfo">Duration — · Distance —</div>
+                                </div>
+                                <div class="td-load-info">
+                                    <div class="td-load-weight" id="tdRcWeight1">5,000 KG</div>
+                                    <div class="td-load-type" id="tdRcCargo1">Cargo</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-pay-section">
+                            <div class="td-pay-details">
+                                <div class="td-pay-item">
+                                    <div class="td-pay-label">Amount</div>
+                                    <div class="td-pay-value" id="tdRcAmt1">₹20,000</div>
+                                </div>
+                                <div class="td-pay-item">
+                                    <div class="td-pay-label">Method</div>
+                                    <div class="td-pay-value">CASH</div>
+                                </div>
+                                <div class="td-pay-item">
+                                    <div class="td-pay-label">By</div>
+                                    <div class="td-pay-value">Receiver</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-note-section"><textarea
+                                placeholder="Note here...">Please submit proof photo copy.</textarea></div>
+                        <div class="td-report-btns">
+                            <button class="td-report-btn breakdown" onclick="alert('Breakdown reported!')">🚨 REPORT
+                                BREAKDOWN</button>
+                            <button class="td-report-btn issue" onclick="alert('Issue reported.')">⚠️ REPORT
+                                ISSUE</button>
+                        </div>
+                    </div>
+
+                    <!-- RC2–RC7: reuse same structure -->
+                    <div id="tdRc2" class="td-rc-page">
+                        <div class="td-preview-row" style="margin-bottom:10px;">
+                            <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                    class="fas fa-sliders-h"></i></button>
+                            <div class="td-pv-center">Wait to Load<br><span class="td-pv-timer"
+                                    id="tdRcTimer2">00:00</span></div>
+                            <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                    class="fas fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName2">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr2">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta2">● Arrived at pickup</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName2">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr2">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta2">● ETA: —</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <div class="td-dest-section">
+                            <div class="td-dest-header"><i class="fas fa-map-marker-alt td-dest-icon"></i>
+                                <div class="td-dest-info">
+                                    <div class="td-dest-name" id="tdRcPickupName2">Pickup</div>
+                                    <div class="td-dest-eta">● Arrived at pickup</div>
+                                    <div class="td-dest-addr" id="tdRcPickupAddr2">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-report-btns"><button class="td-report-btn breakdown"
+                                onclick="alert('Breakdown!')">🚨 REPORT BREAKDOWN</button><button
+                                class="td-report-btn issue" onclick="alert('Issue!')">⚠️ REPORT ISSUE</button></div>
+                    </div>
+
+                    <div id="tdRc3" class="td-rc-page">
+                        <div class="td-preview-row" style="margin-bottom:10px;">
+                            <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                    class="fas fa-sliders-h"></i></button>
+                            <div class="td-pv-center">Loading in Progress<br><span class="td-pv-timer"
+                                    id="tdRcTimer3">00:00</span></div>
+                            <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                    class="fas fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName3">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr3">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta3">● Loading in progress</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName3">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr3">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta3">● ETA: —</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <div class="td-dest-section">
+                            <div class="td-dest-header"><i class="fas fa-map-marker-alt td-dest-icon"></i>
+                                <div class="td-dest-info">
+                                    <div class="td-dest-name" id="tdRcPickupName3">Pickup</div>
+                                    <div class="td-dest-eta">● Loading in progress</div>
+                                    <div class="td-dest-addr" id="tdRcPickupAddr3">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-report-btns"><button class="td-report-btn breakdown"
+                                onclick="alert('Breakdown!')">🚨 REPORT BREAKDOWN</button><button
+                                class="td-report-btn issue" onclick="alert('Issue!')">⚠️ REPORT ISSUE</button></div>
+                    </div>
+
+                    <div id="tdRc4" class="td-rc-page">
+                        <div class="td-preview-row" style="margin-bottom:10px;">
+                            <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                    class="fas fa-sliders-h"></i></button>
+                            <div class="td-pv-center">Driving to Destination<br><span class="td-pv-timer"
+                                    id="tdRcTimer4">00:00</span></div>
+                            <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                    class="fas fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName4">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr4">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta4">● Loading complete</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName4">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr4">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta4">● ETA: 45 mins</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <div class="td-pay-section">
+                            <div class="td-pay-details">
+                                <div class="td-pay-item">
+                                    <div class="td-pay-label">Amount</div>
+                                    <div class="td-pay-value" id="tdRcAmt4">₹20,000</div>
+                                </div>
+                                <div class="td-pay-item">
+                                    <div class="td-pay-label">Method</div>
+                                    <div class="td-pay-value">CASH</div>
+                                </div>
+                                <div class="td-pay-item">
+                                    <div class="td-pay-label">By</div>
+                                    <div class="td-pay-value">Receiver</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-report-btns"><button class="td-report-btn breakdown"
+                                onclick="alert('Breakdown!')">🚨 REPORT BREAKDOWN</button><button
+                                class="td-report-btn issue" onclick="alert('Issue!')">⚠️ REPORT ISSUE</button></div>
+                    </div>
+
+                    <div id="tdRc5" class="td-rc-page">
+                        <div class="td-preview-row" style="margin-bottom:10px;">
+                            <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                    class="fas fa-sliders-h"></i></button>
+                            <div class="td-pv-center">At Drop-off<br><span class="td-pv-timer"
+                                    id="tdRcTimer5">00:00</span></div>
+                            <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                    class="fas fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName5">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr5">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta5">● In transit</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName5">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr5">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta5">● Arrived at delivery</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <div class="td-dest-section">
+                            <div class="td-dest-header"><i class="fas fa-industry td-dest-icon"></i>
+                                <div class="td-dest-info">
+                                    <div class="td-dest-name" id="tdRcDeliveryName5">Delivery</div>
+                                    <div class="td-dest-eta">● Arrived at delivery</div>
+                                    <div class="td-dest-addr" id="tdRcDeliveryAddr5">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-report-btns"><button class="td-report-btn breakdown"
+                                onclick="alert('Breakdown!')">🚨 REPORT BREAKDOWN</button><button
+                                class="td-report-btn issue" onclick="alert('Issue!')">⚠️ REPORT ISSUE</button></div>
+                    </div>
+
+                    <div id="tdRc6" class="td-rc-page">
+                        <div class="td-preview-row" style="margin-bottom:10px;">
+                            <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                    class="fas fa-sliders-h"></i></button>
+                            <div class="td-pv-center">Unloading in Progress<br><span class="td-pv-timer"
+                                    id="tdRcTimer6">00:00</span></div>
+                            <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                    class="fas fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName6">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr6">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta6">● Delivery in progress</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName6">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr6">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta6">● Unloading in progress</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <div class="td-dest-section">
+                            <div class="td-dest-header"><i class="fas fa-industry td-dest-icon"></i>
+                                <div class="td-dest-info">
+                                    <div class="td-dest-name" id="tdRcDeliveryName6">Delivery</div>
+                                    <div class="td-dest-eta">● Unloading in progress</div>
+                                    <div class="td-dest-addr" id="tdRcDeliveryAddr6">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-report-btns"><button class="td-report-btn breakdown"
+                                onclick="alert('Breakdown!')">🚨 REPORT BREAKDOWN</button><button
+                                class="td-report-btn issue" onclick="alert('Issue!')">⚠️ REPORT ISSUE</button></div>
+                    </div>
+
+                    <div id="tdRc7" class="td-rc-page">
+                        <div class="td-preview-row" style="margin-bottom:10px;">
+                            <button class="td-pv-left-btn" onclick="alert('Preferences')"><i
+                                    class="fas fa-sliders-h"></i></button>
+                            <div class="td-pv-center">Delivery Completion<br><span class="td-pv-timer"
+                                    id="tdRcTimer7">00:00</span></div>
+                            <button class="td-pv-right-btn" onclick="alert('Settings')"><i
+                                    class="fas fa-ellipsis-vertical"></i></button>
+                        </div>
+                        <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName7">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr7">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta7">✓ Completed</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName7">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr7">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta7">✓ Delivery complete</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <div class="td-dest-section">
+                            <div class="td-dest-header"><i class="fas fa-check-circle"
+                                    style="font-size:22px;color:#10b981;"></i>
+                                <div class="td-dest-info">
+                                    <div class="td-dest-name">Delivery Complete</div>
+                                    <div class="td-dest-eta">● Trip finished successfully</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="td-report-btns"><button class="td-report-btn breakdown"
+                                onclick="alert('Breakdown!')">🚨 REPORT BREAKDOWN</button><button
+                                class="td-report-btn issue" onclick="alert('Issue!')">⚠️ REPORT ISSUE</button></div>
+                    </div>
+
+                    <div id="tdRc8" class="td-rc-page"></div>
+                    <div id="tdRc9" class="td-rc-page"></div>
+
+                </div><!-- /td-ride-content -->
+            </div><!-- /td-ride-card -->
+
+            <!-- Bottom action buttons -->
+            <div class="td-bottom-nav" id="tdBottomNav">
+                <div class="td-bn-row active" id="tdBn1">
+                    <button class="td-bn-btn green" onclick="tdGoTo(2)"><i class="fas fa-arrow-right"></i> Start to
+                        Pick-up</button>
+                    <button class="td-bn-btn gray" onclick="alert('Opening navigation...')"><i
+                            class="fas fa-map-marked-alt"></i> Navigation</button>
+                </div>
+                <div class="td-bn-row" id="tdBn2">
+                    <button class="td-bn-btn green" onclick="tdStartLoading()"><i class="fas fa-box"></i> START
+                        LOADING</button>
+                </div>
+                <div class="td-bn-row" id="tdBn3">
+                    <button class="td-bn-btn green" onclick="tdFinishLoading()"><i class="fas fa-check"></i> FINISH
+                        LOADING</button>
+                    <button class="td-bn-btn gray" onclick="tdGoTo(8)"><i class="fas fa-file-alt"></i> Pickup
+                        BOL</button>
+                </div>
+                <div class="td-bn-row" id="tdBn4">
+                    <button class="td-bn-btn blue" onclick="tdGoTo(5)"><i class="fas fa-truck"></i> ARRIVED AT
+                        DELIVERY</button>
+                    <button class="td-bn-btn gray" onclick="alert('Opening navigation...')"><i
+                            class="fas fa-map-marked-alt"></i> Navigation</button>
+                </div>
+                <div class="td-bn-row" id="tdBn5">
+                    <button class="td-bn-btn green" onclick="tdStartUnloading()"><i class="fas fa-dolly"></i> START
+                        UNLOADING</button>
+                </div>
+                <div class="td-bn-row" id="tdBn6">
+                    <button class="td-bn-btn green" onclick="tdFinishUnloading()"><i class="fas fa-check"></i> FINISH
+                        UNLOADING</button>
+                    <button class="td-bn-btn gray" onclick="tdGoTo(9)"><i class="fas fa-file-alt"></i> Delivery
+                        BOL</button>
+                </div>
+                <div class="td-bn-row" id="tdBn7">
+                    <button class="td-bn-btn blue" onclick="alert('✅ Payment confirmed! ₹20,000 received.')"><i
+                            class="fas fa-money-bill-wave"></i> Confirm Payment</button>
+                </div>
+                <div class="td-bn-row" id="tdBn8"></div>
+                <div class="td-bn-row" id="tdBn9"></div>
+            </div>
+
+        </div><!-- /relative wrapper -->
+    </div><!-- /tripDetailOverlay -->
+
+    <script>
+        /* ── MAKE TRIP CARDS CLICKABLE ── */
+        const tripData = {
+            1: {
+                title: 'Trip #001 — Allotment', badge: 'In Progress', badgeClass: 'badge-inprogress',
+                senderName: 'Rajesh Kumar', senderAddr: '12, Industrial Area, Sector 5, Mumbai — 400001',
+                receiverName: 'Suresh Mehta', receiverAddr: 'Mehta Warehouse, NH-48, Pune — 411001',
+                payment: '₹20,000', weight: '5,000 KG', cargo: 'Cement (Packaged)', est: '~2.5 hrs',
+                fare: '₹20,000', schedEta: '10:30 AM', schedInfo: 'Duration 2.5 hrs · Distance 86 km'
+            },
+            2: {
+                title: 'Trip #002 — Allotment', badge: 'Incomplete', badgeClass: 'badge-incomplete',
+                senderName: 'Anita Singh', senderAddr: 'Plot 7, MIDC, Nashik Road, Nashik — 422101',
+                receiverName: 'Kumar Logistics', receiverAddr: 'Kumar Cold Storage, Aurangabad — 431001',
+                payment: '₹15,000', weight: '8,000 KG', cargo: 'Industrial Goods', est: '~3.5 hrs',
+                fare: '₹15,000', schedEta: '2:00 PM', schedInfo: 'Duration 3.5 hrs · Distance 142 km'
+            },
+            3: {
+                title: 'Trip #003 — Allotment', badge: 'Completed', badgeClass: 'badge-completed',
+                senderName: 'Deepak Sharma', senderAddr: '45, Logistics Park, Bhiwandi — 421302',
+                receiverName: 'Singh Distribution', receiverAddr: 'Singh DC, Thane West, Mumbai — 400601',
+                payment: '₹23,000', weight: '12,400 KG', cargo: 'FMCG Goods', est: '~2.5 hrs',
+                fare: '₹23,000', schedEta: '7:15 AM', schedInfo: 'Duration 2.5 hrs · Distance 58 km'
+            }
+        };
+
+        document.querySelectorAll('.trip-card').forEach(function (card, idx) {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', function () {
+                window._openTripCardEl = card;
+                openTripDetail(idx + 1);
+            });
+        });
+
+        function openTripDetail(tripId) {
+            var d = tripData[tripId] || tripData[1];
+            // populate header
+            document.getElementById('tdTitle').textContent = d.title;
+            var badge = document.getElementById('tdBadge');
+            badge.textContent = d.badge;
+            badge.className = 'td-trip-badge ' + d.badgeClass;
+            // populate preview stats
+            document.getElementById('tdPvPayment').textContent = d.payment;
+            document.getElementById('tdPvWeight').textContent = d.weight;
+            document.getElementById('tdPvEst').textContent = d.est;
+
+            // ── Populate all party cards (RC1–RC7) ──
+            // Sender cards
+            var senderEtas = { 1: '● ETA: 12 mins', 2: '● Arrived at pickup', 3: '● Loading in progress', 4: '● Loading complete', 5: '● In transit', 6: '● Delivery in progress', 7: '✓ Completed' };
+            var receiverEtas = { 1: '● Delivery ETA: ' + d.schedEta, 2: '● Delivery ETA: ' + d.schedEta, 3: '● Delivery ETA: ' + d.schedEta, 4: '● ETA: 45 mins', 5: '● Arrived at delivery', 6: '● Unloading in progress', 7: '✓ Delivery complete' };
+            for (var n = 1; n <= 7; n++) {
+                var sn = document.getElementById('tdRcSenderName' + n);
+                var sa = document.getElementById('tdRcSenderAddr' + n);
+                var se = document.getElementById('tdRcSenderEta' + n);
+                var rn = document.getElementById('tdRcReceiverName' + n);
+                var ra = document.getElementById('tdRcReceiverAddr' + n);
+                var re = document.getElementById('tdRcReceiverEta' + n);
+                if (sn) sn.textContent = d.senderName;
+                if (sa) sa.textContent = d.senderAddr;
+                if (se) se.textContent = senderEtas[n] || '';
+                if (rn) rn.textContent = d.receiverName;
+                if (ra) ra.textContent = d.receiverAddr;
+                if (re) re.textContent = receiverEtas[n] || '';
+            }
+
+            // RC1 schedule-time sender name
+            var scSender = document.getElementById('tdRcSchedSenderName1');
+            if (scSender) scSender.textContent = d.senderName;
+            document.getElementById('tdRcSchedEta').textContent = 'ETA: ' + d.schedEta;
+            document.getElementById('tdRcSchedInfo').textContent = d.schedInfo;
+            document.getElementById('tdRcWeight1').textContent = d.weight;
+            document.getElementById('tdRcCargo1').textContent = d.cargo;
+            document.getElementById('tdRcAmt1').textContent = d.payment;
+
+            // RC2/RC3 pickup locations
+            ['2', '3'].forEach(function (n) {
+                var pn = document.getElementById('tdRcPickupName' + n);
+                var pa = document.getElementById('tdRcPickupAddr' + n);
+                if (pn) pn.textContent = d.senderName;
+                if (pa) pa.textContent = d.senderAddr;
+            });
+
+            // RC5-6 delivery locations (RC4 uses new receiver card only)
+            ['5', '6'].forEach(function (n) {
+                var dn = document.getElementById('tdRcDeliveryName' + n);
+                var da = document.getElementById('tdRcDeliveryAddr' + n);
+                if (dn) dn.textContent = d.receiverName;
+                if (da) da.textContent = d.receiverAddr;
+            });
+
+            document.getElementById('tdRcAmt4') && (document.getElementById('tdRcAmt4').textContent = d.payment);
+
+            // page 2 timer card
+            document.getElementById('tdPickupName').textContent = d.senderName;
+            // delivery complete page
+            document.getElementById('tdDelTripId').textContent = d.title + ' finished successfully';
+            document.getElementById('tdDelFare').textContent = d.fare;
+            // BOL pages
+            var route = d.senderAddr.split(',').slice(-1)[0].trim() + ' → ' + d.receiverAddr.split(',').slice(-1)[0].trim();
+            document.getElementById('tdBolRoute8').textContent = route;
+            document.getElementById('tdBolRoute9').textContent = route;
+            document.getElementById('tdBolCargo').textContent = d.cargo;
+            document.getElementById('tdBolWeight').textContent = d.weight;
+            document.getElementById('tdBolPay').textContent = d.payment;
+            document.getElementById('tdBolCargo9').textContent = d.cargo;
+            document.getElementById('tdBolWeight9').textContent = d.weight;
+            document.getElementById('tdShipperName').textContent = d.senderName;
+            document.getElementById('tdShipperAddr').textContent = d.senderAddr;
+            document.getElementById('tdReceiverName').textContent = d.receiverName;
+            document.getElementById('tdReceiverAddr').textContent = d.receiverAddr;
+            document.getElementById('tdShipperName9').textContent = d.senderName;
+            document.getElementById('tdShipperAddr9').textContent = d.senderAddr;
+            document.getElementById('tdReceiverName9').textContent = d.receiverName;
+            document.getElementById('tdReceiverAddr9').textContent = d.receiverAddr;
+            // reset to page 1
+            tdCur = 1;
+            for (var i = 1; i <= 9; i++) {
+                var pp = document.getElementById('tdPage' + i); if (pp) { pp.classList.remove('active'); }
+                var rc = document.getElementById('tdRc' + i); if (rc) { rc.classList.remove('active'); }
+                var bn = document.getElementById('tdBn' + i); if (bn) { bn.classList.remove('active'); }
+                var tb = document.getElementById('tdTab' + i); if (tb) { tb.classList.remove('active'); }
+            }
+            document.getElementById('tdPage1').classList.add('active');
+            document.getElementById('tdRc1').classList.add('active');
+            document.getElementById('tdBn1').classList.add('active');
+            document.getElementById('tdTab1').classList.add('active');
+            document.getElementById('tdPvLabel').textContent = 'To Pick-up';
+            var rc = document.getElementById('tdRideCard');
+            rc.style.height = '210px'; rc.classList.remove('expanded');
+            rc.style.display = '';
+            document.getElementById('tripDetailOverlay').classList.add('open');
+            // init canvases
+            tdInitCanvas('tdCvPickup'); tdInitCanvas('tdCvDelivery');
+            // set initial status to page 1 using trip's own badge
+            tdCur = 1;
+            tdUpdateTripCardStatus(1, d);
+        }
+
+        function closeTripDetail() {
+            document.getElementById('tripDetailOverlay').classList.remove('open');
+        }
+
+        /* ── TD page navigation ── */
+        var tdCur = 1;
+        const TD_TAB_MAP = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6 };
+        const tdPvLabels = { 1: 'To Pick-up', 2: 'Wait to Load', 3: 'Loading in Progress', 4: 'Driving to Destination', 5: 'At Drop-off', 6: 'Unloading in Progress', 7: 'Delivery Completion' };
+
+        function tdGoTo(n) {
+            var prevPage = document.getElementById('tdPage' + tdCur); if (prevPage) prevPage.classList.remove('active');
+            var prevRc = document.getElementById('tdRc' + tdCur); if (prevRc) prevRc.classList.remove('active');
+            var prevBn = document.getElementById('tdBn' + tdCur); if (prevBn) prevBn.classList.remove('active');
+            var prevTab = document.getElementById('tdTab' + tdCur); if (prevTab && TD_TAB_MAP[tdCur] !== undefined) prevTab.classList.remove('active');
+            tdCur = n;
+            var curPage = document.getElementById('tdPage' + n); if (curPage) curPage.classList.add('active');
+            var curRc = document.getElementById('tdRc' + n); if (curRc) curRc.classList.add('active');
+            var curBn = document.getElementById('tdBn' + n); if (curBn) curBn.classList.add('active');
+            var curTab = document.getElementById('tdTab' + n); if (curTab && TD_TAB_MAP[n] !== undefined) { curTab.classList.add('active'); curTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); }
+            if (tdPvLabels[n]) document.getElementById('tdPvLabel').textContent = tdPvLabels[n];
+            var rc = document.getElementById('tdRideCard');
+            rc.style.transition = 'height 0.3s ease';
+            rc.style.height = '210px'; rc.classList.remove('expanded');
+            rc.style.display = (n === 8 || n === 9) ? 'none' : '';
+            if (n === 2 && !tdTimerStarted.wait) { tdTimerStarted.wait = true; tdStartCountUp('tdT_wait'); }
+            if (n === 5 && !tdTimerStarted.uwait) { tdTimerStarted.uwait = true; tdStartCountUp('tdT_uwait'); }
+
+            // ── Update trip card badge + party status labels based on current page ──
+            tdUpdateTripCardStatus(n);
+        }
+
+        function tdUpdateTripCardStatus(page, tripDataOverride) {
+            // Map page → { badge text, badge class, senderDot, senderLabel, senderLabelClass, receiverDot, receiverLabel, receiverLabelClass }
+            var statusMap = {
+                1: { badge: 'In Progress', badgeClass: 'badge-inprogress', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-pending', rLbl: 'Pending', rCls: 'pending' },
+                2: { badge: 'Loading', badgeClass: 'badge-loading', sDot: 'dot-loading', sLbl: 'Loading', sCls: 'loading', rDot: 'dot-pending', rLbl: 'Pending', rCls: 'pending' },
+                3: { badge: 'Loading', badgeClass: 'badge-loading', sDot: 'dot-loading', sLbl: 'Loading', sCls: 'loading', rDot: 'dot-pending', rLbl: 'Pending', rCls: 'pending' },
+                4: { badge: 'In Progress', badgeClass: 'badge-inprogress', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-inprogress', rLbl: 'In Progress', rCls: 'inprogress' },
+                5: { badge: 'Unloading', badgeClass: 'badge-unloading', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-unloading', rLbl: 'Unloading', rCls: 'unloading' },
+                6: { badge: 'Unloading', badgeClass: 'badge-unloading', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-unloading', rLbl: 'Unloading', rCls: 'unloading' },
+                7: { badge: 'Completed', badgeClass: 'badge-completed', sDot: 'dot-completed', sLbl: 'Completed', sCls: 'completed', rDot: 'dot-completed', rLbl: 'Completed', rCls: 'completed' }
+            };
+            var s = statusMap[page];
+            if (!s) return;
+
+            // Update the TD header badge
+            // On initial open (page 1), use the trip's own badge so "Incomplete"/"Completed"
+            // trips show their real status until the driver actually starts navigating
+            var badgeText = s.badge, badgeClass = s.badgeClass;
+            if (page === 1 && tripDataOverride) {
+                badgeText = tripDataOverride.badge;
+                badgeClass = tripDataOverride.badgeClass;
+            }
+            var tdBadge = document.getElementById('tdBadge');
+            if (tdBadge) { tdBadge.textContent = badgeText; tdBadge.className = 'td-trip-badge ' + badgeClass; }
+
+            // Update the currently open trip card in the list
+            if (window._openTripCardEl) {
+                var hdrBadge = window._openTripCardEl.querySelector('.trip-badge');
+                if (hdrBadge) { hdrBadge.textContent = badgeText; hdrBadge.className = 'trip-badge ' + badgeClass; }
+                var rows = window._openTripCardEl.querySelectorAll('.party-row');
+                if (rows[0]) {
+                    var sd = rows[0].querySelector('.status-dot');
+                    var sl = rows[0].querySelector('.status-label-text');
+                    if (sd) sd.className = 'status-dot ' + s.sDot;
+                    if (sl) { sl.textContent = s.sLbl; sl.className = 'status-label-text ' + s.sCls; }
+                }
+                if (rows[1]) {
+                    var rd = rows[1].querySelector('.status-dot');
+                    var rl = rows[1].querySelector('.status-label-text');
+                    if (rd) rd.className = 'status-dot ' + s.rDot;
+                    if (rl) { rl.textContent = s.rLbl; rl.className = 'status-label-text ' + s.rCls; }
+                }
+            }
+        }
+
+        var tdTimerStarted = { wait: false, load: false, uwait: false, unload: false };
+        var tdTimerSecs = { tdT_wait: 0, tdT_load: 0, tdT_uwait: 0, tdT_unload: 0 };
+        var tdLoadInt = null, tdLoadRunning = false, tdUnloadInt = null, tdUnloadRunning = false;
+
+        function tdFmt(s) { return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60].map(function (v) { return String(v).padStart(2, '0'); }).join(':'); }
+        function tdStartCountUp(id) { setInterval(function () { tdTimerSecs[id]++; var el = document.getElementById(id); if (el) el.textContent = tdFmt(tdTimerSecs[id]); }, 1000); }
+        function tdStartLoading() { if (!tdLoadRunning) { tdLoadRunning = true; tdTimerStarted.load = true; tdLoadInt = setInterval(function () { tdTimerSecs['tdT_load']++; var el = document.getElementById('tdT_load'); if (el) el.textContent = tdFmt(tdTimerSecs['tdT_load']); }, 1000); tdGoTo(3); } }
+        function tdFinishLoading() { tdLoadRunning = false; clearInterval(tdLoadInt); tdGoTo(4); }
+        function tdStartUnloading() { if (!tdUnloadRunning) { tdUnloadRunning = true; tdTimerStarted.unload = true; tdUnloadInt = setInterval(function () { tdTimerSecs['tdT_unload']++; var el = document.getElementById('tdT_unload'); if (el) el.textContent = tdFmt(tdTimerSecs['tdT_unload']); }, 1000); tdGoTo(6); } }
+        function tdFinishUnloading() { tdUnloadRunning = false; clearInterval(tdUnloadInt); tdGoTo(7); }
+
+        /* ── TD ride-card drag ── */
+        (function () {
+            var rc = document.getElementById('tdRideCard');
+            var dh = document.getElementById('tdDragHandle');
+            var minH = 210, maxH = 620, threshold = (minH + maxH) / 2;
+            var isDragging = false, startY = 0, startH = 0;
+            function startDrag(e) { isDragging = true; startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY; startH = rc.offsetHeight; rc.classList.add('dragging'); rc.style.transition = 'none'; e.preventDefault(); e.stopPropagation(); }
+            function onDrag(e) { if (!isDragging) return; e.preventDefault(); var y = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; var h = Math.max(minH, Math.min(maxH, startH + (startY - y))); rc.style.height = h + 'px'; rc.classList.toggle('expanded', h > threshold); }
+            function stopDrag() { if (!isDragging) return; isDragging = false; rc.classList.remove('dragging'); var h = rc.offsetHeight; rc.style.transition = 'height 0.3s ease'; if (h < threshold) { rc.style.height = minH + 'px'; rc.classList.remove('expanded'); } else { rc.style.height = maxH + 'px'; rc.classList.add('expanded'); } }
+            dh.addEventListener('mousedown', startDrag); document.addEventListener('mousemove', onDrag); document.addEventListener('mouseup', stopDrag);
+            dh.addEventListener('touchstart', startDrag, { passive: false }); document.addEventListener('touchmove', onDrag, { passive: false }); document.addEventListener('touchend', stopDrag);
+            dh.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); rc.style.transition = 'height 0.3s ease'; var exp = !rc.classList.contains('expanded'); rc.classList.toggle('expanded', exp); rc.style.height = exp ? maxH + 'px' : minH + 'px'; });
+        })();
+
+        /* ── TD live timer for preview (allotment style) ── */
+        (function () {
+            var secs = 0;
+            function fmt(s) { var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sc = s % 60; if (h > 0) return h + ':' + String(m).padStart(2, '0') + ':' + String(sc).padStart(2, '0'); return String(m).padStart(2, '0') + ':' + String(sc).padStart(2, '0'); }
+            setInterval(function () { secs++; var t = fmt(secs);['tdPvTimer', 'tdRcTimer1', 'tdRcTimer2', 'tdRcTimer3', 'tdRcTimer4', 'tdRcTimer5', 'tdRcTimer6', 'tdRcTimer7'].forEach(function (id) { var el = document.getElementById(id); if (el) el.textContent = t; }); }, 1000);
+        })();
+
+        /* ── ETA countdown for TD page 1 ── */
+        var tdEta = 12, tdDist = 7.8;
+        setInterval(function () { if (tdCur === 1 && tdEta > 0) { tdEta -= 0.1; tdDist -= 0.065; var e = document.getElementById('tdEtaVal'); var d = document.getElementById('tdDistVal'); if (e) e.textContent = Math.ceil(tdEta) + ' mins'; if (d) d.textContent = Math.max(0, tdDist).toFixed(1) + ' KM'; } }, 6000);
+
+        /* ── TD rating ── */
+        function tdSetRating(n) { document.querySelectorAll('.td-star').forEach(function (s, i) { s.classList.toggle('active', i < n); }); }
+
+        /* ── TD condition ── */
+        function tdSetCondition(type) { document.getElementById('tdGoodBtn').className = 'td-cond-btn' + (type === 'good' ? ' good-on' : ''); document.getElementById('tdDamageBtn').className = 'td-cond-btn' + (type === 'damage' ? ' damage-on' : ''); document.getElementById('tdDamageBox').className = 'td-damage-box' + (type === 'damage' ? ' show' : ''); }
+
+        /* ── TD canvas signature ── */
+        function tdInitCanvas(id) { var c = document.getElementById(id); if (!c) return; var ctx = c.getContext('2d'); ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; var drawing = false; function getPos(e) { var r = c.getBoundingClientRect(), sx = c.width / r.width, sy = c.height / r.height; var src = e.touches ? e.touches[0] : e; return { x: (src.clientX - r.left) * sx, y: (src.clientY - r.top) * sy }; } c.addEventListener('mousedown', function (e) { e.preventDefault(); drawing = true; var p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }); c.addEventListener('mousemove', function (e) { if (!drawing) return; var p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }); c.addEventListener('mouseup', function () { drawing = false; }); c.addEventListener('touchstart', function (e) { e.preventDefault(); drawing = true; var p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false }); c.addEventListener('touchmove', function (e) { e.preventDefault(); if (!drawing) return; var p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false }); c.addEventListener('touchend', function () { drawing = false; }); }
+        function tdClearSig(id) { var c = document.getElementById(id); if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height); }
+        function tdApprovePickup() { var c = document.getElementById('tdCvPickup'); var d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; if (!Array.from(d).some(function (v) { return v !== 0; })) { alert('Please sign before approving.'); return; } alert('✅ Pickup BOL approved! Trip started.'); tdGoTo(4); }
+        function tdApproveDelivery() { alert('✅ Delivery receipt confirmed!'); tdGoTo(7); }
+
+        function switchTab(name) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            const tabEl = document.getElementById('tab' + name.charAt(0).toUpperCase() + name.slice(1));
+            if (tabEl) tabEl.classList.add('active');
+
+            const mapSection = document.getElementById('mapSection');
+            const tripsSection = document.getElementById('tripsSection');
+
+            if (name === 'map') {
+                mapSection.classList.add('visible');
+                tripsSection.style.display = 'flex';
+            } else {
+                mapSection.classList.remove('visible');
+                tripsSection.style.display = 'flex';
+            }
+        }
+
+        /* ── CALL & MESSAGE ── */
+        function makeCall(name, number) {
+            if (confirm('📞 Call ' + name + ' at ' + number + '?')) {
+                window.location.href = 'tel:' + number;
+            }
+        }
+        function sendMsg(name, number) {
+            if (confirm('💬 Send message to ' + name + '?')) {
+                window.location.href = 'sms:' + number;
+            }
+        }
+
+        /* ── SIDEBAR ── */
+        function openSidebarMenu() {
+            document.getElementById('sidebarMenu').classList.add('open');
+            document.getElementById('menuOverlay').classList.add('open');
+        }
+        function closeSidebarMenu() {
+            document.getElementById('sidebarMenu').classList.remove('open');
+            document.getElementById('menuOverlay').classList.remove('open');
+        }
+        document.getElementById('closeMenuBtn').addEventListener('click', closeSidebarMenu);
+        document.getElementById('menuOverlay').addEventListener('click', closeSidebarMenu);
+        document.querySelectorAll('.sidebar-menu-item').forEach(i => i.addEventListener('click', closeSidebarMenu));
+
+        /* ── ONLINE TOGGLE ── */
+        let isOnline = true;
+        document.getElementById('toggleBtn').addEventListener('click', function () {
+            isOnline = !isOnline;
+            document.getElementById('statusTxt').textContent = isOnline ? 'ONLINE' : 'OFFLINE';
+            document.getElementById('toggleSlider').style.right = isOnline ? '2px' : 'auto';
+            document.getElementById('toggleSlider').style.left = isOnline ? 'auto' : '2px';
+        });
+
+        /* ── INIT: start on Map tab ── */
+        window.addEventListener('load', () => { switchTab('map'); });
+
+        /* ══════════════════════════════════════
+           RIDE CARD — drag to expand / collapse
+        ══════════════════════════════════════ */
+        (function () {
+            const rideCard = document.getElementById('rideCard');
+            const dragHandle = document.getElementById('dragHandle');
+            const minH = 215, maxH = 600, threshold = (minH + maxH) / 2;
+            let isDragging = false, startY = 0, startH = 0;
+
+            function startDrag(e) {
+                isDragging = true;
+                startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+                startH = rideCard.offsetHeight;
+                rideCard.classList.add('dragging');
+                rideCard.style.transition = 'none';
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function onDrag(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const y = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+                const h = Math.max(minH, Math.min(maxH, startH + (startY - y)));
+                rideCard.style.height = h + 'px';
+                rideCard.classList.toggle('expanded', h > threshold);
+            }
+
+            function stopDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                rideCard.classList.remove('dragging');
+                const h = rideCard.offsetHeight;
+                rideCard.style.transition = 'height 0.3s ease';
+                if (h < threshold) {
+                    rideCard.style.height = minH + 'px';
+                    rideCard.classList.remove('expanded');
+                } else {
+                    rideCard.style.height = maxH + 'px';
+                    rideCard.classList.add('expanded');
+                }
+            }
+
+            dragHandle.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDrag);
+            dragHandle.addEventListener('touchstart', startDrag, { passive: false });
+            document.addEventListener('touchmove', onDrag, { passive: false });
+            document.addEventListener('touchend', stopDrag);
+
+            dragHandle.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                rideCard.style.transition = 'height 0.3s ease';
+                const expanding = !rideCard.classList.contains('expanded');
+                rideCard.classList.toggle('expanded', expanding);
+                rideCard.style.height = expanding ? maxH + 'px' : minH + 'px';
+            });
+        })();
+
+        /* ── TRIP TIMER (syncs preview + expanded) ── */
+        (function () {
+            let secs = 0;
+            function fmt(s) {
+                const h = Math.floor(s / 3600),
+                    m = Math.floor((s % 3600) / 60),
+                    sc = s % 60;
+                if (h > 0) return h + ':' + String(m).padStart(2, '0') + ':' + String(sc).padStart(2, '0');
+                return String(m).padStart(2, '0') + ':' + String(sc).padStart(2, '0');
+            }
+            setInterval(function () {
+                secs++;
+                const t = fmt(secs);
+                ['pvTimer', 'rcTimer'].forEach(function (id) {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = t;
+                });
+            }, 1000);
+        })();
+    </script>
+</body>
+
+</html>
