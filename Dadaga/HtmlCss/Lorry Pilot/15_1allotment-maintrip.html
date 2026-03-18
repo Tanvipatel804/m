@@ -398,13 +398,25 @@
             border: 1px solid rgba(239, 68, 68, 0.4);
         }
 
+        .badge-loading {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .badge-unloading {
+            background: rgba(139, 92, 246, 0.2);
+            color: #A78BFA;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
         /* Party row */
         .party-row {
             display: grid;
             grid-template-columns: 1fr 56px 90px;
             align-items: center;
             padding: 14px 16px;
-            gap: 12px;
+            gap: 10px;
         }
 
         /* Info column */
@@ -509,55 +521,99 @@
             transform: scale(1.1);
         }
 
-        /* Status column */
+        /* Status column — action button */
         .party-status-col {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 0;
             text-align: center;
+            min-width: 82px;
         }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .dot-pending {
-            background: #FFA726;
-            box-shadow: 0 0 6px rgba(255, 152, 0, 0.6);
-        }
-
-        .dot-inprogress {
-            background: #64B5F6;
-            box-shadow: 0 0 6px rgba(33, 150, 243, 0.6);
-        }
-
-        .dot-completed {
-            background: #66BB6A;
-            box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
-        }
-
-        .status-label-text {
-            font-size: 10px;
+        .party-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 7px 6px 6px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            width: 82px;
+            min-height: 56px;
             font-weight: 800;
-            letter-spacing: 0.07em;
+            font-size: 9.5px;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
+            line-height: 1.2;
+            transition: transform 0.15s, box-shadow 0.15s;
         }
 
-        .status-label-text.pending {
-            color: #FFA726;
+        .party-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
         }
 
-        .status-label-text.inprogress {
-            color: #64B5F6;
+        .party-action-btn .pab-icon {
+            font-size: 17px;
+            line-height: 1;
         }
 
-        .status-label-text.completed {
-            color: #66BB6A;
+        .pab-pickup {
+            background: rgba(33, 150, 243, 0.13);
+            color: #1565C0;
+            border: 1.5px solid rgba(33, 150, 243, 0.35);
+        }
+
+        .pab-loading {
+            background: rgba(245, 158, 11, 0.13);
+            color: #B45309;
+            border: 1.5px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .pab-fload {
+            background: rgba(245, 158, 11, 0.2);
+            color: #92400E;
+            border: 1.5px solid rgba(245, 158, 11, 0.5);
+        }
+
+        .pab-transit {
+            background: rgba(99, 102, 241, 0.13);
+            color: #4338CA;
+            border: 1.5px solid rgba(99, 102, 241, 0.35);
+        }
+
+        .pab-unload {
+            background: rgba(139, 92, 246, 0.13);
+            color: #6D28D9;
+            border: 1.5px solid rgba(139, 92, 246, 0.35);
+        }
+
+        .pab-funload {
+            background: rgba(139, 92, 246, 0.2);
+            color: #5B21B6;
+            border: 1.5px solid rgba(139, 92, 246, 0.5);
+        }
+
+        .pab-done {
+            background: rgba(16, 185, 129, 0.13);
+            color: #065F46;
+            border: 1.5px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .pab-pending {
+            background: rgba(156, 163, 175, 0.13);
+            color: #6B7280;
+            border: 1.5px solid rgba(156, 163, 175, 0.3);
+        }
+
+        .pab-complete {
+            background: rgba(16, 185, 129, 0.18);
+            color: #047857;
+            border: 1.5px solid rgba(16, 185, 129, 0.45);
         }
 
         /* Divider */
@@ -694,9 +750,9 @@
 
         @media (max-width: 600px) {
             .party-row {
-                grid-template-columns: 1fr 48px 70px;
-                padding: 12px 12px;
-                gap: 8px;
+                grid-template-columns: 1fr 48px 82px;
+                padding: 12px 10px;
+                gap: 6px;
             }
 
             .party-name {
@@ -1399,8 +1455,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-inprogress"></div>
-                        <div class="status-label-text inprogress">In Progress</div>
+                        <button class="party-action-btn pab-loading"
+                            onclick="openTripDetail(1);setTimeout(()=>tdGoTo(2),100)">
+                            <span class="pab-icon">⏳</span>Loading
+                        </button>
                     </div>
                 </div>
 
@@ -1432,8 +1490,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-pending"></div>
-                        <div class="status-label-text pending">Pending</div>
+                        <button class="party-action-btn pab-transit"
+                            onclick="openTripDetail(1);setTimeout(()=>tdGoTo(4),100)">
+                            <span class="pab-icon">🚛</span>In Transit
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1471,8 +1531,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-pending"></div>
-                        <div class="status-label-text pending">Pending</div>
+                        <button class="party-action-btn pab-pickup"
+                            onclick="openTripDetail(2);setTimeout(()=>tdGoTo(1),100)">
+                            <span class="pab-icon">📍</span>To Pick-up
+                        </button>
                     </div>
                 </div>
 
@@ -1504,8 +1566,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-pending"></div>
-                        <div class="status-label-text pending">Pending</div>
+                        <button class="party-action-btn pab-pending"
+                            onclick="openTripDetail(2);setTimeout(()=>tdGoTo(1),100)">
+                            <span class="pab-icon">⏱️</span>Pending
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1543,8 +1607,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-completed"></div>
-                        <div class="status-label-text completed">Completed</div>
+                        <button class="party-action-btn pab-done"
+                            onclick="openTripDetail(3);setTimeout(()=>tdGoTo(7),100)">
+                            <span class="pab-icon">✅</span>Completed
+                        </button>
                     </div>
                 </div>
 
@@ -1575,8 +1641,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-completed"></div>
-                        <div class="status-label-text completed">Completed</div>
+                        <button class="party-action-btn pab-complete"
+                            onclick="openTripDetail(3);setTimeout(()=>tdGoTo(7),100)">
+                            <span class="pab-icon">🏁</span>Delivered
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1615,6 +1683,11 @@
                     <div class="pv-stat-value">12,400 KG</div>
                 </div>
                 <div class="pv-stat-block">
+                    <div class="pv-stat-icon">🛣️</div>
+                    <div class="pv-stat-label">Distance</div>
+                    <div class="pv-stat-value">483 KM</div>
+                </div>
+                <div class="pv-stat-block">
                     <div class="pv-stat-icon">⏱️</div>
                     <div class="pv-stat-label">Est. Total</div>
                     <div class="pv-stat-value">~9.5 hrs</div>
@@ -1647,6 +1720,11 @@
                     <div class="rc-stat-icon">⚖️</div>
                     <div class="rc-stat-label">Total Weight</div>
                     <div class="rc-stat-value">12,400 KG</div>
+                </div>
+                <div class="rc-stat-block">
+                    <div class="rc-stat-icon">🛣️</div>
+                    <div class="rc-stat-label">Distance</div>
+                    <div class="rc-stat-value">483 KM</div>
                 </div>
                 <div class="rc-stat-block">
                     <div class="rc-stat-icon">⏱️</div>
@@ -1836,12 +1914,14 @@
             /* ── Step Tabs ── */
             .td-tabs {
                 display: flex;
-                overflow-x: auto;
-                padding: 8px 10px;
+                overflow-x: none;
+                padding: 6px 8px;
                 gap: 6px;
                 background: rgba(0, 0, 0, 0.25);
                 flex-shrink: 0;
                 scrollbar-width: none;
+                justify-content: space-between;
+                align-items: center;
             }
 
             .td-tabs::-webkit-scrollbar {
@@ -2807,58 +2887,6 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
             }
 
-            .td-preview-name-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 12px;
-                background: #F9FAFB;
-                border-radius: 10px;
-                padding: 12px;
-            }
-
-            .td-preview-name {
-                flex: 1;
-                text-align: center;
-                font-size: 16px;
-                font-weight: bold;
-                color: #333;
-            }
-
-            .td-preview-call-btn {
-                width: 38px;
-                height: 38px;
-                border-radius: 50%;
-                background: #4CAF50;
-                border: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                color: white;
-                font-size: 16px;
-                transition: 0.2s;
-            }
-
-            .td-preview-call-btn:hover {
-                background: #45a049;
-                transform: scale(1.05);
-            }
-
-            .td-preview-profile-btn {
-                width: 38px;
-                height: 38px;
-                border-radius: 50%;
-                background: #E5E7EB;
-                border: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                overflow: hidden;
-                transition: 0.2s;
-            }
-
             /* bottom action bar */
             .td-bottom-nav {
                 position: absolute;
@@ -2930,6 +2958,121 @@
             .td-page-panel.active {
                 display: flex;
                 flex-direction: column;
+            }
+
+            /* ── Customer / Receiver party card (replaces preview-name-row) ── */
+            .td-party-card {
+                background: #F9FAFB;
+                border-radius: 10px;
+                padding: 10px 12px;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .td-party-card.sender-card {
+                border-left: 3px solid #1565C0;
+            }
+
+            .td-party-card.receiver-card {
+                border-left: 3px solid #10b981;
+            }
+
+            .td-party-icon-btn {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                border: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 17px;
+                flex-shrink: 0;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .td-party-icon-btn.sender-btn {
+                background: rgba(21, 101, 192, 0.12);
+                color: #1565C0;
+            }
+
+            .td-party-icon-btn.receiver-btn {
+                background: rgba(16, 185, 129, 0.12);
+                color: #10b981;
+                font-size: 18px;
+            }
+
+            .td-party-icon-btn:hover {
+                transform: scale(1.08);
+            }
+
+            .td-party-body {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .td-party-name-line {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                flex-wrap: wrap;
+            }
+
+            .td-party-name {
+                font-size: 14px;
+                font-weight: 800;
+                color: #111827;
+            }
+
+            .td-party-dot {
+                color: #9ca3af;
+                font-size: 10px;
+            }
+
+            .td-party-rating {
+                font-size: 12px;
+                color: #f59e0b;
+                font-weight: 700;
+            }
+
+            .td-party-addr {
+                font-size: 11px;
+                color: #6b7280;
+                margin-top: 2px;
+            }
+
+            .td-party-eta {
+                font-size: 11px;
+                font-weight: 700;
+                color: #1565C0;
+                margin-top: 3px;
+            }
+
+            .td-party-eta.green {
+                color: #10b981;
+            }
+
+            .td-party-call-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: rgba(76, 175, 80, 0.12);
+                border: 1.5px solid rgba(76, 175, 80, 0.35);
+                color: #4CAF50;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                cursor: pointer;
+                flex-shrink: 0;
+                transition: 0.2s;
+            }
+
+            .td-party-call-btn:hover {
+                background: rgba(76, 175, 80, 0.25);
+                transform: scale(1.1);
             }
         </style>
 
@@ -3268,6 +3411,11 @@
                             <div class="td-pv-stat-value" id="tdPvWeight">5,000 KG</div>
                         </div>
                         <div class="td-pv-stat-block">
+                            <div class="td-pv-stat-icon">🛣️</div>
+                            <div class="td-pv-stat-label">Distance</div>
+                            <div class="td-pv-stat-value" id="tdPvDist">86 KM</div>
+                        </div>
+                        <div class="td-pv-stat-block">
                             <div class="td-pv-stat-icon">⏱️</div>
                             <div class="td-pv-stat-label">Est. Total</div>
                             <div class="td-pv-stat-value" id="tdPvEst">~2.5 hrs</div>
@@ -3289,35 +3437,46 @@
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
                         <div class="td-rc-divider"></div>
-                        <div class="td-preview-name-row">
-                            <button class="td-preview-profile-btn"><i class="fas fa-user"
-                                    style="color:#4CAF50;font-size:18px;"></i></button>
-                            <div class="td-preview-name" id="tdRcSenderName1">Sender Name<br><span
-                                    style="font-size:smaller;font-weight:lighter;">⭐4.9 (200 loads)</span></div>
-                            <button class="td-preview-call-btn" onclick="alert('Calling sender...')"><i
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName1">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr1">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta1">● ETA: 12 mins</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
                                     class="fas fa-phone"></i></button>
                         </div>
-                        <div class="td-dest-section">
-                            <div class="td-dest-header">
-                                <i class="fas fa-map-marker-alt td-dest-icon"></i>
-                                <div class="td-dest-info">
-                                    <div class="td-dest-name" id="tdRcPickupName">Pickup Location</div>
-                                    <div class="td-dest-eta" id="tdRcPickupEta">● ETA: 12 mins</div>
-                                    <div class="td-dest-addr" id="tdRcPickupAddr">Address</div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName1">Receiver Name</span>
                                 </div>
-                                <div class="td-supp-actions">
-                                    <button class="td-action-icon call" onclick="alert('Calling pickup...')"><i
-                                            class="fas fa-phone"></i></button>
-                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr1">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta1">● ETA: —</div>
                             </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
                         </div>
                         <div class="td-dest-section">
                             <div class="td-dest-header">
                                 <i class="fas fa-clock" style="font-size:20px;color:#666;"></i>
                                 <div class="td-dest-info">
-                                    <div class="td-dest-name">Schedule Time</div>
+                                    <div class="td-dest-name" style="font-size:14px;font-weight:800;">Schedule Time
+                                    </div>
                                     <div class="td-dest-eta" id="tdRcSchedEta">ETA: —</div>
                                     <div class="td-dest-addr" id="tdRcSchedInfo">Duration — · Distance —</div>
+                                    <div class="td-dest-addr" style="color:#1565C0;font-weight:700;margin-top:2px;">
+                                        <i class="fas fa-road" style="font-size:10px;"></i>
+                                        <span id="tdRcSchedDist">— KM</span>
+                                    </div>
                                 </div>
                                 <div class="td-load-info">
                                     <div class="td-load-weight" id="tdRcWeight1">5,000 KG</div>
@@ -3362,12 +3521,32 @@
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
                         <div class="td-rc-divider"></div>
-                        <div class="td-preview-name-row">
-                            <button class="td-preview-profile-btn"><i class="fas fa-user"
-                                    style="color:#4CAF50;font-size:18px;"></i></button>
-                            <div class="td-preview-name" id="tdRcSenderName2">Sender Name<br><span
-                                    style="font-size:smaller;font-weight:lighter;">⭐4.9</span></div>
-                            <button class="td-preview-call-btn" onclick="alert('Calling...')"><i
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName2">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr2">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta2">● Arrived at pickup</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName2">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr2">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta2">● ETA: —</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
                                     class="fas fa-phone"></i></button>
                         </div>
                         <div class="td-dest-section">
@@ -3394,6 +3573,34 @@
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
                         <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName3">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr3">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta3">● Loading in progress</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName3">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr3">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta3">● ETA: —</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
                         <div class="td-dest-section">
                             <div class="td-dest-header"><i class="fas fa-map-marker-alt td-dest-icon"></i>
                                 <div class="td-dest-info">
@@ -3418,25 +3625,33 @@
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
                         <div class="td-rc-divider"></div>
-                        <div class="td-preview-name-row">
-                            <button class="td-preview-profile-btn"><i class="fas fa-user"
-                                    style="color:#4CAF50;font-size:18px;"></i></button>
-                            <div class="td-preview-name" id="tdRcReceiverName4">Receiver Name<br><span
-                                    style="font-size:smaller;font-weight:lighter;">📍 Destination</span></div>
-                            <button class="td-preview-call-btn" onclick="alert('Calling receiver...')"><i
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName4">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr4">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta4">● Loading complete</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
                                     class="fas fa-phone"></i></button>
                         </div>
-                        <div class="td-dest-section">
-                            <div class="td-dest-header"><i class="fas fa-industry td-dest-icon"></i>
-                                <div class="td-dest-info">
-                                    <div class="td-dest-name" id="tdRcDeliveryName4">Delivery Location</div>
-                                    <div class="td-dest-eta">● ETA: 45 mins</div>
-                                    <div class="td-dest-addr" id="tdRcDeliveryAddr4">—</div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName4">Receiver Name</span>
                                 </div>
-                                <div class="td-supp-actions"><button class="td-action-icon call"
-                                        onclick="alert('Calling delivery...')"><i class="fas fa-phone"></i></button>
-                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr4">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta4">● ETA: 45 mins</div>
                             </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
                         </div>
                         <div class="td-pay-section">
                             <div class="td-pay-details">
@@ -3469,6 +3684,34 @@
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
                         <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName5">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr5">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta5">● In transit</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName5">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr5">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta5">● Arrived at delivery</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
                         <div class="td-dest-section">
                             <div class="td-dest-header"><i class="fas fa-industry td-dest-icon"></i>
                                 <div class="td-dest-info">
@@ -3493,6 +3736,34 @@
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
                         <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName6">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr6">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta6">● Delivery in progress</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName6">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr6">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta6">● Unloading in progress</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
                         <div class="td-dest-section">
                             <div class="td-dest-header"><i class="fas fa-industry td-dest-icon"></i>
                                 <div class="td-dest-info">
@@ -3517,6 +3788,34 @@
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
                         <div class="td-rc-divider"></div>
+                        <!-- Customer (Sender) Card -->
+                        <div class="td-party-card sender-card">
+                            <button class="td-party-icon-btn sender-btn"><i class="fas fa-user"></i></button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcSenderName7">Sender Name</span>
+                                    <span class="td-party-dot">●</span>
+                                    <span class="td-party-rating">⭐4.9 (200 loads)</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcSenderAddr7">Address</div>
+                                <div class="td-party-eta" id="tdRcSenderEta7">✓ Completed</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling sender...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
+                        <!-- Receiver Card -->
+                        <div class="td-party-card receiver-card">
+                            <button class="td-party-icon-btn receiver-btn">📍</button>
+                            <div class="td-party-body">
+                                <div class="td-party-name-line">
+                                    <span class="td-party-name" id="tdRcReceiverName7">Receiver Name</span>
+                                </div>
+                                <div class="td-party-addr" id="tdRcReceiverAddr7">Destination address</div>
+                                <div class="td-party-eta green" id="tdRcReceiverEta7">✓ Delivery complete</div>
+                            </div>
+                            <button class="td-party-call-btn" onclick="alert('Calling receiver...')"><i
+                                    class="fas fa-phone"></i></button>
+                        </div>
                         <div class="td-dest-section">
                             <div class="td-dest-header"><i class="fas fa-check-circle"
                                     style="font-size:22px;color:#10b981;"></i>
@@ -3589,28 +3888,35 @@
                 title: 'Trip #001 — Allotment', badge: 'In Progress', badgeClass: 'badge-inprogress',
                 senderName: 'Rajesh Kumar', senderAddr: '12, Industrial Area, Sector 5, Mumbai — 400001',
                 receiverName: 'Suresh Mehta', receiverAddr: 'Mehta Warehouse, NH-48, Pune — 411001',
-                payment: '₹20,000', weight: '5,000 KG', cargo: 'Cement (Packaged)', est: '~2.5 hrs',
+                payment: '₹20,000', weight: '5,000 KG', cargo: 'Cement (Packaged)', est: '~2.5 hrs', dist: '86 KM',
                 fare: '₹20,000', schedEta: '10:30 AM', schedInfo: 'Duration 2.5 hrs · Distance 86 km'
             },
             2: {
                 title: 'Trip #002 — Allotment', badge: 'Incomplete', badgeClass: 'badge-incomplete',
                 senderName: 'Anita Singh', senderAddr: 'Plot 7, MIDC, Nashik Road, Nashik — 422101',
                 receiverName: 'Kumar Logistics', receiverAddr: 'Kumar Cold Storage, Aurangabad — 431001',
-                payment: '₹15,000', weight: '8,000 KG', cargo: 'Industrial Goods', est: '~3.5 hrs',
+                payment: '₹15,000', weight: '8,000 KG', cargo: 'Industrial Goods', est: '~3.5 hrs', dist: '142 KM',
                 fare: '₹15,000', schedEta: '2:00 PM', schedInfo: 'Duration 3.5 hrs · Distance 142 km'
             },
             3: {
                 title: 'Trip #003 — Allotment', badge: 'Completed', badgeClass: 'badge-completed',
                 senderName: 'Deepak Sharma', senderAddr: '45, Logistics Park, Bhiwandi — 421302',
                 receiverName: 'Singh Distribution', receiverAddr: 'Singh DC, Thane West, Mumbai — 400601',
-                payment: '₹23,000', weight: '12,400 KG', cargo: 'FMCG Goods', est: '~2.5 hrs',
+                payment: '₹23,000', weight: '12,400 KG', cargo: 'FMCG Goods', est: '~2.5 hrs', dist: '58 KM',
                 fare: '₹23,000', schedEta: '7:15 AM', schedInfo: 'Duration 2.5 hrs · Distance 58 km'
             }
         };
 
+        // persistent per-trip page state (survives overlay close/reopen)
+        var tripPageState = { 1: 1, 2: 1, 3: 7 };  // trip3 already completed
+
         document.querySelectorAll('.trip-card').forEach(function (card, idx) {
             card.style.cursor = 'pointer';
-            card.addEventListener('click', function () { openTripDetail(idx + 1); });
+            card.addEventListener('click', function () {
+                window._openTripCardEl = card;
+                window._openTripId = idx + 1;
+                openTripDetail(idx + 1);
+            });
         });
 
         function openTripDetail(tripId) {
@@ -3623,32 +3929,57 @@
             // populate preview stats
             document.getElementById('tdPvPayment').textContent = d.payment;
             document.getElementById('tdPvWeight').textContent = d.weight;
+            document.getElementById('tdPvDist').textContent = d.dist || '— KM';
             document.getElementById('tdPvEst').textContent = d.est;
-            // populate rc1
-            document.getElementById('tdRcSenderName1').innerHTML = d.senderName + '<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9 (200 loads)</span>';
-            document.getElementById('tdRcPickupName').textContent = d.senderName;
-            document.getElementById('tdRcPickupEta').textContent = '● ETA: 12 mins';
-            document.getElementById('tdRcPickupAddr').textContent = d.senderAddr;
+
+            // ── Populate all party cards (RC1–RC7) ──
+            // Sender cards
+            var senderEtas = { 1: '● ETA: 12 mins', 2: '● Arrived at pickup', 3: '● Loading in progress', 4: '● Loading complete', 5: '● In transit', 6: '● Delivery in progress', 7: '✓ Completed' };
+            var receiverEtas = { 1: '● Delivery ETA: ' + d.schedEta, 2: '● Delivery ETA: ' + d.schedEta, 3: '● Delivery ETA: ' + d.schedEta, 4: '● ETA: 45 mins', 5: '● Arrived at delivery', 6: '● Unloading in progress', 7: '✓ Delivery complete' };
+            for (var n = 1; n <= 7; n++) {
+                var sn = document.getElementById('tdRcSenderName' + n);
+                var sa = document.getElementById('tdRcSenderAddr' + n);
+                var se = document.getElementById('tdRcSenderEta' + n);
+                var rn = document.getElementById('tdRcReceiverName' + n);
+                var ra = document.getElementById('tdRcReceiverAddr' + n);
+                var re = document.getElementById('tdRcReceiverEta' + n);
+                if (sn) sn.textContent = d.senderName;
+                if (sa) sa.textContent = d.senderAddr;
+                if (se) se.textContent = senderEtas[n] || '';
+                if (rn) rn.textContent = d.receiverName;
+                if (ra) ra.textContent = d.receiverAddr;
+                if (re) re.textContent = receiverEtas[n] || '';
+            }
+
+            // RC1 schedule-time sender name
+            var scSender = document.getElementById('tdRcSchedSenderName1');
+            if (scSender) scSender.textContent = d.senderName;
             document.getElementById('tdRcSchedEta').textContent = 'ETA: ' + d.schedEta;
             document.getElementById('tdRcSchedInfo').textContent = d.schedInfo;
+            var distEl = document.getElementById('tdRcSchedDist');
+            if (distEl) distEl.textContent = d.dist || '— KM';
             document.getElementById('tdRcWeight1').textContent = d.weight;
             document.getElementById('tdRcCargo1').textContent = d.cargo;
             document.getElementById('tdRcAmt1').textContent = d.payment;
-            // populate rc2 & rc3 pickup
+
+            // RC2/RC3 pickup locations
             ['2', '3'].forEach(function (n) {
-                document.getElementById('tdRcPickupName' + n).textContent = d.senderName;
-                document.getElementById('tdRcPickupAddr' + n).textContent = d.senderAddr;
-                document.getElementById('tdRcSenderName' + n) && (document.getElementById('tdRcSenderName' + n).innerHTML = d.senderName + '<br><span style="font-size:smaller;font-weight:lighter;">⭐4.9</span>');
+                var pn = document.getElementById('tdRcPickupName' + n);
+                var pa = document.getElementById('tdRcPickupAddr' + n);
+                if (pn) pn.textContent = d.senderName;
+                if (pa) pa.textContent = d.senderAddr;
             });
-            // populate rc4-6 delivery
-            ['4', '5', '6'].forEach(function (n) {
-                var nameEl = document.getElementById('tdRcDeliveryName' + n);
-                var addrEl = document.getElementById('tdRcDeliveryAddr' + n);
-                if (nameEl) nameEl.textContent = d.receiverName;
-                if (addrEl) addrEl.textContent = d.receiverAddr;
+
+            // RC5-6 delivery locations (RC4 uses new receiver card only)
+            ['5', '6'].forEach(function (n) {
+                var dn = document.getElementById('tdRcDeliveryName' + n);
+                var da = document.getElementById('tdRcDeliveryAddr' + n);
+                if (dn) dn.textContent = d.receiverName;
+                if (da) da.textContent = d.receiverAddr;
             });
-            if (document.getElementById('tdRcReceiverName4')) document.getElementById('tdRcReceiverName4').innerHTML = d.receiverName + '<br><span style="font-size:smaller;font-weight:lighter;">📍 Destination</span>';
+
             document.getElementById('tdRcAmt4') && (document.getElementById('tdRcAmt4').textContent = d.payment);
+
             // page 2 timer card
             document.getElementById('tdPickupName').textContent = d.senderName;
             // delivery complete page
@@ -3671,28 +4002,46 @@
             document.getElementById('tdShipperAddr9').textContent = d.senderAddr;
             document.getElementById('tdReceiverName9').textContent = d.receiverName;
             document.getElementById('tdReceiverAddr9').textContent = d.receiverAddr;
-            // reset to page 1
-            tdCur = 1;
+            // restore last saved page for this trip (default page 1)
+            var savedPage = (tripPageState && tripPageState[tripId]) ? tripPageState[tripId] : 1;
+            tdCur = savedPage;
             for (var i = 1; i <= 9; i++) {
                 var pp = document.getElementById('tdPage' + i); if (pp) { pp.classList.remove('active'); }
                 var rc = document.getElementById('tdRc' + i); if (rc) { rc.classList.remove('active'); }
                 var bn = document.getElementById('tdBn' + i); if (bn) { bn.classList.remove('active'); }
                 var tb = document.getElementById('tdTab' + i); if (tb) { tb.classList.remove('active'); }
             }
-            document.getElementById('tdPage1').classList.add('active');
-            document.getElementById('tdRc1').classList.add('active');
-            document.getElementById('tdBn1').classList.add('active');
-            document.getElementById('tdTab1').classList.add('active');
-            document.getElementById('tdPvLabel').textContent = 'To Pick-up';
+            var startPage = document.getElementById('tdPage' + savedPage);
+            var startRc = document.getElementById('tdRc' + savedPage);
+            var startBn = document.getElementById('tdBn' + savedPage);
+            var startTab = document.getElementById('tdTab' + savedPage);
+            if (startPage) startPage.classList.add('active');
+            if (startRc) startRc.classList.add('active');
+            if (startBn) startBn.classList.add('active');
+            if (startTab) startTab.classList.add('active');
+            if (tdPvLabels[savedPage]) document.getElementById('tdPvLabel').textContent = tdPvLabels[savedPage];
             var rc = document.getElementById('tdRideCard');
             rc.style.height = '210px'; rc.classList.remove('expanded');
-            rc.style.display = '';
+            rc.style.display = (savedPage === 8 || savedPage === 9) ? 'none' : '';
             document.getElementById('tripDetailOverlay').classList.add('open');
             // init canvases
             tdInitCanvas('tdCvPickup'); tdInitCanvas('tdCvDelivery');
+            // update trip card buttons to reflect saved page
+            // page 1 override: use trip's own badge if never navigated yet
+            if (savedPage === 1) {
+                tdUpdateTripCardStatus(1, d);
+            } else {
+                tdUpdateTripCardStatus(savedPage);
+            }
         }
 
         function closeTripDetail() {
+            // persist current page for this trip before closing
+            if (window._openTripId && typeof tripPageState !== 'undefined') {
+                tripPageState[window._openTripId] = tdCur;
+            }
+            // ensure trip card buttons reflect final state
+            tdUpdateTripCardStatus(tdCur);
             document.getElementById('tripDetailOverlay').classList.remove('open');
         }
 
@@ -3718,6 +4067,54 @@
             rc.style.display = (n === 8 || n === 9) ? 'none' : '';
             if (n === 2 && !tdTimerStarted.wait) { tdTimerStarted.wait = true; tdStartCountUp('tdT_wait'); }
             if (n === 5 && !tdTimerStarted.uwait) { tdTimerStarted.uwait = true; tdStartCountUp('tdT_uwait'); }
+
+            // ── Persist page + update trip card buttons ──
+            if (window._openTripId && typeof tripPageState !== 'undefined') {
+                tripPageState[window._openTripId] = n;
+            }
+            tdUpdateTripCardStatus(n);
+        }
+
+        function tdUpdateTripCardStatus(page, tripDataOverride) {
+            // page → { badge, badgeClass, sIcon, sLabel, sBtnClass, rIcon, rLabel, rBtnClass, sPage, rPage }
+            var tripId = window._openTripId || 1;
+            var statusMap = {
+                1: { badge: 'In Progress', badgeClass: 'badge-inprogress', sIcon: '📍', sLbl: 'To Pick-up', sBcls: 'pab-pickup', rIcon: '⏱️', rLbl: 'Pending', rBcls: 'pab-pending', sPage: 1, rPage: 1 },
+                2: { badge: 'Loading', badgeClass: 'badge-loading', sIcon: '⏳', sLbl: 'Loading', sBcls: 'pab-loading', rIcon: '⏱️', rLbl: 'Pending', rBcls: 'pab-pending', sPage: 2, rPage: 2 },
+                3: { badge: 'Loading', badgeClass: 'badge-loading', sIcon: '⌛', sLbl: 'Finish Loading', sBcls: 'pab-fload', rIcon: '⏱️', rLbl: 'Pending', rBcls: 'pab-pending', sPage: 3, rPage: 3 },
+                4: { badge: 'In Progress', badgeClass: 'badge-inprogress', sIcon: '🚛', sLbl: 'In Transit', sBcls: 'pab-transit', rIcon: '🚛', rLbl: 'In Transit', rBcls: 'pab-transit', sPage: 4, rPage: 4 },
+                5: { badge: 'Unloading', badgeClass: 'badge-unloading', sIcon: '⏳', sLbl: 'Unloading', sBcls: 'pab-unload', rIcon: '⏳', rLbl: 'Unloading', rBcls: 'pab-unload', sPage: 5, rPage: 5 },
+                6: { badge: 'Unloading', badgeClass: 'badge-unloading', sIcon: '⌛', sLbl: 'Finish Unloading', sBcls: 'pab-funload', rIcon: '⌛', rLbl: 'Finish Unloading', rBcls: 'pab-funload', sPage: 6, rPage: 6 },
+                7: { badge: 'Completed', badgeClass: 'badge-completed', sIcon: '✅', sLbl: 'Completed', sBcls: 'pab-done', rIcon: '🏁', rLbl: 'Delivered', rBcls: 'pab-complete', sPage: 7, rPage: 7 }
+            };
+            var s = statusMap[page];
+            if (!s) return;
+
+            // badge override for initial open
+            var badgeText = s.badge, badgeClass = s.badgeClass;
+            if (page === 1 && tripDataOverride) {
+                badgeText = tripDataOverride.badge;
+                badgeClass = tripDataOverride.badgeClass;
+            }
+            var tdBadge = document.getElementById('tdBadge');
+            if (tdBadge) { tdBadge.textContent = badgeText; tdBadge.className = 'td-trip-badge ' + badgeClass; }
+
+            // Update header badge + action buttons in the trip card list
+            if (window._openTripCardEl) {
+                var hdrBadge = window._openTripCardEl.querySelector('.trip-badge');
+                if (hdrBadge) { hdrBadge.textContent = badgeText; hdrBadge.className = 'trip-badge ' + badgeClass; }
+
+                var rows = window._openTripCardEl.querySelectorAll('.party-row');
+                function setBtn(row, icon, label, btnCls, goPage) {
+                    if (!row) return;
+                    var col = row.querySelector('.party-status-col');
+                    if (!col) return;
+                    col.innerHTML = '<button class="party-action-btn ' + btnCls + '" onclick="openTripDetail(' + tripId + ');setTimeout(()=>tdGoTo(' + goPage + '),100)">'
+                        + '<span class="pab-icon">' + icon + '</span>' + label + '</button>';
+                }
+                setBtn(rows[0], s.sIcon, s.sLbl, s.sBcls, s.sPage);
+                setBtn(rows[1], s.rIcon, s.rLbl, s.rBcls, s.rPage);
+            }
         }
 
         var tdTimerStarted = { wait: false, load: false, uwait: false, unload: false };
@@ -3819,8 +4216,23 @@
             document.getElementById('toggleSlider').style.left = isOnline ? 'auto' : '2px';
         });
 
-        /* ── INIT: start on Map tab ── */
-        window.addEventListener('load', () => { switchTab('map'); });
+        /* ── INIT: start on Map tab + render initial trip card buttons ── */
+        window.addEventListener('load', function () {
+            switchTab('map');
+            // render initial action buttons for each trip card from tripPageState
+            var cards = document.querySelectorAll('.trip-card');
+            cards.forEach(function (card, idx) {
+                var tid = idx + 1;
+                var pg = (tripPageState && tripPageState[tid]) ? tripPageState[tid] : 1;
+                var d = tripData[tid] || tripData[1];
+                window._openTripCardEl = card;
+                window._openTripId = tid;
+                tdUpdateTripCardStatus(pg, pg === 1 ? d : undefined);
+            });
+            // reset globals after init
+            window._openTripCardEl = null;
+            window._openTripId = null;
+        });
 
         /* ══════════════════════════════════════
            RIDE CARD — drag to expand / collapse

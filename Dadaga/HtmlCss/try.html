@@ -1683,6 +1683,11 @@
                     <div class="pv-stat-value">12,400 KG</div>
                 </div>
                 <div class="pv-stat-block">
+                    <div class="pv-stat-icon">🛣️</div>
+                    <div class="pv-stat-label">Distance</div>
+                    <div class="pv-stat-value">483 KM</div>
+                </div>
+                <div class="pv-stat-block">
                     <div class="pv-stat-icon">⏱️</div>
                     <div class="pv-stat-label">Est. Total</div>
                     <div class="pv-stat-value">~9.5 hrs</div>
@@ -1715,6 +1720,11 @@
                     <div class="rc-stat-icon">⚖️</div>
                     <div class="rc-stat-label">Total Weight</div>
                     <div class="rc-stat-value">12,400 KG</div>
+                </div>
+                <div class="rc-stat-block">
+                    <div class="rc-stat-icon">🛣️</div>
+                    <div class="rc-stat-label">Distance</div>
+                    <div class="rc-stat-value">483 KM</div>
                 </div>
                 <div class="rc-stat-block">
                     <div class="rc-stat-icon">⏱️</div>
@@ -3401,6 +3411,11 @@
                             <div class="td-pv-stat-value" id="tdPvWeight">5,000 KG</div>
                         </div>
                         <div class="td-pv-stat-block">
+                            <div class="td-pv-stat-icon">🛣️</div>
+                            <div class="td-pv-stat-label">Distance</div>
+                            <div class="td-pv-stat-value" id="tdPvDist">86 KM</div>
+                        </div>
+                        <div class="td-pv-stat-block">
                             <div class="td-pv-stat-icon">⏱️</div>
                             <div class="td-pv-stat-label">Est. Total</div>
                             <div class="td-pv-stat-value" id="tdPvEst">~2.5 hrs</div>
@@ -3458,6 +3473,10 @@
                                     </div>
                                     <div class="td-dest-eta" id="tdRcSchedEta">ETA: —</div>
                                     <div class="td-dest-addr" id="tdRcSchedInfo">Duration — · Distance —</div>
+                                    <div class="td-dest-addr" style="color:#1565C0;font-weight:700;margin-top:2px;">
+                                        <i class="fas fa-road" style="font-size:10px;"></i>
+                                        <span id="tdRcSchedDist">— KM</span>
+                                    </div>
                                 </div>
                                 <div class="td-load-info">
                                     <div class="td-load-weight" id="tdRcWeight1">5,000 KG</div>
@@ -3869,21 +3888,21 @@
                 title: 'Trip #001 — Allotment', badge: 'In Progress', badgeClass: 'badge-inprogress',
                 senderName: 'Rajesh Kumar', senderAddr: '12, Industrial Area, Sector 5, Mumbai — 400001',
                 receiverName: 'Suresh Mehta', receiverAddr: 'Mehta Warehouse, NH-48, Pune — 411001',
-                payment: '₹20,000', weight: '5,000 KG', cargo: 'Cement (Packaged)', est: '~2.5 hrs',
+                payment: '₹20,000', weight: '5,000 KG', cargo: 'Cement (Packaged)', est: '~2.5 hrs', dist: '86 KM',
                 fare: '₹20,000', schedEta: '10:30 AM', schedInfo: 'Duration 2.5 hrs · Distance 86 km'
             },
             2: {
                 title: 'Trip #002 — Allotment', badge: 'Incomplete', badgeClass: 'badge-incomplete',
                 senderName: 'Anita Singh', senderAddr: 'Plot 7, MIDC, Nashik Road, Nashik — 422101',
                 receiverName: 'Kumar Logistics', receiverAddr: 'Kumar Cold Storage, Aurangabad — 431001',
-                payment: '₹15,000', weight: '8,000 KG', cargo: 'Industrial Goods', est: '~3.5 hrs',
+                payment: '₹15,000', weight: '8,000 KG', cargo: 'Industrial Goods', est: '~3.5 hrs', dist: '142 KM',
                 fare: '₹15,000', schedEta: '2:00 PM', schedInfo: 'Duration 3.5 hrs · Distance 142 km'
             },
             3: {
                 title: 'Trip #003 — Allotment', badge: 'Completed', badgeClass: 'badge-completed',
                 senderName: 'Deepak Sharma', senderAddr: '45, Logistics Park, Bhiwandi — 421302',
                 receiverName: 'Singh Distribution', receiverAddr: 'Singh DC, Thane West, Mumbai — 400601',
-                payment: '₹23,000', weight: '12,400 KG', cargo: 'FMCG Goods', est: '~2.5 hrs',
+                payment: '₹23,000', weight: '12,400 KG', cargo: 'FMCG Goods', est: '~2.5 hrs', dist: '58 KM',
                 fare: '₹23,000', schedEta: '7:15 AM', schedInfo: 'Duration 2.5 hrs · Distance 58 km'
             }
         };
@@ -3910,6 +3929,7 @@
             // populate preview stats
             document.getElementById('tdPvPayment').textContent = d.payment;
             document.getElementById('tdPvWeight').textContent = d.weight;
+            document.getElementById('tdPvDist').textContent = d.dist || '— KM';
             document.getElementById('tdPvEst').textContent = d.est;
 
             // ── Populate all party cards (RC1–RC7) ──
@@ -3936,6 +3956,8 @@
             if (scSender) scSender.textContent = d.senderName;
             document.getElementById('tdRcSchedEta').textContent = 'ETA: ' + d.schedEta;
             document.getElementById('tdRcSchedInfo').textContent = d.schedInfo;
+            var distEl = document.getElementById('tdRcSchedDist');
+            if (distEl) distEl.textContent = d.dist || '— KM';
             document.getElementById('tdRcWeight1').textContent = d.weight;
             document.getElementById('tdRcCargo1').textContent = d.cargo;
             document.getElementById('tdRcAmt1').textContent = d.payment;
