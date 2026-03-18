@@ -416,7 +416,7 @@
             grid-template-columns: 1fr 56px 90px;
             align-items: center;
             padding: 14px 16px;
-            gap: 12px;
+            gap: 10px;
         }
 
         /* Info column */
@@ -521,73 +521,99 @@
             transform: scale(1.1);
         }
 
-        /* Status column */
+        /* Status column — action button */
         .party-status-col {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 0;
             text-align: center;
+            min-width: 82px;
         }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .dot-pending {
-            background: #FFA726;
-            box-shadow: 0 0 6px rgba(255, 152, 0, 0.6);
-        }
-
-        .dot-inprogress {
-            background: #64B5F6;
-            box-shadow: 0 0 6px rgba(33, 150, 243, 0.6);
-        }
-
-        .dot-completed {
-            background: #66BB6A;
-            box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
-        }
-
-        .status-label-text {
-            font-size: 10px;
+        .party-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 7px 6px 6px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            width: 82px;
+            min-height: 56px;
             font-weight: 800;
-            letter-spacing: 0.07em;
+            font-size: 9.5px;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
+            line-height: 1.2;
+            transition: transform 0.15s, box-shadow 0.15s;
         }
 
-        .status-label-text.pending {
-            color: #FFA726;
+        .party-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
         }
 
-        .status-label-text.inprogress {
-            color: #64B5F6;
+        .party-action-btn .pab-icon {
+            font-size: 17px;
+            line-height: 1;
         }
 
-        .status-label-text.completed {
-            color: #66BB6A;
+        .pab-pickup {
+            background: rgba(33, 150, 243, 0.13);
+            color: #1565C0;
+            border: 1.5px solid rgba(33, 150, 243, 0.35);
         }
 
-        .status-label-text.loading {
-            color: #FBBF24;
+        .pab-loading {
+            background: rgba(245, 158, 11, 0.13);
+            color: #B45309;
+            border: 1.5px solid rgba(245, 158, 11, 0.4);
         }
 
-        .status-label-text.unloading {
-            color: #A78BFA;
+        .pab-fload {
+            background: rgba(245, 158, 11, 0.2);
+            color: #92400E;
+            border: 1.5px solid rgba(245, 158, 11, 0.5);
         }
 
-        .dot-loading {
-            background: #FBBF24;
-            box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+        .pab-transit {
+            background: rgba(99, 102, 241, 0.13);
+            color: #4338CA;
+            border: 1.5px solid rgba(99, 102, 241, 0.35);
         }
 
-        .dot-unloading {
-            background: #A78BFA;
-            box-shadow: 0 0 6px rgba(139, 92, 246, 0.6);
+        .pab-unload {
+            background: rgba(139, 92, 246, 0.13);
+            color: #6D28D9;
+            border: 1.5px solid rgba(139, 92, 246, 0.35);
+        }
+
+        .pab-funload {
+            background: rgba(139, 92, 246, 0.2);
+            color: #5B21B6;
+            border: 1.5px solid rgba(139, 92, 246, 0.5);
+        }
+
+        .pab-done {
+            background: rgba(16, 185, 129, 0.13);
+            color: #065F46;
+            border: 1.5px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .pab-pending {
+            background: rgba(156, 163, 175, 0.13);
+            color: #6B7280;
+            border: 1.5px solid rgba(156, 163, 175, 0.3);
+        }
+
+        .pab-complete {
+            background: rgba(16, 185, 129, 0.18);
+            color: #047857;
+            border: 1.5px solid rgba(16, 185, 129, 0.45);
         }
 
         /* Divider */
@@ -724,9 +750,9 @@
 
         @media (max-width: 600px) {
             .party-row {
-                grid-template-columns: 1fr 48px 70px;
-                padding: 12px 12px;
-                gap: 8px;
+                grid-template-columns: 1fr 48px 82px;
+                padding: 12px 10px;
+                gap: 6px;
             }
 
             .party-name {
@@ -1429,8 +1455,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-loading"></div>
-                        <div class="status-label-text loading">Loading</div>
+                        <button class="party-action-btn pab-loading"
+                            onclick="openTripDetail(1);setTimeout(()=>tdGoTo(2),100)">
+                            <span class="pab-icon">⏳</span>Loading
+                        </button>
                     </div>
                 </div>
 
@@ -1462,8 +1490,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-inprogress"></div>
-                        <div class="status-label-text inprogress">In Progress</div>
+                        <button class="party-action-btn pab-transit"
+                            onclick="openTripDetail(1);setTimeout(()=>tdGoTo(4),100)">
+                            <span class="pab-icon">🚛</span>In Transit
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1501,8 +1531,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-pending"></div>
-                        <div class="status-label-text pending">Pending</div>
+                        <button class="party-action-btn pab-pickup"
+                            onclick="openTripDetail(2);setTimeout(()=>tdGoTo(1),100)">
+                            <span class="pab-icon">📍</span>To Pick-up
+                        </button>
                     </div>
                 </div>
 
@@ -1534,8 +1566,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-pending"></div>
-                        <div class="status-label-text pending">Pending</div>
+                        <button class="party-action-btn pab-pending"
+                            onclick="openTripDetail(2);setTimeout(()=>tdGoTo(1),100)">
+                            <span class="pab-icon">⏱️</span>Pending
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1573,8 +1607,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-completed"></div>
-                        <div class="status-label-text completed">Completed</div>
+                        <button class="party-action-btn pab-done"
+                            onclick="openTripDetail(3);setTimeout(()=>tdGoTo(7),100)">
+                            <span class="pab-icon">✅</span>Completed
+                        </button>
                     </div>
                 </div>
 
@@ -1605,8 +1641,10 @@
                         </button>
                     </div>
                     <div class="party-status-col">
-                        <div class="status-dot dot-completed"></div>
-                        <div class="status-label-text completed">Completed</div>
+                        <button class="party-action-btn pab-complete"
+                            onclick="openTripDetail(3);setTimeout(()=>tdGoTo(7),100)">
+                            <span class="pab-icon">🏁</span>Delivered
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3414,8 +3452,8 @@
                             <div class="td-dest-header">
                                 <i class="fas fa-clock" style="font-size:20px;color:#666;"></i>
                                 <div class="td-dest-info">
-                                    <div class="td-dest-name" id="tdRcSchedSenderName1"
-                                        style="font-size:14px;font-weight:800;">Sender Name</div>
+                                    <div class="td-dest-name" style="font-size:14px;font-weight:800;">Schedule Time
+                                    </div>
                                     <div class="td-dest-eta" id="tdRcSchedEta">ETA: —</div>
                                     <div class="td-dest-addr" id="tdRcSchedInfo">Duration — · Distance —</div>
                                 </div>
@@ -3848,10 +3886,14 @@
             }
         };
 
+        // persistent per-trip page state (survives overlay close/reopen)
+        var tripPageState = { 1: 1, 2: 1, 3: 7 };  // trip3 already completed
+
         document.querySelectorAll('.trip-card').forEach(function (card, idx) {
             card.style.cursor = 'pointer';
             card.addEventListener('click', function () {
                 window._openTripCardEl = card;
+                window._openTripId = idx + 1;
                 openTripDetail(idx + 1);
             });
         });
@@ -3936,31 +3978,46 @@
             document.getElementById('tdShipperAddr9').textContent = d.senderAddr;
             document.getElementById('tdReceiverName9').textContent = d.receiverName;
             document.getElementById('tdReceiverAddr9').textContent = d.receiverAddr;
-            // reset to page 1
-            tdCur = 1;
+            // restore last saved page for this trip (default page 1)
+            var savedPage = (tripPageState && tripPageState[tripId]) ? tripPageState[tripId] : 1;
+            tdCur = savedPage;
             for (var i = 1; i <= 9; i++) {
                 var pp = document.getElementById('tdPage' + i); if (pp) { pp.classList.remove('active'); }
                 var rc = document.getElementById('tdRc' + i); if (rc) { rc.classList.remove('active'); }
                 var bn = document.getElementById('tdBn' + i); if (bn) { bn.classList.remove('active'); }
                 var tb = document.getElementById('tdTab' + i); if (tb) { tb.classList.remove('active'); }
             }
-            document.getElementById('tdPage1').classList.add('active');
-            document.getElementById('tdRc1').classList.add('active');
-            document.getElementById('tdBn1').classList.add('active');
-            document.getElementById('tdTab1').classList.add('active');
-            document.getElementById('tdPvLabel').textContent = 'To Pick-up';
+            var startPage = document.getElementById('tdPage' + savedPage);
+            var startRc = document.getElementById('tdRc' + savedPage);
+            var startBn = document.getElementById('tdBn' + savedPage);
+            var startTab = document.getElementById('tdTab' + savedPage);
+            if (startPage) startPage.classList.add('active');
+            if (startRc) startRc.classList.add('active');
+            if (startBn) startBn.classList.add('active');
+            if (startTab) startTab.classList.add('active');
+            if (tdPvLabels[savedPage]) document.getElementById('tdPvLabel').textContent = tdPvLabels[savedPage];
             var rc = document.getElementById('tdRideCard');
             rc.style.height = '210px'; rc.classList.remove('expanded');
-            rc.style.display = '';
+            rc.style.display = (savedPage === 8 || savedPage === 9) ? 'none' : '';
             document.getElementById('tripDetailOverlay').classList.add('open');
             // init canvases
             tdInitCanvas('tdCvPickup'); tdInitCanvas('tdCvDelivery');
-            // set initial status to page 1 using trip's own badge
-            tdCur = 1;
-            tdUpdateTripCardStatus(1, d);
+            // update trip card buttons to reflect saved page
+            // page 1 override: use trip's own badge if never navigated yet
+            if (savedPage === 1) {
+                tdUpdateTripCardStatus(1, d);
+            } else {
+                tdUpdateTripCardStatus(savedPage);
+            }
         }
 
         function closeTripDetail() {
+            // persist current page for this trip before closing
+            if (window._openTripId && typeof tripPageState !== 'undefined') {
+                tripPageState[window._openTripId] = tdCur;
+            }
+            // ensure trip card buttons reflect final state
+            tdUpdateTripCardStatus(tdCur);
             document.getElementById('tripDetailOverlay').classList.remove('open');
         }
 
@@ -3987,27 +4044,29 @@
             if (n === 2 && !tdTimerStarted.wait) { tdTimerStarted.wait = true; tdStartCountUp('tdT_wait'); }
             if (n === 5 && !tdTimerStarted.uwait) { tdTimerStarted.uwait = true; tdStartCountUp('tdT_uwait'); }
 
-            // ── Update trip card badge + party status labels based on current page ──
+            // ── Persist page + update trip card buttons ──
+            if (window._openTripId && typeof tripPageState !== 'undefined') {
+                tripPageState[window._openTripId] = n;
+            }
             tdUpdateTripCardStatus(n);
         }
 
         function tdUpdateTripCardStatus(page, tripDataOverride) {
-            // Map page → { badge text, badge class, senderDot, senderLabel, senderLabelClass, receiverDot, receiverLabel, receiverLabelClass }
+            // page → { badge, badgeClass, sIcon, sLabel, sBtnClass, rIcon, rLabel, rBtnClass, sPage, rPage }
+            var tripId = window._openTripId || 1;
             var statusMap = {
-                1: { badge: 'In Progress', badgeClass: 'badge-inprogress', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-pending', rLbl: 'Pending', rCls: 'pending' },
-                2: { badge: 'Loading', badgeClass: 'badge-loading', sDot: 'dot-loading', sLbl: 'Loading', sCls: 'loading', rDot: 'dot-pending', rLbl: 'Pending', rCls: 'pending' },
-                3: { badge: 'Loading', badgeClass: 'badge-loading', sDot: 'dot-loading', sLbl: 'Loading', sCls: 'loading', rDot: 'dot-pending', rLbl: 'Pending', rCls: 'pending' },
-                4: { badge: 'In Progress', badgeClass: 'badge-inprogress', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-inprogress', rLbl: 'In Progress', rCls: 'inprogress' },
-                5: { badge: 'Unloading', badgeClass: 'badge-unloading', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-unloading', rLbl: 'Unloading', rCls: 'unloading' },
-                6: { badge: 'Unloading', badgeClass: 'badge-unloading', sDot: 'dot-inprogress', sLbl: 'In Progress', sCls: 'inprogress', rDot: 'dot-unloading', rLbl: 'Unloading', rCls: 'unloading' },
-                7: { badge: 'Completed', badgeClass: 'badge-completed', sDot: 'dot-completed', sLbl: 'Completed', sCls: 'completed', rDot: 'dot-completed', rLbl: 'Completed', rCls: 'completed' }
+                1: { badge: 'In Progress', badgeClass: 'badge-inprogress', sIcon: '📍', sLbl: 'To Pick-up', sBcls: 'pab-pickup', rIcon: '⏱️', rLbl: 'Pending', rBcls: 'pab-pending', sPage: 1, rPage: 1 },
+                2: { badge: 'Loading', badgeClass: 'badge-loading', sIcon: '⏳', sLbl: 'Loading', sBcls: 'pab-loading', rIcon: '⏱️', rLbl: 'Pending', rBcls: 'pab-pending', sPage: 2, rPage: 2 },
+                3: { badge: 'Loading', badgeClass: 'badge-loading', sIcon: '⌛', sLbl: 'Finish Loading', sBcls: 'pab-fload', rIcon: '⏱️', rLbl: 'Pending', rBcls: 'pab-pending', sPage: 3, rPage: 3 },
+                4: { badge: 'In Progress', badgeClass: 'badge-inprogress', sIcon: '🚛', sLbl: 'In Transit', sBcls: 'pab-transit', rIcon: '🚛', rLbl: 'In Transit', rBcls: 'pab-transit', sPage: 4, rPage: 4 },
+                5: { badge: 'Unloading', badgeClass: 'badge-unloading', sIcon: '⏳', sLbl: 'Unloading', sBcls: 'pab-unload', rIcon: '⏳', rLbl: 'Unloading', rBcls: 'pab-unload', sPage: 5, rPage: 5 },
+                6: { badge: 'Unloading', badgeClass: 'badge-unloading', sIcon: '⌛', sLbl: 'Finish Unloading', sBcls: 'pab-funload', rIcon: '⌛', rLbl: 'Finish Unloading', rBcls: 'pab-funload', sPage: 6, rPage: 6 },
+                7: { badge: 'Completed', badgeClass: 'badge-completed', sIcon: '✅', sLbl: 'Completed', sBcls: 'pab-done', rIcon: '🏁', rLbl: 'Delivered', rBcls: 'pab-complete', sPage: 7, rPage: 7 }
             };
             var s = statusMap[page];
             if (!s) return;
 
-            // Update the TD header badge
-            // On initial open (page 1), use the trip's own badge so "Incomplete"/"Completed"
-            // trips show their real status until the driver actually starts navigating
+            // badge override for initial open
             var badgeText = s.badge, badgeClass = s.badgeClass;
             if (page === 1 && tripDataOverride) {
                 badgeText = tripDataOverride.badge;
@@ -4016,23 +4075,21 @@
             var tdBadge = document.getElementById('tdBadge');
             if (tdBadge) { tdBadge.textContent = badgeText; tdBadge.className = 'td-trip-badge ' + badgeClass; }
 
-            // Update the currently open trip card in the list
+            // Update header badge + action buttons in the trip card list
             if (window._openTripCardEl) {
                 var hdrBadge = window._openTripCardEl.querySelector('.trip-badge');
                 if (hdrBadge) { hdrBadge.textContent = badgeText; hdrBadge.className = 'trip-badge ' + badgeClass; }
+
                 var rows = window._openTripCardEl.querySelectorAll('.party-row');
-                if (rows[0]) {
-                    var sd = rows[0].querySelector('.status-dot');
-                    var sl = rows[0].querySelector('.status-label-text');
-                    if (sd) sd.className = 'status-dot ' + s.sDot;
-                    if (sl) { sl.textContent = s.sLbl; sl.className = 'status-label-text ' + s.sCls; }
+                function setBtn(row, icon, label, btnCls, goPage) {
+                    if (!row) return;
+                    var col = row.querySelector('.party-status-col');
+                    if (!col) return;
+                    col.innerHTML = '<button class="party-action-btn ' + btnCls + '" onclick="openTripDetail(' + tripId + ');setTimeout(()=>tdGoTo(' + goPage + '),100)">'
+                        + '<span class="pab-icon">' + icon + '</span>' + label + '</button>';
                 }
-                if (rows[1]) {
-                    var rd = rows[1].querySelector('.status-dot');
-                    var rl = rows[1].querySelector('.status-label-text');
-                    if (rd) rd.className = 'status-dot ' + s.rDot;
-                    if (rl) { rl.textContent = s.rLbl; rl.className = 'status-label-text ' + s.rCls; }
-                }
+                setBtn(rows[0], s.sIcon, s.sLbl, s.sBcls, s.sPage);
+                setBtn(rows[1], s.rIcon, s.rLbl, s.rBcls, s.rPage);
             }
         }
 
@@ -4135,8 +4192,23 @@
             document.getElementById('toggleSlider').style.left = isOnline ? 'auto' : '2px';
         });
 
-        /* ── INIT: start on Map tab ── */
-        window.addEventListener('load', () => { switchTab('map'); });
+        /* ── INIT: start on Map tab + render initial trip card buttons ── */
+        window.addEventListener('load', function () {
+            switchTab('map');
+            // render initial action buttons for each trip card from tripPageState
+            var cards = document.querySelectorAll('.trip-card');
+            cards.forEach(function (card, idx) {
+                var tid = idx + 1;
+                var pg = (tripPageState && tripPageState[tid]) ? tripPageState[tid] : 1;
+                var d = tripData[tid] || tripData[1];
+                window._openTripCardEl = card;
+                window._openTripId = tid;
+                tdUpdateTripCardStatus(pg, pg === 1 ? d : undefined);
+            });
+            // reset globals after init
+            window._openTripCardEl = null;
+            window._openTripId = null;
+        });
 
         /* ══════════════════════════════════════
            RIDE CARD — drag to expand / collapse
