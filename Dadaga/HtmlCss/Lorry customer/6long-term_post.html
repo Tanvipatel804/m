@@ -203,7 +203,7 @@
         }
 
         .upload-btn {
-            width: 50%;
+            width: 100%;
             padding: 18px;
             background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
             color: white;
@@ -218,12 +218,77 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-left: auto;
+            margin-left: 0;
+        }
+
+        .upload-status {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #4caf50;
+            display: none;
+        }
+
+        .review-attachment-box {
+            background: #353a42;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .review-attachment-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .review-attachment-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .review-attachment-name {
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .review-attachment-meta {
+            color: #b0b8c1;
+            font-size: 0.80rem;
+            margin-top: 3px;
+        }
+
+        .review-attachment-view {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 16px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .review-attachment-view:hover {
+            background: #5568d3;
+        }
+
+        .no-attachment {
+            color: #b0b8c1;
+            font-style: italic;
+            font-size: 0.9rem;
         }
 
         .upload-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(132, 250, 176, 0.4);
+        }
+
+        #pdfFileInput {
+            display: none;
         }
 
         .checkbox-group {
@@ -794,7 +859,8 @@
                         <label class="form-label">Route Type</label>
                         <div class="button-group">
                             <button type="button" class="option-btn"
-                                onclick="selectRouteType(this, 'One-way Haulage')">One-way Haulage</button>
+                                onclick="selectRouteType(this, 'One-way Haulage')">One-way
+                                Haulage</button>
                             <button type="button" class="option-btn"
                                 onclick="selectRouteType(this, 'Round-trip')">Round-trip</button>
                             <button type="button" class="option-btn"
@@ -802,12 +868,14 @@
                         </div>
                     </div>
 
-                    <button type="button" class="upload-btn" onclick="uploadAttachment()">
+                    <input type="file" id="pdfFileInput" accept=".pdf" onchange="handlePdfUpload(this)">
+                    <button type="button" class="upload-btn" onclick="document.getElementById('pdfFileInput').click()">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                             <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" />
                         </svg>
                         Upload Attachments (PDF only [max 3MB])
                     </button>
+                    <div class="upload-status" id="uploadStatus"></div>
                     <button type="button" class="continue-btn" onclick="navigateToPage(3)">Continue to Cargo
                         Requirements</button>
                 </form>
@@ -1235,6 +1303,17 @@
                         </div>
                     </div>
 
+                    <!-- Attached Documents -->
+                    <div class="review-section">
+                        <div class="review-header">
+                            <span class="review-title">Attached Documents</span>
+                            <button class="edit-btn" onclick="navigateToPage(2)">Edit</button>
+                        </div>
+                        <div id="attachmentReviewContainer">
+                            <div class="no-attachment">No attachment uploaded</div>
+                        </div>
+                    </div>
+
                     <div class="section">
                         <div class="checkbox-group" id="tc-checkbox" style="background-color: transparent;">
                             <input type="checkbox" id="t&c" required>
@@ -1264,7 +1343,8 @@
             page5: {},
             frequency: '',
             routeType: '',
-            truckType: ''
+            truckType: '',
+            attachment: null  // { name, size, dataUrl }
         };
 
         // Compliance items configuration
@@ -1391,11 +1471,14 @@
             document.getElementById('review-paymentTerms').textContent = formData.page5.paymentTerms ? formData.page5.paymentTerms + ' days' : '--';
             document.getElementById('review-otherExpenses').textContent = formData.page5.otherExpenses || '--';
             document.getElementById('review-additionalComments').textContent = formData.page5.additionalComments || 'No additional comments provided';
+
+            // Attachment
+            updateAttachmentReview();
         }
 
         function updateComplianceReview() {
             const container = document.getElementById('complianceReviewContainer');
-            
+
             if (!formData.page4.selectedCompliance || formData.page4.selectedCompliance.length === 0) {
                 container.innerHTML = '<div class="compliance-list"><div class="compliance-item no-compliance">No compliance requirements selected</div></div>';
             } else {
@@ -1487,8 +1570,68 @@
             }
         }
 
+        function handlePdfUpload(input) {
+            const file = input.files[0];
+            const status = document.getElementById('uploadStatus');
+            if (!file) return;
+            if (file.type !== 'application/pdf') {
+                status.style.color = '#e53e3e';
+                status.textContent = '✗ Only PDF files are allowed.';
+                status.style.display = 'block';
+                input.value = '';
+                formData.attachment = null;
+                return;
+            }
+            if (file.size > 3 * 1024 * 1024) {
+                status.style.color = '#e53e3e';
+                status.textContent = '✗ File size exceeds 3MB limit.';
+                status.style.display = 'block';
+                input.value = '';
+                formData.attachment = null;
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                formData.attachment = {
+                    name: file.name,
+                    size: (file.size / 1024).toFixed(1) + ' KB',
+                    dataUrl: e.target.result
+                };
+                status.style.color = '#4caf50';
+                status.textContent = '✓ ' + file.name + ' uploaded successfully.';
+                status.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateAttachmentReview() {
+            const container = document.getElementById('attachmentReviewContainer');
+            if (!formData.attachment) {
+                container.innerHTML = '<div class="no-attachment">No attachment uploaded</div>';
+                return;
+            }
+            const att = formData.attachment;
+            container.innerHTML = `
+                <div class="review-attachment-box">
+                    <div class="review-attachment-icon">📄</div>
+                    <div class="review-attachment-info">
+                        <div class="review-attachment-name">${att.name}</div>
+                        <div class="review-attachment-meta">PDF &nbsp;|&nbsp; ${att.size}</div>
+                    </div>
+                    <button class="review-attachment-view" onclick="viewAttachment()">View PDF</button>
+                </div>
+            `;
+        }
+
+        function viewAttachment() {
+            if (formData.attachment && formData.attachment.dataUrl) {
+                const win = window.open();
+                win.document.write('<iframe src="' + formData.attachment.dataUrl + '" width="100%" height="100%" style="border:none;margin:0;padding:0;"></iframe>');
+            }
+        }
+
         function uploadAttachment() {
-            alert('File picker opened - PDF files only (max 3MB)');
+            document.getElementById('pdfFileInput').click();
         }
 
         function uploadGoodsPhoto() {
