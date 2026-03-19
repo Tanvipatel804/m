@@ -825,13 +825,17 @@
         .preview-section {
             padding: 10px 18px 8px;
             opacity: 1;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.25s ease, height 0.25s ease, padding 0.25s ease;
+            overflow: hidden;
         }
 
         .ride-card.expanded .preview-section {
             opacity: 0;
             pointer-events: none;
-            position: absolute;
+            height: 0 !important;
+            padding-top: 0;
+            padding-bottom: 0;
+            overflow: hidden;
         }
 
         .preview-row {
@@ -3436,6 +3440,28 @@
                             <button class="td-pv-right-btn" onclick="alert('Settings')"><i
                                     class="fas fa-ellipsis-vertical"></i></button>
                         </div>
+                        <div class="td-pv-stat-blocks" style="margin-bottom:8px;">
+                            <div class="td-pv-stat-block">
+                                <div class="td-pv-stat-icon">💰</div>
+                                <div class="td-pv-stat-label">Payment</div>
+                                <div class="td-pv-stat-value" id="tdRcPvPayment">₹20,000</div>
+                            </div>
+                            <div class="td-pv-stat-block">
+                                <div class="td-pv-stat-icon">⚖️</div>
+                                <div class="td-pv-stat-label">Weight</div>
+                                <div class="td-pv-stat-value" id="tdRcPvWeight">5,000 KG</div>
+                            </div>
+                            <div class="td-pv-stat-block">
+                                <div class="td-pv-stat-icon">🛣️</div>
+                                <div class="td-pv-stat-label">Distance</div>
+                                <div class="td-pv-stat-value" id="tdRcPvDist">86 KM</div>
+                            </div>
+                            <div class="td-pv-stat-block">
+                                <div class="td-pv-stat-icon">⏱️</div>
+                                <div class="td-pv-stat-label">Est. Total</div>
+                                <div class="td-pv-stat-value" id="tdRcPvEst">~2.5 hrs</div>
+                            </div>
+                        </div>
                         <div class="td-rc-divider"></div>
                         <!-- Customer (Sender) Card -->
                         <div class="td-party-card sender-card">
@@ -3936,6 +3962,11 @@
             document.getElementById('tdPvWeight').textContent = d.weight;
             document.getElementById('tdPvDist').textContent = d.dist || '— KM';
             document.getElementById('tdPvEst').textContent = d.est;
+            // populate RC1 expanded stat blocks (same values)
+            document.getElementById('tdRcPvPayment').textContent = d.payment;
+            document.getElementById('tdRcPvWeight').textContent = d.weight;
+            document.getElementById('tdRcPvDist').textContent = d.dist || '— KM';
+            document.getElementById('tdRcPvEst').textContent = d.est;
 
             // ── Populate all party cards (RC1–RC7) ──
             // Sender cards
