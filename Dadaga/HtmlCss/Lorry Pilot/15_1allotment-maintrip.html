@@ -1709,27 +1709,27 @@
             </div>
             <div class="rc-divider"></div>
 
-            <!-- Stat Blocks -->
-            <div class="rc-stat-blocks" style="margin-bottom:12px;">
-                <div class="rc-stat-block">
-                    <div class="rc-stat-icon">💰</div>
-                    <div class="rc-stat-label">Total Payment</div>
-                    <div class="rc-stat-value">₹58,000</div>
+            <!-- Stat Blocks (same as preview) -->
+            <div class="pv-stat-blocks" style="margin-bottom:12px;">
+                <div class="pv-stat-block">
+                    <div class="pv-stat-icon">💰</div>
+                    <div class="pv-stat-label">Total Payment</div>
+                    <div class="pv-stat-value">₹58,000</div>
                 </div>
-                <div class="rc-stat-block">
-                    <div class="rc-stat-icon">⚖️</div>
-                    <div class="rc-stat-label">Total Weight</div>
-                    <div class="rc-stat-value">12,400 KG</div>
+                <div class="pv-stat-block">
+                    <div class="pv-stat-icon">⚖️</div>
+                    <div class="pv-stat-label">Total Weight</div>
+                    <div class="pv-stat-value">12,400 KG</div>
                 </div>
-                <div class="rc-stat-block">
-                    <div class="rc-stat-icon">🛣️</div>
-                    <div class="rc-stat-label">Distance</div>
-                    <div class="rc-stat-value">483 KM</div>
+                <div class="pv-stat-block">
+                    <div class="pv-stat-icon">🛣️</div>
+                    <div class="pv-stat-label">Distance</div>
+                    <div class="pv-stat-value">483 KM</div>
                 </div>
-                <div class="rc-stat-block">
-                    <div class="rc-stat-icon">⏱️</div>
-                    <div class="rc-stat-label">Est. Total</div>
-                    <div class="rc-stat-value">~9.5 hrs</div>
+                <div class="pv-stat-block">
+                    <div class="pv-stat-icon">⏱️</div>
+                    <div class="pv-stat-label">Est. Total</div>
+                    <div class="pv-stat-value">~9.5 hrs</div>
                 </div>
             </div>
             <div class="rc-divider"></div>
@@ -3473,9 +3473,14 @@
                                     </div>
                                     <div class="td-dest-eta" id="tdRcSchedEta">ETA: —</div>
                                     <div class="td-dest-addr" id="tdRcSchedInfo">Duration — · Distance —</div>
-                                    <div class="td-dest-addr" style="color:#1565C0;font-weight:700;margin-top:2px;">
-                                        <i class="fas fa-road" style="font-size:10px;"></i>
-                                        <span id="tdRcSchedDist">— KM</span>
+                                </div>
+                                <!-- Centered distance highlight badge -->
+                                <div
+                                    style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;padding:0 6px;">
+                                    <div
+                                        style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;font-size:13px;font-weight:900;padding:6px 12px;border-radius:20px;text-align:center;letter-spacing:0.04em;box-shadow:0 2px 8px rgba(21,101,192,0.35);white-space:nowrap;">
+                                        <i class="fas fa-road" style="font-size:10px;margin-right:4px;"></i><span
+                                            id="tdRcSchedDist">86 KM</span>
                                     </div>
                                 </div>
                                 <div class="td-load-info">
