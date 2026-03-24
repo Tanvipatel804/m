@@ -320,8 +320,9 @@
         <!-- Multiple Vehicles Section -->
         <div class="multiple-vehicles-section highlighted-section" id="multipleVehiclesSection">
             <div class="diff">
-                <label for="uvehicleCount">How many vehicles do you have?:<span>*</span> 
-                    <input type="number" name="vehicleCount" id="uvehicleCount" placeholder="Enter number" min="1" max="20" readonly>
+                <label for="uvehicleCount">How many vehicles do you have?:<span>*</span>
+                    <input type="number" name="vehicleCount" id="uvehicleCount" placeholder="Enter number" min="1"
+                        max="20" readonly>
                 </label>
             </div>
 
@@ -353,7 +354,9 @@
             <button type="button" name="btn" id="btnp">+ Upload File</button> <br>
         </div>
 
-        <button type="button" id="btnnext" name="btnp"><a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\6payment-details.html" alt="Fill all the details">Next</a></button>
+        <button type="button" id="btnnext" name="btnp"><a
+                href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\6payment-details.html"
+                alt="Fill all the details">Next</a></button>
 
     </form>
 
@@ -370,7 +373,7 @@
         const MAX_VEHICLES = 20;
 
         // Toggle sections based on checkbox
-        checkbox.addEventListener('change', function() {
+        checkbox.addEventListener('change', function () {
             if (this.checked) {
                 singleSection.style.display = 'none';
                 multipleSection.style.display = 'block';
@@ -385,7 +388,7 @@
         });
 
         // Add Vehicle Button
-        btnAddVehicle.addEventListener('click', function() {
+        btnAddVehicle.addEventListener('click', function () {
             if (vehicleCount < MAX_VEHICLES) {
                 vehicleCount++;
                 vehicleCountInput.value = vehicleCount;
@@ -396,7 +399,7 @@
         });
 
         // Remove Vehicle Button
-        btnRemoveVehicle.addEventListener('click', function() {
+        btnRemoveVehicle.addEventListener('click', function () {
             if (vehicleCount > 0) {
                 const lastVehicle = vehiclesContainer.lastElementChild;
                 if (lastVehicle) {
@@ -469,6 +472,36 @@
                 </div>
 
                 <div class="diff">
+                    <label for="udname${number}"> Driver's Name:<span>*</span> 
+                        <input type="text" name="dname${number}" id="udname${number}" placeholder="Enter driver's full name">
+                    </label>
+                </div>
+
+                <div class="diff">
+                    <label for="uwarranty${number}"> Vehicle has Warranty?
+                        <input type="checkbox" name="warranty${number}" id="uwarranty${number}" onchange="toggleWarranty(this, ${number})">
+                    </label>
+                </div>
+
+                <div class="diff hidden" id="warrantyDetails${number}">
+                    <label for="uwarrantyvno${number}"> Warranty Vehicle No.:<span>*</span> 
+                        <input type="text" name="warrantyvno${number}" id="uwarrantyvno${number}" placeholder="Enter vehicle number for warranty">
+                    </label>
+                </div>
+
+                <div class="diff">
+                    <label for="uinsurance${number}"> Has Vehicle Insurance?
+                        <input type="checkbox" name="insurance${number}" id="uinsurance${number}" onchange="toggleInsurance(this, ${number})">
+                    </label>
+                </div>
+
+                <div class="diff hidden" id="insuranceDetails${number}">
+                    <label for="uinsexp${number}"> Insurance Expiry Date:<span>*</span> 
+                        <input type="date" name="insexp${number}" id="uinsexp${number}">
+                    </label>
+                </div>
+
+                <div class="diff">
                     <label for="uvcolor${number}"> Vehicle Color:<span>*</span>
                         <select name="vcolor${number}" id="uvcolor${number}">
                             <option>red</option>
@@ -496,6 +529,34 @@
                 <button type="button" name="btn">+ Upload File</button> <br>
             `;
             return block;
+        }
+
+        // Toggle warranty vehicle number field
+        function toggleWarranty(checkbox, number) {
+            const details = document.getElementById('warrantyDetails' + number);
+            const input = document.getElementById('uwarrantyvno' + number);
+            if (checkbox.checked) {
+                details.classList.remove('hidden');
+                input.required = true;
+            } else {
+                details.classList.add('hidden');
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        // Toggle insurance expiry date field
+        function toggleInsurance(checkbox, number) {
+            const details = document.getElementById('insuranceDetails' + number);
+            const input = document.getElementById('uinsexp' + number);
+            if (checkbox.checked) {
+                details.classList.remove('hidden');
+                input.required = true;
+            } else {
+                details.classList.add('hidden');
+                input.required = false;
+                input.value = '';
+            }
         }
 
         // Initialize button states
