@@ -4,24 +4,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🚛 Long-Term Contract — Driver View</title>
+  <title>LORRY — Long-Term Trip</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0e1a;
-      --card: #111827;
-      --card2: #1a2332;
-      --border: rgba(255, 255, 255, 0.07);
+      --bg: #080c14;
+      --card: #0f1724;
+      --card2: #13202e;
+      --border: rgba(255, 255, 255, .07);
       --green: #00e676;
       --blue: #2979ff;
       --orange: #ff9100;
       --yellow: #ffd600;
       --red: #ff1744;
-      --purple: #d500f9;
       --teal: #1de9b6;
-      --text: #e8eaf6;
-      --muted: #78909c;
-      --dim: #37474f;
+      --text: #e0e6f0;
+      --muted: #6b7f8f;
+      --dim: #2e3d4a;
     }
 
     * {
@@ -30,39 +32,377 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Barlow', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding-bottom: 20px;
+      padding-bottom: 80px;
+      overflow-x: hidden;
     }
 
-    /* ── HEADER ── */
+    /* SIDEBAR */
+    .sb-ov {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .75);
+      z-index: 800;
+      backdrop-filter: blur(4px);
+    }
+
+    .sb-ov.open {
+      display: block;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: -280px;
+      top: 0;
+      bottom: 0;
+      width: 280px;
+      background: linear-gradient(170deg, #0d1a2a, #081018);
+      border-right: 1px solid rgba(0, 230, 118, .15);
+      z-index: 900;
+      transition: left .3s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sb-top {
+      padding: 20px 18px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: linear-gradient(135deg, #0d2818, #0d1b2a);
+    }
+
+    .sb-logo {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .sb-logo em {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .sb-drv {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: rgba(0, 230, 118, .07);
+      border: 1px solid rgba(0, 230, 118, .15);
+      border-radius: 12px;
+    }
+
+    .sb-av {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--teal));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 900;
+      color: #080c14;
+      flex-shrink: 0;
+    }
+
+    .sb-nm {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .sb-role {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: 14px 0;
+      overflow-y: auto;
+    }
+
+    .sb-grp {
+      font-size: 8px;
+      font-weight: 800;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 14px 20px 5px;
+    }
+
+    .sb-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      border-left: 3px solid transparent;
+      transition: all .2s;
+    }
+
+    .sb-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, .04);
+    }
+
+    .sb-link.on {
+      color: var(--green);
+      border-left-color: var(--green);
+      background: rgba(0, 230, 118, .05);
+    }
+
+    .sb-link i {
+      width: 18px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .sb-foot {
+      padding: 14px 18px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .sb-close-btn {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .05);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'Barlow', sans-serif;
+    }
+
+    .sb-close-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* NOTIF PANEL */
+    .np-ov {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .7);
+      z-index: 700;
+      backdrop-filter: blur(3px);
+    }
+
+    .np-ov.open {
+      display: block;
+    }
+
+    .np-panel {
+      position: fixed;
+      top: 0;
+      right: -360px;
+      bottom: 0;
+      width: 320px;
+      max-width: 90vw;
+      background: linear-gradient(170deg, #0d1a2a, #081018);
+      border-left: 1px solid rgba(0, 230, 118, .15);
+      z-index: 750;
+      transition: right .3s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .np-panel.open {
+      right: 0;
+    }
+
+    .np-hdr {
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      background: linear-gradient(135deg, #0d2818, #0d1b2a);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .np-ttl {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .np-x {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .np-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .ni {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 11px 12px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all .2s;
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .ni.new {
+      background: rgba(0, 230, 118, .05);
+      border-color: rgba(0, 230, 118, .12);
+    }
+
+    .ni:hover {
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .ni-ic {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .ni-bd {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ni-ttl {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .ni-msg {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .ni-ts {
+      font-size: 9px;
+      color: var(--dim);
+      margin-top: 3px;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .ni-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    /* HEADER */
     .hdr {
-      background: linear-gradient(135deg, #0d1520, #1a2332);
+      background: linear-gradient(135deg, #0c1520, #111e2e);
       border-bottom: 2px solid var(--green);
-      padding: 12px 16px;
+      padding: 11px 14px;
       position: sticky;
       top: 0;
       z-index: 200;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 30px rgba(0, 230, 118, .1);
+      box-shadow: 0 4px 30px rgba(0, 230, 118, .08);
     }
 
-    .hdr-left {
+    .hdr-l {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .mbtn {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      background: none;
+      border: none;
+      transition: background .2s;
+    }
+
+    .mbtn:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .mbtn span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all .3s;
+    }
+
+    .mbtn.open span:nth-child(1) {
+      transform: rotate(45deg) translate(4px, 4px);
+    }
+
+    .mbtn.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mbtn.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(4px, -4px);
     }
 
     .logo {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 900;
       color: #fff;
-      letter-spacing: .5px;
+      letter-spacing: 1.5px;
     }
 
     .logo em {
@@ -70,165 +410,376 @@
       font-style: normal;
     }
 
-    .contract-chip {
-      background: rgba(0, 230, 118, .12);
-      border: 1px solid var(--green);
-      color: var(--green);
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: 1px;
-    }
-
-    .hdr-right {
+    .hdr-r {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .drv-av {
-      width: 34px;
-      height: 34px;
+    .nbtn {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 214, 0, .1);
+      border: 1px solid rgba(255, 214, 0, .3);
+      color: var(--yellow);
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ndot {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 7px;
+      height: 7px;
+      background: var(--red);
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--green), var(--teal));
+      border: 1.5px solid var(--bg);
+      animation: bl 2s infinite;
+    }
+
+    @keyframes bl {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    /* TRIP BAR */
+    .tbar {
+      background: linear-gradient(90deg, #0d1e30, #0c1824);
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      padding: 10px 14px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 900;
-      color: #0a0e1a;
+      justify-content: space-between;
     }
 
-    .drv-name {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .drv-sub {
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    .menu-icon {
+    .tbar-l {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
       gap: 5px;
-      cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 8px;
-      transition: background .2s;
-    }
-
-    .menu-icon:hover {
-      background: rgba(255, 255, 255, .08);
-    }
-
-    .menu-icon span {
-      display: block;
-      width: 22px;
-      height: 2px;
-      background: #fff;
-      border-radius: 2px;
-    }
-
-    /* ── BOTTOM NAV ── */
-    .bnav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(180deg, #0d1520, #0a0e1a);
-      border-top: 1px solid var(--border);
-      display: flex;
-      z-index: 200;
-      padding: 0 4px 4px;
-    }
-
-    .bnav-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 4px 8px;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-size: 10px;
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: #fff;
+      font-size: 11px;
       font-weight: 700;
-      gap: 4px;
-      border-top: 2px solid transparent;
+      padding: 7px 12px;
+      border-radius: 9px;
+      cursor: pointer;
       transition: all .2s;
+      font-family: 'Barlow', sans-serif;
     }
 
-    .bnav-btn i {
-      font-size: 18px;
+    .back-btn:hover {
+      background: rgba(255, 255, 255, .12);
     }
 
-    .bnav-btn.active {
+    .tb-id {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tb-tag {
+      font-size: 8px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: rgba(0, 230, 118, .15);
+      border: 1px solid rgba(0, 230, 118, .4);
       color: var(--green);
-      border-top-color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .8px;
     }
 
-    /* ── PAGES ── */
-    .page {
-      display: none;
+    .tb-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 1px;
     }
 
-    .page.active {
-      display: block;
+    .status-pill {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 5px 13px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      white-space: nowrap;
+      background: rgba(255, 214, 0, .12);
+      border: 1px solid var(--yellow);
+      color: var(--yellow);
+      box-shadow: 0 0 10px rgba(255, 214, 0, .15);
     }
 
-    /* ── CONTRACT OVERVIEW (HOME) ── */
-    .contract-hero {
-      margin: 14px 14px 0;
-      background: linear-gradient(135deg, #0d2818, #112a1e);
-      border: 1px solid rgba(0, 230, 118, .25);
+    /* MAP */
+    .map-wrap {
+      margin: 12px 12px 0;
       border-radius: 16px;
-      padding: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(41, 121, 255, .2);
+      background: var(--card);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .3);
+    }
+
+    .map-cv {
+      height: 200px;
+      background: linear-gradient(135deg, #0a1628, #0d2040);
       position: relative;
       overflow: hidden;
     }
 
-    /* .contract-hero::before {
-       content: '📋';
+    .map-grid {
       position: absolute;
-      right: 16px;
-      top: 12px;
-      font-size: 52px;
-      opacity: .12;
-    } */
+      inset: 0;
+      background-image: linear-gradient(rgba(41, 121, 255, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(41, 121, 255, .07) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .map-road {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), rgba(255, 145, 0, .8));
+      transform: translateY(-50%);
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(0, 230, 118, .3);
+    }
+
+    .map-road::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .3) 0, rgba(255, 255, 255, .3) 8px, transparent 8px, transparent 18px);
+      transform: translateY(-50%);
+    }
+
+    .map-pin {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .map-pdot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    .map-plbl {
+      font-size: 9px;
+      font-weight: 800;
+      color: #fff;
+      background: rgba(0, 0, 0, .7);
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .map-truck {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      font-size: 22px;
+      animation: trk 4s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 8px rgba(0, 230, 118, .6));
+    }
+
+    @keyframes trk {
+      from {
+        left: 38%
+      }
+
+      to {
+        left: 62%
+      }
+    }
+
+    .map-info {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .mib {
+      padding: 10px 8px;
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, .06);
+      transition: background .2s;
+    }
+
+    .mib:last-child {
+      border-right: none;
+    }
+
+    .mib:hover {
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .mib-ic {
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .mib-v {
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .mib-l {
+      font-size: 8px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-top: 3px;
+    }
+
+    /* CONTRACT HERO */
+    .ch {
+      margin: 12px 12px 0;
+      background: linear-gradient(135deg, #0d2818, #0d1b2a);
+      border: 1px solid rgba(0, 230, 118, .2);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .ch:hover {
+      border-color: rgba(0, 230, 118, .4);
+      box-shadow: 0 4px 20px rgba(0, 230, 118, .08);
+    }
 
     .ch-tag {
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 800;
       color: var(--green);
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .ch-name {
-      font-size: 22px;
-      font-weight: 900;
-      color: #fff;
       margin-bottom: 4px;
     }
 
-    .ch-party {
+    .ch-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .ch-name {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .ch-acts {
+      display: flex;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .ch-a {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid;
+      cursor: pointer;
+      transition: all .2s;
       font-size: 12px;
+    }
+
+    .ch-party {
+      font-size: 11px;
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
+    }
+
+    .ch-hint {
+      font-size: 9px;
+      font-weight: 700;
+      color: rgba(0, 230, 118, .5);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .cp-hdr {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    .cp-lbl {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .cp-pct {
+      color: var(--green);
+      font-weight: 900;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .cp-track {
+      height: 7px;
+      background: rgba(255, 255, 255, .07);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .cp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--teal));
+      border-radius: 4px;
     }
 
     .ch-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 7px;
     }
 
     .ch-stat {
@@ -238,197 +789,499 @@
       text-align: center;
     }
 
-    .ch-stat-val {
-      font-size: 20px;
+    .ch-sv {
+      font-size: 22px;
       font-weight: 900;
       color: #fff;
       line-height: 1;
     }
 
-    .ch-stat-lbl {
-      font-size: 9px;
+    .ch-sl {
+      font-size: 8px;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: .6px;
       margin-top: 2px;
     }
 
-    .contract-meta {
-      margin: 10px 14px 0;
+    /* CONTRACT META */
+    .cm-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
+      margin: 10px 12px 0;
     }
 
     .cm-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 12px 14px;
+      padding: 11px 13px;
     }
 
     .cm-lbl {
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 800;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
     .cm-row {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
-      padding: 4px 0;
-      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
     }
 
     .cm-row:last-child {
       border-bottom: none;
     }
 
-    .cm-key {
+    .cm-k {
       color: var(--muted);
     }
 
-    .cm-val {
+    .cm-v {
       color: var(--text);
       font-weight: 600;
     }
 
-    .cm-full {
-      grid-column: 1/-1;
+    /* REVIEW PANEL */
+    .rv-ov {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      z-index: 600;
+      backdrop-filter: blur(5px);
+      align-items: flex-end;
+      justify-content: center;
     }
 
-    /* contract progress */
-    .cp-wrap {
-      padding: 10px 14px 0;
-    }
-
-    .cp-head {
+    .rv-ov.open {
       display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      margin-bottom: 5px;
     }
 
-    .cp-label {
-      color: var(--muted);
-      font-weight: 700;
+    .rv-sheet {
+      background: var(--card2);
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 520px;
+      border-top: 2px solid var(--green);
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 -8px 40px rgba(0, 0, 0, .6);
     }
 
-    .cp-pct {
-      color: var(--green);
-      font-weight: 900;
+    .rv-drag {
+      width: 36px;
+      height: 4px;
+      background: rgba(255, 255, 255, .15);
+      border-radius: 2px;
+      margin: 12px auto 0;
     }
 
-    .cp-track {
-      height: 8px;
-      background: rgba(255, 255, 255, .08);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .cp-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--teal));
-      border-radius: 4px;
-      transition: width .6s;
-    }
-
-    /* payment summary bar */
-    .pay-summary {
-      margin: 10px 14px 0;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-    }
-
-    .ps-title {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .ps-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 13px;
-    }
-
-    .ps-total {
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .ps-track {
-      height: 7px;
-      background: rgba(255, 255, 255, .08);
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 10px 0 6px;
-    }
-
-    .ps-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width .5s;
-    }
-
-    .ps-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    /* ── ACTIVE TRIP CARD (HOME) ── */
-    .active-trip-section {
-      margin: 12px 14px 0;
-    }
-
-    .section-head {
+    .rv-hdr {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(0, 230, 118, .15);
+      background: linear-gradient(135deg, #0d2818, #0d1b2a);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .rv-ttl {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .rv-x {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rv-body {
+      padding: 14px;
+    }
+
+    .rv-sec {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rv-sec:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .rv-stl {
+      font-size: 8px;
+      font-weight: 800;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      margin-bottom: 9px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .rv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
       margin-bottom: 8px;
     }
 
-    .sec-title {
-      font-size: 12px;
+    .rv-card {
+      background: rgba(0, 0, 0, .3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .rv-cl {
+      font-size: 8px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 3px;
+    }
+
+    .rv-cv {
+      font-size: 13px;
       font-weight: 900;
       color: #fff;
+    }
+
+    .rv-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      font-size: 11px;
+      gap: 8px;
+    }
+
+    .rv-row:last-child {
+      border-bottom: none;
+    }
+
+    .rv-k {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .rv-v {
+      color: var(--text);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .rv-comp {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text);
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+    }
+
+    .rv-comp:last-child {
+      border-bottom: none;
+    }
+
+    .rv-ck {
+      color: var(--green);
+      font-size: 11px;
+    }
+
+    /* RIDE CARD */
+    .rc-wrap {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 400;
+      display: flex;
+      pointer-events: none;
+    }
+
+    .rc {
+      background: #fff;
+      border-radius: 22px 22px 0 0;
+      border-top: 2px solid rgba(0, 230, 118, .35);
+      width: 100%;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, .45);
+      transform: translateY(calc(100% - 84px));
+      transition: transform .38s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: all;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rc.expanded {
+      transform: translateY(0);
+    }
+
+    /* handle: [left btn] [drag bar centered] [right btn] — allotment style */
+    .rc-handle {
+      flex-shrink: 0;
+      cursor: grab;
+      padding: 10px 16px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .rc-handle:active {
+      cursor: grabbing;
+    }
+
+    .rc-handle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .rc-bar-wrap {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .rc-bar {
+      width: 44px;
+      height: 5px;
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    .rc-opt {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      flex-shrink: 0;
+      background: #F3F4F6;
+    }
+
+    .rc-opt:hover {
+      background: #E5E7EB;
+      transform: scale(1.05);
+    }
+
+    .rc-opt i {
+      font-size: 15px;
+      color: #374151;
+    }
+
+    .rc-opt-pref {
+      background: #F3F4F6;
+    }
+
+    .rc-opt-more {
+      background: #F3F4F6;
+    }
+
+    .rc-mini {
+      display: none;
+    }
+
+    .rc-chev {
+      display: none;
+    }
+
+    /* allotment-style preview center: status label + two timer pills */
+    .rc-trip-type {
+      text-align: center;
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 600;
+      letter-spacing: .4px;
+      margin-bottom: 5px;
+    }
+
+    .rc-timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .rc-timer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 50px;
+      font-weight: 800;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-family: 'Space Mono', monospace;
+      white-space: nowrap;
+    }
+
+    /* count-up: green — trip in progress */
+    .rc-elapsed-pill {
+      border: 2px solid #059669;
+      color: #065f46;
+      background: #f0fdf4;
+    }
+
+    .rc-elapsed-pill i {
+      font-size: 10px;
+      color: #059669;
+    }
+
+    /* countdown: amber — time remaining */
+    .rc-countdown-pill {
+      border: 2px solid #B45309;
+      color: #92400e;
+      background: #fffbeb;
+    }
+
+    .rc-countdown-pill i {
+      font-size: 10px;
+      color: #B45309;
+    }
+
+    .rc-timer-sep {
+      font-size: 14px;
+      color: #d1d5db;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    /* keep old class unused — hide */
+    .rc-countdown-box {
+      display: none;
+    }
+
+    .rc-cd-icon,
+    .rc-cd-sub {
+      display: none;
+    }
+
+    /* rc-ml row in body after at-hdr */
+    .rc-ml-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 0 10px;
+    }
+
+    .rc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--yellow);
+      animation: bl 1.5s infinite;
+      flex-shrink: 0;
+    }
+
+    .rc-mlabel {
+      font-size: 13px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .rc-msub {
+      font-size: 10px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    /* scrollable body */
+    .rc-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+    }
+
+    .rc-body::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .rc-body::-webkit-scrollbar-thumb {
+      background: #e5e7eb;
+      border-radius: 2px;
+    }
+
+    /* active trip (white) */
+    .at-sec {
+      padding: 10px 14px 4px;
+    }
+
+    .at-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .at-ttl {
+      font-size: 12px;
+      font-weight: 900;
+      color: #111827;
       text-transform: uppercase;
       letter-spacing: .8px;
     }
 
-    .sec-action {
-      font-size: 11px;
-      color: var(--green);
-      font-weight: 700;
-      cursor: pointer;
-    }
-
     .at-card {
-      background: var(--card);
-      border: 1px solid rgba(0, 230, 118, .2);
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
       border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 230, 118, .05);
+      margin-bottom: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
     }
 
-    .at-top {
-      background: linear-gradient(135deg, #0d2818, #112a1e);
-      padding: 12px 14px;
+    .at-ct {
+      background: linear-gradient(135deg, #0d2818, #0d1b28);
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -440,145 +1293,201 @@
       color: var(--green);
     }
 
-    .at-type-badge {
-      font-size: 9px;
+    .at-badge {
+      font-size: 8px;
       font-weight: 800;
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: 20px;
-      letter-spacing: .5px;
       text-transform: uppercase;
+      letter-spacing: .5px;
     }
 
-    .tb-single {
+    .ab-single {
       background: rgba(41, 121, 255, .2);
       color: #82b1ff;
-      border: 1px solid #2979ff;
-    }
-
-    .tb-allotment {
-      background: rgba(213, 0, 249, .2);
-      color: #ea80fc;
-      border: 1px solid var(--purple);
-    }
-
-    .at-body {
-      padding: 12px 14px;
+      border: 1px solid var(--blue);
     }
 
     .at-route {
+      padding: 10px 14px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 6px;
+      background: #fff;
     }
 
-    .at-city {
-      flex: 1;
+    .ar-city {
+      min-width: 72px;
     }
 
-    .at-city-tag {
-      font-size: 9px;
-      color: var(--muted);
+    .ar-tag {
+      font-size: 8px;
+      color: #9ca3af;
       text-transform: uppercase;
-      letter-spacing: .6px;
+      letter-spacing: .5px;
     }
 
-    .at-city-name {
-      font-size: 15px;
+    .ar-nm {
+      font-size: 14px;
       font-weight: 900;
-      color: #fff;
+      color: #111827;
     }
 
-    .at-city-sub {
-      font-size: 10px;
-      color: var(--muted);
+    .ar-sub {
+      font-size: 9px;
+      color: #9ca3af;
     }
 
-    .at-arrow {
-      color: var(--orange);
-      font-size: 16px;
+    .ar-mid {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
     }
 
-    .at-mini-stats {
+    .ar-line {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .ar-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+
+    .ar-dash {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--green), var(--orange));
+    }
+
+    .ar-load {
+      background: rgba(255, 145, 0, .1);
+      border: 1px solid rgba(255, 145, 0, .25);
+      border-radius: 7px;
+      padding: 2px 8px;
+      font-size: 9px;
+      font-weight: 800;
+      color: #c2580a;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .at-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      gap: 5px;
+      padding: 0 14px 10px;
+      background: #fff;
     }
 
-    .at-mini {
-      background: rgba(255, 255, 255, .04);
-      border: 1px solid var(--border);
+    .at-stat {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
       border-radius: 8px;
       padding: 7px;
       text-align: center;
     }
 
-    .at-mini-val {
-      font-size: 14px;
+    .at-sv {
+      font-size: 13px;
       font-weight: 900;
-      color: #fff;
+      color: #111827;
     }
 
-    .at-mini-lbl {
-      font-size: 8px;
-      color: var(--muted);
+    .at-sl {
+      font-size: 7px;
+      color: #9ca3af;
       text-transform: uppercase;
       letter-spacing: .5px;
     }
 
-    .at-btn-row {
+    .at-btns {
       display: flex;
-      gap: 8px;
-      padding: 0 14px 14px;
+      gap: 7px;
+      padding: 0 14px 12px;
+      background: #fff;
+      border-radius: 0 0 13px 13px;
     }
 
     .at-btn {
       flex: 1;
-      padding: 11px;
+      padding: 10px;
       border: none;
       border-radius: 10px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       transition: all .2s;
+      font-family: 'Barlow', sans-serif;
     }
 
     .at-btn:hover {
-      filter: brightness(1.1);
+      filter: brightness(1.06);
       transform: translateY(-1px);
     }
 
-    .at-btn-primary {
+    .ab-primary {
       background: linear-gradient(135deg, var(--green), var(--teal));
-      color: #0a0e1a;
+      color: #080c14;
     }
 
-    .at-btn-ghost {
-      background: rgba(255, 255, 255, .07);
-      border: 1px solid var(--border);
-      color: var(--muted);
+    .ab-ghost {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      color: #6b7280;
     }
 
-    /* ── TRIP HISTORY LIST ── */
-    .trip-list {
-      margin: 10px 14px 0;
+    /* trip history (white) */
+    .th-sec {
+      padding: 2px 14px 4px;
+    }
+
+    .th-div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .th-line {
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .th-lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      white-space: nowrap;
     }
 
     .trip-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      transition: all .2s;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 11px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      cursor: pointer;
+      transition: all .2s;
       position: relative;
       overflow: hidden;
     }
@@ -590,10 +1499,10 @@
       top: 0;
       bottom: 0;
       width: 3px;
-      border-radius: 12px 0 0 12px;
+      border-radius: 11px 0 0 11px;
     }
 
-    .ti-completed::before {
+    .ti-done::before {
       background: var(--green);
     }
 
@@ -601,39 +1510,35 @@
       background: var(--yellow);
     }
 
-    .ti-scheduled::before {
-      background: var(--muted);
-    }
-
-    .ti-failed::before {
-      background: var(--red);
+    .ti-sched::before {
+      background: #d1d5db;
     }
 
     .trip-item:hover {
-      border-color: rgba(0, 230, 118, .3);
-      background: rgba(0, 230, 118, .03);
+      border-color: #d1fae5;
+      background: #f0fdf4;
     }
 
-    .ti-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+    .ti-ic {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 16px;
       flex-shrink: 0;
     }
 
-    .ti-icon.single {
-      background: rgba(41, 121, 255, .15);
+    .ti-ic.sn {
+      background: #eff6ff;
     }
 
-    .ti-icon.allotment {
-      background: rgba(213, 0, 249, .15);
+    .ti-ic.al {
+      background: #fdf4ff;
     }
 
-    .ti-info {
+    .ti-inf {
       flex: 1;
       min-width: 0;
     }
@@ -642,985 +1547,78 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
     .ti-id {
       font-size: 11px;
       font-weight: 800;
-      color: var(--text);
+      color: #111827;
     }
 
-    .ti-date {
+    .ti-dt {
+      font-size: 9px;
+      color: #9ca3af;
+    }
+
+    .ti-rt {
       font-size: 10px;
-      color: var(--muted);
-    }
-
-    .ti-route {
-      font-size: 11px;
-      color: var(--muted);
+      color: #6b7280;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
-    .ti-bottom {
+    .ti-bot {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    .ti-status {
-      font-size: 9px;
+    .ti-st {
+      font-size: 8px;
       font-weight: 800;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: .5px;
     }
 
     .tis-done {
-      background: rgba(0, 230, 118, .15);
-      color: var(--green);
+      background: #d1fae5;
+      color: #065f46;
     }
 
     .tis-active {
-      background: rgba(255, 214, 0, .15);
-      color: var(--yellow);
+      background: #fef9c3;
+      color: #92600a;
     }
 
     .tis-sched {
-      background: rgba(120, 144, 156, .15);
-      color: var(--muted);
-    }
-
-    .tis-fail {
-      background: rgba(255, 23, 68, .15);
-      color: var(--red);
+      background: #f3f4f6;
+      color: #6b7280;
     }
 
     .ti-earn {
       font-size: 11px;
-      font-weight: 700;
-      color: var(--green);
+      font-weight: 800;
+      color: #059669;
       margin-left: auto;
     }
 
-    /* ── SCHEDULE PAGE ── */
-    .schedule-header {
-      padding: 14px 14px 0;
-    }
-
-    .filter-row {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .filter-row::-webkit-scrollbar {
-      display: none;
-    }
-
-    .filter-pill {
-      flex-shrink: 0;
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, .04);
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all .2s;
-      white-space: nowrap;
-    }
-
-    .filter-pill.active {
-      background: var(--green);
-      color: #0a0e1a;
-      border-color: var(--green);
-    }
-
-    .calendar-strip {
-      display: flex;
-      gap: 6px;
-      padding: 0 14px 10px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .calendar-strip::-webkit-scrollbar {
-      display: none;
-    }
-
-    .cal-day {
-      flex-shrink: 0;
-      width: 48px;
-      text-align: center;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 6px;
-      cursor: pointer;
-      transition: all .2s;
-    }
-
-    .cal-day.active {
-      background: var(--green);
-      border-color: var(--green);
-    }
-
-    .cal-day.has-trip {
-      border-color: rgba(0, 230, 118, .4);
-    }
-
-    .cal-day-name {
-      font-size: 9px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-    }
-
-    .cal-day.active .cal-day-name {
-      color: rgba(0, 0, 0, .6);
-    }
-
-    .cal-day-num {
-      font-size: 18px;
-      font-weight: 900;
-      color: #fff;
-    }
-
-    .cal-day.active .cal-day-num {
-      color: #0a0e1a;
-    }
-
-    .cal-day-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--green);
-      margin: 3px auto 0;
-    }
-
-    .sched-list {
-      padding: 0 14px;
-    }
-
-    .sched-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all .2s;
-    }
-
-    .sched-item:hover {
-      border-color: rgba(0, 230, 118, .3);
-    }
-
-    .si-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-
-    .si-left {
-      color: green;
-    }
-
-    .si-time {
-      font-size: 20px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1;
-    }
-
-    .si-date {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 1px;
-    }
-
-    .si-badges {
-      display: flex;
-      gap: 6px;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-
-    .si-route {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .si-city {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .si-arrow {
-      color: var(--orange);
-      font-size: 12px;
-    }
-
-    .si-details {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
-    .si-det {
-      background: rgba(255, 255, 255, .04);
-      border-radius: 8px;
-      padding: 7px 8px;
-    }
-
-    .si-det-val {
-      font-size: 13px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .si-det-lbl {
-      font-size: 9px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .4px;
-    }
-
-    .si-action-row {
+    /* report buttons */
+    .rep-sec {
+      padding: 8px 14px 16px;
       display: flex;
       gap: 8px;
-      margin-top: 10px;
     }
 
-    .si-btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 9px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-    }
-
-    .si-btn-green {
-      background: linear-gradient(135deg, var(--green), var(--teal));
-      color: #0a0e1a;
-    }
-
-    .si-btn-ghost {
-      background: rgba(255, 255, 255, .07);
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-
-    /* ── ACTIVE TRIP PAGE (full process) ── */
-    .trip-type-selector {
-      display: flex;
-      gap: 8px;
-      padding: 14px 14px 0;
-    }
-
-    .tts-btn {
+    .rep-btn {
       flex: 1;
       padding: 12px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: var(--card);
-      text-align: center;
-      cursor: pointer;
-      transition: all .2s;
-    }
-
-    .tts-btn.active {
-      border-color: var(--green);
-      background: rgba(0, 230, 118, .08);
-    }
-
-    .tts-icon {
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
-
-    .tts-name {
-      font-size: 12px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .tts-desc {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 1px;
-    }
-
-    /* single trip view */
-    .single-view,
-    .allotment-view {
-      padding: 12px 14px 0;
-    }
-
-    /* customer tabs (allotment) */
-    .cust-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      overflow-x: auto;
-    }
-
-    .cust-tabs::-webkit-scrollbar {
-      display: none;
-    }
-
-    .ct {
-      flex-shrink: 0;
-      min-width: 90px;
-      background: var(--card);
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 10px;
-      cursor: pointer;
-      text-align: center;
-      position: relative;
-      transition: all .2s;
-    }
-
-    .ct.active {
-      border-color: var(--green);
-      background: rgba(0, 230, 118, .08);
-    }
-
-    .ct-num {
-      font-size: 9px;
-      font-weight: 800;
-      color: var(--muted);
-      letter-spacing: 1px;
-      margin-bottom: 2px;
-    }
-
-    .ct-name {
-      font-size: 12px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .ct-dot {
-      position: absolute;
-      top: 7px;
-      right: 8px;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-    }
-
-    /* PROCESS PANEL */
-    .process-panel {
-      color: green;
-    }
-
-    /* trip info bar */
-    .trip-info-bar {
-      background: linear-gradient(135deg, #0d2818, #0d1b30);
-      border: 1px solid rgba(0, 230, 118, .15);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tib-name {
-      font-size: 20px;
-      font-weight: 900;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-
-    .tib-meta {
-      font-size: 11px;
-      color: var(--muted);
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .tib-meta span {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .status-badge {
-      padding: 5px 14px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .sb-pending {
-      background: rgba(120, 144, 156, .2);
-      color: var(--muted);
-      border: 1px solid var(--dim);
-    }
-
-    .sb-loading {
-      background: rgba(255, 214, 0, .15);
-      color: var(--yellow);
-      border: 1px solid var(--yellow);
-    }
-
-    .sb-transit {
-      background: rgba(41, 121, 255, .15);
-      color: #82b1ff;
-      border: 1px solid var(--blue);
-    }
-
-    .sb-reached {
-      background: rgba(255, 145, 0, .15);
-      color: var(--orange);
-      border: 1px solid var(--orange);
-    }
-
-    .sb-unloading {
-      background: rgba(255, 145, 0, .15);
-      color: var(--orange);
-      border: 1px solid var(--orange);
-    }
-
-    .sb-delivered {
-      background: rgba(0, 230, 118, .15);
-      color: var(--green);
-      border: 1px solid var(--green);
-    }
-
-    .sb-failed {
-      background: rgba(255, 23, 68, .15);
-      color: var(--red);
-      border: 1px solid var(--red);
-    }
-
-    /* horizontal stepper */
-    .stepper-wrap {
-      background: rgba(0, 0, 0, .3);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 12px;
-      margin-bottom: 12px;
-      overflow-x: auto;
-    }
-
-    .stepper {
-      display: flex;
-      align-items: flex-start;
-      min-width: 560px;
-    }
-
-    .step {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-    }
-
-    .step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 19px;
-      left: 50%;
-      width: 100%;
-      height: 2px;
-      background: var(--border);
-      z-index: 0;
-    }
-
-    .step.done:not(:last-child)::after {
-      background: var(--green);
-    }
-
-    .step.active:not(:last-child)::after {
-      background: linear-gradient(90deg, var(--green), var(--border));
-    }
-
-    .step-c {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      border: 2px solid var(--dim);
-      background: rgba(255, 255, 255, .04);
-      color: var(--dim);
-      transition: all .3s;
-    }
-
-    .step.done .step-c {
-      background: var(--green);
-      border-color: var(--green);
-      color: #0a0e1a;
-    }
-
-    .step.active .step-c {
-      background: var(--yellow);
-      border-color: var(--yellow);
-      color: #0a0e1a;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 8px rgba(255, 214, 0, .4)
-      }
-
-      50% {
-        box-shadow: 0 0 20px rgba(255, 214, 0, .8)
-      }
-    }
-
-    .step-lbl {
-      font-size: 8px;
-      font-weight: 700;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 5px;
-      text-transform: uppercase;
-      letter-spacing: .4px;
-      line-height: 1.3;
-    }
-
-    .step.done .step-lbl {
-      color: var(--green);
-    }
-
-    .step.active .step-lbl {
-      color: var(--yellow);
-    }
-
-    .step-t {
-      font-size: 8px;
-      color: var(--dim);
-      margin-top: 1px;
-      font-family: 'Courier New', monospace;
-    }
-
-    /* content grid */
-    .c-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .c-full {
-      grid-column: 1/-1;
-    }
-
-    .sec-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-    }
-
-    .sec-head {
-      font-size: 9px;
-      font-weight: 800;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .sec-head i {
-      font-size: 12px;
-    }
-
-    .inf-r {
-      display: flex;
-      justify-content: space-between;
-      padding: 5px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 11px;
-    }
-
-    .inf-r:last-child {
-      border-bottom: none;
-    }
-
-    .ik {
-      color: var(--muted);
-    }
-
-    .iv {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    /* load table */
-    .l-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 11px;
-    }
-
-    .l-table th {
-      text-align: left;
-      font-size: 8px;
-      font-weight: 800;
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 0 0 7px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .l-table td {
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, .04);
-      color: var(--text);
-    }
-
-    .l-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .qb {
-      background: rgba(255, 255, 255, .07);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1px 7px;
-      font-weight: 700;
-      font-size: 11px;
-    }
-
-    /* stage block */
-    .stage-b {
-      background: rgba(0, 0, 0, .25);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-    }
-
-    .stage-bh {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-
-    .stage-nm {
-      font-size: 11px;
-      font-weight: 800;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .sbadge {
-      font-size: 8px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-
-    .sbp {
-      background: rgba(120, 144, 156, .15);
-      color: var(--muted);
-    }
-
-    .sba {
-      background: rgba(255, 214, 0, .2);
-      color: var(--yellow);
-    }
-
-    .sbd {
-      background: rgba(0, 230, 118, .2);
-      color: var(--green);
-    }
-
-    .timer-display {
-      font-size: 26px;
-      font-weight: 900;
-      color: #fff;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      padding: 6px 0;
-    }
-
-    .td-active {
-      color: var(--yellow);
-      text-shadow: 0 0 16px rgba(255, 214, 0, .4);
-    }
-
-    .td-done {
-      color: var(--green);
-    }
-
-    /* photos */
-    .photo-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      margin-top: 8px;
-    }
-
-    .photo-b {
-      aspect-ratio: 16/9;
-      background: rgba(255, 255, 255, .03);
-      border: 1.5px dashed var(--dim);
-      border-radius: 9px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      cursor: pointer;
-      transition: all .2s;
-      color: var(--dim);
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .photo-b:hover {
-      border-color: var(--green);
-      color: var(--green);
-    }
-
-    .photo-b.done {
-      border-style: solid;
-      border-color: var(--green);
-      background: rgba(0, 230, 118, .06);
-      color: var(--green);
-    }
-
-    .photo-b i {
-      font-size: 18px;
-    }
-
-    /* payment */
-    .pay-b {
-      border-radius: 10px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .pay-b.paid {
-      background: rgba(0, 230, 118, .07);
-      border: 1px solid rgba(0, 230, 118, .3);
-    }
-
-    .pay-b.partial {
-      background: rgba(255, 145, 0, .07);
-      border: 1px solid rgba(255, 145, 0, .3);
-    }
-
-    .pay-b.cod {
-      background: rgba(41, 121, 255, .07);
-      border: 1px solid rgba(41, 121, 255, .3);
-    }
-
-    .pay-b.unpaid {
-      background: rgba(255, 23, 68, .07);
-      border: 1px solid rgba(255, 23, 68, .3);
-    }
-
-    .pay-amt {
-      font-size: 26px;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .pa-green {
-      color: var(--green);
-    }
-
-    .pa-orange {
-      color: var(--orange);
-    }
-
-    .pa-blue {
-      color: #82b1ff;
-    }
-
-    .pa-red {
-      color: var(--red);
-    }
-
-    .pay-rt {
-      text-align: right;
-    }
-
-    .pay-mb {
-      display: inline-block;
-      padding: 2px 9px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, .07);
-      border: 1px solid var(--border);
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--muted);
-      margin-bottom: 2px;
-    }
-
-    .pay-st {
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    .paybar-w {
-      margin: 6px 0;
-    }
-
-    .pbt {
-      height: 6px;
-      background: rgba(255, 255, 255, .07);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-bottom: 4px;
-    }
-
-    .pbf {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--teal));
-      border-radius: 3px;
-      transition: width .4s;
-    }
-
-    .pb-lbls {
-      display: flex;
-      justify-content: space-between;
-      font-size: 9px;
-      font-weight: 700;
-      font-family: 'Courier New', monospace;
-    }
-
-    .ph-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, .04);
-      font-size: 10px;
-    }
-
-    .ph-row:last-child {
-      border-bottom: none;
-    }
-
-    .ph-amt {
-      color: var(--green);
-      font-weight: 700;
-      font-size: 12px;
-    }
-
-    .ph-meta {
-      color: var(--dim);
-    }
-
-    /* signature */
-    .sig-wrap {
-      border: 1.5px dashed var(--dim);
-      border-radius: 10px;
-      overflow: hidden;
-      background: rgba(0, 0, 0, .3);
-      margin-bottom: 6px;
-    }
-
-    .sig-wrap canvas {
-      width: 100%;
-      display: block;
-      height: 90px;
-      cursor: crosshair;
-      touch-action: none;
-    }
-
-    .sig-clear {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 10px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all .2s;
-    }
-
-    .sig-clear:hover {
-      border-color: var(--red);
-      color: var(--red);
-    }
-
-    /* notes */
-    .notes-ta {
-      width: 100%;
-      background: rgba(0, 0, 0, .3);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 11px;
-      color: var(--text);
-      font-size: 11px;
-      resize: vertical;
-      min-height: 56px;
-      outline: none;
-      transition: border-color .2s;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    .notes-ta:focus {
-      border-color: var(--green);
-    }
-
-    /* action buttons */
-    .act-row {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-      padding-bottom: 6px;
-    }
-
-    .ab {
-      flex: 1;
-      min-width: 100px;
-      padding: 11px 12px;
       border: none;
-      border-radius: 10px;
+      border-radius: 11px;
       font-size: 11px;
       font-weight: 800;
       cursor: pointer;
@@ -1629,369 +1627,45 @@
       justify-content: center;
       gap: 6px;
       transition: all .2s;
+      font-family: 'Barlow', sans-serif;
       letter-spacing: .3px;
     }
 
-    .ab:hover:not(:disabled) {
+    .rep-btn:hover {
+      filter: brightness(1.06);
       transform: translateY(-1px);
-      filter: brightness(1.08);
     }
 
-    .ab:disabled {
-      opacity: .3;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .ab-green {
-      background: linear-gradient(135deg, var(--green), var(--teal));
-      color: #0a0e1a;
-    }
-
-    .ab-blue {
-      background: linear-gradient(135deg, #1565c0, var(--blue));
+    .rb-bd {
+      background: linear-gradient(135deg, #1e40af, #2979ff);
       color: #fff;
     }
 
-    .ab-orange {
-      background: linear-gradient(135deg, #e65100, var(--orange));
-      color: #fff;
+    .rb-is {
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      color: #be123c;
     }
 
-    .ab-yellow {
-      background: linear-gradient(135deg, #f57f17, var(--yellow));
-      color: #0a0e1a;
-    }
-
-    .ab-red {
-      background: linear-gradient(135deg, #b71c1c, var(--red));
-      color: #fff;
-    }
-
-    .ab-gray {
-      background: rgba(255, 255, 255, .08);
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-
-    /* allotment summary bar */
-    .almt-summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .almt-sv {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 10px;
-      text-align: center;
-    }
-
-    .almt-sv-val {
-      font-size: 18px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1;
-    }
-
-    .almt-sv-lbl {
-      font-size: 8px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      margin-top: 2px;
-    }
-
-    .almt-pbar-wrap {
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .almt-pbar-track {
-      flex: 1;
-      height: 6px;
-      background: rgba(255, 255, 255, .08);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .almt-pbar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--teal));
-      border-radius: 3px;
-      transition: width .5s;
-    }
-
-    .almt-pbar-pct {
-      font-size: 10px;
-      font-weight: 900;
-      color: var(--green);
-      font-family: 'Courier New', monospace;
-      white-space: nowrap;
-    }
-
-    /* ── MODALS ── */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .82);
-      z-index: 500;
-      align-items: flex-end;
-      justify-content: center;
-    }
-
-    .overlay.open {
-      display: flex;
-    }
-
-    .sheet {
-      background: var(--card2);
-      border-radius: 20px 20px 0 0;
-      padding: 20px;
-      width: 100%;
-      max-width: 500px;
-      border-top: 2px solid var(--green);
-      box-shadow: 0 -8px 40px rgba(0, 0, 0, .6);
-      max-height: 92vh;
-      overflow-y: auto;
-    }
-
-    .drag-bar {
-      width: 36px;
-      height: 4px;
-      background: rgba(255, 255, 255, .2);
-      border-radius: 2px;
-      margin: 0 auto 16px;
-    }
-
-    .sheet-title {
-      font-size: 16px;
-      font-weight: 900;
-      color: #fff;
-      margin-bottom: 3px;
-    }
-
-    .sheet-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-
-    .kp-display {
-      background: rgba(0, 0, 0, .4);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .kp-val {
-      font-size: 34px;
-      font-weight: 900;
-      color: var(--green);
-      font-family: 'Courier New', monospace;
-    }
-
-    .kp-hint {
-      font-size: 10px;
-      color: var(--dim);
-      margin-top: 3px;
-    }
-
-    .kp-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 7px;
-      margin-bottom: 10px;
-    }
-
-    .kp-btn {
-      background: rgba(255, 255, 255, .07);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 13px;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all .1s;
-      text-align: center;
-      font-family: 'Courier New', monospace;
-    }
-
-    .kp-btn:active {
-      transform: scale(.93);
-    }
-
-    .kp-c {
-      color: var(--red);
-    }
-
-    .kp-b {
-      color: var(--orange);
-    }
-
-    .frow {
-      display: flex;
-      gap: 7px;
-      margin-bottom: 8px;
-    }
-
-    .f-sel,
-    .f-inp {
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 10px;
-      color: var(--text);
-      font-size: 11px;
-      outline: none;
-      transition: border-color .2s;
-    }
-
-    .f-sel {
-      flex: 1;
-      cursor: pointer;
-    }
-
-    .f-inp {
-      flex: 2;
-    }
-
-    .f-sel:focus,
-    .f-inp:focus {
-      border-color: var(--green);
-    }
-
-    .mrow {
-      display: flex;
-      gap: 7px;
-    }
-
-    .m-btn {
-      flex: 1;
-      padding: 11px;
-      border: none;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .m-cancel {
-      background: rgba(255, 255, 255, .07);
-      color: var(--muted);
-    }
-
-    .m-confirm {
-      background: linear-gradient(135deg, var(--green), var(--teal));
-      color: #0a0e1a;
-    }
-
-    /* confirm overlay */
-    .c-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .88);
-      z-index: 600;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .c-overlay.open {
-      display: flex;
-    }
-
-    .c-box {
-      background: var(--card2);
-      border-radius: 16px;
-      padding: 26px;
-      max-width: 320px;
-      width: 88%;
-      text-align: center;
-      border: 1px solid var(--border);
-    }
-
-    .c-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin: 0 auto 12px;
-    }
-
-    .c-title {
-      font-size: 16px;
-      font-weight: 900;
-      color: #fff;
-      margin-bottom: 7px;
-    }
-
-    .c-body {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 18px;
-      line-height: 1.6;
-    }
-
-    .c-btns {
-      display: flex;
-      gap: 8px;
-    }
-
-    .c-cancel {
-      flex: 1;
-      padding: 11px;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, .07);
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .c-ok {
-      flex: 1;
-      padding: 11px;
-      border: none;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    /* toast */
+    /* TOAST */
     .toast {
       position: fixed;
-      bottom: 24px;
+      bottom: 90px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: var(--card2);
+      background: #1a2840;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 11px 18px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       font-size: 12px;
       font-weight: 700;
       color: #fff;
       opacity: 0;
       transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
-      z-index: 700;
+      z-index: 1000;
       pointer-events: none;
       white-space: nowrap;
       box-shadow: 0 8px 30px rgba(0, 0, 0, .5);
@@ -2002,312 +1676,38 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .toast-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* ── SCHEDULE CARD (new style) ── */
-    .sc-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      margin-bottom: 12px;
-      overflow: hidden;
-      transition: border-color .2s;
-    }
-
-    .sc-card:hover {
-      border-color: rgba(0, 230, 118, .25);
-    }
-
-    .sc-card[data-status="active"] {
-      border-color: rgba(255, 214, 0, .35);
-    }
-
-    .sc-card[data-status="completed"] {
-      opacity: .88;
-    }
-
-    /* ── REVIEW PANEL (contract details) ── */
-    .review-panel {
-      margin: 10px 14px 0;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .rp-header {
-      background: linear-gradient(135deg, #0d2818, #112a1e);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(0, 230, 118, .15);
-    }
-
-    .rp-title {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--green);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .rp-expand {
-      font-size: 10px;
-      color: var(--muted);
-      cursor: pointer;
-      background: rgba(255, 255, 255, .07);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 3px 10px;
-      transition: all .2s;
-    }
-
-    .rp-expand:hover {
-      border-color: var(--green);
-      color: var(--green);
-    }
-
-    .rp-body {
-      padding: 12px 14px;
-    }
-
-    .rp-section {
-      margin-bottom: 14px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .rp-section:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .rp-sec-title {
-      font-size: 9px;
-      font-weight: 800;
-      color: var(--green);
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .rp-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
-
-    .rp-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 4px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, .04);
-      font-size: 11px;
-      gap: 8px;
-    }
-
-    .rp-row:last-child {
-      border-bottom: none;
-    }
-
-    .rp-k {
-      color: var(--muted);
-      flex-shrink: 0;
-    }
-
-    .rp-v {
-      color: var(--text);
-      font-weight: 600;
-      text-align: right;
-      word-break: break-word;
-    }
-
-    .rp-card {
-      background: rgba(0, 0, 0, .25);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-
-    .rp-card-lbl {
-      font-size: 8px;
-      font-weight: 800;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-bottom: 3px;
-    }
-
-    .rp-card-val {
-      font-size: 14px;
-      font-weight: 900;
-      color: #fff;
-    }
-
-    .rp-attach {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(0, 0, 0, .25);
-      border: 1px solid rgba(0, 230, 118, .2);
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-
-    .rp-attach-icon {
-      font-size: 22px;
-    }
-
-    .rp-attach-name {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .rp-attach-meta {
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    .rp-compliance-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text);
-      padding: 4px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, .04);
-    }
-
-    .rp-compliance-item:last-child {
-      border-bottom: none;
-    }
-
-    .rp-compliance-check {
-      color: var(--green);
-      font-size: 12px;
-    }
-
-    /* tb-return trip badge */
-    .tb-return {
-      background: rgba(0, 230, 118, .15);
-      color: var(--green);
-      border: 1px solid var(--green);
-    }
-
-    /* active trip load-between-route layout */
-    .at-route-stack {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      flex: 1;
-      padding: 0 6px;
-    }
-
-    .at-load-badge {
-      background: rgba(255, 145, 0, .15);
-      border: 1px solid rgba(255, 145, 0, .4);
-      border-radius: 8px;
-      padding: 3px 10px;
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--orange);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .at-route-line {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .at-route-dot {
+    .t-dot {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: var(--green);
       flex-shrink: 0;
     }
 
-    .at-route-dash {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--green), var(--orange));
-      max-width: 40px;
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 4px;
     }
 
-    /* navigation top bar (replaces bottom nav) */
-    .topnav {
-      background: linear-gradient(180deg, #0d1520, #0a0e1a);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      overflow-x: auto;
-      padding: 0 4px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .topnav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tnav-btn {
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 16px;
-      cursor: pointer;
-      border: none;
+    ::-webkit-scrollbar-track {
       background: transparent;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      gap: 6px;
-      border-bottom: 2px solid transparent;
-      transition: all .2s;
-      white-space: nowrap;
     }
 
-    .tnav-btn i {
-      font-size: 14px;
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .1);
+      border-radius: 2px;
     }
 
-    .tnav-btn.active {
-      color: var(--green);
-      border-bottom-color: var(--green);
-    }
-
-    @media(max-width:520px) {
-      .c-grid {
-        grid-template-columns: 1fr;
+    @media(max-width:480px) {
+      .map-info {
+        grid-template-columns: repeat(2, 1fr);
       }
 
-      .contract-meta {
-        grid-template-columns: 1fr;
+      .mib:nth-child(2) {
+        border-right: none;
       }
 
-      .stepper {
-        min-width: 520px;
+      .mib:nth-child(3) {
+        border-top: 1px solid rgba(255, 255, 255, .06);
       }
     }
   </style>
@@ -2315,1765 +1715,655 @@
 
 <body>
 
-  <!-- ══ HEADER ══ -->
-  <div class="hdr">
-    <div class="hdr-left">
-      <div class="menu-icon" onclick="showToast('☰ Menu opening…','var(--green)')">
-        <span></span><span></span><span></span>
+  <!-- SIDEBAR -->
+  <div class="sb-ov" id="sbOv" onclick="closeSB()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo">⚡ LOR<em>RY</em></div>
+      <div class="sb-drv">
+        <div class="sb-av">RK</div>
+        <div>
+          <div class="sb-nm">Ravi Kumar</div>
+          <div class="sb-role">🟢 On Duty · MH-12-AK-4821</div>
+        </div>
       </div>
-      <div class="logo">⚡ LORRY<em>GO</em></div>
-      <div class="contract-chip">LONG-TERM CONTRACT</div>
     </div>
-    <div class="hdr-right">
-      <button onclick="history.back();showToast('⬅️ Going back…','var(--muted)')"
-        style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:700;padding:7px 13px;border-radius:10px;cursor:pointer;letter-spacing:.3px;">
-        <i class="fas fa-arrow-left" style="font-size:11px;"></i> Back
-      </button>
-      <button onclick="showToast('🔔 Notifications','var(--yellow)')"
-        style="position:relative;width:36px;height:36px;border-radius:10px;background:rgba(255,214,0,.1);border:1px solid rgba(255,214,0,.3);color:var(--yellow);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-        <i class="fas fa-bell"></i>
+    <div class="sb-nav">
+      <div class="sb-grp">Navigation</div>
+      <div class="sb-link on"><i class="fas fa-home"></i> Home</div>
+      <div class="sb-link" onclick="toast('🚛 My Trips…','var(--green)')"><i class="fas fa-truck"></i> My Trips</div>
+      <div class="sb-link" onclick="toast('📅 Schedule…','var(--green)')"><i class="fas fa-calendar-alt"></i> Schedule
+      </div>
+      <div class="sb-link" onclick="toast('🗺️ Live Map…','var(--blue)')"><i class="fas fa-map-marked-alt"></i> Live Map
+      </div>
+      <div class="sb-grp">Account</div>
+      <div class="sb-link" onclick="toast('💰 Earnings…','var(--green)')"><i class="fas fa-rupee-sign"></i> Earnings
+      </div>
+      <div class="sb-link" onclick="toast('👤 Profile…','var(--muted)')"><i class="fas fa-user-circle"></i> Profile
+      </div>
+      <div class="sb-link" onclick="toast('📄 Documents…','var(--muted)')"><i class="fas fa-file-alt"></i> Documents
+      </div>
+      <div class="sb-grp">Support</div>
+      <div class="sb-link" onclick="toast('🆘 Help…','var(--orange)')"><i class="fas fa-headset"></i> Help &amp; Support
+      </div>
+      <div class="sb-link" onclick="toast('⚙️ Settings…','var(--muted)')"><i class="fas fa-cog"></i> Settings</div>
+    </div>
+    <div class="sb-foot">
+      <button class="sb-close-btn" onclick="closeSB()"><i class="fas fa-sign-out-alt"></i> &nbsp;Close Sidebar</button>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION PANEL -->
+  <div class="np-ov" id="npOv" onclick="closeNP()"></div>
+  <div class="np-panel" id="npPanel">
+    <div class="np-hdr">
+      <div class="np-ttl">
+        <i class="fas fa-bell" style="color:var(--yellow)"></i> Notifications
         <span
-          style="position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--bg);"></span>
+          style="font-size:9px;background:rgba(255,23,68,.2);border:1px solid rgba(255,23,68,.4);color:var(--red);padding:2px 7px;border-radius:20px;font-weight:800;">3
+          NEW</span>
+      </div>
+      <button class="np-x" onclick="closeNP()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="np-list">
+      <div class="ni new" onclick="toast('📍 Trip alert viewed','var(--yellow)')">
+        <div class="ni-ic" style="background:rgba(255,214,0,.12);color:var(--yellow)">🚛</div>
+        <div class="ni-bd">
+          <div class="ni-ttl">Trip #TR-2847 In Transit</div>
+          <div class="ni-msg">Your current trip Mumbai → Pune is on track. ETA: 2:00 PM</div>
+          <div class="ni-ts">08:45 AM · Today</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+      <div class="ni new" onclick="toast('💰 Payment viewed','var(--green)')">
+        <div class="ni-ic" style="background:rgba(0,230,118,.12);color:var(--green)">💰</div>
+        <div class="ni-bd">
+          <div class="ni-ttl">Payment Received</div>
+          <div class="ni-msg">₹36,000 for Trip #TR-2839 has been credited to your account</div>
+          <div class="ni-ts">Yesterday · 6:30 PM</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+      <div class="ni new" onclick="toast('📋 Contract viewed','var(--green)')">
+        <div class="ni-ic" style="background:rgba(41,121,255,.12);color:#82b1ff">📋</div>
+        <div class="ni-bd">
+          <div class="ni-ttl">Contract Renewed</div>
+          <div class="ni-msg">Sharma Enterprises has extended your contract by 30 days</div>
+          <div class="ni-ts">Yesterday · 11:00 AM</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+      <div class="ni" onclick="toast('📅 Schedule viewed','var(--muted)')">
+        <div class="ni-ic" style="background:rgba(120,144,156,.12);color:var(--muted)">📅</div>
+        <div class="ni-bd">
+          <div class="ni-ttl">Next Trip Scheduled</div>
+          <div class="ni-msg">Trip #TRPR-5678 (Return) scheduled for Fri 28 Mar at 2:00 PM</div>
+          <div class="ni-ts">2 days ago</div>
+        </div>
+      </div>
+      <div class="ni" onclick="toast('⚠️ Alert viewed','var(--orange)')">
+        <div class="ni-ic" style="background:rgba(255,145,0,.12);color:var(--orange)">⚠️</div>
+        <div class="ni-bd">
+          <div class="ni-ttl">Document Expiry Reminder</div>
+          <div class="ni-msg">Your vehicle fitness certificate expires in 15 days. Please renew.</div>
+          <div class="ni-ts">3 days ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-l">
+      <button class="mbtn" id="mbtn" onclick="toggleSB()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="logo">⚡ LOR<em>RY</em></div>
+    </div>
+    <div class="hdr-r">
+      <button class="nbtn" onclick="toggleNP()">
+        <i class="fas fa-bell"></i>
+        <span class="ndot" id="ndot"></span>
       </button>
     </div>
   </div>
 
-  <!-- ════════════════════════════════
-     PAGE: CONTRACT OVERVIEW (Home)
-════════════════════════════════ -->
-  <div class="page active" id="pg-home">
-
-    <!-- Active Trip -->
-    <div class="active-trip-section">
-      <div class="section-head">
-        <div class="sec-title">🟡 Active Trip</div>
-      </div>
-      <div class="at-card">
-        <div class="at-top">
-          <div class="at-id">TRIP #TR-2847 &nbsp;·&nbsp; Today 08:30 AM</div>
-          <div class="at-type-badge tb-single">Single Load</div>
-        </div>
-        <div class="at-body">
-          <!-- Route row: FROM — [Load Badge] — TO — Status on right -->
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-            <div class="at-city" style="flex:0 0 auto;max-width:90px;">
-              <div class="at-city-tag">From</div>
-              <div class="at-city-name" style="font-size:13px;">Mumbai</div>
-              <div class="at-city-sub">Dharavi</div>
-            </div>
-            <div class="at-route-stack">
-              <div class="at-route-line">
-                <div class="at-route-dot"></div>
-                <div class="at-route-dash"></div>
-              </div>
-              <div class="at-load-badge"><i class="fas fa-weight-hanging"></i> 10,200 KG</div>
-              <div class="at-route-line">
-                <div class="at-route-dash"></div>
-                <div class="at-route-dot" style="background:var(--orange);"></div>
-              </div>
-            </div>
-            <div class="at-city" style="flex:0 0 auto;max-width:90px;">
-              <div class="at-city-tag">To</div>
-              <div class="at-city-name" style="font-size:13px;">Pune</div>
-              <div class="at-city-sub">Hadapsar</div>
-            </div>
-            <div style="margin-left:auto;flex-shrink:0;">
-              <div class="status-badge sb-transit" style="font-size:10px;padding:4px 10px;">In Transit</div>
-            </div>
-          </div>
-          <div class="at-mini-stats">
-            <div class="at-mini">
-              <div class="at-mini-val">148 KM</div>
-              <div class="at-mini-lbl">Distance</div>
-            </div>
-            <div class="at-mini">
-              <div class="at-mini-val" style="color:var(--green)">₹36,000</div>
-              <div class="at-mini-lbl">Trip Value</div>
-            </div>
-            <div class="at-mini">
-              <div class="at-mini-val" style="color:var(--yellow)">~2:00 PM</div>
-              <div class="at-mini-lbl">ETA</div>
-            </div>
-          </div>
-        </div>
-        <div class="at-btn-row">
-          <button class="at-btn at-btn-primary" onclick="goPage('pg-trip')"><i class="fas fa-play-circle"></i> Continue
-            Trip</button>
-          <button class="at-btn at-btn-ghost" onclick="goPage('pg-schedule')"><i class="fas fa-calendar"></i>
-            Scheduled</button>
-        </div>
+  <!-- TRIP BAR -->
+  <div class="tbar">
+    <div class="tbar-l">
+      <button class="back-btn" onclick="toast('⬅️ Going back…','var(--muted)')">
+        <i class="fas fa-arrow-left" style="font-size:10px;"></i> Back
+      </button>
+      <div>
+        <div class="tb-id">TR-LT-2847 <span class="tb-tag">Long-Term Trip</span></div>
+        <div class="tb-sub">Sharma Enterprises Ltd. · 6-Month Contract</div>
       </div>
     </div>
+    <div class="status-pill"><i class="fas fa-circle" style="font-size:6px;"></i> In Progress</div>
+  </div>
 
-    <!-- Contract Hero Card -->
-    <div class="contract-hero">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div class="ch-name" style="margin-bottom:0;">Sharma Enterprises Ltd.</div>
-        <div style="display:flex;gap:8px;flex-shrink:0;">
-          <a href="tel:+919999900001"
-            style="width:34px;height:34px;border-radius:50%;background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.4);display:flex;align-items:center;justify-content:center;text-decoration:none;"
-            onclick="showToast('📞 Calling Sharma Enterprises…','var(--green)');return false;">
-            <i class="fas fa-phone" style="color:var(--green);font-size:13px;"></i>
-          </a>
-          <a href="sms:+919999900001"
-            style="width:34px;height:34px;border-radius:50%;background:rgba(41,121,255,.15);border:1px solid rgba(41,121,255,.4);display:flex;align-items:center;justify-content:center;text-decoration:none;"
-            onclick="showToast('💬 Opening message…','var(--blue)');return false;">
-            <i class="fas fa-comment-dots" style="color:#82b1ff;font-size:13px;"></i>
-          </a>
-        </div>
+  <!-- MAP SECTION -->
+  <div class="map-wrap">
+    <div class="map-cv">
+      <div class="map-grid"></div>
+      <div class="map-road"></div>
+      <div class="map-pin" style="left:10%;">
+        <div class="map-pdot" style="color:var(--green);background:var(--green);"></div>
+        <div class="map-plbl">📦 Dharavi</div>
       </div>
-      <div class="ch-party">📍 Mumbai → Pune Corridor &nbsp;·&nbsp; 6-Month Agreement</div>
-      <div class="ch-stats">
-        <div class="ch-stat">
-          <div class="ch-stat-val" id="ov-total-trips">24</div>
-          <div class="ch-stat-lbl">Total Trips</div>
-        </div>
-        <div class="ch-stat">
-          <div class="ch-stat-val" style="color:var(--green)" id="ov-done-trips">18</div>
-          <div class="ch-stat-lbl">Completed</div>
-        </div>
-        <div class="ch-stat">
-          <div class="ch-stat-val" style="color:var(--yellow)" id="ov-left-trips">6</div>
-          <div class="ch-stat-lbl">Remaining</div>
-        </div>
+      <div class="map-pin" style="right:10%;">
+        <div class="map-pdot" style="color:var(--orange);background:var(--orange);"></div>
+        <div class="map-plbl">🏭 Hadapsar</div>
+      </div>
+      <div class="map-truck">🚛</div>
+      <div
+        style="position:absolute;top:10px;left:12px;font-size:9px;font-weight:800;color:rgba(41,121,255,.8);letter-spacing:.8px;text-transform:uppercase;">
+        LIVE ROUTE</div>
+      <div
+        style="position:absolute;top:10px;right:12px;font-size:9px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:4px;">
+        <span
+          style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:bl 1.5s infinite;display:inline-block;"></span>
+        TRACKING
       </div>
     </div>
-
-    <!-- Contract Progress -->
-    <div class="cp-wrap">
-      <div class="cp-head">
-        <span class="cp-label">Contract Progress</span>
-        <span class="cp-pct">75%</span>
+    <div class="map-info">
+      <div class="mib">
+        <div class="mib-ic" style="color:var(--blue)">📏</div>
+        <div class="mib-v">148 KM</div>
+        <div class="mib-l">Total Dist.</div>
       </div>
-      <div class="cp-track">
-        <div class="cp-fill" style="width:75%"></div>
+      <div class="mib">
+        <div class="mib-ic" style="color:var(--yellow)">⏱️</div>
+        <div class="mib-v">~2:00 PM</div>
+        <div class="mib-l">ETA</div>
       </div>
-    </div>
-
-    <!-- Contract Meta (Trip Details + Cargo only) -->
-    <div class="contract-meta">
-      <div class="cm-card">
-        <div class="cm-lbl"><i class="fas fa-truck"></i> Trip Details</div>
-        <div class="cm-row"><span class="cm-key">Route</span><span class="cm-val">Mumbai → Pune</span></div>
-        <div class="cm-row"><span class="cm-key">Distance</span><span class="cm-val">148 KM</span></div>
-        <div class="cm-row"><span class="cm-key">Load Type</span><span class="cm-val">FMCG / Mixed</span></div>
+      <div class="mib">
+        <div class="mib-ic" style="color:var(--green)">📆</div>
+        <div class="mib-v">181 Days</div>
+        <div class="mib-l">Contract</div>
       </div>
-      <div class="cm-card">
-        <div class="cm-lbl"><i class="fas fa-box"></i> Cargo Specs</div>
-        <div class="cm-row"><span class="cm-key">Avg. Load Weight</span><span class="cm-val">8,000–12,000 KG</span>
-        </div>
-        <div class="cm-row"><span class="cm-key">Trip Type</span><span class="cm-val">Single &amp; Return</span></div>
-        <div class="cm-row"><span class="cm-key">Special</span><span class="cm-val">Temp. Sensitive</span></div>
+      <div class="mib">
+        <div class="mib-ic" style="color:var(--orange)">🔄</div>
+        <div class="mib-v">18 / 24</div>
+        <div class="mib-l">Trips Run</div>
       </div>
     </div>
+  </div>
 
-    <!-- Contract Details Panel (collapse/expand arrow on left side only) -->
-    <div class="review-panel">
-      <div class="rp-header">
-        <button class="rp-expand" onclick="toggleReview()"
-          style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:0 6px 0 0;display:flex;align-items:center;"
-          id="review-toggle-btn">▶</button>
-        <div class="rp-title"><i class="fas fa-clipboard-check"></i> Contract Details</div>
+  <!-- CONTRACT HERO -->
+  <div class="ch" onclick="openRV()">
+    <div class="ch-tag">📋 Long-Term Contract</div>
+    <div class="ch-top">
+      <div class="ch-name">Sharma Enterprises Ltd.</div>
+      <div class="ch-acts">
+        <a class="ch-a" style="background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.4);color:var(--green);"
+          onclick="event.stopPropagation();toast('📞 Calling Sharma…','var(--green)');return false;">
+          <i class="fas fa-phone"></i>
+        </a>
+        <a class="ch-a" style="background:rgba(41,121,255,.12);border-color:rgba(41,121,255,.4);color:#82b1ff;"
+          onclick="event.stopPropagation();toast('💬 Opening message…','var(--blue)');return false;">
+          <i class="fas fa-comment-dots"></i>
+        </a>
       </div>
-      <div class="rp-body" id="review-panel-body" style="display:none;">
+    </div>
+    <div class="ch-party">📍 Mumbai → Pune Corridor &nbsp;·&nbsp; 6-Month Agreement</div>
+    <div class="ch-hint"><i class="fas fa-hand-pointer" style="font-size:10px;"></i> Tap to view full contract details
+    </div>
+    <div class="cp-hdr"><span class="cp-lbl">Contract Progress</span><span class="cp-pct">75%</span></div>
+    <div class="cp-track">
+      <div class="cp-fill" style="width:75%"></div>
+    </div>
+    <div class="ch-stats">
+      <div class="ch-stat">
+        <div class="ch-sv">24</div>
+        <div class="ch-sl">Total Trips</div>
+      </div>
+      <div class="ch-stat">
+        <div class="ch-sv" style="color:var(--green)">18</div>
+        <div class="ch-sl">Completed</div>
+      </div>
+      <div class="ch-stat">
+        <div class="ch-sv" style="color:var(--yellow)">6</div>
+        <div class="ch-sl">Remaining</div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Company Information -->
-        <div class="rp-section">
-          <div class="rp-sec-title"><i class="fas fa-building"></i> Company Information</div>
-          <div class="rp-grid">
-            <div class="rp-card">
-              <div class="rp-card-lbl">Company</div>
-              <div class="rp-card-val" style="font-size:13px;">Sharma Enterprises Ltd.</div>
+
+  <!-- REVIEW PANEL -->
+  <div class="rv-ov" id="rvOv" onclick="if(event.target===this)closeRV()">
+    <div class="rv-sheet">
+      <div class="rv-drag"></div>
+      <div class="rv-hdr">
+        <div class="rv-ttl"><i class="fas fa-clipboard-check"></i> Contract Details</div>
+        <button class="rv-x" onclick="closeRV()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="rv-body">
+        <div class="rv-sec">
+          <div class="rv-stl"><i class="fas fa-building"></i> Company Information</div>
+          <div class="rv-grid">
+            <div class="rv-card">
+              <div class="rv-cl">Company</div>
+              <div class="rv-cv" style="font-size:12px;">Sharma Enterprises Ltd.</div>
             </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Contact</div>
-              <div class="rp-card-val" style="font-size:13px;">Rajan Mehta</div>
+            <div class="rv-card">
+              <div class="rv-cl">Contact Person</div>
+              <div class="rv-cv" style="font-size:12px;">Rajan Mehta</div>
             </div>
           </div>
-          <div style="margin-top:6px;">
-            <div class="rp-row"><span class="rp-k">Primary Contact No.</span><span class="rp-v"><a
-                  href="tel:+919999900001"
-                  style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.4);text-decoration:none;"
-                  onclick="showToast('📞 Calling +91 99999 00001…','var(--green)');return false;"><i
-                    class="fas fa-phone" style="color:var(--green);font-size:12px;"></i></a></span>
+          <div class="rv-row"><span class="rv-k">Primary Contact</span><span class="rv-v">+91 99999 00001</span></div>
+          <div class="rv-row"><span class="rv-k">Company Phone</span><span class="rv-v">+91 22 1234 5678</span></div>
+          <div class="rv-row"><span class="rv-k">Email</span><span class="rv-v"><a href="/cdn-cgi/l/email-protection"
+                class="__cf_email__"
+                data-cfemail="6900070f06291a01081b04080c071d470a0604">[email&#160;protected]</a></span></div>
+          <div class="rv-row"><span class="rv-k">HQ Address</span><span class="rv-v">Dharavi Industrial Area,
+              Mumbai</span></div>
+        </div>
+        <div class="rv-sec">
+          <div class="rv-stl"><i class="fas fa-route"></i> Contract &amp; Route</div>
+          <div class="rv-grid">
+            <div class="rv-card">
+              <div class="rv-cl">Start Date</div>
+              <div class="rv-cv">01 Jan 2025</div>
             </div>
-            <div class="rp-row"><span class="rp-k">Company Contact No.</span><span class="rp-v"><a
-                  href="tel:+912212345678"
-                  style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.4);text-decoration:none;"
-                  onclick="showToast('📞 Calling +91 22 1234 5678…','var(--green)');return false;"><i
-                    class="fas fa-phone" style="color:var(--green);font-size:12px;"></i></a></span>
+            <div class="rv-card">
+              <div class="rv-cl">End Date</div>
+              <div class="rv-cv">30 Jun 2025</div>
             </div>
-            <div class="rp-row"><span class="rp-k">Email Address</span><span class="rp-v"><a
-                  href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                  data-cfemail="d4a6b5beb5ba94a7bcb5a6b9b5f9b1baa0fab7bbb9">[email&#160;protected]</a></span></div>
-            <div class="rp-row"><span class="rp-k">Address / HQ</span><span class="rp-v">Dharavi Industrial Area,
-                Mumbai</span></div>
+            <div class="rv-card">
+              <div class="rv-cl">Duration</div>
+              <div class="rv-cv">181 Days</div>
+            </div>
+            <div class="rv-card">
+              <div class="rv-cl">Duty Hours</div>
+              <div class="rv-cv">08:00–18:00</div>
+            </div>
+          </div>
+          <div class="rv-row"><span class="rv-k">Pick-up</span><span class="rv-v">Mumbai — Dharavi Warehouse</span>
+          </div>
+          <div class="rv-row"><span class="rv-k">Destination</span><span class="rv-v">Pune — Hadapsar Industrial
+              Zone</span></div>
+          <div class="rv-row"><span class="rv-k">Monthly Trips</span><span class="rv-v">4 trips/month</span></div>
+        </div>
+        <div class="rv-sec">
+          <div class="rv-stl"><i class="fas fa-rupee-sign"></i> Financial Terms</div>
+          <div class="rv-grid">
+            <div class="rv-card">
+              <div class="rv-cl">Contract Value</div>
+              <div class="rv-cv" style="color:var(--green)">₹8,64,000</div>
+            </div>
+            <div class="rv-card">
+              <div class="rv-cl">Per Trip Rate</div>
+              <div class="rv-cv" style="color:var(--green)">₹36,000</div>
+            </div>
+            <div class="rv-card">
+              <div class="rv-cl">Advance Paid</div>
+              <div class="rv-cv" style="color:var(--teal)">₹2,00,000</div>
+            </div>
+            <div class="rv-card">
+              <div class="rv-cl">Payment Mode</div>
+              <div class="rv-cv" style="font-size:11px;">NEFT/RTGS</div>
+            </div>
+          </div>
+          <div class="rv-row"><span class="rv-k">Payment Cycle</span><span class="rv-v">Monthly — 5th of next
+              month</span></div>
+          <div class="rv-row"><span class="rv-k">Detention Rate</span><span class="rv-v">₹2,000/hr after 4hr</span>
           </div>
         </div>
-
-        <!-- Contract & Route -->
-        <div class="rp-section">
-          <div class="rp-sec-title"><i class="fas fa-route"></i> Contract &amp; Route</div>
-          <div class="rp-grid">
-            <div class="rp-card">
-              <div class="rp-card-lbl">Start Date</div>
-              <div class="rp-card-val">01 Jan 2025</div>
+        <div class="rv-sec">
+          <div class="rv-stl"><i class="fas fa-truck"></i> Vehicle &amp; Compliance</div>
+          <div class="rv-row"><span class="rv-k">Vehicle No.</span><span class="rv-v">MH 12 AK 4821</span></div>
+          <div class="rv-row"><span class="rv-k">Type</span><span class="rv-v">22-Wheeler / Multi-axle</span></div>
+          <div class="rv-row"><span class="rv-k">Capacity</span><span class="rv-v">16,000 KG</span></div>
+          <div style="margin-top:8px;">
+            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> GPS Tracking Active
             </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">End Date</div>
-              <div class="rp-card-val">30 Jun 2025</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Duration</div>
-              <div class="rp-card-val">181 days</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Duty Time</div>
-              <div class="rp-card-val">08:00 – 18:00</div>
-            </div>
-          </div>
-          <div style="margin-top:6px;">
-            <div class="rp-row"><span class="rp-k">Pick-up Location</span><span class="rp-v">Mumbai — Dharavi
-                Warehouse</span></div>
-            <div class="rp-row"><span class="rp-k">Destination</span><span class="rp-v">Pune — Hadapsar Industrial
-                Zone</span></div>
-            <div class="rp-row"><span class="rp-k">Est. Monthly Trips</span><span class="rp-v">4 trips/month</span>
-            </div>
-            <div class="rp-row"><span class="rp-k">Range of Trip</span><span class="rp-v">148 km</span></div>
-            <div class="rp-row"><span class="rp-k">Frequency</span><span class="rp-v">Weekly (Mon, Wed, Fri, Sat)</span>
-            </div>
-            <div class="rp-row"><span class="rp-k">Route Type</span><span class="rp-v">Round-trip</span></div>
+            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> Insurance Valid till Dec
+              2025</div>
+            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> Pollution Certificate
+              Valid</div>
+            <div class="rv-comp" style="color:var(--orange);"><span style="color:var(--orange)"><i
+                  class="fas fa-exclamation-circle"></i></span> Fitness Cert. expires in 15 days</div>
           </div>
         </div>
-
-        <!-- Cargo Details -->
-        <div class="rp-section">
-          <div class="rp-sec-title"><i class="fas fa-boxes"></i> Cargo Details</div>
-          <div class="rp-grid">
-            <div class="rp-card">
-              <div class="rp-card-lbl">Trucks Required</div>
-              <div class="rp-card-val">2</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Driver Required</div>
-              <div class="rp-card-val">Yes</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Truck Type</div>
-              <div class="rp-card-val" style="font-size:12px;">Semi Trailer</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Freight Capacity</div>
-              <div class="rp-card-val">12,000 kg</div>
-            </div>
-          </div>
-          <div style="margin-top:6px;">
-            <div class="rp-row"><span class="rp-k">Goods Type</span><span class="rp-v">Packaged (FMCG)</span></div>
-            <div class="rp-row"><span class="rp-k">Goods Name</span><span class="rp-v">Rice, Flour, Pulses</span></div>
-            <div class="rp-row"><span class="rp-k">Special Notes</span><span class="rp-v">Temperature Sensitive</span>
-            </div>
-            <div class="rp-row"><span class="rp-k">Loading/Unloading Facility</span><span class="rp-v">Available</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Service & Compliance -->
-        <div class="rp-section">
-          <div class="rp-sec-title"><i class="fas fa-shield-alt"></i> Service &amp; Compliance</div>
-          <div class="rp-compliance-item"><span class="rp-compliance-check">✓</span> Insurance Requirements</div>
-          <div class="rp-compliance-item"><span class="rp-compliance-check">✓</span> API Tracking Integration</div>
-          <div class="rp-compliance-item"><span class="rp-compliance-check">✓</span> HSE Site Compliance</div>
-          <div class="rp-compliance-item"><span class="rp-compliance-check">✓</span> Equipment Standard</div>
-        </div>
-
-        <!-- Pricing & Notes -->
-        <div class="rp-section">
-          <div class="rp-sec-title"><i class="fas fa-rupee-sign"></i> Pricing &amp; Notes</div>
-          <div class="rp-grid">
-            <div class="rp-card">
-              <div class="rp-card-lbl">Total Contract Amount</div>
-              <div class="rp-card-val" style="color:var(--green)">₹8,64,000</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Cycle Amount</div>
-              <div class="rp-card-val" style="color:var(--yellow)">₹36,000</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Payment Cycle</div>
-              <div class="rp-card-val">30 days</div>
-            </div>
-            <div class="rp-card">
-              <div class="rp-card-lbl">Other Expenses</div>
-              <div class="rp-card-val" style="font-size:11px;">Toll + Accommodation</div>
-            </div>
-          </div>
-          <div style="margin-top:6px;">
-            <div class="rp-row"><span class="rp-k">Additional Comments</span><span class="rp-v">Priority FMCG delivery.
-                Maintain cold chain.</span></div>
-          </div>
-        </div>
-
-        <!-- Attached Documents -->
-        <div class="rp-section">
-          <div class="rp-sec-title"><i class="fas fa-paperclip"></i> Attached Documents</div>
-          <div class="rp-attach">
-            <div class="rp-attach-icon">📄</div>
+        <div class="rv-sec">
+          <div class="rv-stl"><i class="fas fa-file-signature"></i> Signed Contract</div>
+          <div
+            style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.25);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:10px 12px;cursor:pointer;"
+            onclick="toast('📄 Opening contract PDF…','var(--blue)')">
+            <span style="font-size:22px;">📄</span>
             <div>
-              <div class="rp-attach-name">Contract_Agreement_CNT-2025-047.pdf</div>
-              <div class="rp-attach-meta">PDF &nbsp;·&nbsp; 1.2 MB</div>
+              <div style="font-size:12px;font-weight:700;color:#fff;">Sharma_Enterprises_Contract.pdf</div>
+              <div style="font-size:10px;color:var(--muted);">1.2 MB · Signed 01 Jan 2025</div>
             </div>
-          </div>
-        </div>
-
-      </div><!-- end rp-body -->
-    </div><!-- end review-panel -->
-
-    <!-- Trip History -->
-    <div class="trip-list" style="margin-top:16px;">
-      <div class="section-head">
-        <div class="sec-title">📋 Trip History</div>
-        <div class="sec-action" onclick="goPage('pg-history')">View All →</div>
-      </div>
-      <div class="trip-item ti-completed" onclick="goPage('pg-history')">
-        <div class="ti-icon single"><i class="fas fa-truck" style="color:#82b1ff"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TRPS#-0001</span><span class="ti-date">25 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Dharavi → Pune Hadapsar (Single Load)</div>
-          <div class="ti-bottom"><span class="ti-status tis-done">Completed</span><span class="ti-earn">₹34,500</span>
-          </div>
-        </div>
-      </div>
-      <div class="trip-item ti-completed" onclick="goPage('pg-history')">
-        <div class="ti-icon" style="background:rgba(0,230,118,.12);"><i class="fas fa-sync-alt"
-            style="color:var(--green)"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TRPR#-1234</span><span class="ti-date">21 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Andheri → Pune Wakad (Return Trip)</div>
-          <div class="ti-bottom"><span class="ti-status tis-done">Completed</span><span
-              style="font-size:9px;color:var(--muted);margin-left:4px;">🔄 Return</span><span
-              class="ti-earn">₹41,200</span></div>
-        </div>
-      </div>
-      <div class="trip-item ti-completed" onclick="goPage('pg-history')">
-        <div class="ti-icon single"><i class="fas fa-truck" style="color:#82b1ff"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TRPS#-0002</span><span class="ti-date">18 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Dharavi → Pune Kothrud (Single Load)</div>
-          <div class="ti-bottom"><span class="ti-status tis-done">Completed</span><span class="ti-earn">₹36,000</span>
+            <i class="fas fa-download" style="margin-left:auto;color:var(--green);font-size:14px;"></i>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-  </div><!-- end pg-home -->
+  <!-- RIDE CARD -->
+  <div class="rc-wrap">
+    <div class="rc" id="rc">
 
-
-  <!-- ════════════════════════════
-     PAGE: SCHEDULE
-════════════════════════════ -->
-  <div class="page" id="pg-schedule">
-    <div class="schedule-header">
-      <div style="padding:14px 0 10px;font-size:16px;font-weight:900;color:#fff;">📅 Trip Schedule</div>
-
-      <!-- Filter Pills — all functional -->
-      <div class="filter-row">
-        <div class="filter-pill active" onclick="filterTrips('all',this)">All</div>
-        <div class="filter-pill" onclick="filterTrips('week',this)">This Week</div>
-        <div class="filter-pill" onclick="filterTrips('month',this)">This Month</div>
-        <div class="filter-pill" onclick="filterTrips('upcoming',this)">Upcoming</div>
-        <div class="filter-pill" onclick="filterTrips('completed',this)">Completed</div>
-      </div>
-
-      <!-- Calendar Strip -->
-      <div class="calendar-strip">
-        <div class="cal-day" onclick="calSelect(this,'24')">
-          <div class="cal-day-name">Mon</div>
-          <div class="cal-day-num">24</div>
-        </div>
-        <div class="cal-day has-trip" onclick="calSelect(this,'25')">
-          <div class="cal-day-name">Tue</div>
-          <div class="cal-day-num">25</div>
-          <div class="cal-day-dot"></div>
-        </div>
-        <div class="cal-day" onclick="calSelect(this,'26')">
-          <div class="cal-day-name">Wed</div>
-          <div class="cal-day-num">26</div>
-        </div>
-        <div class="cal-day active has-trip" onclick="calSelect(this,'27')">
-          <div class="cal-day-name">Thu</div>
-          <div class="cal-day-num">27</div>
-          <div class="cal-day-dot"></div>
-        </div>
-        <div class="cal-day has-trip" onclick="calSelect(this,'28')">
-          <div class="cal-day-name">Fri</div>
-          <div class="cal-day-num">28</div>
-          <div class="cal-day-dot"></div>
-        </div>
-        <div class="cal-day" onclick="calSelect(this,'29')">
-          <div class="cal-day-name">Sat</div>
-          <div class="cal-day-num">29</div>
-        </div>
-        <div class="cal-day has-trip" onclick="calSelect(this,'31')">
-          <div class="cal-day-name">Mon</div>
-          <div class="cal-day-num">31</div>
-          <div class="cal-day-dot"></div>
-        </div>
-        <div class="cal-day has-trip" onclick="calSelect(this,'1')">
-          <div class="cal-day-name">Tue</div>
-          <div class="cal-day-num">1</div>
-          <div class="cal-day-dot"></div>
-        </div>
-        <div class="cal-day" onclick="calSelect(this,'2')">
-          <div class="cal-day-name">Wed</div>
-          <div class="cal-day-num">2</div>
-        </div>
-        <div class="cal-day" onclick="calSelect(this,'3')">
-          <div class="cal-day-name">Thu</div>
-          <div class="cal-day-num">3</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Trip count summary -->
-    <div style="padding:0 14px 10px;display:flex;align-items:center;justify-content:space-between;">
-      <div style="font-size:11px;color:var(--muted);" id="sched-count">Showing <b style="color:#fff">5</b> trips</div>
-      <div style="font-size:10px;color:var(--muted);display:flex;gap:10px;">
-        <span><span style="color:#82b1ff;">●</span> Single</span>
-        <span><span style="color:var(--green);">●</span> Return</span>
-      </div>
-    </div>
-
-    <!-- Schedule List -->
-    <div class="sched-list" id="sched-list">
-
-      <!-- ── TRIP 1: ACTIVE · Single · Today ── -->
-      <div class="sc-card" data-filter="all week month" data-status="active" data-day="27">
-        <div
-          style="background:linear-gradient(135deg,#0d2818,#112a1e);border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,230,118,.15);">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="font-size:10px;font-weight:800;color:var(--green);">TRPS#-0003</div>
-            <div style="font-size:9px;color:var(--muted);">Today — 27 Mar 2025 · 08:30 AM</div>
+      <!-- handle: [left btn] [drag bar] [right btn] — allotment style -->
+      <div class="rc-handle" id="rcHandle" onclick="toggleRC()">
+        <div class="rc-handle-row">
+          <button class="rc-opt rc-opt-pref" title="Preferences"
+            onclick="event.stopPropagation();toast('⚙️ Preferences…','var(--green)')">
+            <i class="fas fa-sliders-h"></i>
+          </button>
+          <div class="rc-bar-wrap">
+            <div class="rc-bar"></div>
           </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="at-type-badge tb-single">Single Trip</span>
-            <span class="ti-status tis-active">🟡 In Progress</span>
-          </div>
+          <button class="rc-opt rc-opt-more" title="More Options"
+            onclick="event.stopPropagation();toast('••• More Options…','var(--muted)')">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
         </div>
-        <!-- Route: From → [Load] → To · Status right -->
-        <div style="padding:12px 14px 0;display:flex;align-items:center;gap:4px;">
-          <div style="min-width:80px;">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">From</div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Mumbai</div>
-            <div style="font-size:10px;color:var(--muted);">Dharavi</div>
-          </div>
-          <div class="at-route-stack" style="flex:1;">
-            <div class="at-route-line">
-              <div class="at-route-dot"></div>
-              <div class="at-route-dash" style="max-width:100%;flex:1;"></div>
+        <div class="rc-timer-center">
+          <div class="rc-trip-type">Long-Term Trip</div>
+          <div class="rc-timer-row">
+            <div class="rc-timer-pill rc-elapsed-pill" title="Trip elapsed time">
+              <i class="fas fa-play-circle"></i>
+              <span id="elapsedLabel">00:00:00</span>
             </div>
-            <div class="at-load-badge"><i class="fas fa-weight-hanging"></i> 10,200 KG</div>
-            <div class="at-route-line">
-              <div class="at-route-dash" style="max-width:100%;flex:1;"></div>
-              <div class="at-route-dot" style="background:var(--orange);"></div>
-            </div>
-          </div>
-          <div style="min-width:80px;text-align:right;">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">To</div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Pune</div>
-            <div style="font-size:10px;color:var(--muted);">Hadapsar</div>
-          </div>
-        </div>
-        <div class="si-details" style="margin:10px 14px 0;">
-          <div class="si-det">
-            <div class="si-det-val">148 KM</div>
-            <div class="si-det-lbl">Distance</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--green);">₹36,000</div>
-            <div class="si-det-lbl">Amount</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--yellow);">~2:00 PM</div>
-            <div class="si-det-lbl">ETA</div>
-          </div>
-        </div>
-        <div class="si-action-row" style="padding:10px 14px 14px;">
-          <button class="si-btn si-btn-green" onclick="goPage('pg-trip')"><i class="fas fa-play-circle"></i> Continue
-            Trip</button>
-          <button class="si-btn si-btn-ghost" onclick="showToast('🗺️ Opening route map…','var(--blue)')"><i
-              class="fas fa-map-marked-alt"></i> Route</button>
-        </div>
-      </div>
-
-      <!-- ── TRIP 2: UPCOMING · Return · Fri 28 ── -->
-      <div class="sc-card" data-filter="all week upcoming" data-status="upcoming" data-day="28">
-        <div
-          style="background:linear-gradient(135deg,#0a1a10,#0d1f1a);border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,230,118,.1);">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="font-size:10px;font-weight:800;color:var(--green);">TRPR#-5678</div>
-            <div style="font-size:9px;color:var(--muted);">Fri 28 Mar 2025 · 02:00 PM</div>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="at-type-badge tb-return"
-              style="background:rgba(0,230,118,.15);color:var(--green);border:1px solid var(--green);">🔄 Return
-              Trip</span>
-            <span class="ti-status tis-sched">Scheduled</span>
-          </div>
-        </div>
-        <!-- Outbound route -->
-        <div style="padding:10px 14px 0;">
-          <div
-            style="font-size:8px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
-            🚛 Outbound</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="min-width:80px;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">From</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Mumbai</div>
-              <div style="font-size:10px;color:var(--muted);">Dharavi Depot</div>
-            </div>
-            <div class="at-route-stack" style="flex:1;">
-              <div class="at-route-line">
-                <div class="at-route-dot"></div>
-                <div class="at-route-dash" style="max-width:100%;flex:1;"></div>
-              </div>
-              <div class="at-load-badge"><i class="fas fa-weight-hanging"></i> 12,000 KG</div>
-              <div class="at-route-line">
-                <div class="at-route-dash" style="max-width:100%;flex:1;"></div>
-                <div class="at-route-dot" style="background:var(--orange);"></div>
-              </div>
-            </div>
-            <div style="min-width:80px;text-align:right;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">To</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Pune</div>
-              <div style="font-size:10px;color:var(--muted);">Hadapsar MIDC</div>
-            </div>
-          </div>
-        </div>
-        <!-- Divider -->
-        <div style="margin:10px 14px;display:flex;align-items:center;gap:8px;">
-          <div style="flex:1;height:1px;background:rgba(255,255,255,.07);"></div>
-          <div
-            style="font-size:8px;font-weight:800;color:var(--green);letter-spacing:1px;padding:2px 8px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:20px;">
-            🔄 RETURN</div>
-          <div style="flex:1;height:1px;background:rgba(255,255,255,.07);"></div>
-        </div>
-        <!-- Return route -->
-        <div style="padding:0 14px 0;">
-          <div
-            style="font-size:8px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
-            🔄 Return Back-haul</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="min-width:80px;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">From</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Pune</div>
-              <div style="font-size:10px;color:var(--muted);">Hadapsar MIDC</div>
-            </div>
-            <div class="at-route-stack" style="flex:1;">
-              <div class="at-route-line">
-                <div class="at-route-dot" style="background:var(--orange);"></div>
-                <div class="at-route-dash"
-                  style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--orange),var(--green));"></div>
-              </div>
-              <div class="at-load-badge"
-                style="background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green);"><i
-                  class="fas fa-weight-hanging"></i> 800 KG</div>
-              <div class="at-route-line">
-                <div class="at-route-dash"
-                  style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--green),var(--teal));"></div>
-                <div class="at-route-dot" style="background:var(--green);"></div>
-              </div>
-            </div>
-            <div style="min-width:80px;text-align:right;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">To</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Mumbai</div>
-              <div style="font-size:10px;color:var(--muted);">Dharavi Depot</div>
-            </div>
-          </div>
-        </div>
-        <div class="si-details" style="margin:10px 14px 0;">
-          <div class="si-det">
-            <div class="si-det-val">148 KM</div>
-            <div class="si-det-lbl">Each Way</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--green);">₹44,000</div>
-            <div class="si-det-lbl">Total</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--muted);">~6:00 PM</div>
-            <div class="si-det-lbl">Return ETA</div>
-          </div>
-        </div>
-        <div class="si-action-row" style="padding:10px 14px 14px;">
-          <button class="si-btn si-btn-ghost"><i class="fas fa-eye"></i> View Details</button>
-          <button class="si-btn si-btn-ghost" onclick="showToast('🗺️ Opening route map…','var(--blue)')"><i
-              class="fas fa-map-marked-alt"></i> Route</button>
-        </div>
-      </div>
-
-      <!-- ── TRIP 3: UPCOMING · Single · Mon 31 ── -->
-      <div class="sc-card" data-filter="all month upcoming" data-status="upcoming" data-day="31">
-        <div
-          style="background:linear-gradient(135deg,#0d1520,#111c2b);border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(41,121,255,.15);">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="font-size:10px;font-weight:800;color:#82b1ff;">TRPS#-0004</div>
-            <div style="font-size:9px;color:var(--muted);">Mon 31 Mar 2025 · 07:30 AM</div>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="at-type-badge tb-single">Single Trip</span>
-            <span class="ti-status tis-sched">Scheduled</span>
-          </div>
-        </div>
-        <div style="padding:12px 14px 0;display:flex;align-items:center;gap:8px;">
-          <div style="min-width:80px;">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">From</div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Mumbai</div>
-            <div style="font-size:10px;color:var(--muted);">Kurla Depot</div>
-          </div>
-          <div class="at-route-stack" style="flex:1;">
-            <div class="at-route-line">
-              <div class="at-route-dot"></div>
-              <div class="at-route-dash" style="max-width:100%;flex:1;"></div>
-            </div>
-            <div class="at-load-badge"><i class="fas fa-weight-hanging"></i> 9,500 KG</div>
-            <div class="at-route-line">
-              <div class="at-route-dash" style="max-width:100%;flex:1;"></div>
-              <div class="at-route-dot" style="background:var(--orange);"></div>
-            </div>
-          </div>
-          <div style="min-width:80px;text-align:right;">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">To</div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Pune</div>
-            <div style="font-size:10px;color:var(--muted);">Kothrud</div>
-          </div>
-        </div>
-        <div class="si-details" style="margin:10px 14px 0;">
-          <div class="si-det">
-            <div class="si-det-val">152 KM</div>
-            <div class="si-det-lbl">Distance</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--green);">₹38,000</div>
-            <div class="si-det-lbl">Amount</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--muted);">~1:00 PM</div>
-            <div class="si-det-lbl">ETA</div>
-          </div>
-        </div>
-        <div class="si-action-row" style="padding:10px 14px 14px;">
-          <button class="si-btn si-btn-ghost"><i class="fas fa-eye"></i> View Details</button>
-          <button class="si-btn si-btn-ghost" onclick="showToast('🗺️ Opening route map…','var(--blue)')"><i
-              class="fas fa-map-marked-alt"></i> Route</button>
-        </div>
-      </div>
-
-      <!-- ── TRIP 4: COMPLETED · Single · Tue 25 ── -->
-      <div class="sc-card" data-filter="all week completed" data-status="completed" data-day="25">
-        <div
-          style="background:linear-gradient(135deg,#0a1a12,#0d1f18);border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,230,118,.1);">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="font-size:10px;font-weight:800;color:var(--green);">TRPS#-0005</div>
-            <div style="font-size:9px;color:var(--muted);">Tue 25 Mar 2025 · 08:00 AM</div>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="at-type-badge tb-single">Single Trip</span>
-            <span class="ti-status tis-done">✅ Completed</span>
-          </div>
-        </div>
-        <div style="padding:12px 14px 0;display:flex;align-items:center;gap:8px;">
-          <div style="min-width:80px;">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">From</div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Mumbai</div>
-            <div style="font-size:10px;color:var(--muted);">Dharavi</div>
-          </div>
-          <div class="at-route-stack" style="flex:1;">
-            <div class="at-route-line">
-              <div class="at-route-dot" style="background:var(--green);"></div>
-              <div class="at-route-dash"
-                style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--green),var(--teal));"></div>
-            </div>
-            <div class="at-load-badge"
-              style="background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green);"><i
-                class="fas fa-weight-hanging"></i> 11,500 KG</div>
-            <div class="at-route-line">
-              <div class="at-route-dash"
-                style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--teal),var(--green));"></div>
-              <div class="at-route-dot" style="background:var(--teal);"></div>
-            </div>
-          </div>
-          <div style="min-width:80px;text-align:right;">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">To</div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Pune</div>
-            <div style="font-size:10px;color:var(--muted);">Hadapsar</div>
-          </div>
-        </div>
-        <div class="si-details" style="margin:10px 14px 0;">
-          <div class="si-det">
-            <div class="si-det-val">148 KM</div>
-            <div class="si-det-lbl">Distance</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--green);">₹34,500</div>
-            <div class="si-det-lbl">Earned</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--green);">✅ Paid</div>
-            <div class="si-det-lbl">Payment</div>
-          </div>
-        </div>
-        <div class="si-action-row" style="padding:10px 14px 14px;">
-          <button class="si-btn si-btn-ghost" onclick="showToast('📋 Opening trip report…','var(--green)')"><i
-              class="fas fa-file-alt"></i> View Report</button>
-        </div>
-      </div>
-
-      <!-- ── TRIP 5: COMPLETED · Return · Tue 1 Apr ── -->
-      <div class="sc-card" data-filter="all month completed" data-status="completed" data-day="1">
-        <div
-          style="background:linear-gradient(135deg,#0a1a12,#0d1f1a);border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,230,118,.1);">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="font-size:10px;font-weight:800;color:var(--green);">TRPR#9012</div>
-            <div style="font-size:9px;color:var(--muted);">Tue 1 Apr 2025 · 06:30 AM</div>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="at-type-badge tb-return"
-              style="background:rgba(0,230,118,.15);color:var(--green);border:1px solid var(--green);">🔄 Return
-              Trip</span>
-            <span class="ti-status tis-done">✅ Completed</span>
-          </div>
-        </div>
-        <!-- Outbound -->
-        <div style="padding:10px 14px 0;">
-          <div
-            style="font-size:8px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
-            🚛 Outbound</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="min-width:80px;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">From</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Mumbai</div>
-              <div style="font-size:10px;color:var(--muted);">Andheri</div>
-            </div>
-            <div class="at-route-stack" style="flex:1;">
-              <div class="at-route-line">
-                <div class="at-route-dot" style="background:var(--green);"></div>
-                <div class="at-route-dash"
-                  style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--green),var(--teal));"></div>
-              </div>
-              <div class="at-load-badge"
-                style="background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green);"><i
-                  class="fas fa-weight-hanging"></i> 10,800 KG</div>
-              <div class="at-route-line">
-                <div class="at-route-dash"
-                  style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--teal),var(--green));"></div>
-                <div class="at-route-dot" style="background:var(--teal);"></div>
-              </div>
-            </div>
-            <div style="min-width:80px;text-align:right;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">To</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Pune</div>
-              <div style="font-size:10px;color:var(--muted);">Wakad</div>
-            </div>
-          </div>
-        </div>
-        <!-- Divider -->
-        <div style="margin:10px 14px;display:flex;align-items:center;gap:8px;">
-          <div style="flex:1;height:1px;background:rgba(255,255,255,.07);"></div>
-          <div
-            style="font-size:8px;font-weight:800;color:var(--green);letter-spacing:1px;padding:2px 8px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:20px;">
-            🔄 RETURN</div>
-          <div style="flex:1;height:1px;background:rgba(255,255,255,.07);"></div>
-        </div>
-        <!-- Return -->
-        <div style="padding:0 14px 0;">
-          <div
-            style="font-size:8px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
-            🔄 Return Back-haul</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="min-width:80px;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">From</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Pune</div>
-              <div style="font-size:10px;color:var(--muted);">Wakad</div>
-            </div>
-            <div class="at-route-stack" style="flex:1;">
-              <div class="at-route-line">
-                <div class="at-route-dot" style="background:var(--teal);"></div>
-                <div class="at-route-dash"
-                  style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--teal),var(--green));"></div>
-              </div>
-              <div class="at-load-badge"
-                style="background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green);"><i
-                  class="fas fa-weight-hanging"></i> 1,200 KG</div>
-              <div class="at-route-line">
-                <div class="at-route-dash"
-                  style="max-width:100%;flex:1;background:linear-gradient(90deg,var(--green),var(--teal));"></div>
-                <div class="at-route-dot" style="background:var(--green);"></div>
-              </div>
-            </div>
-            <div style="min-width:80px;text-align:right;">
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">To</div>
-              <div style="font-size:13px;font-weight:900;color:#fff;">Mumbai</div>
-              <div style="font-size:10px;color:var(--muted);">Andheri Depot</div>
-            </div>
-          </div>
-        </div>
-        <div class="si-details" style="margin:10px 14px 0;">
-          <div class="si-det">
-            <div class="si-det-val">148 KM</div>
-            <div class="si-det-lbl">Each Way</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--green);">₹41,200</div>
-            <div class="si-det-lbl">Total Earned</div>
-          </div>
-          <div class="si-det">
-            <div class="si-det-val" style="color:var(--green);">✅ Paid</div>
-            <div class="si-det-lbl">Payment</div>
-          </div>
-        </div>
-        <div class="si-action-row" style="padding:10px 14px 14px;">
-          <button class="si-btn si-btn-ghost" onclick="showToast('📋 Opening trip report…','var(--green)')"><i
-              class="fas fa-file-alt"></i> View Report</button>
-        </div>
-      </div>
-
-      <!-- Empty state (hidden by default) -->
-      <div id="sched-empty" style="display:none;text-align:center;padding:40px 20px;">
-        <div style="font-size:40px;margin-bottom:12px;">📭</div>
-        <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;">No trips found</div>
-        <div style="font-size:12px;color:var(--muted);">No trips match the selected filter.</div>
-      </div>
-
-    </div>
-  </div><!-- end pg-schedule -->
-
-
-  <!-- ════════════════════════════
-     PAGE: ACTIVE TRIP (Process)
-════════════════════════════ -->
-  <div class="page" id="pg-trip">
-
-    <!-- Trip Type Selector -->
-    <div class="trip-type-selector">
-      <div class="tts-btn active" id="tts-single" onclick="selectTripType('single')">
-        <div class="tts-icon">🚛</div>
-        <div class="tts-name">Single Trip</div>
-        <div class="tts-desc">One customer</div>
-      </div>
-      <div class="tts-btn" id="tts-return" onclick="selectTripType('return')">
-        <div class="tts-icon">🔄</div>
-        <div class="tts-name">Return Trip</div>
-        <div class="tts-desc">Back-haul route</div>
-      </div>
-    </div>
-
-    <!-- SINGLE TRIP VIEW (default active) -->
-    <div class="single-view" id="view-single" style="display:block;">
-      <div class="trip-info-bar">
-        <div>
-          <div class="tib-name">Sharma Enterprises Ltd.</div>
-          <div class="tib-meta"><span>📞 +91 99999 00001</span><span>📍 Pune Hadapsar Warehouse</span><span>⏰ ETA: 2:00
-              PM</span></div>
-        </div>
-        <div class="status-badge sb-pending" id="single-badge">Pending</div>
-      </div>
-
-      <div class="stepper-wrap">
-        <div class="stepper">
-          <div class="step done">
-            <div class="step-c">✓</div>
-            <div class="step-lbl">Assigned</div>
-            <div class="step-t">08:00</div>
-          </div>
-          <div class="step pending" id="ss-1">
-            <div class="step-c"><i class="fas fa-box-open"></i></div>
-            <div class="step-lbl">Loading<br>Start</div>
-            <div class="step-t" id="sst-1">—</div>
-          </div>
-          <div class="step pending" id="ss-2">
-            <div class="step-c"><i class="fas fa-check-double"></i></div>
-            <div class="step-lbl">Loading<br>Done</div>
-            <div class="step-t" id="sst-2">—</div>
-          </div>
-          <div class="step pending" id="ss-3">
-            <div class="step-c"><i class="fas fa-truck"></i></div>
-            <div class="step-lbl">Transit</div>
-            <div class="step-t" id="sst-3">—</div>
-          </div>
-          <div class="step pending" id="ss-4">
-            <div class="step-c"><i class="fas fa-map-marker-alt"></i></div>
-            <div class="step-lbl">Reached<br>Drop</div>
-            <div class="step-t" id="sst-4">—</div>
-          </div>
-          <div class="step pending" id="ss-5">
-            <div class="step-c"><i class="fas fa-dolly"></i></div>
-            <div class="step-lbl">Unloading<br>Done</div>
-            <div class="step-t" id="sst-5">—</div>
-          </div>
-          <div class="step pending" id="ss-6">
-            <div class="step-c"><i class="fas fa-check-circle"></i></div>
-            <div class="step-lbl">Delivered</div>
-            <div class="step-t" id="sst-6">—</div>
           </div>
         </div>
       </div>
 
-      <div class="c-grid">
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-box"></i>Load Details</div>
-          <table class="l-table">
-            <tr>
-              <th>Item</th>
-              <th>Qty</th>
-              <th>KG</th>
-            </tr>
-            <tr>
-              <td>FMCG Cartons</td>
-              <td><span class="qb">×120</span></td>
-              <td>7,200</td>
-            </tr>
-            <tr>
-              <td>Packaged Food</td>
-              <td><span class="qb">×60</span></td>
-              <td>3,600</td>
-            </tr>
-          </table>
-          <div class="inf-r" style="margin-top:6px"><span class="ik">Total Weight</span><span class="iv">10,800
-              KG</span></div>
-          <div class="inf-r"><span class="ik">Invoice</span><span class="iv">INV-004</span></div>
-          <div class="inf-r"><span class="ik">Distance</span><span class="iv">148 KM</span></div>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-clock"></i>Loading Timer</div>
-          <div class="stage-b">
-            <div class="stage-bh">
-              <div class="stage-nm"><i class="fas fa-box-open"></i> Loading</div>
-              <div class="sbadge sbp" id="s-lb">Pending</div>
-            </div>
-            <div class="timer-display" id="s-lt">00:00:00</div>
-            <div class="photo-grid">
-              <div class="photo-b" id="sp1" onclick="markPhoto('sp1','Before Load')"><i
-                  class="fas fa-camera"></i><span>Before Load</span></div>
-              <div class="photo-b" id="sp2" onclick="markPhoto('sp2','Weight Slip')"><i
-                  class="fas fa-weight-hanging"></i><span>Weight Slip</span></div>
-            </div>
+      <!-- scrollable body -->
+      <div class="rc-body" id="rcBody">
+
+        <!-- ACTIVE TRIP -->
+        <div class="at-sec">
+          <div class="at-hdr">
+            <div class="at-ttl">🟡 Active Trip</div>
+            <span style="font-size:10px;color:#059669;font-weight:800;cursor:pointer;"
+              onclick="toast('📊 Full details…','var(--green)')">See All →</span>
           </div>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-route"></i>Transit Info</div>
-          <div class="inf-r"><span class="ik">Route</span><span class="iv">Mumbai → Pune</span></div>
-          <div class="inf-r"><span class="ik">Distance</span><span class="iv">148 KM</span></div>
-          <div class="inf-r"><span class="ik">ETA</span><span class="iv">~2:00 PM</span></div>
-          <div class="timer-display" id="s-tt" style="font-size:20px;padding:5px 0;">00:00:00</div>
-          <div style="display:flex;gap:6px;margin-top:4px">
-            <button class="ab ab-blue" style="font-size:10px;padding:7px;" onclick="alert('📍 Navigation...')"><i
-                class="fas fa-map-marked-alt"></i> Navigate</button>
-            <button class="ab ab-gray" style="font-size:10px;padding:7px;" onclick="alert('📞 Calling...')"><i
-                class="fas fa-phone"></i> Call</button>
-          </div>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-truck-loading"></i>Unloading Timer</div>
-          <div class="stage-b">
-            <div class="stage-bh">
-              <div class="stage-nm"><i class="fas fa-dolly"></i> Unloading</div>
-              <div class="sbadge sbp" id="s-ub">Pending</div>
-            </div>
-            <div class="timer-display" id="s-ut">00:00:00</div>
-            <div class="photo-grid">
-              <div class="photo-b" id="sp3" onclick="markPhoto('sp3','During Unload')"><i
-                  class="fas fa-camera"></i><span>During Unload</span></div>
-              <div class="photo-b" id="sp4" onclick="markPhoto('sp4','Empty Truck')"><i
-                  class="fas fa-truck"></i><span>Empty Truck</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="sec-card c-full">
-          <div class="sec-head"><i class="fas fa-credit-card"></i>Payment</div>
-          <div class="pay-b unpaid" id="s-paybanner">
+          <!-- rc-ml: dot + trip name/sub — after at-hdr -->
+          <div class="rc-ml-row">
+            <div class="rc-dot"></div>
             <div>
-              <div class="pay-amt pa-red" id="s-payamt">₹36,000</div>
-              <div style="font-size:10px;color:var(--muted)">Total: ₹36,000</div>
-            </div>
-            <div class="pay-rt">
-              <div class="pay-mb">📦 COD</div>
-              <div class="pay-st" id="s-paystatus">Collect on Delivery</div>
-              <button class="ab ab-green" style="font-size:10px;padding:5px 10px;margin-top:5px;"
-                onclick="openCollect('s',36000)">💰 Collect ₹36,000</button>
+              <div class="rc-mlabel">Active Trip · TR-2847</div>
+              <div class="rc-msub">Mumbai → Pune · In Transit</div>
             </div>
           </div>
-          <div class="paybar-w">
-            <div class="pbt">
-              <div class="pbf" id="s-pb" style="width:0%"></div>
+          <div class="at-card">
+            <div class="at-ct">
+              <div class="at-id">TRIP #TR-2847 · Today 08:30 AM</div>
+              <div class="at-badge ab-single">Single Load</div>
             </div>
-            <div class="pb-lbls" id="s-pblbl"><span style="color:var(--green)">Paid: ₹0</span><span
-                style="color:var(--orange)">Due: ₹36,000</span></div>
-          </div>
-          <div id="s-ph">
-            <div style="font-size:10px;color:var(--dim);padding:4px 0;">No payments yet</div>
-          </div>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-signature"></i>Receiver Signature</div>
-          <div class="sig-wrap"><canvas id="sig-s" width="600" height="90"></canvas></div>
-          <button class="sig-clear" onclick="clearSig('sig-s')">Clear</button>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-sticky-note"></i>Notes</div>
-          <textarea class="notes-ta" id="n-s">FMCG — fragile. Unload carefully.</textarea>
-          <button class="ab ab-gray" style="font-size:10px;padding:6px 10px;margin-top:6px;"
-            onclick="showToast('📝 Notes saved','var(--blue)')">💾 Save</button>
-        </div>
-      </div>
-
-      <div class="act-row">
-        <button class="ab ab-yellow" id="s-btn-load" onclick="sLoad()"><i class="fas fa-play"></i> Start
-          Loading</button>
-        <button class="ab ab-green" id="s-btn-doneload" onclick="sDoneLoad()" disabled><i class="fas fa-check"></i>
-          Loading Done</button>
-        <button class="ab ab-blue" id="s-btn-transit" onclick="sTransit()" disabled><i class="fas fa-truck"></i> Start
-          Transit</button>
-        <button class="ab ab-orange" id="s-btn-reached" onclick="sReached()" disabled><i
-            class="fas fa-map-marker-alt"></i> Reached Drop</button>
-        <button class="ab ab-yellow" id="s-btn-unload" onclick="sUnload()" disabled><i class="fas fa-play"></i> Start
-          Unload</button>
-        <button class="ab ab-green" id="s-btn-deliver" onclick="sConfirmDeliver()" disabled><i
-            class="fas fa-check-circle"></i> Delivered</button>
-        <button class="ab ab-red" onclick="confirmFail('s')"><i class="fas fa-times"></i> Failed</button>
-      </div>
-    </div><!-- end single-view -->
-
-    <!-- RETURN TRIP VIEW -->
-    <div class="single-view" id="view-return" style="display:none;padding:12px 14px 0;">
-      <div class="trip-info-bar">
-        <div>
-          <div class="tib-name">Sharma Enterprises Ltd. — Return</div>
-          <div class="tib-meta"><span>📞 +91 99999 00001</span><span>📍 Mumbai Dharavi Warehouse</span><span>⏰ ETA: 6:00
-              PM</span></div>
-        </div>
-        <div class="status-badge sb-pending" id="return-badge">Pending</div>
-      </div>
-
-      <!-- Route summary for return -->
-      <div class="trip-info-bar"
-        style="margin-top:10px;background:rgba(0,230,118,.05);border-color:rgba(0,230,118,.2);">
-        <div style="display:flex;align-items:center;gap:10px;width:100%;">
-          <div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;">Return From
+            <div class="at-route">
+              <div class="ar-city">
+                <div class="ar-tag">From</div>
+                <div class="ar-nm">Mumbai</div>
+                <div class="ar-sub">Dharavi</div>
+              </div>
+              <div class="ar-mid">
+                <div class="ar-line">
+                  <div class="ar-dot"></div>
+                  <div class="ar-dash"></div>
+                </div>
+                <div class="ar-load"><i class="fas fa-weight-hanging"></i> 10,200 KG</div>
+                <div class="ar-line">
+                  <div class="ar-dash" style="background:linear-gradient(90deg,var(--orange),var(--orange));"></div>
+                  <div class="ar-dot" style="background:var(--orange);"></div>
+                </div>
+              </div>
+              <div class="ar-city" style="text-align:right;">
+                <div class="ar-tag">To</div>
+                <div class="ar-nm">Pune</div>
+                <div class="ar-sub">Hadapsar</div>
+              </div>
+              <div style="margin-left:8px;flex-shrink:0;">
+                <span
+                  style="font-size:9px;font-weight:800;padding:4px 9px;border-radius:20px;background:rgba(41,121,255,.12);color:#1d4ed8;border:1px solid #bfdbfe;">In
+                  Transit</span>
+              </div>
             </div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Pune</div>
-            <div style="font-size:10px;color:var(--muted);">Hadapsar Warehouse</div>
-          </div>
-          <div style="flex:1;text-align:center;">
-            <div style="font-size:9px;color:var(--orange);font-weight:800;margin-bottom:3px;">🔄 RETURN LOAD</div>
-            <div style="height:1px;background:linear-gradient(90deg,var(--orange),var(--green));margin:2px 8px;"></div>
-            <div style="font-size:10px;color:var(--muted);">148 KM</div>
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;">Return To</div>
-            <div style="font-size:14px;font-weight:900;color:#fff;">Mumbai</div>
-            <div style="font-size:10px;color:var(--muted);">Dharavi Depot</div>
-          </div>
-          <div style="margin-left:auto;">
-            <div class="status-badge sb-pending" style="font-size:10px;padding:4px 10px;">Pending</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="stepper-wrap" style="margin-top:10px;">
-        <div class="stepper">
-          <div class="step done">
-            <div class="step-c">✓</div>
-            <div class="step-lbl">Assigned</div>
-            <div class="step-t">02:00 PM</div>
-          </div>
-          <div class="step pending" id="rs-1">
-            <div class="step-c"><i class="fas fa-box-open"></i></div>
-            <div class="step-lbl">Loading<br>Start</div>
-            <div class="step-t" id="rst-1">—</div>
-          </div>
-          <div class="step pending" id="rs-2">
-            <div class="step-c"><i class="fas fa-check-double"></i></div>
-            <div class="step-lbl">Loading<br>Done</div>
-            <div class="step-t" id="rst-2">—</div>
-          </div>
-          <div class="step pending" id="rs-3">
-            <div class="step-c"><i class="fas fa-truck"></i></div>
-            <div class="step-lbl">Transit</div>
-            <div class="step-t" id="rst-3">—</div>
-          </div>
-          <div class="step pending" id="rs-4">
-            <div class="step-c"><i class="fas fa-map-marker-alt"></i></div>
-            <div class="step-lbl">Reached<br>Depot</div>
-            <div class="step-t" id="rst-4">—</div>
-          </div>
-          <div class="step pending" id="rs-5">
-            <div class="step-c"><i class="fas fa-dolly"></i></div>
-            <div class="step-lbl">Unloading<br>Done</div>
-            <div class="step-t" id="rst-5">—</div>
-          </div>
-          <div class="step pending" id="rs-6">
-            <div class="step-c"><i class="fas fa-check-circle"></i></div>
-            <div class="step-lbl">Complete</div>
-            <div class="step-t" id="rst-6">—</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="c-grid">
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-box"></i>Return Load Details</div>
-          <table class="l-table">
-            <tr>
-              <th>Item</th>
-              <th>Qty</th>
-              <th>KG</th>
-            </tr>
-            <tr>
-              <td>Empty Pallets</td>
-              <td><span class="qb">×30</span></td>
-              <td>600</td>
-            </tr>
-            <tr>
-              <td>Return Goods</td>
-              <td><span class="qb">×5</span></td>
-              <td>200</td>
-            </tr>
-          </table>
-          <div class="inf-r" style="margin-top:6px"><span class="ik">Total Weight</span><span class="iv">800 KG</span>
-          </div>
-          <div class="inf-r"><span class="ik">Return Invoice</span><span class="iv">RINV-047</span></div>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-clock"></i>Loading Timer</div>
-          <div class="stage-b">
-            <div class="stage-bh">
-              <div class="stage-nm"><i class="fas fa-box-open"></i> Loading</div>
-              <div class="sbadge sbp" id="r-lb">Pending</div>
+            <div class="at-stats">
+              <div class="at-stat">
+                <div class="at-sv">148 KM</div>
+                <div class="at-sl">Distance</div>
+              </div>
+              <div class="at-stat">
+                <div class="at-sv" style="color:#059669">₹36,000</div>
+                <div class="at-sl">Trip Value</div>
+              </div>
+              <div class="at-stat">
+                <div class="at-sv" style="color:#92600a">~2 PM</div>
+                <div class="at-sl">ETA</div>
+              </div>
             </div>
-            <div class="timer-display" id="r-lt">00:00:00</div>
-            <div class="photo-grid">
-              <div class="photo-b" id="rp1" onclick="markPhoto('rp1','Before Load')"><i
-                  class="fas fa-camera"></i><span>Before Load</span></div>
-              <div class="photo-b" id="rp2" onclick="markPhoto('rp2','Weight Slip')"><i
-                  class="fas fa-weight-hanging"></i><span>Weight Slip</span></div>
+            <div class="at-btns">
+              <button class="at-btn ab-primary" onclick="toast('▶️ Continuing trip…','var(--green)')"><i
+                  class="fas fa-play-circle"></i>Active Trip</button>
+              <button class="at-btn ab-ghost" onclick="toast('🗺️ Opening route…','var(--blue)')"><i
+                  class="fas fa-map-marked-alt"></i> Route</button>
             </div>
           </div>
         </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-route"></i>Transit Info</div>
-          <div class="inf-r"><span class="ik">Route</span><span class="iv">Pune → Mumbai</span></div>
-          <div class="inf-r"><span class="ik">Distance</span><span class="iv">148 KM</span></div>
-          <div class="inf-r"><span class="ik">ETA</span><span class="iv">~6:00 PM</span></div>
-          <div class="timer-display" id="r-tt" style="font-size:20px;padding:5px 0;">00:00:00</div>
-          <div style="display:flex;gap:6px;margin-top:4px">
-            <button class="ab ab-blue" style="font-size:10px;padding:7px;" onclick="alert('📍 Navigation...')"><i
-                class="fas fa-map-marked-alt"></i> Navigate</button>
-            <button class="ab ab-gray" style="font-size:10px;padding:7px;" onclick="alert('📞 Calling...')"><i
-                class="fas fa-phone"></i> Call</button>
+
+        <!-- TRIP HISTORY -->
+        <div class="th-sec">
+          <div class="th-div">
+            <div class="th-line"></div>
+            <div class="th-lbl">Trip History · 18 of 24</div>
+            <div class="th-line"></div>
           </div>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-truck-loading"></i>Unloading Timer</div>
-          <div class="stage-b">
-            <div class="stage-bh">
-              <div class="stage-nm"><i class="fas fa-dolly"></i> Unloading</div>
-              <div class="sbadge sbp" id="r-ub">Pending</div>
-            </div>
-            <div class="timer-display" id="r-ut">00:00:00</div>
-            <div class="photo-grid">
-              <div class="photo-b" id="rp3" onclick="markPhoto('rp3','During Unload')"><i
-                  class="fas fa-camera"></i><span>During Unload</span></div>
-              <div class="photo-b" id="rp4" onclick="markPhoto('rp4','Empty Truck')"><i
-                  class="fas fa-truck"></i><span>Empty Truck</span></div>
+
+          <div class="trip-item ti-active" onclick="toast('📋 TR-2847 details…','var(--yellow)')">
+            <div class="ti-ic sn">🚛</div>
+            <div class="ti-inf">
+              <div class="ti-top"><span class="ti-id">#TR-2847</span><span class="ti-dt">Today</span></div>
+              <div class="ti-rt">Mumbai → Pune · Dharavi → Hadapsar</div>
+              <div class="ti-bot"><span class="ti-st tis-active">🟡 In Progress</span><span
+                  class="ti-earn">₹36,000</span></div>
             </div>
           </div>
-        </div>
-        <div class="sec-card c-full">
-          <div class="sec-head"><i class="fas fa-credit-card"></i>Return Payment</div>
-          <div class="pay-b cod">
-            <div>
-              <div class="pay-amt pa-blue">₹8,000</div>
-              <div style="font-size:10px;color:var(--muted)">Return Trip Value</div>
-            </div>
-            <div class="pay-rt">
-              <div class="pay-mb">📦 COD</div>
-              <div class="pay-st">Collect on Delivery</div>
-              <button class="ab ab-green" style="font-size:10px;padding:5px 10px;margin-top:5px;"
-                onclick="openCollect('r',8000)">💰 Collect ₹8,000</button>
+
+          <div class="trip-item ti-done" onclick="toast('✅ TR-2839 completed','var(--green)')">
+            <div class="ti-ic sn">🚛</div>
+            <div class="ti-inf">
+              <div class="ti-top"><span class="ti-id">#TR-2839</span><span class="ti-dt">24 Mar</span></div>
+              <div class="ti-rt">Mumbai → Pune · Single Load · 9,800 KG</div>
+              <div class="ti-bot"><span class="ti-st tis-done">✅ Delivered</span><span class="ti-earn">₹36,000</span>
+              </div>
             </div>
           </div>
-          <div class="paybar-w">
-            <div class="pbt">
-              <div class="pbf" id="r-pb" style="width:0%"></div>
+
+          <div class="trip-item ti-done" onclick="toast('✅ TRPR-5671 completed','var(--green)')">
+            <div class="ti-ic al">🔄</div>
+            <div class="ti-inf">
+              <div class="ti-top"><span class="ti-id">#TRPR-5671</span><span class="ti-dt">22 Mar</span></div>
+              <div class="ti-rt">Pune → Mumbai · Return Back-haul</div>
+              <div class="ti-bot"><span class="ti-st tis-done">✅ Complete</span><span class="ti-earn">₹44,000</span>
+              </div>
             </div>
-            <div class="pb-lbls" id="r-pblbl"><span style="color:var(--green)">Paid: ₹0</span><span
-                style="color:var(--orange)">Due: ₹8,000</span></div>
           </div>
-          <div id="r-ph">
-            <div style="font-size:10px;color:var(--dim);padding:4px 0;">No payments yet</div>
+
+          <div class="trip-item ti-done" onclick="toast('✅ TR-2831 details','var(--green)')">
+            <div class="ti-ic sn">🚛</div>
+            <div class="ti-inf">
+              <div class="ti-top"><span class="ti-id">#TR-2831</span><span class="ti-dt">19 Mar</span></div>
+              <div class="ti-rt">Mumbai → Pune · Single Load · 10,500 KG</div>
+              <div class="ti-bot"><span class="ti-st tis-done">✅ Delivered</span><span class="ti-earn">₹36,000</span>
+              </div>
+            </div>
           </div>
+
+          <div class="trip-item ti-done" onclick="toast('✅ TR-2820 details','var(--green)')">
+            <div class="ti-ic sn">🚛</div>
+            <div class="ti-inf">
+              <div class="ti-top"><span class="ti-id">#TR-2820</span><span class="ti-dt">15 Mar</span></div>
+              <div class="ti-rt">Mumbai → Pune · Single Load · 11,200 KG</div>
+              <div class="ti-bot"><span class="ti-st tis-done">✅ Delivered</span><span class="ti-earn">₹36,000</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="trip-item ti-sched" onclick="toast('📅 TRPR-5678 scheduled','var(--muted)')">
+            <div class="ti-ic al">🔄</div>
+            <div class="ti-inf">
+              <div class="ti-top"><span class="ti-id">#TRPR-5678</span><span class="ti-dt">28 Mar</span></div>
+              <div class="ti-rt">Mumbai → Pune &amp; Return · Back-haul</div>
+              <div class="ti-bot"><span class="ti-st tis-sched">⏰ Scheduled</span><span class="ti-earn">₹44,000</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /th-sec -->
+
+        <!-- REPORT BUTTONS -->
+        <div class="rep-sec">
+          <button class="rep-btn rb-bd" onclick="toast('📊 Opening report breakdown…','var(--blue)')">
+            <i class="fas fa-chart-bar"></i> Report Breakdown
+          </button>
+          <button class="rep-btn rb-is" onclick="toast('🚨 Report issue form…','var(--red)')">
+            <i class="fas fa-exclamation-triangle"></i> Report Issue
+          </button>
         </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-signature"></i>Receiver Signature</div>
-          <div class="sig-wrap"><canvas id="sig-r" width="600" height="90"></canvas></div>
-          <button class="sig-clear" onclick="clearSig('sig-r')">Clear</button>
-        </div>
-        <div class="sec-card">
-          <div class="sec-head"><i class="fas fa-sticky-note"></i>Notes</div>
-          <textarea class="notes-ta" id="n-r">Return trip — empty pallets + backload.</textarea>
-          <button class="ab ab-gray" style="font-size:10px;padding:6px 10px;margin-top:6px;"
-            onclick="showToast('📝 Notes saved','var(--blue)')">💾 Save</button>
-        </div>
-      </div>
 
-      <div class="act-row">
-        <button class="ab ab-yellow" id="r-btn-load" onclick="rLoad()"><i class="fas fa-play"></i> Start
-          Loading</button>
-        <button class="ab ab-green" id="r-btn-doneload" onclick="rDoneLoad()" disabled><i class="fas fa-check"></i>
-          Loading Done</button>
-        <button class="ab ab-blue" id="r-btn-transit" onclick="rTransit()" disabled><i class="fas fa-truck"></i> Start
-          Transit</button>
-        <button class="ab ab-orange" id="r-btn-reached" onclick="rReached()" disabled><i
-            class="fas fa-map-marker-alt"></i> Reached Depot</button>
-        <button class="ab ab-yellow" id="r-btn-unload" onclick="rUnload()" disabled><i class="fas fa-play"></i> Start
-          Unload</button>
-        <button class="ab ab-green" id="r-btn-deliver" onclick="rConfirmDeliver()" disabled><i
-            class="fas fa-check-circle"></i> Trip Complete</button>
-        <button class="ab ab-red" onclick="confirmFail('r')"><i class="fas fa-times"></i> Failed</button>
-      </div>
-    </div><!-- end return-view -->
+      </div><!-- /rc-body -->
+    </div><!-- /rc -->
+  </div><!-- /rc-wrap -->
 
-  </div><!-- end pg-trip -->
-
-
-  <!-- ════════════════════════════
-     PAGE: HISTORY
-════════════════════════════ -->
-  <div class="page" id="pg-history">
-    <div style="padding:14px 14px 0;">
-      <div style="font-size:16px;font-weight:900;color:#fff;margin-bottom:12px;">📋 All Trip History</div>
-      <div class="pay-summary" style="margin-bottom:12px;">
-        <div class="ps-title">Contract Earnings Summary</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;">
-          <div style="background:rgba(0,0,0,.3);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-size:16px;font-weight:900;color:var(--green)">₹6.48L</div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">
-              Earned</div>
-          </div>
-          <div style="background:rgba(0,0,0,.3);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-size:16px;font-weight:900;color:#fff">18</div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">
-              Trips Done</div>
-          </div>
-          <div style="background:rgba(0,0,0,.3);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-size:16px;font-weight:900;color:var(--yellow)">₹2.16L</div>
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">
-              Pending</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="padding:0 14px 20px;">
-
-      <!-- Current Active — Single -->
-      <div class="trip-item ti-active" onclick="goPage('pg-trip')">
-        <div class="ti-icon single"><i class="fas fa-truck" style="color:#82b1ff"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2847 (Current)</span><span class="ti-date">27 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Dharavi → Pune Hadapsar (Single Trip)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-active">🟡 In Progress</span>
-            <span style="font-size:9px;font-weight:700;color:var(--muted);margin-left:4px;">10,200 KG</span>
-            <span class="ti-earn">₹36,000</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Completed — Return -->
-      <div class="trip-item ti-completed">
-        <div class="ti-icon" style="background:rgba(0,230,118,.12);"><i class="fas fa-sync-alt"
-            style="color:var(--green)"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2845</span><span class="ti-date">25 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Andheri → Pune Wakad · Return (800 KG back)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-done">✅ Completed</span>
-            <span style="font-size:9px;font-weight:700;color:var(--muted);margin-left:4px;">🔄 Return</span>
-            <span class="ti-earn">₹41,200</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Completed — Single -->
-      <div class="trip-item ti-completed">
-        <div class="ti-icon single"><i class="fas fa-truck" style="color:#82b1ff"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2846</span><span class="ti-date">25 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Dharavi → Pune Hadapsar (Single Trip)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-done">✅ Completed</span>
-            <span style="font-size:9px;font-weight:700;color:var(--muted);margin-left:4px;">11,500 KG</span>
-            <span class="ti-earn">₹34,500</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Completed — Single -->
-      <div class="trip-item ti-completed">
-        <div class="ti-icon single"><i class="fas fa-truck" style="color:#82b1ff"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2844</span><span class="ti-date">18 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Dharavi → Pune Kothrud (Single Trip)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-done">✅ Completed</span>
-            <span style="font-size:9px;font-weight:700;color:var(--muted);margin-left:4px;">10,800 KG</span>
-            <span class="ti-earn">₹36,000</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Completed — Return -->
-      <div class="trip-item ti-completed">
-        <div class="ti-icon" style="background:rgba(0,230,118,.12);"><i class="fas fa-sync-alt"
-            style="color:var(--green)"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2843</span><span class="ti-date">14 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Kurla → Pune Wakad · Return (1,200 KG back)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-done">✅ Completed</span>
-            <span style="font-size:9px;font-weight:700;color:var(--muted);margin-left:4px;">🔄 Return</span>
-            <span class="ti-earn">₹39,800</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Completed — Single -->
-      <div class="trip-item ti-completed">
-        <div class="ti-icon single"><i class="fas fa-truck" style="color:#82b1ff"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2841</span><span class="ti-date">10 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Andheri → Pune MIDC Pimpri (Single Trip)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-done">✅ Completed</span>
-            <span style="font-size:9px;font-weight:700;color:var(--muted);margin-left:4px;">9,200 KG</span>
-            <span class="ti-earn">₹33,500</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Completed — Return -->
-      <div class="trip-item ti-completed">
-        <div class="ti-icon" style="background:rgba(0,230,118,.12);"><i class="fas fa-sync-alt"
-            style="color:var(--green)"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2839</span><span class="ti-date">07 Mar 2025</span></div>
-          <div class="ti-route">Mumbai Dharavi → Pune Hadapsar · Return (600 KG back)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-done">✅ Completed</span>
-            <span style="font-size:9px;font-weight:700;color:var(--muted);margin-left:4px;">🔄 Return</span>
-            <span class="ti-earn">₹38,200</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Failed — Single -->
-      <div class="trip-item ti-failed">
-        <div class="ti-icon single"><i class="fas fa-truck" style="color:#ef5350"></i></div>
-        <div class="ti-info">
-          <div class="ti-top"><span class="ti-id">TR-2838</span><span class="ti-date">02 Mar 2025</span></div>
-          <div class="ti-route">Mumbai → Pune Hinjewadi (Single Trip)</div>
-          <div class="ti-bottom">
-            <span class="ti-status tis-fail">❌ Failed</span>
-            <span style="font-size:11px;font-weight:700;color:var(--red);margin-left:auto;">₹0</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
+  <!-- TOAST -->
+  <div class="toast" id="toastEl">
+    <div class="t-dot" id="tDot"></div>
+    <span id="tMsg"></span>
   </div>
 
-
-  <!-- ══ COLLECT MODAL ══ -->
-  <div class="overlay" id="collectModal">
-    <div class="sheet">
-      <div class="drag-bar"></div>
-      <div class="sheet-title">💰 Collect Payment</div>
-      <div class="sheet-sub" id="collect-info">—</div>
-      <div class="kp-display">
-        <div style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:3px;">AMOUNT (₹)</div>
-        <div class="kp-val" id="kp-val">0</div>
-        <div class="kp-hint" id="kp-hint"></div>
-      </div>
-      <div class="kp-grid">
-        <button class="kp-btn" onclick="kp('1')">1</button><button class="kp-btn" onclick="kp('2')">2</button><button
-          class="kp-btn" onclick="kp('3')">3</button>
-        <button class="kp-btn" onclick="kp('4')">4</button><button class="kp-btn" onclick="kp('5')">5</button><button
-          class="kp-btn" onclick="kp('6')">6</button>
-        <button class="kp-btn" onclick="kp('7')">7</button><button class="kp-btn" onclick="kp('8')">8</button><button
-          class="kp-btn" onclick="kp('9')">9</button>
-        <button class="kp-btn kp-c" onclick="kp('C')">C</button><button class="kp-btn"
-          onclick="kp('0')">0</button><button class="kp-btn kp-b" onclick="kp('⌫')">⌫</button>
-      </div>
-      <div class="frow">
-        <select class="f-sel" id="c-method">
-          <option>💵 Cash</option>
-          <option>📱 UPI</option>
-          <option>💳 Card</option>
-          <option>🌐 Online</option>
-        </select>
-        <input class="f-inp" id="c-note" placeholder="Note...">
-      </div>
-      <div class="mrow">
-        <button class="m-btn m-cancel" onclick="closeCollect()">Cancel</button>
-        <button class="m-btn m-confirm" onclick="submitCollect()">✓ Confirm</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ CONFIRM MODAL ══ -->
-  <div class="c-overlay" id="confirmModal">
-    <div class="c-box">
-      <div class="c-icon" id="c-icon"></div>
-      <div class="c-title" id="c-title"></div>
-      <div class="c-body" id="c-body"></div>
-      <div class="c-btns">
-        <button class="c-cancel" onclick="closeConfirm()">Cancel</button>
-        <button class="c-ok" id="c-ok" onclick="doConfirm()">Confirm</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ TOAST ══ -->
-  <div class="toast" id="toast">
-    <div class="toast-dot" id="toast-dot"></div><span id="toast-msg"></span>
-  </div>
-
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
-    /* ══ NAVIGATION ══ */
-    const pages = ['pg-home', 'pg-schedule', 'pg-trip', 'pg-history'];
-    const bnavs = { 'pg-home': 'bn-home', 'pg-schedule': 'bn-schedule', 'pg-trip': 'bn-trip', 'pg-history': 'bn-history' };
-
-    function goPage(id) {
-      pages.forEach(p => document.getElementById(p).classList.remove('active'));
-      Object.values(bnavs).forEach(b => { const el = document.getElementById(b); if (el) el.classList.remove('active'); });
-      document.getElementById(id).classList.add('active');
-      if (bnavs[id]) { const el = document.getElementById(bnavs[id]); if (el) el.classList.add('active'); }
-      window.scrollTo(0, 0);
+    /* SIDEBAR */
+    function toggleSB() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sbOv').classList.toggle('open');
+      document.getElementById('mbtn').classList.toggle('open');
+    }
+    function closeSB() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sbOv').classList.remove('open');
+      document.getElementById('mbtn').classList.remove('open');
     }
 
-    /* ══ SCHEDULE FILTER ══ */
-    function filterTrips(f, btn) {
-      // Update active pill
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-
-      // Reset calendar selection when filtering
-      if (f !== 'day') {
-        document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('active'));
+    /* NOTIFICATIONS */
+    function toggleNP() {
+      document.getElementById('npPanel').classList.toggle('open');
+      document.getElementById('npOv').classList.toggle('open');
+      if (document.getElementById('npPanel').classList.contains('open')) {
+        document.getElementById('ndot').style.display = 'none';
       }
-
-      const cards = document.querySelectorAll('.sc-card');
-      let visible = 0;
-      cards.forEach(card => {
-        const filters = card.dataset.filter || '';
-        const show = f === 'all' || filters.includes(f);
-        card.style.display = show ? 'block' : 'none';
-        if (show) visible++;
-      });
-
-      // Update count
-      const countEl = document.getElementById('sched-count');
-      if (countEl) countEl.innerHTML = `Showing <b style="color:#fff">${visible}</b> trip${visible !== 1 ? 's' : ''}`;
-
-      // Show/hide empty state
-      const empty = document.getElementById('sched-empty');
-      if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+    }
+    function closeNP() {
+      document.getElementById('npPanel').classList.remove('open');
+      document.getElementById('npOv').classList.remove('open');
     }
 
-    function calSelect(el, day) {
-      // Toggle cal day highlight
-      document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('active'));
-      el.classList.add('active');
+    /* REVIEW PANEL */
+    function openRV() { document.getElementById('rvOv').classList.add('open'); }
+    function closeRV() { document.getElementById('rvOv').classList.remove('open'); }
 
-      // Filter cards by day
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    /* RIDE CARD */
+    const rc = document.getElementById('rc');
+    const rcH = document.getElementById('rcHandle');
+    let expanded = false;
+    let dragging = false;
+    let dragY0 = 0;
+    let wasExp = false;
 
-      const cards = document.querySelectorAll('.sc-card');
-      let visible = 0;
-      cards.forEach(card => {
-        const cardDay = String(card.dataset.day || '');
-        const show = cardDay === String(day);
-        card.style.display = show ? 'block' : 'none';
-        if (show) visible++;
-      });
-
-      const countEl = document.getElementById('sched-count');
-      if (countEl) countEl.innerHTML = `Showing <b style="color:#fff">${visible}</b> trip${visible !== 1 ? 's' : ''} on day ${day}`;
-
-      const empty = document.getElementById('sched-empty');
-      if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+    function setExp(val) {
+      expanded = val;
+      rc.classList.toggle('expanded', expanded);
+      rc.style.transform = '';
+      rc.style.transition = '';
     }
 
-    /* ══ REVIEW PANEL TOGGLE ══ */
-    function toggleReview() {
-      const body = document.getElementById('review-panel-body');
-      const btn = document.getElementById('review-toggle-btn');
-      const hidden = body.style.display === 'none' || body.style.display === '';
-      body.style.display = hidden ? 'block' : 'none';
-      btn.textContent = hidden ? '▼' : '▶';
+    function toggleRC() {
+      if (dragging) return;
+      setExp(!expanded);
     }
 
-    /* ══ TRIP TYPE ══ */
-    function selectTripType(t) {
-      document.getElementById('tts-single').classList.toggle('active', t === 'single');
-      document.getElementById('tts-return').classList.toggle('active', t === 'return');
-      document.getElementById('view-single').style.display = t === 'single' ? 'block' : 'none';
-      document.getElementById('view-return').style.display = t === 'return' ? 'block' : 'none';
-    }
-    /* ══ TIMERS ══ */
-    const timers = {};
-    function fmtTime(s) { return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60].map(v => String(v).padStart(2, '0')).join(':'); }
-    function nowTime() { return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); }
+    rcH.addEventListener('mousedown', dStart);
+    rcH.addEventListener('touchstart', dStart, { passive: true });
 
-    function confirmFail(c) {
-      openConfirm('❌', 'rgba(255,23,68,.2)', 'Report Failed Delivery?', 'Mark this delivery as failed/undeliverable.', 'var(--red)', 'REPORT FAILED', () => showToast('⚠️ Delivery failed reported', 'var(--red)'));
+    function dStart(e) {
+      dragging = false;
+      dragY0 = e.touches ? e.touches[0].clientY : e.clientY;
+      wasExp = expanded;
+      rc.style.transition = 'none';
+      document.addEventListener('mousemove', dMove);
+      document.addEventListener('touchmove', dMove, { passive: true });
+      document.addEventListener('mouseup', dEnd);
+      document.addEventListener('touchend', dEnd);
     }
 
-    /* ══ SINGLE LOAD ACTIONS ══ */
-    const st = { load: 0, transit: 0, unload: 0, lRun: false, tRun: false, uRun: false };
-    function sLoad() {
-      const t = nowTime();
-      setStep('ss-1', 'active'); document.getElementById('sst-1').textContent = t;
-      document.getElementById('s-lb').className = 'sbadge sba'; document.getElementById('s-lb').textContent = 'Running';
-      document.getElementById('s-lt').className = 'timer-display td-active';
-      st.lRun = true; timers['s-l'] = setInterval(() => { st.load++; document.getElementById('s-lt').textContent = fmtTime(st.load); }, 1000);
-      setBtn('s-btn-load', true); setBtn('s-btn-doneload', false);
-      document.getElementById('single-badge').className = 'status-badge sb-loading'; document.getElementById('single-badge').textContent = 'Loading...';
-      showToast('📦 Loading started', 'var(--yellow)');
-    }
-    function sDoneLoad() {
-      clearInterval(timers['s-l']); st.lRun = false;
-      const t = nowTime();
-      setStep('ss-1', 'done'); setStep('ss-2', 'active'); document.getElementById('sst-2').textContent = t;
-      document.getElementById('s-lb').className = 'sbadge sbd'; document.getElementById('s-lb').textContent = 'Done ✓';
-      document.getElementById('s-lt').className = 'timer-display td-done';
-      setBtn('s-btn-doneload', true); setBtn('s-btn-transit', false);
-      showToast('✅ Loading done', 'var(--green)');
-    }
-    function sTransit() {
-      const t = nowTime();
-      setStep('ss-2', 'done'); setStep('ss-3', 'active'); document.getElementById('sst-3').textContent = t;
-      document.getElementById('s-tt').className = 'timer-display td-active';
-      st.tRun = true; timers['s-t'] = setInterval(() => { st.transit++; document.getElementById('s-tt').textContent = fmtTime(st.transit); }, 1000);
-      setBtn('s-btn-transit', true); setBtn('s-btn-reached', false);
-      document.getElementById('single-badge').className = 'status-badge sb-transit'; document.getElementById('single-badge').textContent = 'In Transit';
-      showToast('🚛 Trip started — In Transit', 'var(--blue)');
-    }
-    function sReached() {
-      clearInterval(timers['s-t']); st.tRun = false;
-      const t = nowTime();
-      setStep('ss-3', 'done'); setStep('ss-4', 'active'); document.getElementById('sst-4').textContent = t;
-      document.getElementById('s-tt').className = 'timer-display td-done';
-      setBtn('s-btn-reached', true); setBtn('s-btn-unload', false);
-      document.getElementById('single-badge').className = 'status-badge sb-reached'; document.getElementById('single-badge').textContent = 'At Drop-off';
-      showToast('📍 Reached drop-off', 'var(--orange)');
-    }
-    function sUnload() {
-      const t = nowTime();
-      setStep('ss-4', 'done'); setStep('ss-5', 'active'); document.getElementById('sst-5').textContent = t;
-      document.getElementById('s-ub').className = 'sbadge sba'; document.getElementById('s-ub').textContent = 'Running';
-      document.getElementById('s-ut').className = 'timer-display td-active';
-      st.uRun = true; timers['s-u'] = setInterval(() => { st.unload++; document.getElementById('s-ut').textContent = fmtTime(st.unload); }, 1000);
-      setBtn('s-btn-unload', true); setBtn('s-btn-deliver', false);
-      document.getElementById('single-badge').className = 'status-badge sb-unloading'; document.getElementById('single-badge').textContent = 'Unloading...';
-      showToast('🏗️ Unloading started', 'var(--orange)');
-    }
-    function sConfirmDeliver() {
-      openConfirm('✅', 'rgba(0,230,118,.2)', 'Mark as Delivered?', 'Confirm single load delivery completed.', 'var(--green)', 'CONFIRM DELIVERED', () => {
-        clearInterval(timers['s-u']);
-        setStep('ss-5', 'done'); setStep('ss-6', 'done');
-        document.getElementById('s-ub').className = 'sbadge sbd'; document.getElementById('s-ub').textContent = 'Done ✓';
-        document.getElementById('s-ut').className = 'timer-display td-done';
-        setBtn('s-btn-deliver', true);
-        document.getElementById('single-badge').className = 'status-badge sb-delivered'; document.getElementById('single-badge').textContent = '✅ Delivered';
-        showToast('✅ Delivery complete!', 'var(--green)');
-      });
-    }
-    function setStep(id, cls) {
-      const el = document.getElementById(id); if (!el) return;
-      el.className = 'step ' + cls;
-      if (cls === 'done') el.querySelector('.step-c').innerHTML = '✓';
-    }
-    function setBtn(id, disabled) { const el = document.getElementById(id); if (el) el.disabled = disabled; }
-
-    /* ══ COLLECT PAYMENT ══ */
-    let collectTarget = null, collectMax = 0, collectAmt = '0';
-    function openCollect(target, max) {
-      collectTarget = target; collectMax = max; collectAmt = '0';
-      document.getElementById('collect-info').innerHTML = `Customer ${target} &nbsp;·&nbsp; Remaining: <span style="color:var(--red)">₹${max.toLocaleString()}</span>`;
-      document.getElementById('kp-val').textContent = '0';
-      document.getElementById('kp-hint').textContent = 'Max: ₹' + max.toLocaleString();
-      document.getElementById('c-note').value = '';
-      document.getElementById('collectModal').classList.add('open');
-    }
-    function closeCollect() { document.getElementById('collectModal').classList.remove('open'); }
-    function kp(k) {
-      if (k === 'C') collectAmt = '0';
-      else if (k === '⌫') collectAmt = collectAmt.length > 1 ? collectAmt.slice(0, -1) : '0';
-      else collectAmt = collectAmt === '0' ? k : collectAmt + k;
-      document.getElementById('kp-val').textContent = parseInt(collectAmt).toLocaleString();
-    }
-    function submitCollect() {
-      const amt = parseInt(collectAmt);
-      if (!amt || amt <= 0) { showToast('⚠️ Enter valid amount', 'var(--yellow)'); return; }
-      if (amt > collectMax) { showToast('⚠️ Exceeds balance', 'var(--yellow)'); return; }
-      const method = document.getElementById('c-method').value;
-      const note = document.getElementById('c-note').value || 'Payment collected';
-      // update UI for specific target
-      const t = collectTarget;
-      if (t === 's') {
-        // single load
-        const newPaid = amt; const total = 36000; const pct = Math.round(newPaid / total * 100);
-        document.getElementById('s-pb').style.width = pct + '%';
-        document.getElementById('s-pblbl').innerHTML = `<span style="color:var(--green)">Paid: ₹${amt.toLocaleString()}</span><span style="color:var(--orange)">Due: ₹${(total - amt).toLocaleString()}</span>`;
-        const row = document.createElement('div'); row.className = 'ph-row';
-        row.innerHTML = `<div><div class="ph-amt">+₹${amt.toLocaleString()}</div><div class="ph-meta">${method} · ${nowTime()} · ${note}</div></div>`;
-        document.getElementById('s-ph').appendChild(row);
-      } else if (t === 'r') {
-        // return trip
-        const total = 8000; const pct = Math.round(amt / total * 100);
-        document.getElementById('r-pb').style.width = pct + '%';
-        document.getElementById('r-pblbl').innerHTML = `<span style="color:var(--green)">Paid: ₹${amt.toLocaleString()}</span><span style="color:var(--orange)">Due: ₹${(total - amt).toLocaleString()}</span>`;
-        const row = document.createElement('div'); row.className = 'ph-row';
-        row.innerHTML = `<div><div class="ph-amt">+₹${amt.toLocaleString()}</div><div class="ph-meta">${method} · ${nowTime()} · ${note}</div></div>`;
-        const ph = document.getElementById('r-ph');
-        ph.innerHTML = ''; ph.appendChild(row);
+    function dMove(e) {
+      const y = e.touches ? e.touches[0].clientY : e.clientY;
+      const d = y - dragY0;
+      if (Math.abs(d) > 8) dragging = true;
+      if (!dragging) return;
+      const h = rc.offsetHeight - 84;
+      if (wasExp) {
+        rc.style.transform = 'translateY(' + Math.max(0, Math.min(h, d)) + 'px)';
       } else {
-        const row = document.createElement('div'); row.className = 'ph-row';
-        row.innerHTML = `<div><div class="ph-amt">+₹${amt.toLocaleString()}</div><div class="ph-meta">${method} · ${nowTime()} · ${note}</div></div>`;
-        const el = document.getElementById('ph-c' + t); if (el) el.appendChild(row);
+        rc.style.transform = 'translateY(' + Math.max(-h, Math.min(0, d)) + 'px)';
       }
-      closeCollect();
-      showToast(`💰 ₹${amt.toLocaleString()} collected`, 'var(--green)');
     }
 
-    /* ══ CONFIRM MODAL ══ */
-    let confirmCb = null;
-    function openConfirm(icon, bg, title, body, color, label, cb) {
-      confirmCb = cb;
-      document.getElementById('c-icon').textContent = icon;
-      document.getElementById('c-icon').style.background = bg;
-      document.getElementById('c-title').textContent = title;
-      document.getElementById('c-body').textContent = body;
-      document.getElementById('c-ok').textContent = label;
-      document.getElementById('c-ok').style.background = color;
-      document.getElementById('confirmModal').classList.add('open');
-    }
-    function closeConfirm() { document.getElementById('confirmModal').classList.remove('open'); }
-    function doConfirm() { if (confirmCb) confirmCb(); closeConfirm(); }
-
-    /* ══ PHOTO ══ */
-    function markPhoto(id, label) {
-      const el = document.getElementById(id); if (!el || el.classList.contains('done')) return;
-      el.classList.add('done');
-      el.innerHTML = `<i class="fas fa-check-circle" style="font-size:18px"></i><span>${label} ✓</span>`;
-      showToast('📸 ' + label + ' captured', 'var(--blue)');
+    function dEnd(e) {
+      document.removeEventListener('mousemove', dMove);
+      document.removeEventListener('touchmove', dMove);
+      document.removeEventListener('mouseup', dEnd);
+      document.removeEventListener('touchend', dEnd);
+      const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+      const d = y - dragY0;
+      rc.style.transition = '';
+      if (dragging) {
+        if (d < -50) setExp(true);
+        else if (d > 50) setExp(false);
+        else setExp(wasExp);
+      } else {
+        rc.style.transform = '';
+      }
+      setTimeout(() => { dragging = false; }, 10);
     }
 
-    /* ══ RETURN TRIP ACTIONS ══ */
-    const rt = { load: 0, transit: 0, unload: 0, lRun: false, tRun: false, uRun: false };
-    function rLoad() {
-      const t = nowTime();
-      setStep('rs-1', 'active'); document.getElementById('rst-1').textContent = t;
-      document.getElementById('r-lb').className = 'sbadge sba'; document.getElementById('r-lb').textContent = 'Running';
-      document.getElementById('r-lt').className = 'timer-display td-active';
-      document.getElementById('return-badge').className = 'status-badge sb-loading'; document.getElementById('return-badge').textContent = 'Loading...';
-      rt.lRun = true; timers['r-l'] = setInterval(() => { rt.load++; document.getElementById('r-lt').textContent = fmtTime(rt.load); }, 1000);
-      setBtn('r-btn-load', true); setBtn('r-btn-doneload', false);
-      showToast('📦 Return loading started', 'var(--yellow)');
-    }
-    function rDoneLoad() {
-      clearInterval(timers['r-l']); rt.lRun = false;
-      const t = nowTime();
-      setStep('rs-1', 'done'); setStep('rs-2', 'active'); document.getElementById('rst-2').textContent = t;
-      document.getElementById('r-lb').className = 'sbadge sbd'; document.getElementById('r-lb').textContent = 'Done ✓';
-      document.getElementById('r-lt').className = 'timer-display td-done';
-      setBtn('r-btn-doneload', true); setBtn('r-btn-transit', false);
-      showToast('✅ Return loading done', 'var(--green)');
-    }
-    function rTransit() {
-      const t = nowTime();
-      setStep('rs-2', 'done'); setStep('rs-3', 'active'); document.getElementById('rst-3').textContent = t;
-      document.getElementById('r-tt').className = 'timer-display td-active';
-      document.getElementById('return-badge').className = 'status-badge sb-transit'; document.getElementById('return-badge').textContent = 'In Transit';
-      rt.tRun = true; timers['r-t'] = setInterval(() => { rt.transit++; document.getElementById('r-tt').textContent = fmtTime(rt.transit); }, 1000);
-      setBtn('r-btn-transit', true); setBtn('r-btn-reached', false);
-      showToast('🚛 Return transit started', 'var(--blue)');
-    }
-    function rReached() {
-      clearInterval(timers['r-t']); rt.tRun = false;
-      const t = nowTime();
-      setStep('rs-3', 'done'); setStep('rs-4', 'active'); document.getElementById('rst-4').textContent = t;
-      document.getElementById('r-tt').className = 'timer-display td-done';
-      document.getElementById('return-badge').className = 'status-badge sb-reached'; document.getElementById('return-badge').textContent = 'At Depot';
-      setBtn('r-btn-reached', true); setBtn('r-btn-unload', false);
-      showToast('📍 Reached depot', 'var(--orange)');
-    }
-    function rUnload() {
-      const t = nowTime();
-      setStep('rs-4', 'done'); setStep('rs-5', 'active'); document.getElementById('rst-5').textContent = t;
-      document.getElementById('r-ub').className = 'sbadge sba'; document.getElementById('r-ub').textContent = 'Running';
-      document.getElementById('r-ut').className = 'timer-display td-active';
-      document.getElementById('return-badge').className = 'status-badge sb-unloading'; document.getElementById('return-badge').textContent = 'Unloading...';
-      rt.uRun = true; timers['r-u'] = setInterval(() => { rt.unload++; document.getElementById('r-ut').textContent = fmtTime(rt.unload); }, 1000);
-      setBtn('r-btn-unload', true); setBtn('r-btn-deliver', false);
-      showToast('🏗️ Return unloading started', 'var(--orange)');
-    }
-    function rConfirmDeliver() {
-      openConfirm('🔄', 'rgba(0,230,118,.2)', 'Mark Return Trip Complete?', 'Confirm return trip fully completed at depot.', 'var(--green)', 'CONFIRM COMPLETE', () => {
-        clearInterval(timers['r-u']);
-        setStep('rs-5', 'done'); setStep('rs-6', 'done');
-        document.getElementById('r-ub').className = 'sbadge sbd'; document.getElementById('r-ub').textContent = 'Done ✓';
-        document.getElementById('r-ut').className = 'timer-display td-done';
-        setBtn('r-btn-deliver', true);
-        document.getElementById('return-badge').className = 'status-badge sb-delivered'; document.getElementById('return-badge').textContent = '✅ Complete';
-        showToast('✅ Return trip complete!', 'var(--green)');
-      });
+    /* TOAST */
+    let tTimer;
+    function toast(msg, color) {
+      document.getElementById('tMsg').textContent = msg;
+      document.getElementById('tDot').style.background = color;
+      const el = document.getElementById('toastEl');
+      el.classList.add('show');
+      clearTimeout(tTimer);
+      tTimer = setTimeout(() => el.classList.remove('show'), 2800);
     }
 
-    /* ══ SIGNATURE ══ */
-    function initSig(id) {
-      const c = document.getElementById(id); if (!c) return;
-      const ctx = c.getContext('2d');
-      ctx.strokeStyle = 'var(--green)'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      let drawing = false;
-      function pos(e) { const r = c.getBoundingClientRect(); const src = e.touches ? e.touches[0] : e; return { x: (src.clientX - r.left) * (c.width / r.width), y: (src.clientY - r.top) * (c.height / r.height) }; }
-      c.addEventListener('mousedown', e => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
-      c.addEventListener('mousemove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
-      c.addEventListener('mouseup', () => drawing = false);
-      c.addEventListener('touchstart', e => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }, { passive: false });
-      c.addEventListener('touchmove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }, { passive: false });
-      c.addEventListener('touchend', () => drawing = false);
-    }
-    function clearSig(id) { const c = document.getElementById(id); if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height); }
+    /* alias */
+    function showToast(m, c) { toast(m, c); }
 
-    /* ══ TOAST ══ */
-    let toastT;
-    function showToast(msg, color) {
-      document.getElementById('toast-msg').textContent = msg;
-      document.getElementById('toast-dot').style.background = color;
-      const t = document.getElementById('toast');
-      t.classList.add('show'); clearTimeout(toastT);
-      toastT = setTimeout(() => t.classList.remove('show'), 2800);
+    /* ELAPSED TIMER — counts up from trip start (08:30 AM today) */
+    const tripStartTime = new Date();
+    tripStartTime.setHours(8, 30, 0, 0);
+
+    function padZ(n) { return String(n).padStart(2, '0'); }
+
+    function updateTimer() {
+      const elapsed = Math.max(0, Date.now() - tripStartTime.getTime());
+      const eh = Math.floor(elapsed / 3600000);
+      const em = Math.floor((elapsed % 3600000) / 60000);
+      const es = Math.floor((elapsed % 60000) / 1000);
+      document.getElementById('elapsedLabel').textContent =
+        (eh > 0 ? eh + ':' : '') + padZ(em) + ':' + padZ(es);
     }
 
-    /* ══ INIT ══ */
-    window.addEventListener('load', () => {
-      initSig('sig-s');
-      initSig('sig-r');
-    });
-
+    updateTimer();
+    setInterval(updateTimer, 1000);
   </script>
 </body>
 
