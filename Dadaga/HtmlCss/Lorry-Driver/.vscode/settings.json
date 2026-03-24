@@ -1,6 +1,0 @@
-{
-    "liveServer.settings.port": 5500,
-    "liveServer.settings.host": "127.0.0.1",
-    "javascript.validate.enable": true,
-    "debug.javascript.autoAttachFilter": "onlyWithFlag"
-}
