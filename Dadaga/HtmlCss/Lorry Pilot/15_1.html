@@ -1052,15 +1052,20 @@
       transform: translateY(0);
     }
 
-    /* handle: [pref icon][drag bar][more icon] + chevron */
+    /* handle: [left btn] [drag bar centered] [right btn] — allotment style */
     .rc-handle {
       flex-shrink: 0;
       cursor: grab;
-      padding: 10px 14px 8px;
+      padding: 10px 16px 8px;
       display: flex;
       flex-direction: column;
       align-items: stretch;
       gap: 6px;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid #f0f0f0;
     }
 
     .rc-handle:active {
@@ -1070,105 +1075,133 @@
     .rc-handle-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .rc-bar-wrap {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .rc-bar {
-      flex: none;
-      width: 48px;
-      height: 4px;
+      width: 44px;
+      height: 5px;
       background: #d1d5db;
-      border-radius: 2px;
+      border-radius: 3px;
     }
 
     .rc-opt {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
       border: none;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all .2s;
       flex-shrink: 0;
+      background: #F3F4F6;
     }
 
     .rc-opt:hover {
-      transform: scale(1.1);
+      background: #E5E7EB;
+      transform: scale(1.05);
+    }
+
+    .rc-opt i {
+      font-size: 15px;
+      color: #374151;
     }
 
     .rc-opt-pref {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      color: #15803d;
+      background: #F3F4F6;
     }
 
     .rc-opt-more {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      color: #475569;
+      background: #F3F4F6;
     }
 
     .rc-mini {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
+      display: none;
     }
 
     .rc-chev {
-      font-size: 12px;
-      color: #9ca3af;
-      transition: transform .3s;
+      display: none;
     }
 
-    .rc.expanded .rc-chev {
-      transform: rotate(180deg);
-    }
-
-    /* trip type label */
+    /* allotment-style preview center: status label + two timer pills */
     .rc-trip-type {
       text-align: center;
-      font-size: 11px;
-      font-weight: 800;
-      color: #374151;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 600;
+      letter-spacing: .4px;
+      margin-bottom: 5px;
     }
 
-    /* bordered countdown box */
-    .rc-countdown-box {
+    .rc-timer-row {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      border: 1.5px solid #d1fae5;
-      border-radius: 10px;
-      padding: 6px 14px;
-      background: #f0fdf4;
     }
 
-    .rc-cd-icon {
-      color: #059669;
+    .rc-timer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 50px;
+      font-weight: 800;
+      padding: 2px 10px;
       font-size: 12px;
-    }
-
-    .rc-cd-label {
-      font-size: 13px;
-      font-weight: 900;
-      color: #065f46;
       font-family: 'Space Mono', monospace;
       white-space: nowrap;
     }
 
-    .rc-cd-sub {
+    /* count-up: green — trip in progress */
+    .rc-elapsed-pill {
+      border: 2px solid #059669;
+      color: #065f46;
+      background: #f0fdf4;
+    }
+
+    .rc-elapsed-pill i {
       font-size: 10px;
-      color: #6b7280;
-      font-weight: 600;
-      white-space: nowrap;
+      color: #059669;
+    }
+
+    /* countdown: amber — time remaining */
+    .rc-countdown-pill {
+      border: 2px solid #B45309;
+      color: #92400e;
+      background: #fffbeb;
+    }
+
+    .rc-countdown-pill i {
+      font-size: 10px;
+      color: #B45309;
+    }
+
+    .rc-timer-sep {
+      font-size: 14px;
+      color: #d1d5db;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    /* keep old class unused — hide */
+    .rc-countdown-box {
+      display: none;
+    }
+
+    .rc-cd-icon,
+    .rc-cd-sub {
+      display: none;
     }
 
     /* rc-ml row in body after at-hdr */
@@ -2014,27 +2047,29 @@
   <div class="rc-wrap">
     <div class="rc" id="rc">
 
-      <!-- handle: [pref icon] [drag bar] [more icon] — always visible -->
+      <!-- handle: [left btn] [drag bar] [right btn] — allotment style -->
       <div class="rc-handle" id="rcHandle" onclick="toggleRC()">
         <div class="rc-handle-row">
           <button class="rc-opt rc-opt-pref" title="Preferences"
             onclick="event.stopPropagation();toast('⚙️ Preferences…','var(--green)')">
             <i class="fas fa-sliders-h"></i>
           </button>
-          <div class="rc-bar"></div>
+          <div class="rc-bar-wrap">
+            <div class="rc-bar"></div>
+          </div>
           <button class="rc-opt rc-opt-more" title="More Options"
             onclick="event.stopPropagation();toast('••• More Options…','var(--muted)')">
             <i class="fas fa-ellipsis-v"></i>
           </button>
         </div>
-        <div class="rc-mini">
-          <i class="fas fa-chevron-up rc-chev" id="rcChev"></i>
-        </div>
-        <div class="rc-trip-type">Long-Term Trip</div>
-        <div class="rc-countdown-box">
-          <i class="fas fa-clock rc-cd-icon"></i>
-          <span class="rc-cd-label" id="timerLabel">1d 20m</span>
-          <span class="rc-cd-sub">to finish trip</span>
+        <div class="rc-timer-center">
+          <div class="rc-trip-type">Long-Term Trip</div>
+          <div class="rc-timer-row">
+            <div class="rc-timer-pill rc-elapsed-pill" title="Trip elapsed time">
+              <i class="fas fa-play-circle"></i>
+              <span id="elapsedLabel">00:00:00</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2312,26 +2347,19 @@
     /* alias */
     function showToast(m, c) { toast(m, c); }
 
-    /* TRIP COUNTDOWN TIMER — starts at 1 day 20 minutes, counts down */
-    const tripDuration = (1 * 24 * 60 + 20) * 60 * 1000; // 1d 20m in ms
-    const tripEndTime = new Date(Date.now() + tripDuration);
+    /* ELAPSED TIMER — counts up from trip start (08:30 AM today) */
+    const tripStartTime = new Date();
+    tripStartTime.setHours(8, 30, 0, 0);
+
+    function padZ(n) { return String(n).padStart(2, '0'); }
 
     function updateTimer() {
-      const left = Math.max(0, tripEndTime - Date.now());
-
-      const d = Math.floor(left / 86400000);
-      const h = Math.floor((left % 86400000) / 3600000);
-      const m = Math.floor((left % 3600000) / 60000);
-      const s = Math.floor((left % 60000) / 1000);
-
-      let label;
-      if (d > 0) label = d + 'd ' + h + 'h ' + m + 'm';
-      else if (h > 0) label = h + 'h ' + m + 'm ' + s + 's';
-      else if (m > 0) label = m + 'm ' + s + 's';
-      else if (left > 0) label = s + 's';
-      else label = 'Trip Ended';
-
-      document.getElementById('timerLabel').textContent = label;
+      const elapsed = Math.max(0, Date.now() - tripStartTime.getTime());
+      const eh = Math.floor(elapsed / 3600000);
+      const em = Math.floor((elapsed % 3600000) / 60000);
+      const es = Math.floor((elapsed % 60000) / 1000);
+      document.getElementById('elapsedLabel').textContent =
+        (eh > 0 ? eh + ':' : '') + padZ(em) + ':' + padZ(es);
     }
 
     updateTimer();
