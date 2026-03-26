@@ -1710,6 +1710,1720 @@
         border-top: 1px solid rgba(255, 255, 255, .06);
       }
     }
+
+    /* ═══ PREFERENCE & SETTINGS MODAL CSS (from 15_MT-maintrip.html) ═══ */
+    .pref-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      flex-direction: column;
+      background: #0d1120;
+      overflow: hidden;
+    }
+
+    .pref-modal-overlay.active {
+      display: flex;
+    }
+
+    .pref-topbar {
+      background: #141829;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #1e2538;
+    }
+
+    .pref-back {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1e2538;
+      border: 1px solid #2a3044;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      color: #aaa;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .pref-back:hover {
+      background: #2a3044;
+      color: #fff;
+    }
+
+    .pref-page-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.06em;
+    }
+
+    .pref-main-tabs {
+      background: #141829;
+      padding: 10px 16px 12px;
+      border-bottom: 1px solid #1e2538;
+      flex-shrink: 0;
+    }
+
+    .pref-pill-row {
+      display: flex;
+      background: #0d1120;
+      border-radius: 14px;
+      padding: 4px;
+      gap: 4px;
+      border: 1px solid #1e2538;
+    }
+
+    .pmain-tab {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      background: transparent;
+      color: #5a6a88;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .pmain-tab.active {
+      background: #1e2a50;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .pref-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .pref-msg-page {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .pref-msg-page.active {
+      display: flex;
+    }
+
+    .msg-sidebar {
+      background: #141829;
+      display: flex;
+      flex-direction: row;
+      border-bottom: 1px solid #1e2538;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+
+    .msg-tab-btn {
+      flex: 1;
+      min-width: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 11px 6px 9px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+      gap: 4px;
+      position: relative;
+    }
+
+    .msg-tab-btn.active {
+      border-bottom-color: #4caf50;
+      background: #0a1a0d;
+    }
+
+    .msg-tab-btn.active.opp {
+      border-bottom-color: #ff9800;
+      background: #1a0e00;
+    }
+
+    .msg-tab-btn.active.svc {
+      border-bottom-color: #7c4dff;
+      background: #0f0a1e;
+    }
+
+    .msg-tab-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+    }
+
+    .msg-tab-btn.trips .msg-tab-icon {
+      background: #0e2014;
+    }
+
+    .msg-tab-btn.opp .msg-tab-icon {
+      background: #1e1200;
+    }
+
+    .msg-tab-btn.svc .msg-tab-icon {
+      background: #160d2a;
+    }
+
+    .msg-tab-btn.active.trips .msg-tab-icon {
+      background: #2a7a2a;
+    }
+
+    .msg-tab-btn.active.opp .msg-tab-icon {
+      background: #a05000;
+    }
+
+    .msg-tab-btn.active.svc .msg-tab-icon {
+      background: #4a2aaa;
+    }
+
+    .msg-tab-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #5a6a88;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      font-family: 'Courier New', monospace;
+    }
+
+    .msg-tab-btn.active .msg-tab-label {
+      color: #c0d0e0;
+    }
+
+    .msg-tab-badge {
+      position: absolute;
+      top: 7px;
+      right: 8px;
+      background: #f44336;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+    }
+
+    .msg-searchbar {
+      background: #141829;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-bottom: 1px solid #1e2538;
+      flex-shrink: 0;
+    }
+
+    .msg-search-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #0d1120;
+      border-radius: 22px;
+      padding: 7px 14px;
+      gap: 8px;
+      border: 1px solid #2a3044;
+    }
+
+    .msg-search-wrap i {
+      color: #5a6a88;
+      font-size: 13px;
+    }
+
+    .msg-search-wrap input {
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      outline: none;
+      color: #d0d8f0;
+      flex: 1;
+    }
+
+    .msg-search-wrap input::placeholder {
+      color: #4a5a72;
+    }
+
+    .msg-clear-btn {
+      background: #2a3044;
+      color: #aaa;
+      border: 1px solid #3a4060;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .msg-clear-btn:hover {
+      background: #3a4060;
+      color: #fff;
+    }
+
+    .msg-list-scroll {
+      flex: 1;
+      overflow-y: auto;
+      background: #0d1120;
+    }
+
+    .msg-panel {
+      display: none;
+      padding: 4px 0 20px;
+    }
+
+    .msg-panel.active {
+      display: block;
+    }
+
+    .msg-card {
+      background: #141829;
+      margin: 8px 12px;
+      border-radius: 12px;
+      border-left: 4px solid #2a7a2a;
+      padding: 14px 15px;
+      border-top: 1px solid #1e2538;
+      border-right: 1px solid #1e2538;
+      border-bottom: 1px solid #1e2538;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .msg-card:hover {
+      background: #1a2040;
+      border-top-color: #2a3044;
+    }
+
+    .msg-card.opp {
+      border-left-color: #c07000;
+    }
+
+    .msg-card.svc {
+      border-left-color: #5a3acc;
+    }
+
+    .mc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .mc-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e0e8ff;
+    }
+
+    .mc-meta {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .mc-time {
+      font-size: 11px;
+      color: #5a6a88;
+      white-space: nowrap;
+      font-family: 'Courier New', monospace;
+    }
+
+    .mc-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      color: #fff;
+    }
+
+    .mc-badge.high {
+      background: #c0220a;
+    }
+
+    .mc-badge.medium {
+      background: #a05800;
+    }
+
+    .mc-badge.low {
+      background: #3a4a5a;
+    }
+
+    .mc-badge.info {
+      background: #1a5aaa;
+    }
+
+    .mc-body {
+      font-size: 13px;
+      color: #8a9ab8;
+      line-height: 1.55;
+    }
+
+    .mc-body2 {
+      font-size: 12px;
+      color: #5a6a88;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .pref-trip-page {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .pref-trip-page.active {
+      display: flex;
+    }
+
+    .trip-subtabs {
+      background: #141829;
+      padding: 10px 14px;
+      border-bottom: 1px solid #1e2538;
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .trip-stab {
+      flex: 1;
+      padding: 10px 0;
+      border: 1px solid #2a3044;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.22s;
+      background: #0d1120;
+      color: #5a6a88;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.04em;
+    }
+
+    .trip-stab.active {
+      background: #1e2a50;
+      border-color: #2979ff;
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(41, 121, 255, 0.25);
+    }
+
+    .trip-panel {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .trip-panel.active {
+      display: block;
+    }
+
+    .dash-wrap {
+      background: #0d1120;
+      min-height: 100%;
+      padding: 16px;
+    }
+
+    .db-toprow {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .db-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.04em;
+    }
+
+    .db-date {
+      font-size: 12px;
+      color: #5a6a88;
+      font-family: 'Courier New', monospace;
+      margin-top: 2px;
+    }
+
+    .db-status {
+      background: #141829;
+      border: 1.5px solid #2a3044;
+      border-radius: 12px;
+      padding: 8px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      min-width: 100px;
+    }
+
+    .db-status:hover {
+      border-color: #4a5a88;
+      background: #1e2538;
+    }
+
+    .db-status-lbl {
+      font-size: 9px;
+      color: #5a6a88;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .db-status-val {
+      font-size: 12px;
+      font-weight: 900;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .db-status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .db-status-chevron {
+      font-size: 9px;
+      color: #5a6a88;
+      margin-left: 2px;
+    }
+
+    .db-status-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: #141829;
+      border: 1px solid #2a3044;
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 100;
+      min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .db-status-dropdown.open {
+      display: block;
+    }
+
+    .db-status-opt {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid #1e2538;
+    }
+
+    .db-status-opt:last-child {
+      border-bottom: none;
+    }
+
+    .db-status-opt:hover {
+      background: #1e2538;
+    }
+
+    .db-status-opt.selected {
+      background: #1a2540;
+    }
+
+    .db-status-opt .opt-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .db-status-opt .opt-label {
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.05em;
+    }
+
+    .db-status-opt .opt-check {
+      margin-left: auto;
+      font-size: 12px;
+      color: #43e97b;
+      display: none;
+    }
+
+    .db-status-opt.selected .opt-check {
+      display: block;
+    }
+
+    .db-card {
+      background: #141829;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 1px solid #1e2538;
+    }
+
+    .db-card-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .db-card-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #7a8aaa;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-card-badge {
+      font-size: 10px;
+      color: #5a6a88;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-gauges {
+      display: flex;
+      justify-content: space-around;
+      gap: 8px;
+    }
+
+    .db-gauge {
+      text-align: center;
+      flex: 1;
+    }
+
+    .db-gauge svg {
+      display: block;
+      margin: 0 auto 4px;
+    }
+
+    .db-gauge-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: #7a8aaa;
+      letter-spacing: 0.06em;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-gauge-sub {
+      font-size: 10px;
+      color: #5a6a88;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-load-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .db-load-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #ffa94d;
+      letter-spacing: 0.08em;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-enroute {
+      background: #0a2a1a;
+      border: 1px solid #43e97b;
+      border-radius: 8px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: #43e97b;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-route-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .db-route-city {
+      flex: 1;
+    }
+
+    .db-route-tag {
+      font-size: 9px;
+      color: #5a6a88;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .db-route-name {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-route-sub {
+      font-size: 10px;
+      color: #5a6a88;
+    }
+
+    .db-arrow {
+      font-size: 18px;
+      color: #ffa94d;
+    }
+
+    .db-prog-lbl {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #7a8aaa;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 5px;
+    }
+
+    .db-prog-track {
+      background: #1e2538;
+      border-radius: 4px;
+      height: 8px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .db-prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffa94d, #ff6b35);
+      border-radius: 4px;
+      width: 68%;
+    }
+
+    .db-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .db-stat {
+      background: #0d1120;
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
+      border: 1px solid #1e2538;
+    }
+
+    .db-stat-icon {
+      font-size: 16px;
+    }
+
+    .db-stat-lbl {
+      font-size: 9px;
+      color: #5a6a88;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+
+    .db-stat-val {
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+    }
+
+    .db-reload {
+      background: #141829;
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid #1e2538;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .db-reload-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #43e97b;
+      flex-shrink: 0;
+    }
+
+    .db-reload-info {
+      flex: 1;
+    }
+
+    .db-reload-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #43e97b;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.05em;
+    }
+
+    .db-reload-sub {
+      font-size: 11px;
+      color: #5a6a88;
+    }
+
+    .db-reload-btn {
+      background: #43e97b;
+      color: #0a1a10;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .db-reload-btn:hover {
+      background: #6effa0;
+    }
+
+    .tp-wrap {
+      background: #0a0d16;
+      min-height: 100%;
+      padding: 16px;
+    }
+
+    .tp-live-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+    }
+
+    .tp-live-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #43e97b;
+      animation: tpPulse 1.4s infinite;
+    }
+
+    @keyframes tpPulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(1.35)
+      }
+    }
+
+    .tp-live-lbl {
+      font-size: 11px;
+      font-weight: 800;
+      color: #43e97b;
+      letter-spacing: 0.1em;
+      font-family: 'Courier New', monospace;
+    }
+
+    .tp-heading {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .tp-timer {
+      font-size: 40px;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 18px;
+    }
+
+    .tp-card {
+      background: #141829;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border: 1px solid #1e2538;
+    }
+
+    .tp-card-hdr {
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .tp-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .tp-avatar.org {
+      background: linear-gradient(135deg, #e65100, #ff9800);
+    }
+
+    .tp-avatar.blu {
+      background: linear-gradient(135deg, #1565c0, #2979ff);
+    }
+
+    .tp-info {
+      flex: 1;
+    }
+
+    .tp-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .tp-addr {
+      font-size: 12px;
+      color: #7a8aaa;
+    }
+
+    .tp-drop {
+      font-size: 12px;
+      color: #7a8aaa;
+    }
+
+    .tp-drop b {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .tp-fav {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #2a1800;
+      border-radius: 10px;
+      padding: 3px 10px;
+      margin-top: 5px;
+      font-size: 11px;
+      color: #ff9800;
+      font-weight: 700;
+    }
+
+    .tp-menu-btn {
+      background: none;
+      border: none;
+      color: #7a8aaa;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .tp-map {
+      background: #1a2030;
+      height: 165px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tp-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(#1e2540 1px, transparent 1px), linear-gradient(90deg, #1e2540 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .tp-route-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tp-map-lbl {
+      position: absolute;
+      font-size: 9px;
+      font-weight: 700;
+      color: #5a6a88;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.06em;
+    }
+
+    .tp-map-lbl.pu {
+      bottom: 10px;
+      left: 12px;
+    }
+
+    .tp-map-lbl.do {
+      top: 8px;
+      right: 10px;
+    }
+
+    .tp-pin {
+      position: absolute;
+      font-size: 22px;
+      line-height: 1;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .5));
+    }
+
+    .tp-pin.pu {
+      bottom: 30px;
+      left: 88px;
+    }
+
+    .tp-pin.do {
+      top: 22px;
+      right: 58px;
+    }
+
+    .tp-next-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .tp-next-footer {
+      padding: 12px 16px;
+      background: #0f1420;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid #1e2538;
+    }
+
+    .tp-ready-icon {
+      font-size: 18px;
+      color: #7a8aaa;
+    }
+
+    .tp-ready-info {
+      flex: 1;
+    }
+
+    .tp-ready-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .tp-ready-route {
+      font-size: 11px;
+      color: #7a8aaa;
+    }
+
+    .tp-accept-btn {
+      background: #2979ff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .tp-accept-btn:hover {
+      background: #1565c0;
+    }
+
+    .tp-loc-icon {
+      color: #f44336;
+      font-size: 20px;
+      align-self: flex-start;
+      margin-top: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════
+           SETTINGS MODAL (from 14_settings3sle.html)
+        ═══════════════════════════════════════════════ */
+    .settings-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      flex-direction: column;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      overflow: hidden;
+    }
+
+    .settings-modal-overlay.active {
+      display: flex;
+    }
+
+    .settings-modal-topbar {
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      flex-shrink: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .settings-modal-back {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .settings-modal-back:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .settings-modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.06em;
+    }
+
+    .settings-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    /* reuse settings styles scoped inside overlay */
+    .settings-modal-overlay .smo-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings-modal-overlay .smo-nav-tabs {
+      display: flex;
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .settings-modal-overlay .smo-nav-tab {
+      flex: 1;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .settings-modal-overlay .smo-nav-tab.active {
+      color: white;
+      position: relative;
+    }
+
+    .settings-modal-overlay .smo-nav-tab.s-settings.active {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+    }
+
+    .settings-modal-overlay .smo-nav-tab.s-location.active {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+    }
+
+    .settings-modal-overlay .smo-nav-tab.s-emergency.active {
+      background: linear-gradient(135deg, #FF6B6B, #FF5252);
+    }
+
+    .settings-modal-overlay .smo-page {
+      display: none;
+      min-height: 500px;
+    }
+
+    .settings-modal-overlay .smo-page.active {
+      display: block;
+    }
+
+    .settings-modal-overlay .smo-page-header {
+      padding: 20px;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .settings-modal-overlay .smo-settings-hdr {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+    }
+
+    .settings-modal-overlay .smo-location-hdr {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+    }
+
+    .settings-modal-overlay .smo-emergency-hdr {
+      background: linear-gradient(135deg, #FF6B6B, #FF5252);
+    }
+
+    .settings-modal-overlay .smo-menu-button {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .settings-modal-overlay .smo-menu-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .settings-modal-overlay .smo-dropdown-menu {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      min-width: 200px;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-10px);
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .settings-modal-overlay .smo-dropdown-menu.show {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    .settings-modal-overlay .smo-dropdown-item {
+      padding: 15px 20px;
+      cursor: pointer;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .settings-modal-overlay .smo-dropdown-item:last-child {
+      border-bottom: none;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .settings-modal-overlay .smo-dropdown-item:first-child {
+      border-radius: 10px 10px 0 0;
+    }
+
+    .settings-modal-overlay .smo-dropdown-item:hover {
+      background: #f8f9fa;
+    }
+
+    .settings-modal-overlay .smo-page-content {
+      padding: 20px;
+    }
+
+    .settings-modal-overlay .smo-section {
+      margin-bottom: 30px;
+    }
+
+    .settings-modal-overlay .smo-section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .settings-modal-overlay .smo-section-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .settings-modal-overlay .smo-section-item:hover {
+      background: #e9ecef;
+    }
+
+    .settings-modal-overlay .smo-section-item-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .settings-modal-overlay .smo-toggle {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: #ccc;
+      border-radius: 13px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .settings-modal-overlay .smo-toggle.active {
+      background: #4CAF50;
+    }
+
+    .settings-modal-overlay .smo-toggle::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .settings-modal-overlay .smo-toggle.active::before {
+      transform: translateX(24px);
+    }
+
+    .settings-modal-overlay .smo-sos-button {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF6B6B, #FF5252);
+      border: 4px solid #FF8A80;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+      transition: all 0.3s;
+    }
+
+    .settings-modal-overlay .smo-sos-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6);
+    }
+
+    .settings-modal-overlay .smo-mini-map {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(45deg, #e3f2fd, #bbdefb);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .settings-modal-overlay .smo-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: #e8f5e8;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .settings-modal-overlay .smo-status.inactive {
+      background: #ffebee;
+    }
+
+    .settings-modal-overlay .smo-emergency-numbers {
+      display: grid;
+      gap: 10px;
+    }
+
+    .settings-modal-overlay .smo-emergency-number {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: #fff3e0;
+      border-radius: 10px;
+      border-left: 4px solid #ff9800;
+    }
+
+    .settings-modal-overlay .smo-number-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .settings-modal-overlay .smo-call-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .settings-modal-overlay .smo-action-buttons {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+      background: #f8f9fa;
+    }
+
+    .settings-modal-overlay .smo-btn {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .settings-modal-overlay .smo-btn-primary {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .settings-modal-overlay .smo-btn-primary:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+    }
+
+    .settings-modal-overlay .smo-btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .settings-modal-overlay .smo-btn-secondary:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+    }
+
+    .settings-modal-overlay .smo-btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .settings-modal-overlay .smo-btn-danger:hover {
+      background: #c82333;
+      transform: translateY(-2px);
+    }
+
+    .settings-modal-overlay .smo-checkbox {
+      width: 20px;
+      height: 20px;
+      accent-color: #4CAF50;
+    }
+
+    /* Help / Privacy sub-modals inside settings overlay */
+    .settings-modal-overlay .smo-submodal {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-modal-overlay .smo-submodal.show {
+      display: flex;
+    }
+
+    .settings-modal-overlay .smo-submodal-content {
+      background: white;
+      margin: 20px;
+      padding: 0;
+      border-radius: 15px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings-modal-overlay .smo-submodal-header {
+      padding: 25px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .settings-modal-overlay .smo-submodal-body {
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .settings-modal-overlay .smo-close-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-modal-overlay .smo-close-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .settings-modal-overlay .smo-submodal-body h3 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 12px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .settings-modal-overlay .smo-submodal-body h4 {
+      color: #555;
+      font-size: 15px;
+      margin: 12px 0 6px;
+    }
+
+    .settings-modal-overlay .smo-submodal-body p {
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .settings-modal-overlay .smo-submodal-body ul {
+      margin-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    .settings-modal-overlay .smo-submodal-body li {
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    /* ═══════════════════════════════════════════════
+           SIDEBAR MENU (from 10practice.html)
+        ═══════════════════════════════════════════════ */
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100vh;
+      background: linear-gradient(180deg, #1a1d29 0%, #2c3e50 100%);
+      z-index: 6000;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+      overflow-y: auto;
+    }
+
+    .sidebar-menu.open {
+      left: 0;
+    }
+
+    .sidebar-menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 5999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .sidebar-menu-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar-menu-header {
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .close-menu-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .close-menu-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 35px;
+      color: white;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-name {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .profile-rating {
+      color: #bbb;
+      font-size: 13px;
+    }
+
+    .sidebar-menu-items {
+      padding: 10px 0;
+    }
+
+    .sidebar-menu-item {
+      padding: 16px 25px;
+      color: #e0e0e0;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-menu-item a {
+      margin-left: 10px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .sidebar-menu-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-left-color: #667eea;
+      color: white;
+    }
+
+    .sidebar-menu-item i {
+      width: 20px;
+      font-size: 16px;
+    }
+
+
+    /* ── TIMER ROW ── */
+    .rc-timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
   </style>
 </head>
 
@@ -1731,25 +3445,34 @@
     <div class="sb-nav">
       <div class="sb-grp">Navigation</div>
       <div class="sb-link on"><i class="fas fa-home"></i> Home</div>
-      <div class="sb-link" onclick="toast('🚛 My Trips…','var(--green)')"><i class="fas fa-truck"></i> My Trips</div>
-      <div class="sb-link" onclick="toast('📅 Schedule…','var(--green)')"><i class="fas fa-calendar-alt"></i> Schedule
+      <div class="sb-link" onclick="toast('🚛 My Trips…','var(--green)')"><i class="fas fa-truck"></i> My Trips
       </div>
-      <div class="sb-link" onclick="toast('🗺️ Live Map…','var(--blue)')"><i class="fas fa-map-marked-alt"></i> Live Map
+      <div class="sb-link" onclick="toast('📅 Schedule…','var(--green)')"><i class="fas fa-calendar-alt"></i>
+        Schedule
+      </div>
+      <div class="sb-link" onclick="toast('🗺️ Live Map…','var(--blue)')"><i class="fas fa-map-marked-alt"></i>
+        Live Map
       </div>
       <div class="sb-grp">Account</div>
-      <div class="sb-link" onclick="toast('💰 Earnings…','var(--green)')"><i class="fas fa-rupee-sign"></i> Earnings
+      <div class="sb-link" onclick="toast('💰 Earnings…','var(--green)')"><i class="fas fa-rupee-sign"></i>
+        Earnings
       </div>
-      <div class="sb-link" onclick="toast('👤 Profile…','var(--muted)')"><i class="fas fa-user-circle"></i> Profile
+      <div class="sb-link" onclick="toast('👤 Profile…','var(--muted)')"><i class="fas fa-user-circle"></i>
+        Profile
       </div>
-      <div class="sb-link" onclick="toast('📄 Documents…','var(--muted)')"><i class="fas fa-file-alt"></i> Documents
+      <div class="sb-link" onclick="toast('📄 Documents…','var(--muted)')"><i class="fas fa-file-alt"></i>
+        Documents
       </div>
       <div class="sb-grp">Support</div>
-      <div class="sb-link" onclick="toast('🆘 Help…','var(--orange)')"><i class="fas fa-headset"></i> Help &amp; Support
+      <div class="sb-link" onclick="toast('🆘 Help…','var(--orange)')"><i class="fas fa-headset"></i> Help &amp;
+        Support
       </div>
-      <div class="sb-link" onclick="toast('⚙️ Settings…','var(--muted)')"><i class="fas fa-cog"></i> Settings</div>
+      <div class="sb-link" onclick="toast('⚙️ Settings…','var(--muted)')"><i class="fas fa-cog"></i> Settings
+      </div>
     </div>
     <div class="sb-foot">
-      <button class="sb-close-btn" onclick="closeSB()"><i class="fas fa-sign-out-alt"></i> &nbsp;Close Sidebar</button>
+      <button class="sb-close-btn" onclick="closeSB()"><i class="fas fa-sign-out-alt"></i> &nbsp;Close
+        Sidebar</button>
     </div>
   </div>
 
@@ -1907,7 +3630,8 @@
       </div>
     </div>
     <div class="ch-party">📍 Mumbai → Pune Corridor &nbsp;·&nbsp; 6-Month Agreement</div>
-    <div class="ch-hint"><i class="fas fa-hand-pointer" style="font-size:10px;"></i> Tap to view full contract details
+    <div class="ch-hint"><i class="fas fa-hand-pointer" style="font-size:10px;"></i> Tap to view full contract
+      details
     </div>
     <div class="cp-hdr"><span class="cp-lbl">Contract Progress</span><span class="cp-pct">75%</span></div>
     <div class="cp-track">
@@ -1951,11 +3675,43 @@
               <div class="rv-cv" style="font-size:12px;">Rajan Mehta</div>
             </div>
           </div>
-          <div class="rv-row"><span class="rv-k">Primary Contact</span><span class="rv-v">+91 99999 00001</span></div>
-          <div class="rv-row"><span class="rv-k">Company Phone</span><span class="rv-v">+91 22 1234 5678</span></div>
-          <div class="rv-row"><span class="rv-k">Email</span><span class="rv-v"><a href="/cdn-cgi/l/email-protection"
-                class="__cf_email__"
-                data-cfemail="6900070f06291a01081b04080c071d470a0604">[email&#160;protected]</a></span></div>
+          <div class="rv-row">
+            <span class="rv-k">Primary Contact</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <a href="tel:+919999900001" onclick="event.stopPropagation();"
+                style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.4);color:var(--green);font-size:10px;font-weight:800;text-decoration:none;font-family:'Barlow',sans-serif;"
+                title="Call Primary Contact">
+                <i class="fas fa-phone" style="font-size:9px;"></i> Call
+              </a>
+              <a href="sms:+919999900001" onclick="event.stopPropagation();"
+                style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:rgba(41,121,255,.12);border:1px solid rgba(41,121,255,.4);color:#82b1ff;font-size:10px;font-weight:800;text-decoration:none;font-family:'Barlow',sans-serif;"
+                title="Message Primary Contact">
+                <i class="fas fa-comment-dots" style="font-size:9px;"></i> Message
+              </a>
+            </div>
+          </div>
+          <div class="rv-row">
+            <span class="rv-k">Company Phone</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <a href="tel:+912212345678" onclick="event.stopPropagation();"
+                style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.4);color:var(--green);font-size:10px;font-weight:800;text-decoration:none;font-family:'Barlow',sans-serif;"
+                title="Call Company Phone">
+                <i class="fas fa-phone" style="font-size:9px;"></i> Call
+              </a>
+              <a href="sms:+912212345678" onclick="event.stopPropagation();"
+                style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:rgba(41,121,255,.12);border:1px solid rgba(41,121,255,.4);color:#82b1ff;font-size:10px;font-weight:800;text-decoration:none;font-family:'Barlow',sans-serif;"
+                title="Message Company Phone">
+                <i class="fas fa-comment-dots" style="font-size:9px;"></i> Message
+              </a>
+            </div>
+          </div>
+          <div class="rv-row">
+            <span class="rv-k">Email</span>
+            <span class="rv-v" style="display:inline-flex;align-items:center;gap:5px;">
+              <i class="fas fa-lock" style="font-size:9px;color:var(--muted);"></i>
+              <span style="color:var(--muted);font-size:10px;font-weight:600;font-style:italic;">Protected</span>
+            </span>
+          </div>
           <div class="rv-row"><span class="rv-k">HQ Address</span><span class="rv-v">Dharavi Industrial Area,
               Mumbai</span></div>
         </div>
@@ -1979,11 +3735,14 @@
               <div class="rv-cv">08:00–18:00</div>
             </div>
           </div>
-          <div class="rv-row"><span class="rv-k">Pick-up</span><span class="rv-v">Mumbai — Dharavi Warehouse</span>
+          <div class="rv-row"><span class="rv-k">Pick-up</span><span class="rv-v">Mumbai — Dharavi
+              Warehouse</span>
           </div>
-          <div class="rv-row"><span class="rv-k">Destination</span><span class="rv-v">Pune — Hadapsar Industrial
+          <div class="rv-row"><span class="rv-k">Destination</span><span class="rv-v">Pune — Hadapsar
+              Industrial
               Zone</span></div>
-          <div class="rv-row"><span class="rv-k">Monthly Trips</span><span class="rv-v">4 trips/month</span></div>
+          <div class="rv-row"><span class="rv-k">Monthly Trips</span><span class="rv-v">4 trips/month</span>
+          </div>
         </div>
         <div class="rv-sec">
           <div class="rv-stl"><i class="fas fa-rupee-sign"></i> Financial Terms</div>
@@ -2007,20 +3766,26 @@
           </div>
           <div class="rv-row"><span class="rv-k">Payment Cycle</span><span class="rv-v">Monthly — 5th of next
               month</span></div>
-          <div class="rv-row"><span class="rv-k">Detention Rate</span><span class="rv-v">₹2,000/hr after 4hr</span>
+          <div class="rv-row"><span class="rv-k">Detention Rate</span><span class="rv-v">₹2,000/hr after
+              4hr</span>
           </div>
         </div>
         <div class="rv-sec">
           <div class="rv-stl"><i class="fas fa-truck"></i> Vehicle &amp; Compliance</div>
-          <div class="rv-row"><span class="rv-k">Vehicle No.</span><span class="rv-v">MH 12 AK 4821</span></div>
-          <div class="rv-row"><span class="rv-k">Type</span><span class="rv-v">22-Wheeler / Multi-axle</span></div>
+          <div class="rv-row"><span class="rv-k">Vehicle No.</span><span class="rv-v">MH 12 AK 4821</span>
+          </div>
+          <div class="rv-row"><span class="rv-k">Type</span><span class="rv-v">22-Wheeler / Multi-axle</span>
+          </div>
           <div class="rv-row"><span class="rv-k">Capacity</span><span class="rv-v">16,000 KG</span></div>
           <div style="margin-top:8px;">
-            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> GPS Tracking Active
+            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> GPS Tracking
+              Active
             </div>
-            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> Insurance Valid till Dec
+            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> Insurance
+              Valid till Dec
               2025</div>
-            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> Pollution Certificate
+            <div class="rv-comp"><span class="rv-ck"><i class="fas fa-check-circle"></i></span> Pollution
+              Certificate
               Valid</div>
             <div class="rv-comp" style="color:var(--orange);"><span style="color:var(--orange)"><i
                   class="fas fa-exclamation-circle"></i></span> Fitness Cert. expires in 15 days</div>
@@ -2033,7 +3798,8 @@
             onclick="toast('📄 Opening contract PDF…','var(--blue)')">
             <span style="font-size:22px;">📄</span>
             <div>
-              <div style="font-size:12px;font-weight:700;color:#fff;">Sharma_Enterprises_Contract.pdf</div>
+              <div style="font-size:12px;font-weight:700;color:#fff;">Sharma_Enterprises_Contract.pdf
+              </div>
               <div style="font-size:10px;color:var(--muted);">1.2 MB · Signed 01 Jan 2025</div>
             </div>
             <i class="fas fa-download" style="margin-left:auto;color:var(--green);font-size:14px;"></i>
@@ -2050,25 +3816,30 @@
       <!-- handle: [left btn] [drag bar] [right btn] — allotment style -->
       <div class="rc-handle" id="rcHandle" onclick="toggleRC()">
         <div class="rc-handle-row">
-          <button class="rc-opt rc-opt-pref" title="Preferences"
-            onclick="event.stopPropagation();toast('⚙️ Preferences…','var(--green)')">
+          <button class="rc-opt rc-opt-pref" title="Preferences" onclick="event.stopPropagation();openPrefModal()">
             <i class="fas fa-sliders-h"></i>
           </button>
           <div class="rc-bar-wrap">
             <div class="rc-bar"></div>
           </div>
-          <button class="rc-opt rc-opt-more" title="More Options"
-            onclick="event.stopPropagation();toast('••• More Options…','var(--muted)')">
+          <button class="rc-opt rc-opt-more" title="More Options" onclick="event.stopPropagation();openSettingsModal()">
             <i class="fas fa-ellipsis-v"></i>
           </button>
         </div>
         <div class="rc-timer-center">
-          <div class="rc-trip-type">Long-Term Trip</div>
+          <div class="rc-trip-type">Long-Term Trip &nbsp;·&nbsp; <span id="tripCountLabel">Trip 18 of
+              24</span></div>
           <div class="rc-timer-row">
-            <div class="rc-timer-pill rc-elapsed-pill" title="Trip elapsed time">
-              <i class="fas fa-play-circle"></i>
-              <span id="elapsedLabel">00:00:00</span>
+            <div class="rc-timer-pill" id="totalAccPill"
+              style="border:2px solid #7c3aed;background:#f5f3ff;color:#5b21b6;font-size:12px;">
+              <i class="fas fa-layer-group" style="color:#7c3aed;font-size:10px;"></i>
+              <span style="font-size:9px;font-weight:800;color:#7c3aed;margin-right:3px;">TOTAL</span>
+              <span id="totalAccLabel">00:00:00</span>
             </div>
+            <button onclick="event.stopPropagation();completeCurrentTrip()"
+              style="font-size:9px;font-weight:800;padding:4px 10px;border-radius:20px;border:1px solid #059669;background:#f0fdf4;color:#065f46;cursor:pointer;font-family:'Barlow',sans-serif;white-space:nowrap;">
+              ✔ Complete Trip
+            </button>
           </div>
         </div>
       </div>
@@ -2158,7 +3929,8 @@
           <div class="trip-item ti-active" onclick="toast('📋 TR-2847 details…','var(--yellow)')">
             <div class="ti-ic sn">🚛</div>
             <div class="ti-inf">
-              <div class="ti-top"><span class="ti-id">#TR-2847</span><span class="ti-dt">Today</span></div>
+              <div class="ti-top"><span class="ti-id">#TR-2847</span><span class="ti-dt">Today</span>
+              </div>
               <div class="ti-rt">Mumbai → Pune · Dharavi → Hadapsar</div>
               <div class="ti-bot"><span class="ti-st tis-active">🟡 In Progress</span><span
                   class="ti-earn">₹36,000</span></div>
@@ -2168,7 +3940,8 @@
           <div class="trip-item ti-done" onclick="toast('✅ TR-2839 completed','var(--green)')">
             <div class="ti-ic sn">🚛</div>
             <div class="ti-inf">
-              <div class="ti-top"><span class="ti-id">#TR-2839</span><span class="ti-dt">24 Mar</span></div>
+              <div class="ti-top"><span class="ti-id">#TR-2839</span><span class="ti-dt">24 Mar</span>
+              </div>
               <div class="ti-rt">Mumbai → Pune · Single Load · 9,800 KG</div>
               <div class="ti-bot"><span class="ti-st tis-done">✅ Delivered</span><span class="ti-earn">₹36,000</span>
               </div>
@@ -2178,7 +3951,8 @@
           <div class="trip-item ti-done" onclick="toast('✅ TRPR-5671 completed','var(--green)')">
             <div class="ti-ic al">🔄</div>
             <div class="ti-inf">
-              <div class="ti-top"><span class="ti-id">#TRPR-5671</span><span class="ti-dt">22 Mar</span></div>
+              <div class="ti-top"><span class="ti-id">#TRPR-5671</span><span class="ti-dt">22 Mar</span>
+              </div>
               <div class="ti-rt">Pune → Mumbai · Return Back-haul</div>
               <div class="ti-bot"><span class="ti-st tis-done">✅ Complete</span><span class="ti-earn">₹44,000</span>
               </div>
@@ -2188,7 +3962,8 @@
           <div class="trip-item ti-done" onclick="toast('✅ TR-2831 details','var(--green)')">
             <div class="ti-ic sn">🚛</div>
             <div class="ti-inf">
-              <div class="ti-top"><span class="ti-id">#TR-2831</span><span class="ti-dt">19 Mar</span></div>
+              <div class="ti-top"><span class="ti-id">#TR-2831</span><span class="ti-dt">19 Mar</span>
+              </div>
               <div class="ti-rt">Mumbai → Pune · Single Load · 10,500 KG</div>
               <div class="ti-bot"><span class="ti-st tis-done">✅ Delivered</span><span class="ti-earn">₹36,000</span>
               </div>
@@ -2198,7 +3973,8 @@
           <div class="trip-item ti-done" onclick="toast('✅ TR-2820 details','var(--green)')">
             <div class="ti-ic sn">🚛</div>
             <div class="ti-inf">
-              <div class="ti-top"><span class="ti-id">#TR-2820</span><span class="ti-dt">15 Mar</span></div>
+              <div class="ti-top"><span class="ti-id">#TR-2820</span><span class="ti-dt">15 Mar</span>
+              </div>
               <div class="ti-rt">Mumbai → Pune · Single Load · 11,200 KG</div>
               <div class="ti-bot"><span class="ti-st tis-done">✅ Delivered</span><span class="ti-earn">₹36,000</span>
               </div>
@@ -2208,7 +3984,8 @@
           <div class="trip-item ti-sched" onclick="toast('📅 TRPR-5678 scheduled','var(--muted)')">
             <div class="ti-ic al">🔄</div>
             <div class="ti-inf">
-              <div class="ti-top"><span class="ti-id">#TRPR-5678</span><span class="ti-dt">28 Mar</span></div>
+              <div class="ti-top"><span class="ti-id">#TRPR-5678</span><span class="ti-dt">28 Mar</span>
+              </div>
               <div class="ti-rt">Mumbai → Pune &amp; Return · Back-haul</div>
               <div class="ti-bot"><span class="ti-st tis-sched">⏰ Scheduled</span><span class="ti-earn">₹44,000</span>
               </div>
@@ -2347,24 +4124,799 @@
     /* alias */
     function showToast(m, c) { toast(m, c); }
 
-    /* ELAPSED TIMER — counts up from trip start (08:30 AM today) */
-    const tripStartTime = new Date();
-    tripStartTime.setHours(8, 30, 0, 0);
-
+    /* ── MULTI-TRIP ACCUMULATOR TIMER ── */
     function padZ(n) { return String(n).padStart(2, '0'); }
-
-    function updateTimer() {
-      const elapsed = Math.max(0, Date.now() - tripStartTime.getTime());
-      const eh = Math.floor(elapsed / 3600000);
-      const em = Math.floor((elapsed % 3600000) / 60000);
-      const es = Math.floor((elapsed % 60000) / 1000);
-      document.getElementById('elapsedLabel').textContent =
-        (eh > 0 ? eh + ':' : '') + padZ(em) + ':' + padZ(es);
+    function fmtSecs(s) {
+      const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sc = s % 60;
+      return (h > 0 ? h + ':' : '') + padZ(m) + ':' + padZ(sc);
     }
 
-    updateTimer();
-    setInterval(updateTimer, 1000);
+    /* Trip state ── { id, startEpoch, endEpoch|null }
+       Trips 1-17: simulated completed (1h 30m each)
+       Trip 18:    active, started 08:30 today
+       Contract:   24 trips total                     */
+    const TOTAL_CONTRACT_TRIPS = 24;
+    const TRIP_DUR_SECS = 5400; // 1h 30m per completed trip
+
+    const todayBase = new Date();
+    todayBase.setHours(8, 30, 0, 0);
+    const todayEpoch = todayBase.getTime();
+
+    const tripLog = [];
+    for (let i = 1; i <= 17; i++) {
+      const s = todayEpoch - (18 - i) * (TRIP_DUR_SECS + 600) * 1000;
+      tripLog.push({ id: i, startEpoch: s, endEpoch: s + TRIP_DUR_SECS * 1000 });
+    }
+    tripLog.push({ id: 18, startEpoch: todayEpoch, endEpoch: null }); // active
+
+    function getCompletedSecs() {
+      return tripLog.reduce((acc, t) => {
+        if (t.endEpoch !== null) acc += Math.round((t.endEpoch - t.startEpoch) / 1000);
+        return acc;
+      }, 0);
+    }
+
+    function getActiveSecs() {
+      const a = tripLog.find(t => t.endEpoch === null);
+      return a ? Math.max(0, Math.round((Date.now() - a.startEpoch) / 1000)) : 0;
+    }
+
+    function completeCurrentTrip() {
+      const active = tripLog.find(t => t.endEpoch === null);
+      if (!active) { toast('✅ All contract trips completed!', 'var(--green)'); return; }
+      active.endEpoch = Date.now();
+      const nextId = active.id + 1;
+      if (nextId <= TOTAL_CONTRACT_TRIPS) {
+        tripLog.push({ id: nextId, startEpoch: Date.now(), endEpoch: null });
+        toast('✅ Trip ' + active.id + ' done! Starting Trip ' + nextId, 'var(--green)');
+      } else {
+        toast('🏁 All ' + TOTAL_CONTRACT_TRIPS + ' trips completed!', 'var(--green)');
+      }
+      updateTimers();
+    }
+
+    function updateTimers() {
+      const active = tripLog.find(t => t.endEpoch === null);
+      const currentId = active ? active.id : tripLog[tripLog.length - 1].id;
+
+      // Trip count label
+      document.getElementById('tripCountLabel').textContent =
+        'Trip ' + currentId + ' of ' + TOTAL_CONTRACT_TRIPS;
+
+      // TOTAL pill = all completed trips + current active trip time
+      const totalSecs = getCompletedSecs() + getActiveSecs();
+      document.getElementById('totalAccLabel').textContent = fmtSecs(totalSecs);
+
+      // Tooltip shows breakdown
+      const pill = document.getElementById('totalAccPill');
+      if (pill) {
+        const done = tripLog.filter(t => t.endEpoch !== null);
+        const parts = done.map(t =>
+          'T' + t.id + '(' + fmtSecs(Math.round((t.endEpoch - t.startEpoch) / 1000)) + ')');
+        if (active) parts.push('T' + active.id + '(live)');
+        pill.title = parts.join(' + ') + ' = ' + fmtSecs(totalSecs);
+      }
+    }
+
+    updateTimers();
+    setInterval(() => { updateTimers(); }, 1000);
+
+    /* ═══ PREFERENCE & SETTINGS MODAL JS (from 15_MT-maintrip.html) ═══ */
+    /* ══════════════════════════════
+       PREFERENCE MODAL LOGIC (LEFT BTN)
+    ══════════════════════════════ */
+    function openPrefModal() { document.getElementById('prefModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closePrefModal() { document.getElementById('prefModal').classList.remove('active'); document.body.style.overflow = ''; closeStatusDropdown(); }
+
+    function switchPrefTab(tab) {
+      document.getElementById('pmTab-msg').classList.toggle('active', tab === 'msg');
+      document.getElementById('pmTab-trip').classList.toggle('active', tab === 'trip');
+      document.getElementById('prefMsgPage').classList.toggle('active', tab === 'msg');
+      document.getElementById('prefTripPage').classList.toggle('active', tab === 'trip');
+      closeStatusDropdown();
+    }
+    function switchMsgTab(key) {
+      ['trips', 'opp', 'svc'].forEach(k => {
+        document.getElementById('msgt-' + k).classList.toggle('active', k === key);
+        document.getElementById('msgp-' + k).classList.toggle('active', k === key);
+      });
+    }
+    function switchTripTab(key) {
+      ['dash', 'planner'].forEach(k => {
+        document.getElementById('tstab-' + k).classList.toggle('active', k === key);
+        document.getElementById('tripPanel-' + k).classList.toggle('active', k === key);
+      });
+      closeStatusDropdown();
+    }
+    function filterMsgCards() { const q = document.getElementById('msgSearchInput').value.toLowerCase(); document.querySelectorAll('.msg-card').forEach(c => { c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none'; }); }
+    function clearMsgSearch() { document.getElementById('msgSearchInput').value = ''; document.querySelectorAll('.msg-card').forEach(c => c.style.display = ''); }
+
+    function toggleStatusDropdown(e) { e.stopPropagation(); document.getElementById('dbStatusDropdown').classList.toggle('open'); }
+    function closeStatusDropdown() { const d = document.getElementById('dbStatusDropdown'); if (d) d.classList.remove('open'); }
+    function setStatus(e, label, dotColor, textColor) { e.stopPropagation(); document.getElementById('dbStatusText').textContent = label; document.getElementById('dbStatusText').style.color = textColor; document.getElementById('dbStatusDot').style.background = dotColor; document.querySelectorAll('.db-status-opt').forEach(o => o.classList.remove('selected')); e.currentTarget.classList.add('selected'); closeStatusDropdown(); }
+    document.addEventListener('click', function (e) { if (!e.target.closest('#dbStatusBadge')) closeStatusDropdown(); });
+
+    /* ══════════════════════════════
+       SETTINGS MODAL LOGIC (RIGHT BTN)
+    ══════════════════════════════ */
+    function openSettingsModal() { document.getElementById('settingsModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('active'); document.body.style.overflow = ''; }
+
+    // Tab switching inside settings modal
+    document.querySelectorAll('.smo-nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const pageId = tab.getAttribute('data-smo-page');
+        document.querySelectorAll('.smo-nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.smo-page').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(pageId).classList.add('active');
+        document.querySelectorAll('.smo-dropdown-menu').forEach(d => d.classList.remove('show'));
+      });
+    });
+
+    function smoToggleDropdown(btn) {
+      const dropdown = btn.nextElementSibling;
+      document.querySelectorAll('.smo-dropdown-menu').forEach(m => { if (m !== dropdown) m.classList.remove('show'); });
+      dropdown.classList.toggle('show');
+      setTimeout(() => { document.addEventListener('click', function close(e) { if (!btn.contains(e.target) && !dropdown.contains(e.target)) { dropdown.classList.remove('show'); document.removeEventListener('click', close); } }); }, 100);
+    }
+    function smoShowSubModal(id) { document.getElementById(id).classList.add('show'); document.querySelectorAll('.smo-dropdown-menu').forEach(d => d.classList.remove('show')); }
+    function smoCloseSubModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    function smoToggleLocationSharing(on) {
+      const el = document.getElementById('smo-loc-status');
+      const txt = document.getElementById('smo-loc-status-txt');
+      if (on) { txt.textContent = 'ON'; txt.style.color = '#4CAF50'; el.classList.remove('inactive'); alert('📍 Location sharing started!'); }
+      else { txt.textContent = 'OFF'; txt.style.color = '#ff5252'; el.classList.add('inactive'); alert('❌ Location sharing stopped.'); }
+    }
+    function smo_sosAlert() {
+      if (confirm('🆘 EMERGENCY! Call police and alert contacts?')) {
+        alert('🚨 SOS activated! Police notified. Emergency contacts alerted with your location.');
+      }
+    }
+
+
   </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+     PREFERENCE MODAL — LEFT BTN (from 11practice-connect.html)
+════════════════════════════════════════════════════════ -->
+  <div class="pref-modal-overlay" id="prefModal">
+
+    <div class="pref-topbar">
+      <button class="pref-back" onclick="closePrefModal()">&#8592;</button>
+      <span class="pref-page-title">⚙️ PREFERENCES</span>
+    </div>
+
+    <div class="pref-main-tabs">
+      <div class="pref-pill-row">
+        <button class="pmain-tab active" id="pmTab-msg" onclick="switchPrefTab('msg')">💬 Messages</button>
+        <button class="pmain-tab" id="pmTab-trip" onclick="switchPrefTab('trip')">🚚 Trip</button>
+      </div>
+    </div>
+
+    <div class="pref-body">
+
+      <!-- MESSAGES PAGE -->
+      <div class="pref-msg-page active" id="prefMsgPage">
+        <div class="msg-sidebar">
+          <button class="msg-tab-btn trips active" id="msgt-trips" onclick="switchMsgTab('trips')">
+            <div class="msg-tab-icon">🚚</div>
+            <span class="msg-tab-label">Trips</span>
+            <span class="msg-tab-badge">2</span>
+          </button>
+          <button class="msg-tab-btn opp" id="msgt-opp" onclick="switchMsgTab('opp')">
+            <div class="msg-tab-icon">🎯</div>
+            <span class="msg-tab-label">Opportunities</span>
+            <span class="msg-tab-badge">3</span>
+          </button>
+          <button class="msg-tab-btn svc" id="msgt-svc" onclick="switchMsgTab('svc')">
+            <div class="msg-tab-icon">🛠️</div>
+            <span class="msg-tab-label">Service</span>
+          </button>
+        </div>
+
+        <div class="msg-searchbar">
+          <div class="msg-search-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" id="msgSearchInput" placeholder="Search messages..." oninput="filterMsgCards()">
+          </div>
+          <button class="msg-clear-btn" onclick="clearMsgSearch()">Clear</button>
+        </div>
+
+        <div class="msg-list-scroll">
+          <!-- TRIPS -->
+          <div class="msg-panel active" id="msgp-trips">
+            <div class="msg-card">
+              <div class="mc-top">
+                <div class="mc-title">Urgent Pickup Request — Dubai Marina</div>
+                <div class="mc-meta"><span class="mc-time">8 min ago</span><span class="mc-badge high">HIGH</span></div>
+              </div>
+              <div class="mc-body">High-priority cargo delivery needed from Dubai Marina to Abu Dhabi
+                International Airport. Cargo type: Medical supplies (1.3 tons).</div>
+              <div class="mc-body2">Time-sensitive delivery required within 3 hours. Premium rate: $280.
+              </div>
+            </div>
+            <div class="msg-card">
+              <div class="mc-top">
+                <div class="mc-title">Active Trip Progress Update</div>
+                <div class="mc-meta"><span class="mc-time">23 min ago</span><span class="mc-badge medium">MEDIUM</span>
+                </div>
+              </div>
+              <div class="mc-body">Current delivery to Sharjah Industrial Area is 85% complete. GPS shows
+                clear traffic ahead. Estimated arrival: 18 minutes.</div>
+              <div class="mc-body2">Customer has been notified and is preparing for receipt.</div>
+            </div>
+            <div class="msg-card">
+              <div class="mc-top">
+                <div class="mc-title">Delivery Completed Successfully</div>
+                <div class="mc-meta"><span class="mc-time">1 hour ago</span><span class="mc-badge low">LOW</span></div>
+              </div>
+              <div class="mc-body">Furniture delivery to Al Ain residential complex completed. Customer
+                satisfaction: 5 stars. Payment received: $195 + $25 tip.</div>
+            </div>
+            <div class="msg-card">
+              <div class="mc-top">
+                <div class="mc-title">Route Change — Traffic on Sheikh Zayed Rd</div>
+                <div class="mc-meta"><span class="mc-time">2 hours ago</span><span class="mc-badge medium">MEDIUM</span>
+                </div>
+              </div>
+              <div class="mc-body">Traffic delay detected. Alternate route via Al Khail Road recommended.
+                ETA adjusted by +12 minutes.</div>
+            </div>
+            <div class="msg-card">
+              <div class="mc-top">
+                <div class="mc-title">Load #4821 — Rate Confirmation</div>
+                <div class="mc-meta"><span class="mc-time">Yesterday</span><span class="mc-badge info">INFO</span></div>
+              </div>
+              <div class="mc-body">Rate confirmation for load #4821 attached. Please sign and return
+                before pickup window.</div>
+            </div>
+          </div>
+          <!-- OPPORTUNITIES -->
+          <div class="msg-panel" id="msgp-opp">
+            <div class="msg-card opp">
+              <div class="mc-top">
+                <div class="mc-title">Hot Load — Chicago → Detroit</div>
+                <div class="mc-meta"><span class="mc-time">Just now</span><span class="mc-badge high">HOT 🔥</span>
+                </div>
+              </div>
+              <div class="mc-body">$1,850 · 284 mi · 38,000 lbs Dry Van. Pickup today 3:00 PM. Rate above
+                market +22%.</div>
+            </div>
+            <div class="msg-card opp">
+              <div class="mc-top">
+                <div class="mc-title">Reload Match — 12 mi from Drop</div>
+                <div class="mc-meta"><span class="mc-time">5 min ago</span><span class="mc-badge medium">MATCH</span>
+                </div>
+              </div>
+              <div class="mc-body">$850 · Columbus → Pittsburgh. 4h fits your HOS. Dry Van. Pickup 4:00
+                PM.</div>
+              <div class="mc-body2">12 miles from your current destination. Perfectly fits remaining drive
+                time.</div>
+            </div>
+            <div class="msg-card opp">
+              <div class="mc-top">
+                <div class="mc-title">Contract Offer — Midwest Freight</div>
+                <div class="mc-meta"><span class="mc-time">32 min ago</span><span class="mc-badge info">CONTRACT</span>
+                </div>
+              </div>
+              <div class="mc-body">3-month dedicated lane Chicago → Indianapolis. $3,200/week guaranteed.
+                Respond by 5 PM today.</div>
+            </div>
+            <div class="msg-card opp">
+              <div class="mc-top">
+                <div class="mc-title">Backhaul — Cincinnati → Chicago</div>
+                <div class="mc-meta"><span class="mc-time">2h ago</span><span class="mc-badge low">BACKHAUL</span></div>
+              </div>
+              <div class="mc-body">$720 · 302 mi · Return to home base. Available tomorrow AM. Flatbed
+                required.</div>
+            </div>
+          </div>
+          <!-- SERVICE -->
+          <div class="msg-panel" id="msgp-svc">
+            <div class="msg-card svc">
+              <div class="mc-top">
+                <div class="mc-title">Maintenance Due — Unit #TRK-441</div>
+                <div class="mc-meta"><span class="mc-time">Today 8:00 AM</span><span class="mc-badge high">ACTION</span>
+                </div>
+              </div>
+              <div class="mc-body">Oil change overdue by 1,200 mi. Schedule service at nearest authorized
+                shop to avoid penalty.</div>
+            </div>
+            <div class="msg-card svc">
+              <div class="mc-top">
+                <div class="mc-title">Tire Pressure Alert — Left Rear</div>
+                <div class="mc-meta"><span class="mc-time">9:15 AM</span><span class="mc-badge high">URGENT</span></div>
+              </div>
+              <div class="mc-body">Left rear tire reading 88 PSI (recommended 110 PSI). Check at next
+                stop.</div>
+            </div>
+            <div class="msg-card svc">
+              <div class="mc-top">
+                <div class="mc-title">Insurance Renewal — Due in 14 Days</div>
+                <div class="mc-meta"><span class="mc-time">Feb 20</span><span class="mc-badge medium">REMINDER</span>
+                </div>
+              </div>
+              <div class="mc-body">Commercial auto policy expires Mar 7. Contact your agent or renew
+                online to avoid coverage gap.</div>
+            </div>
+            <div class="msg-card svc">
+              <div class="mc-top">
+                <div class="mc-title">ELD Sync Complete</div>
+                <div class="mc-meta"><span class="mc-time">11:00 PM</span><span class="mc-badge info">OK</span></div>
+              </div>
+              <div class="mc-body">Logs synced successfully. FMCSA compliance status: OK. Next HOS reset
+                in 3h 22min.</div>
+            </div>
+            <div class="msg-card svc">
+              <div class="mc-top">
+                <div class="mc-title">Fuel Card — Low Balance</div>
+                <div class="mc-meta"><span class="mc-time">Feb 19</span><span class="mc-badge low">LOW</span></div>
+              </div>
+              <div class="mc-body">Comdata card balance is $124.80. Reload recommended before next fuel
+                stop on I-70.</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /prefMsgPage -->
+
+      <!-- TRIP PAGE -->
+      <div class="pref-trip-page" id="prefTripPage">
+        <div class="trip-subtabs">
+          <button class="trip-stab active" id="tstab-dash" onclick="switchTripTab('dash')">📊
+            Dashboard</button>
+          <button class="trip-stab" id="tstab-planner" onclick="switchTripTab('planner')">🗺️ Trip
+            Planner</button>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="trip-panel active" id="tripPanel-dash">
+          <div class="dash-wrap">
+            <div class="db-toprow">
+              <div>
+                <div class="db-title">DASHBOARD</div>
+                <div class="db-date">Saturday, Feb 21 · 10:24 AM</div>
+              </div>
+              <div class="db-status" id="dbStatusBadge" onclick="toggleStatusDropdown(event)">
+                <span class="db-status-lbl">CURRENT STATUS</span>
+                <div class="db-status-val" id="dbStatusVal">
+                  <span class="db-status-dot" id="dbStatusDot" style="background:#7aee30;"></span>
+                  <span id="dbStatusText" style="color:#a8f030;">ON DUTY</span>
+                  <span class="db-status-chevron">▼</span>
+                </div>
+                <div class="db-status-dropdown" id="dbStatusDropdown">
+                  <div class="db-status-opt selected" onclick="setStatus(event,'ON DUTY','#7aee30','#a8f030')"><span
+                      class="opt-dot" style="background:#7aee30;"></span><span class="opt-label"
+                      style="color:#a8f030;">ON DUTY</span><span class="opt-check">✓</span></div>
+                  <div class="db-status-opt" onclick="setStatus(event,'DRIVING','#ffa94d','#ffa94d')">
+                    <span class="opt-dot" style="background:#ffa94d;"></span><span class="opt-label"
+                      style="color:#ffa94d;">DRIVING</span><span class="opt-check">✓</span>
+                  </div>
+                  <div class="db-status-opt" onclick="setStatus(event,'OFF DUTY','#5a6a88','#8a9ab8')"><span
+                      class="opt-dot" style="background:#5a6a88;"></span><span class="opt-label"
+                      style="color:#8a9ab8;">OFF DUTY</span><span class="opt-check">✓</span></div>
+                  <div class="db-status-opt" onclick="setStatus(event,'SLEEPER','#a855f7','#c490ff')">
+                    <span class="opt-dot" style="background:#a855f7;"></span><span class="opt-label"
+                      style="color:#c490ff;">SLEEPER</span><span class="opt-check">✓</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="db-card">
+              <div class="db-card-hdr">
+                <div class="db-card-title">Hours of Service</div>
+                <div class="db-card-badge">11h DAILY LIMIT</div>
+              </div>
+              <div class="db-gauges">
+                <div class="db-gauge"><svg width="74" height="74" viewBox="0 0 74 74">
+                    <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7" />
+                    <circle cx="37" cy="37" r="29" fill="none" stroke="#ffa94d" stroke-width="7" stroke-dasharray="182"
+                      stroke-dashoffset="91" stroke-linecap="round" transform="rotate(-90 37 37)" /><text x="37" y="42"
+                      text-anchor="middle" font-size="14" font-weight="900" fill="#ffa94d"
+                      font-family="Courier New">3.5</text>
+                  </svg>
+                  <div class="db-gauge-lbl">DRIVE</div>
+                  <div class="db-gauge-sub">3.5h left</div>
+                </div>
+                <div class="db-gauge"><svg width="74" height="74" viewBox="0 0 74 74">
+                    <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7" />
+                    <circle cx="37" cy="37" r="29" fill="none" stroke="#2979ff" stroke-width="7" stroke-dasharray="182"
+                      stroke-dashoffset="91" stroke-linecap="round" transform="rotate(-90 37 37)" /><text x="37" y="42"
+                      text-anchor="middle" font-size="14" font-weight="900" fill="#2979ff"
+                      font-family="Courier New">3.5</text>
+                  </svg>
+                  <div class="db-gauge-lbl">ON DUTY</div>
+                  <div class="db-gauge-sub">3.5h left</div>
+                </div>
+                <div class="db-gauge"><svg width="74" height="74" viewBox="0 0 74 74">
+                    <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7" />
+                    <circle cx="37" cy="37" r="29" fill="none" stroke="#a855f7" stroke-width="7" stroke-dasharray="182"
+                      stroke-dashoffset="30" stroke-linecap="round" transform="rotate(-90 37 37)" /><text x="37" y="42"
+                      text-anchor="middle" font-size="13" font-weight="900" fill="#a855f7"
+                      font-family="Courier New">18.0</text>
+                  </svg>
+                  <div class="db-gauge-lbl">CYCLE</div>
+                  <div class="db-gauge-sub">18.0h left</div>
+                </div>
+              </div>
+            </div>
+            <div class="db-card">
+              <div class="db-load-hdr">
+                <div class="db-load-title">ACTIVE LOAD</div>
+                <div class="db-enroute">● EN ROUTE</div>
+              </div>
+              <div class="db-route-row">
+                <div class="db-route-city">
+                  <div class="db-route-tag">ORIGIN</div>
+                  <div class="db-route-name">Chicago, IL</div>
+                  <div class="db-route-sub">Distribution Center</div>
+                </div>
+                <div class="db-arrow">→</div>
+                <div class="db-route-city" style="text-align:right">
+                  <div class="db-route-tag" style="text-align:right">DESTINATION</div>
+                  <div class="db-route-name">Columbus, OH</div>
+                  <div class="db-route-sub">Warehouse Gate 4</div>
+                </div>
+              </div>
+              <div class="db-prog-lbl"><span>PROGRESS</span><span style="color:#ffa94d">68% · 112 mi
+                  left</span></div>
+              <div class="db-prog-track">
+                <div class="db-prog-fill"></div>
+              </div>
+              <div class="db-stats">
+                <div class="db-stat">
+                  <div class="db-stat-icon">⏰</div>
+                  <div class="db-stat-lbl">ETA</div>
+                  <div class="db-stat-val">2:45 PM</div>
+                </div>
+                <div class="db-stat">
+                  <div class="db-stat-icon">💰</div>
+                  <div class="db-stat-lbl">RATE</div>
+                  <div class="db-stat-val">$1,240</div>
+                </div>
+                <div class="db-stat">
+                  <div class="db-stat-icon">⚖️</div>
+                  <div class="db-stat-lbl">WEIGHT</div>
+                  <div class="db-stat-val">38,400</div>
+                </div>
+              </div>
+            </div>
+            <div class="db-reload">
+              <div class="db-reload-dot"></div>
+              <div class="db-reload-info">
+                <div class="db-reload-title">RELOAD FOUND</div>
+                <div class="db-reload-sub">12 mi from destination · $850 · Fits 4h remaining</div>
+              </div><button class="db-reload-btn">VIEW →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRIP PLANNER -->
+        <div class="trip-panel" id="tripPanel-planner">
+          <div class="tp-wrap">
+            <div class="tp-live-row">
+              <div class="tp-live-dot"></div><span class="tp-live-lbl">LIVE</span>
+            </div>
+            <div class="tp-heading">Trip to Joely</div>
+            <div class="tp-timer">1:30</div>
+            <div class="tp-card">
+              <div class="tp-card-hdr">
+                <div class="tp-avatar org">👤</div>
+                <div class="tp-info">
+                  <div class="tp-name">Joely</div>
+                  <div class="tp-addr">123 Ash St</div>
+                  <div class="tp-drop"><b>Dropoff:</b> 456 Elm Ave</div>
+                  <div class="tp-fav">🟠 Favorites</div>
+                </div><button class="tp-menu-btn">⋮</button>
+              </div>
+              <div class="tp-map">
+                <div class="tp-grid"></div><svg class="tp-route-svg" viewBox="0 0 340 165" preserveAspectRatio="none">
+                  <polyline points="118,128 118,68 232,68 232,38" fill="none" stroke="#ff9800" stroke-width="3.5"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="tp-map-lbl pu">PICKUP: 123 ASH ST</div>
+                <div class="tp-map-lbl do">DROPOFF: 456 ELM AVE</div>
+                <div class="tp-pin pu">📍</div>
+                <div class="tp-pin do">📍</div>
+              </div>
+            </div>
+            <div class="tp-next-title">Next Trip</div>
+            <div class="tp-card">
+              <div class="tp-card-hdr">
+                <div class="tp-avatar blu">👤</div>
+                <div class="tp-info">
+                  <div class="tp-name">Mark</div>
+                  <div class="tp-addr">123 Ash St</div>
+                  <div class="tp-drop"><b>Dropoff:</b> 456 Elm Ave.</div>
+                  <div class="tp-fav">🟠 Favorites</div>
+                </div>
+                <div class="tp-loc-icon">📍</div>
+              </div>
+              <div class="tp-next-footer">
+                <div class="tp-ready-icon">🕐</div>
+                <div class="tp-ready-info">
+                  <div class="tp-ready-lbl">Ready in ~3 min</div>
+                  <div class="tp-ready-route">Ash St → Elm Ave</div>
+                </div><button class="tp-accept-btn">Accept</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /prefTripPage -->
+    </div><!-- /pref-body -->
+  </div><!-- /prefModal -->
+
+
+  <!-- ═══════════════════════════════════════════════════════
+     SETTINGS MODAL — RIGHT BTN (from 14_settings3sle.html)
+════════════════════════════════════════════════════════ -->
+  <div class="settings-modal-overlay" id="settingsModal">
+
+    <div class="settings-modal-topbar">
+      <button class="settings-modal-back" onclick="closeSettingsModal()">&#8592;</button>
+      <span class="settings-modal-title">🛡️ Driver Safety Settings</span>
+    </div>
+
+    <div class="settings-modal-body">
+      <div class="smo-container">
+
+        <!-- Nav Tabs -->
+        <div class="smo-nav-tabs">
+          <button class="smo-nav-tab s-settings active" data-smo-page="smo-settings">
+            <span>🔧</span> Settings
+          </button>
+          <button class="smo-nav-tab s-location" data-smo-page="smo-location">
+            <span>📍</span> Location
+          </button>
+          <button class="smo-nav-tab s-emergency" data-smo-page="smo-emergency">
+            <span>🚨</span> Emergency
+          </button>
+        </div>
+
+        <!-- Settings Page -->
+        <div class="smo-page active" id="smo-settings">
+          <div class="smo-page-header smo-settings-hdr">
+            <span>🔧</span> Safety Settings
+            <button class="smo-menu-button" onclick="smoToggleDropdown(this)">⋮</button>
+            <div class="smo-dropdown-menu">
+              <div class="smo-dropdown-item" onclick="smoShowSubModal('smo-help')"><span>❓</span> Help/FAQ
+              </div>
+              <div class="smo-dropdown-item" onclick="smoShowSubModal('smo-privacy')"><span>🔒</span>
+                Privacy</div>
+            </div>
+          </div>
+          <div class="smo-page-content">
+            <div class="smo-section">
+              <div class="smo-section-title">Emergency Contacts</div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>➕</span><span>Add Contact</span></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>📋</span><span>View/Edit Contacts</span>
+                </div>
+              </div>
+            </div>
+            <div class="smo-section">
+              <div class="smo-section-title">SOS & Alerts</div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Enable SOS Shortcut</span></div>
+                <div class="smo-toggle active" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Night Safety Alert</span></div>
+                <div class="smo-toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Fatigue Alert Reminder</span></div>
+                <div class="smo-toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+            </div>
+            <div class="smo-section">
+              <div class="smo-section-title">Security</div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>🔒</span><span>PIN / Biometric Lock for
+                    Safety Features</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="smo-action-buttons">
+            <button class="smo-btn smo-btn-primary" onclick="alert('✅ Settings saved!')">✅ Save
+              Settings</button>
+            <button class="smo-btn smo-btn-secondary" onclick="closeSettingsModal()">❌ Cancel</button>
+          </div>
+        </div>
+
+        <!-- Location Page -->
+        <div class="smo-page" id="smo-location">
+          <div class="smo-page-header smo-location-hdr">
+            <span>📍</span> Share Live Location
+            <button class="smo-menu-button" onclick="smoToggleDropdown(this)">⋮</button>
+            <div class="smo-dropdown-menu">
+              <div class="smo-dropdown-item" onclick="smoShowSubModal('smo-help')"><span>❓</span> Help/FAQ
+              </div>
+              <div class="smo-dropdown-item" onclick="smoShowSubModal('smo-privacy')"><span>🔒</span>
+                Privacy</div>
+            </div>
+          </div>
+          <div class="smo-page-content">
+            <div class="smo-section">
+              <div class="smo-section-title">Share Options</div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Share for trip duration</span></div>
+                <div class="smo-toggle active" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Share for fixed time (2 hours)</span></div>
+                <div class="smo-toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Always on until stopped</span></div>
+                <div class="smo-toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+            </div>
+            <div class="smo-section">
+              <div class="smo-section-title">Share With</div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><input type="checkbox" class="smo-checkbox"
+                    checked><span>Dispatcher / Company</span></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><input type="checkbox" class="smo-checkbox" checked><span>Family /
+                    Trusted Contact</span></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>➕</span><span>Add New Contact</span></div>
+              </div>
+            </div>
+            <div class="smo-section">
+              <div class="smo-section-title">Status</div>
+              <div class="smo-mini-map">📍 Current Location Map Preview</div>
+              <div class="smo-status inactive" id="smo-loc-status">
+                <span>Live Location Sharing</span>
+                <span id="smo-loc-status-txt" style="color:#ff5252;font-weight:bold;">OFF</span>
+              </div>
+            </div>
+          </div>
+          <div class="smo-action-buttons">
+            <button class="smo-btn smo-btn-primary" onclick="smoToggleLocationSharing(true)">✅ Start
+              Sharing</button>
+            <button class="smo-btn smo-btn-danger" onclick="smoToggleLocationSharing(false)">❌ Stop
+              Sharing</button>
+          </div>
+        </div>
+
+        <!-- Emergency Page -->
+        <div class="smo-page" id="smo-emergency">
+          <div class="smo-page-header smo-emergency-hdr">
+            <span>🚨</span> Emergency Help
+            <button class="smo-menu-button" onclick="smoToggleDropdown(this)">⋮</button>
+            <div class="smo-dropdown-menu">
+              <div class="smo-dropdown-item" onclick="smoShowSubModal('smo-help')"><span>❓</span> Help/FAQ
+              </div>
+              <div class="smo-dropdown-item" onclick="smoShowSubModal('smo-privacy')"><span>🔒</span>
+                Privacy</div>
+            </div>
+          </div>
+          <div class="smo-page-content">
+            <div class="smo-section">
+              <div class="smo-section-title">Quick Actions</div>
+              <div class="smo-sos-button" onclick="smo_sosAlert()">
+                <div>🆘</div>
+                <div>Call Police</div>
+              </div>
+            </div>
+            <div class="smo-section">
+              <div class="smo-section-title">Auto Actions</div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>📍</span><span>Automatically send location
+                    to police</span></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>📤</span><span>Notify emergency contacts
+                    instantly</span></div>
+              </div>
+            </div>
+            <div class="smo-section">
+              <div class="smo-section-title">Other Numbers</div>
+              <div class="smo-emergency-numbers">
+                <div class="smo-emergency-number">
+                  <div class="smo-number-info"><span>🚔</span><span>Highway Patrol</span></div><button
+                    class="smo-call-btn">Call</button>
+                </div>
+                <div class="smo-emergency-number">
+                  <div class="smo-number-info"><span>🚑</span><span>Ambulance</span></div><button
+                    class="smo-call-btn">Call</button>
+                </div>
+                <div class="smo-emergency-number">
+                  <div class="smo-number-info"><span>🔥</span><span>Fire Service</span></div><button
+                    class="smo-call-btn">Call</button>
+                </div>
+              </div>
+            </div>
+            <div class="smo-section">
+              <div class="smo-section-title">Options</div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Silent SOS (no sound, only alerts)</span>
+                </div>
+                <div class="smo-toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="smo-section-item">
+                <div class="smo-section-item-content"><span>Enable Alarm Sound (panic alarm)</span>
+                </div>
+                <div class="smo-toggle active" onclick="this.classList.toggle('active')"></div>
+              </div>
+            </div>
+          </div>
+          <div class="smo-action-buttons">
+            <button class="smo-btn smo-btn-secondary" onclick="alert('🧪 SOS Test Mode — no real emergency.')">🧪 Test
+              SOS</button>
+            <button class="smo-btn smo-btn-primary" onclick="closeSettingsModal()">⬅️ Back</button>
+          </div>
+        </div>
+
+      </div><!-- /smo-container -->
+    </div><!-- /settings-modal-body -->
+
+    <!-- Help sub-modal -->
+    <div class="smo-submodal" id="smo-help" style="position:fixed;">
+      <div class="smo-submodal-content">
+        <div class="smo-submodal-header">Help Center <button class="smo-close-btn"
+            onclick="smoCloseSubModal('smo-help')">&times;</button></div>
+        <div class="smo-submodal-body">
+          <div style="margin-bottom:20px;">
+            <h3>Getting Started</h3>
+            <h4>How do I set up emergency contacts?</h4>
+            <p>From Safety Settings, tap "Add Contact" to add phone numbers for family or a manager.</p>
+            <h4>Why is my location not updating?</h4>
+            <p>Check your phone's GPS settings and ensure location services are enabled. Location updates
+              also require a stable internet connection.</p>
+            <h3>SOS & Alerts</h3>
+            <h4>What is "Silent SOS"?</h4>
+            <p>Silent SOS sends a discreet alert to emergency contacts without sound — ideal for dangerous
+              situations.</p>
+            <h3>Location Sharing</h3>
+            <h4>How do I stop sharing my location?</h4>
+            <p>Return to the Share Live Location page and tap "Stop Sharing" at any time.</p>
+            <h3>Contact Support</h3>
+            <p>📞 Call: +1-800-DRIVER-HELP (24/7)</p>
+            <p>✉️ Email: <span style="color:#6b7f8f;font-style:italic;"><i class="fas fa-lock"
+                  style="font-size:9px;"></i> support@lorry-app.com</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy sub-modal -->
+    <div class="smo-submodal" id="smo-privacy" style="position:fixed;">
+      <div class="smo-submodal-content">
+        <div class="smo-submodal-header">Privacy &amp; Security <button class="smo-close-btn"
+            onclick="smoCloseSubModal('smo-privacy')">&times;</button></div>
+        <div class="smo-submodal-body">
+          <h3>What We Collect</h3>
+          <ul>
+            <li><strong>Personal Information:</strong> Name, phone number, emergency contacts.</li>
+            <li><strong>Location Data:</strong> GPS coordinates, only when a safety feature is active.</li>
+            <li><strong>Device Information:</strong> Phone model and OS for bug fixes.</li>
+          </ul>
+          <h3>How We Use Your Data</h3>
+          <ul>
+            <li>Send SOS alerts and location to emergency contacts and police.</li>
+            <li>Allow secure location sharing with your dispatcher or family.</li>
+            <li>Provide helpful alerts based on your trip.</li>
+          </ul>
+          <h3>Your Control</h3>
+          <ul>
+            <li>Stop location sharing at any time.</li>
+            <li>Edit or delete emergency contacts.</li>
+            <li>Delete your account by contacting support.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /settingsModal -->
+
 </body>
 
 </html>
