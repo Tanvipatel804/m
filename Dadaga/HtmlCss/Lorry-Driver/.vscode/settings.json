@@ -1,0 +1,11 @@
+{
+    "liveServer.settings.port": 5500,
+    "liveServer.settings.root": "/src",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "GitHub.remotehub",
+    "files.autoSave": "afterDelay",
+    "editor.tabSize": 2,
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    }
+}
