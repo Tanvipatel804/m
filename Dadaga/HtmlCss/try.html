@@ -78,12 +78,7 @@
       display: none;
     }
 
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    /* ═══════════ HEADER ═══════════ */
+    /* ═══ HEADER ROW 1 – logo / location / wish / notif ═══ */
     .site-header {
       position: sticky;
       top: 0;
@@ -99,7 +94,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      height: 62px;
+      height: 58px;
     }
 
     .logo {
@@ -126,7 +121,7 @@
       cursor: pointer;
       white-space: nowrap;
       flex-shrink: 0;
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 8px;
       transition: background .2s;
     }
@@ -150,6 +145,80 @@
       .loc-btn {
         display: none;
       }
+    }
+
+    .hdr-spacer {
+      flex: 1;
+    }
+
+    .hdr-icons {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .hi {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      position: relative;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .hi:hover {
+      background: rgba(255, 255, 255, .18);
+    }
+
+    .hi svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .hbadge {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 8px;
+      height: 8px;
+      background: var(--yellow);
+      border-radius: 50%;
+      border: 2px solid var(--black);
+    }
+
+    .cnum {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: var(--red);
+      color: var(--white);
+      font-size: 9px;
+      font-weight: 800;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ═══ HEADER ROW 2 – search + camera ═══ */
+    .hdr-search-row {
+      background: var(--black);
+      padding: 0 var(--pad) 10px;
+    }
+
+    .hdr-srch-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .hdr-srch {
@@ -214,69 +283,7 @@
       color: var(--black);
     }
 
-    .hdr-icons {
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .hi {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, .08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--white);
-      position: relative;
-      cursor: pointer;
-      transition: background .2s;
-    }
-
-    .hi:hover {
-      background: rgba(255, 255, 255, .18);
-    }
-
-    .hi svg {
-      width: 19px;
-      height: 19px;
-    }
-
-    .hbadge {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      width: 8px;
-      height: 8px;
-      background: var(--yellow);
-      border-radius: 50%;
-      border: 2px solid var(--black);
-    }
-
-    .cnum {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      background: var(--red);
-      color: var(--white);
-      font-size: 9px;
-      font-weight: 800;
-      width: 17px;
-      height: 17px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    @media(max-width:480px) {
-      .hdr-icons .hi:nth-child(3) {
-        display: none;
-      }
-    }
-
-    /* desk subnav */
+    /* ═══ DESK SUB-NAV (row 3) ═══ */
     .desk-nav {
       background: var(--black);
       border-top: 1px solid rgba(255, 255, 255, .08);
@@ -295,7 +302,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 10px 14px;
+      padding: 9px 14px;
       cursor: pointer;
       font-size: 13px;
       font-weight: 600;
@@ -321,12 +328,90 @@
       }
     }
 
-    /* filter bar */
+    /* ═══ STORE PARTNER STRIP ═══ */
+    .store-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--mg);
+      padding: 10px 0;
+    }
+
+    .store-strip-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--pad);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .store-strip-lbl {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-right: 4px;
+    }
+
+    .sp-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px 6px 8px;
+      border-radius: 30px;
+      border: 1.5px solid var(--mg);
+      background: var(--white);
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .sp-pill:hover {
+      border-color: var(--yellow);
+      background: var(--yl);
+      transform: translateY(-1px);
+      box-shadow: var(--sh0);
+    }
+
+    .sp-pill.active {
+      border-color: var(--yellow);
+      background: var(--yl);
+    }
+
+    .sp-logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .sp-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .sp-offer {
+      font-size: 10px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ═══ FILTER BAR ═══ */
     .filter-bar {
       background: var(--white);
       border-bottom: 1px solid var(--mg);
       position: sticky;
-      top: 62px;
+      top: 0;
       z-index: 300;
     }
 
@@ -389,7 +474,7 @@
       }
     }
 
-    /* ═══════════ HERO ═══════════ */
+    /* HERO */
     .hero {
       display: grid;
       grid-template-columns: 1fr 300px;
@@ -813,7 +898,7 @@
       line-height: 1.35;
       margin-bottom: 7px;
       display: -webkit-box;
-      /* -webkit-line-clamp: 2; */
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -1015,7 +1100,7 @@
       font-size: 12px;
     }
 
-    /* stores */
+    /* store circle row (in page sections) */
     .strow {
       display: flex;
       gap: 14px;
@@ -1063,6 +1148,193 @@
       margin: 22px calc(-1 * var(--pad));
     }
 
+    /* ═══════════ STORE PAGE ═══════════ */
+    .store-hero {
+      border-radius: var(--r);
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .store-hero-inner {
+      padding: 28px var(--pad);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .store-hero-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      border: 3px solid rgba(255, 255, 255, .3);
+      flex-shrink: 0;
+    }
+
+    .store-hero-info {
+      flex: 1;
+    }
+
+    .store-hero-name {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .store-hero-sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .75);
+    }
+
+    .store-hero-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .store-stat {
+      text-align: center;
+    }
+
+    .store-stat-val {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    .store-stat-lbl {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .65);
+      margin-top: 1px;
+    }
+
+    .store-follow-btn {
+      padding: 9px 20px;
+      background: var(--yellow);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--black);
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+
+    .store-follow-btn:hover {
+      background: var(--yd);
+    }
+
+    .store-follow-btn.following {
+      background: rgba(255, 255, 255, .15);
+      color: var(--white);
+      border: 1.5px solid rgba(255, 255, 255, .3);
+    }
+
+    /* booklet */
+    .booklet-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 4px;
+    }
+
+    .booklet-card {
+      flex: 0 0 clamp(200px, 28vw, 260px);
+      border-radius: var(--r);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: var(--sh0);
+    }
+
+    .booklet-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sh1);
+    }
+
+    .booklet-cover {
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    .booklet-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, .2);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      width: fit-content;
+    }
+
+    .booklet-title {
+      font-size: clamp(14px, 2vw, 17px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .booklet-footer {
+      background: var(--white);
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .booklet-date {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .booklet-cta {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--yd);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .booklet-cta svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    /* best offer card (store page) */
+    .offer-card {
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1px solid var(--mg);
+      box-shadow: var(--sh0);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh1);
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 14px;
+    }
+
     /* ═══════════ BOTTOM NAV ═══════════ */
     .bnav {
       display: none;
@@ -1089,15 +1361,15 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 3px;
       cursor: pointer;
       padding-bottom: 6px;
       position: relative;
     }
 
     .ni svg {
-      width: 22px;
-      height: 22px;
+      width: 21px;
+      height: 21px;
       color: var(--gray);
       transition: color .2s;
     }
@@ -1130,7 +1402,7 @@
     }
 
     .nc {
-      flex: 1.4;
+      flex: 1.3;
       position: relative;
     }
 
@@ -1172,31 +1444,24 @@
       color: var(--black);
     }
 
-    /* ═══════════ OVERLAY BASE ═══════════ */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
+    .ni-badge {
+      position: absolute;
+      top: 6px;
+      right: 50%;
+      margin-right: -18px;
+      background: var(--red);
+      color: var(--white);
+      font-size: 8px;
+      font-weight: 800;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
       display: flex;
-      flex-direction: column;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .25s ease;
+      align-items: center;
+      justify-content: center;
     }
 
-    .overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .overlay-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .55);
-      backdrop-filter: blur(3px);
-    }
-
-    /* ═══════════ DRAWER (slides up) ═══════════ */
+    /* ═══════════ DRAWER ═══════════ */
     .drawer {
       position: fixed;
       bottom: 0;
@@ -1262,7 +1527,7 @@
       padding: 16px 20px;
     }
 
-    /* ═══════════ MODAL (centered) ═══════════ */
+    /* ═══════════ MODAL ═══════════ */
     .modal {
       position: fixed;
       inset: 0;
@@ -1337,7 +1602,20 @@
 
     /* ═══════════ SEARCH OVERLAY ═══════════ */
     #sovOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
       background: var(--white);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+
+    #sovOverlay.open {
+      opacity: 1;
+      pointer-events: all;
     }
 
     .sov-hdr {
@@ -1470,7 +1748,6 @@
       color: var(--gray);
     }
 
-    /* search results */
     .sr-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -1622,7 +1899,7 @@
       height: 17px;
     }
 
-    /* ═══════════ CART DRAWER ═══════════ */
+    /* cart / wish / notif / account – same as before */
     .cart-item {
       display: flex;
       gap: 12px;
@@ -1752,35 +2029,28 @@
       background: var(--yd);
     }
 
-    .empty-cart {
+    .empty-state {
       text-align: center;
       padding: 40px 20px;
       color: var(--gray);
     }
 
-    .empty-cart .eci {
+    .empty-state .ei {
       font-size: 56px;
       margin-bottom: 12px;
     }
 
-    .empty-cart p {
+    .empty-state p {
       font-size: 14px;
       font-weight: 600;
     }
 
-    /* ═══════════ WISHLIST DRAWER ═══════════ */
     .wl-item {
       display: flex;
       gap: 12px;
       padding: 14px 0;
       border-bottom: 1px solid var(--lg);
       cursor: pointer;
-      transition: background .15s;
-      border-radius: 8px;
-    }
-
-    .wl-item:hover {
-      background: var(--lg);
     }
 
     .wl-img {
@@ -1840,18 +2110,6 @@
       color: var(--red);
     }
 
-    .empty-wl {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--gray);
-    }
-
-    .empty-wl .ewi {
-      font-size: 56px;
-      margin-bottom: 12px;
-    }
-
-    /* ═══════════ NOTIF DRAWER ═══════════ */
     .notif-item {
       display: flex;
       gap: 12px;
@@ -1868,10 +2126,6 @@
 
     .notif-item.unread {
       background: var(--yl);
-    }
-
-    .notif-item.unread:hover {
-      background: #fef0a0;
     }
 
     .ni-icon {
@@ -1926,16 +2180,6 @@
       flex-shrink: 0;
     }
 
-    .unread-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--blue);
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 6px;
-    }
-
-    /* ═══════════ ACCOUNT DRAWER ═══════════ */
     .acct-header {
       text-align: center;
       padding: 20px 0 16px;
@@ -2042,13 +2286,10 @@
       flex: 1;
     }
 
-    .menu-arr {
-      color: var(--gray);
-    }
-
     .menu-arr svg {
       width: 16px;
       height: 16px;
+      color: var(--gray);
     }
 
     .logout-btn {
@@ -2072,7 +2313,6 @@
       background: #fecaca;
     }
 
-    /* ═══════════ LOCATION MODAL ═══════════ */
     .loc-option {
       display: flex;
       align-items: center;
@@ -2085,11 +2325,7 @@
       margin-bottom: 8px;
     }
 
-    .loc-option:hover {
-      border-color: var(--yellow);
-      background: var(--yl);
-    }
-
+    .loc-option:hover,
     .loc-option.selected {
       border-color: var(--yellow);
       background: var(--yl);
@@ -2114,64 +2350,12 @@
       color: var(--gray);
     }
 
-    .loc-check {
-      color: var(--yellow);
-      flex-shrink: 0;
-    }
-
     .loc-check svg {
       width: 18px;
       height: 18px;
+      color: var(--yellow);
     }
 
-    /* ═══════════ CATEGORIES PAGE ═══════════ */
-    .cat-page-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 14px;
-    }
-
-    .cat-page-card {
-      background: var(--white);
-      border-radius: var(--r);
-      padding: 20px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all .2s;
-      border: 1.5px solid var(--mg);
-      box-shadow: var(--sh0);
-    }
-
-    .cat-page-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--sh1);
-      border-color: var(--yellow);
-    }
-
-    .cat-page-em {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
-
-    .cat-page-nm {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .cat-page-cnt {
-      font-size: 11px;
-      color: var(--gray);
-      margin-top: 2px;
-    }
-
-    /* ═══════════ TODAY'S DEALS PAGE ═══════════ */
-    .deals-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    /* ═══════════ FILTER MODAL ═══════════ */
     .filter-group {
       margin-bottom: 20px;
     }
@@ -2251,7 +2435,6 @@
       background: var(--yd);
     }
 
-    /* ═══════════ CAMERA MODAL ═══════════ */
     .cam-upload {
       border: 2px dashed var(--mg);
       border-radius: 14px;
@@ -2283,7 +2466,82 @@
       color: var(--gray);
     }
 
-    /* ═══════════ TOAST ═══════════ */
+    .cat-page-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 14px;
+    }
+
+    .cat-page-card {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      border: 1.5px solid var(--mg);
+      box-shadow: var(--sh0);
+    }
+
+    .cat-page-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sh1);
+      border-color: var(--yellow);
+    }
+
+    .cat-page-em {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .cat-page-nm {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cat-page-cnt {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .back-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .back-bar-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--white);
+      border: 1.5px solid var(--mg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .back-bar-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .back-bar-title {
+      font-size: clamp(16px, 2.5vw, 22px);
+      font-weight: 900;
+    }
+
+    /* toast */
     .toast {
       position: fixed;
       bottom: 78px;
@@ -2321,7 +2579,6 @@
       color: var(--yellow);
     }
 
-    /* animations */
     @keyframes fadeUp {
       from {
         opacity: 0;
@@ -2362,10 +2619,11 @@
 
 <body>
 
-  <!-- ═══════════════════════════════════════
+  <!-- ════════════════════════════
      HEADER
-═══════════════════════════════════════ -->
+════════════════════════════ -->
   <header class="site-header">
+    <!-- ROW 1: Logo · Location · Spacer · Wish · Notif -->
     <div class="hdr-top">
       <div class="logo" onclick="goHome()">Price<span>Hunt</span></div>
       <div class="loc-btn" onclick="openLocation()">
@@ -2374,54 +2632,49 @@
             d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
         </svg>
         Deliver to <strong id="locLabel">Ajman, UAE</strong>
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-          style="width:11px;height:11px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+          style="width:11px;height:11px;color:rgba(255,255,255,.35)">
           <path d="m6 9 6 6 6-6" />
         </svg>
       </div>
-      <div class="hdr-srch" onclick="openSearch()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
-        <input id="fakeInput" placeholder="Search products, stores, brands…" readonly>
-      </div>
-      <button class="cam-btn" onclick="openCamera()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-          <circle cx="12" cy="13" r="4" />
-        </svg>
-      </button>
+      <div class="hdr-spacer"></div>
       <div class="hdr-icons">
-        <div class="hi" id="wishIcon" onclick="openWishlist()">
+        <div class="hi" onclick="openWishlist()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path
               d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
         </div>
-        <div class="hi" id="notifIcon" onclick="openNotifications()">
+        <div class="hi" onclick="openNotifications()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
           <div class="hbadge" id="notifBadge"></div>
         </div>
-        <div class="hi" id="cartIcon" onclick="openCart()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <circle cx="9" cy="21" r="1" />
-            <circle cx="20" cy="21" r="1" />
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-          </svg>
-          <div class="cnum" id="cartBadge">0</div>
-        </div>
-        <div class="hi" onclick="openAccount()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-        </div>
       </div>
     </div>
+
+    <!-- ROW 2: Search bar + Camera (between top and desk-nav) -->
+    <div class="hdr-search-row">
+      <div class="hdr-srch-inner">
+        <div class="hdr-srch" onclick="openSearch()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input id="fakeInput" placeholder="Search products, stores, brands…" readonly>
+        </div>
+        <button class="cam-btn" onclick="openCamera()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+            <circle cx="12" cy="13" r="4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ROW 3: Desktop category nav -->
     <nav class="desk-nav">
       <div class="desk-nav-inner">
         <div class="dni on" onclick="deskNav(this,'home')">
@@ -2453,9 +2706,21 @@
     </nav>
   </header>
 
-  <!-- FILTER BAR -->
+  <!-- ════════════════════════════
+     STORE PARTNER STRIP  (between header & filter bar)
+════════════════════════════ -->
+  <div class="store-strip">
+    <div class="store-strip-inner" id="storeStrip">
+      <span class="store-strip-lbl">Stores:</span>
+      <!-- pills rendered by JS -->
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
+     FILTER BAR
+════════════════════════════ -->
   <div class="filter-bar f1">
-    <div class="filter-inner" id="filterBar">
+    <div class="filter-inner">
       <div class="chip on" onclick="pickChip(this,'all')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M3 6h18M7 12h10M10 18h4" />
@@ -2463,23 +2728,22 @@
       </div>
       <div class="chip off" onclick="pickChip(this,'low')">💰 Lowest Price</div>
       <div class="chip off" onclick="pickChip(this,'fast')">🚀 Fast Delivery</div>
-      <div class="chip off" onclick="pickChip(this,'near')">📍 Nearby Stores</div>
+      <div class="chip off" onclick="pickChip(this,'near')">📍 Nearby</div>
       <div class="chip off" onclick="pickChip(this,'top')">⭐ Top Rated</div>
       <div class="chip off" onclick="pickChip(this,'new')">🆕 New Arrivals</div>
       <div class="chip off" onclick="openFilterModal()">⚙️ More Filters</div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════
-     MAIN PAGE
-═══════════════════════════════════════ -->
+  <!-- ════════════════════════════
+     MAIN HOME PAGE
+════════════════════════════ -->
   <div id="mainPage">
     <main class="page">
-
       <!-- HERO -->
       <div class="hero f2">
         <div class="main-banner" id="mb">
-          <div class="bslide on" onclick="openDeal(0)">
+          <div class="bslide on" onclick="openProduct(0)">
             <div class="bslide-bg" style="background:linear-gradient(135deg,#0F2027,#203A43,#2C5364)"></div>
             <div class="bslide-ov"></div>
             <div class="bcon">
@@ -2488,7 +2752,7 @@
               <div class="bsub">Compare across Amazon, Noon, Lulu &amp; more</div>
             </div>
           </div>
-          <div class="bslide" onclick="openDeal(1)">
+          <div class="bslide" onclick="openProduct(3)">
             <div class="bslide-bg" style="background:linear-gradient(135deg,#1A1A2E,#E94560)"></div>
             <div class="bslide-ov"></div>
             <div class="bcon">
@@ -2497,7 +2761,7 @@
               <div class="bsub">Available at Lulu, Carrefour &amp; more</div>
             </div>
           </div>
-          <div class="bslide" onclick="openDeal(2)">
+          <div class="bslide" onclick="openCategoryPage('Groceries','🛒')">
             <div class="bslide-bg" style="background:linear-gradient(135deg,#2D3561,#8B5CF6)"></div>
             <div class="bslide-ov"></div>
             <div class="bcon">
@@ -2506,7 +2770,7 @@
               <div class="bsub">Lulu vs Nesto vs KM Trading</div>
             </div>
           </div>
-          <div class="bslide" onclick="openDeal(3)">
+          <div class="bslide" onclick="openStorePage('KM Trading')">
             <div class="bslide-bg" style="background:linear-gradient(135deg,#134E5E,#71B280)"></div>
             <div class="bslide-ov"></div>
             <div class="bcon">
@@ -2605,8 +2869,8 @@
       <div class="sec f4">
         <div class="sec-hd">
           <div class="sec-ttl"><span class="em">⭐</span>Best Sellers</div>
-          <div class="see-all" onclick="showAllProducts('Best Sellers')">See All <svg viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5">
+          <div class="see-all" onclick="showAllProducts('Best Sellers',PRODUCTS)">See All <svg viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="m9 18 6-6-6-6" />
             </svg></div>
         </div>
@@ -2629,49 +2893,16 @@
 
       <div class="div"></div>
 
-      <!-- STORE PARTNERS -->
+      <!-- STORE PARTNERS (full section in page) -->
       <div class="sec f6">
         <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">🏪</span>Store Partners</div>
-          <div class="see-all" onclick="showToast('🏪 All 24 partner stores')">All Stores <svg viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2.5">
+          <div class="sec-ttl"><span class="em">🏪</span>Store Partners in UAE</div>
+          <div class="see-all" onclick="showToast('🏪 25 UAE partner stores')">All <svg viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5">
               <path d="m9 18 6-6-6-6" />
             </svg></div>
         </div>
-        <div class="strow">
-          <div class="sti" onclick="openStorePage('Amazon')">
-            <div class="stcircle" style="background:#FF9900;border-color:#FF9900;color:#fff;font-size:11px;">amzn</div>
-            <div class="stnm">Amazon</div>
-          </div>
-          <div class="sti" onclick="openStorePage('Noon')">
-            <div class="stcircle" style="background:var(--yellow);border-color:var(--yd);">noon</div>
-            <div class="stnm">Noon</div>
-          </div>
-          <div class="sti" onclick="openStorePage('Lulu')">
-            <div class="stcircle" style="background:#E31837;border-color:#C0112C;color:#fff;font-size:11px;">LuLu</div>
-            <div class="stnm">Lulu</div>
-          </div>
-          <div class="sti" onclick="openStorePage('Nesto')">
-            <div class="stcircle" style="background:#00A651;border-color:#007A3B;color:#fff;font-size:10px;">NESTO</div>
-            <div class="stnm">Nesto</div>
-          </div>
-          <div class="sti" onclick="openStorePage('KM Trading')">
-            <div class="stcircle" style="background:#003087;border-color:#002060;color:#fff;">KM</div>
-            <div class="stnm">KM Trading</div>
-          </div>
-          <div class="sti" onclick="openStorePage('Carrefour')">
-            <div class="stcircle" style="color:#003f96;font-size:11px;">Carr.</div>
-            <div class="stnm">Carrefour</div>
-          </div>
-          <div class="sti" onclick="openStorePage('Flipkart')">
-            <div class="stcircle" style="background:#2874F0;border-color:#1A5DC4;color:#fff;font-size:10px;">Flipk</div>
-            <div class="stnm">Flipkart</div>
-          </div>
-          <div class="sti" onclick="openStorePage('Spinney\'s')">
-            <div class="stcircle" style="background:#76B82A;border-color:#5A8E1E;color:#fff;font-size:10px;">Spin</div>
-            <div class="stnm">Spinney's</div>
-          </div>
-        </div>
+        <div class="strow" id="storeCircles"></div>
       </div>
 
       <div class="div"></div>
@@ -2691,61 +2922,64 @@
     </main>
   </div>
 
-  <!-- SUB-PAGES -->
+  <!-- SUB PAGE -->
   <div id="subPage" style="display:none;">
     <div style="max-width:var(--max);margin:0 auto;padding:20px var(--pad) 90px;" id="subPageContent"></div>
   </div>
 
-  <!-- BOTTOM NAV -->
-  <nav class="bnav">
-    <div class="ni on" id="bnavHome" onclick="bNav(this,'home')">
+  <!-- BOTTOM NAV (5 tabs, dynamically labelled) -->
+  <nav class="bnav" id="bottomNav">
+    <div class="ni on" id="bn0" onclick="bNavClick(0)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
         <polyline points="9 22 9 12 15 12 15 22" />
-      </svg><span>Home</span>
+      </svg>
+      <span id="bn0lbl">Home</span>
     </div>
-    <div class="ni" id="bnavCats" onclick="bNav(this,'categories')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+    <div class="ni" id="bn1" onclick="bNavClick(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" id="bn1ico">
         <rect x="3" y="3" width="7" height="7" />
         <rect x="14" y="3" width="7" height="7" />
         <rect x="14" y="14" width="7" height="7" />
         <rect x="3" y="14" width="7" height="7" />
-      </svg><span>Categories</span>
+      </svg>
+      <span id="bn1lbl">Categories</span>
     </div>
     <div class="nc">
-      <div class="nfab" onclick="bNav(document.getElementById('bnavDeals'),'deals')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <div class="nfab" id="nfab" onclick="bNavClick(2)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="nfabIco">
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
         </svg>
       </div>
-      <span class="nflbl">Deals</span>
+      <span class="nflbl" id="nfabLbl">Deals</span>
     </div>
-    <div class="ni" id="bnavDeals" onclick="bNav(this,'deals')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-        <circle cx="9" cy="21" r="1" />
-        <circle cx="20" cy="21" r="1" />
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-      </svg>
-      <div style="position:relative;top:-4px" class="cnum" id="bnavCartNum">0</div>
-      <span>Cart</span>
+    <div class="ni" id="bn3" onclick="bNavClick(3)">
+      <div style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+        </svg>
+        <div class="cnum" id="cartBadge" style="top:0;right:0">0</div>
+      </div>
+      <span id="bn3lbl">Cart</span>
     </div>
-    <div class="ni" id="bnavAcct" onclick="bNav(this,'account')">
+    <div class="ni" id="bn4" onclick="bNavClick(4)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
-      </svg><span>Account</span>
+      </svg>
+      <span id="bn4lbl">Account</span>
     </div>
   </nav>
-
-  <!-- ══════════════ OVERLAYS ══════════════ -->
 
   <!-- BACKDROP -->
   <div id="backdrop"
     style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:490;opacity:0;pointer-events:none;transition:opacity .25s;">
   </div>
 
-  <!-- SEARCH -->
-  <div id="sovOverlay" class="overlay" style="background:var(--white);flex-direction:column;">
+  <!-- SEARCH OVERLAY -->
+  <div id="sovOverlay">
     <div class="sov-hdr">
       <button class="bkbtn" onclick="closeSearch()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2.5">
@@ -2791,7 +3025,6 @@
     </div>
     <div class="drawer-body" id="cartBody"></div>
   </div>
-
   <!-- WISHLIST DRAWER -->
   <div id="wishDrawer" class="drawer">
     <div class="drawer-handle"></div>
@@ -2804,7 +3037,6 @@
     </div>
     <div class="drawer-body" id="wishBody"></div>
   </div>
-
   <!-- NOTIF DRAWER -->
   <div id="notifDrawer" class="drawer">
     <div class="drawer-handle"></div>
@@ -2817,7 +3049,6 @@
     </div>
     <div class="drawer-body" id="notifBody"></div>
   </div>
-
   <!-- ACCOUNT DRAWER -->
   <div id="acctDrawer" class="drawer">
     <div class="drawer-handle"></div>
@@ -2847,7 +3078,6 @@
       <div class="modal-body" id="locBody"></div>
     </div>
   </div>
-
   <!-- FILTER MODAL -->
   <div id="filterBackdrop"
     style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;">
@@ -2864,7 +3094,6 @@
       <div class="modal-body" id="filterBody"></div>
     </div>
   </div>
-
   <!-- CAMERA MODAL -->
   <div id="camBackdrop"
     style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;">
@@ -2884,7 +3113,7 @@
           <div class="cam-ttl">Take a Photo</div>
           <div class="cam-sub">Point at any product to find the best price</div>
         </div>
-        <div class="cam-upload" onclick="showToast('🖼️ Gallery opened – select an image')">
+        <div class="cam-upload" onclick="showToast('🖼️ Gallery opened')">
           <div class="cam-em">🖼️</div>
           <div class="cam-ttl">Upload from Gallery</div>
           <div class="cam-sub">Choose an existing photo of the product</div>
@@ -2894,7 +3123,6 @@
       </div>
     </div>
   </div>
-
   <!-- RECHARGE MODAL -->
   <div id="rechargeBackdrop"
     style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;">
@@ -2912,74 +3140,27 @@
     </div>
   </div>
 
-  <!-- TOAST -->
   <div class="toast" id="toastEl"></div>
 
   <script>
-    /* ══════════════════════════════════════
-       DATA
-    ══════════════════════════════════════ */
+    /* ══ DATA ══ */
     const PRODUCTS = [
-      {
-        id: 0, name: 'Apple iPhone 15 128GB Black', emoji: '📱', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best',
-        prices: [{ store: 'Amazon', price: 2899, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 3050, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 3199, delivery: '3 days', rating: 4.5 }, { store: 'Carrefour', price: 3299, delivery: '4 days', rating: 4.3 }],
-        desc: 'The iPhone 15 features a 6.1‑inch Super Retina XDR display, 48MP main camera, and USB‑C connector.'
-      },
-      {
-        id: 1, name: 'AirPods Pro 2nd Gen USB-C', emoji: '🎧', cat: 'Electronics', badge: '-18%', badgeType: 'hot',
-        prices: [{ store: 'Noon', price: 729, delivery: 'Today', rating: 4.9 }, { store: 'Amazon', price: 799, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Carrefour', price: 849, delivery: '3 days', rating: 4.4 }, { store: 'KM Trading', price: 875, delivery: '5 days', rating: 4.2 }],
-        desc: 'Active Noise Cancellation, Transparency mode, Adaptive Audio. Up to 30 hours total listening time.'
-      },
-      {
-        id: 2, name: 'MacBook Air M2 8GB 256GB Silver', emoji: '💻', cat: 'Electronics', badge: '-12%', badgeType: '',
-        prices: [{ store: 'KM Trading', price: 3799, delivery: '3 days', rating: 4.7 }, { store: 'Flipkart', price: 4100, delivery: '5 days', rating: 4.5 }, { store: 'Lulu', price: 4299, delivery: '3 days', rating: 4.4 }, { store: 'Amazon', price: 4399, delivery: 'Tomorrow', rating: 4.8 }],
-        desc: 'M2 chip with 8‑core CPU and 8‑core GPU. Up to 18 hours battery life. Fanless design.'
-      },
-      {
-        id: 3, name: 'Samsung 55″ 4K QLED Smart TV', emoji: '📺', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best',
-        prices: [{ store: 'Nesto', price: 1899, delivery: '5 days', rating: 4.5 }, { store: 'Amazon', price: 2199, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 2349, delivery: '4 days', rating: 4.3 }, { store: 'Noon', price: 2399, delivery: '2 days', rating: 4.6 }],
-        desc: 'Quantum Dot technology, 4K upscaling, Smart TV powered by Tizen OS with voice control.'
-      },
-      {
-        id: 4, name: 'Logitech MX Keys S Wireless Keyboard', emoji: '⌨️', cat: 'Electronics', badge: '-22%', badgeType: '',
-        prices: [{ store: 'Amazon', price: 379, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 419, delivery: '2 days', rating: 4.6 }, { store: 'Carrefour', price: 449, delivery: '4 days', rating: 4.3 }],
-        desc: 'Backlit keys, multi-device switching up to 3 devices. Works with Mac, Windows, Linux.'
-      },
-      {
-        id: 5, name: 'Dell 27″ IPS FHD Monitor S2722D', emoji: '🖥️', cat: 'Electronics', badge: '-19%', badgeType: '',
-        prices: [{ store: 'Noon', price: 649, delivery: '2 days', rating: 4.7 }, { store: 'Amazon', price: 699, delivery: 'Tomorrow', rating: 4.8 }, { store: 'KM Trading', price: 729, delivery: '4 days', rating: 4.4 }],
-        desc: '27‑inch FHD IPS display, 75Hz refresh rate, built-in USB hub, height adjustable stand.'
-      },
-      {
-        id: 6, name: 'Nescafé Classic 200g Jar', emoji: '☕', cat: 'Groceries', badge: 'HOT', badgeType: 'hot',
-        prices: [{ store: 'KM Trading', price: 24, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 27, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 28, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 29, delivery: '2 days', rating: 4.3 }],
-        desc: 'Classic instant coffee. Rich aroma. 200g jar. Best enjoyed hot or iced.'
-      },
-      {
-        id: 7, name: 'Nivea Body Lotion 400ml Cocoa', emoji: '🧴', cat: 'Health & Beauty', badge: '', badgeType: '',
-        prices: [{ store: 'Nesto', price: 18, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 22, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 25, delivery: 'Today', rating: 4.3 }],
-        desc: 'Deep moisturising lotion with natural cocoa butter. Suitable for dry to very dry skin.'
-      },
-      {
-        id: 8, name: 'PlayStation 5 Console Bundle', emoji: '🎮', cat: 'Gaming', badge: '-25%', badgeType: '',
-        prices: [{ store: 'Amazon', price: 1649, delivery: 'Tomorrow', rating: 4.9 }, { store: 'Noon', price: 1799, delivery: '2 days', rating: 4.8 }, { store: 'Lulu', price: 1849, delivery: '3 days', rating: 4.6 }],
-        desc: 'PS5 console with DualSense controller. Ultra-fast SSD, ray tracing, 4K gaming.'
-      },
-      {
-        id: 9, name: 'HP DeskJet Ink Advantage 2335', emoji: '🖨️', cat: 'Electronics', badge: '-40%', badgeType: '',
-        prices: [{ store: 'Noon', price: 199, delivery: '2 days', rating: 4.4 }, { store: 'Amazon', price: 219, delivery: 'Tomorrow', rating: 4.5 }, { store: 'KM Trading', price: 235, delivery: '4 days', rating: 4.2 }],
-        desc: 'Print, scan, copy. USB connectivity. Up to 7.5 ppm black print speed.'
-      },
-      {
-        id: 10, name: 'Samsung Galaxy Watch 6 44mm', emoji: '⌚', cat: 'Electronics', badge: '-30%', badgeType: '',
-        prices: [{ store: 'Nesto', price: 699, delivery: '3 days', rating: 4.6 }, { store: 'Amazon', price: 799, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Noon', price: 849, delivery: '2 days', rating: 4.5 }],
-        desc: 'Advanced health monitoring, Wear OS, 40‑hour battery, 5ATM water resistance.'
-      },
-      {
-        id: 11, name: 'Dyson V15 Detect Cordless Vacuum', emoji: '🧹', cat: 'Home & Living', badge: '-15%', badgeType: '',
-        prices: [{ store: 'Amazon', price: 2199, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 2399, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 2549, delivery: '3 days', rating: 4.5 }],
-        desc: 'Laser dust detection, HEPA filtration, 60-min run time. Includes 7 accessories.'
-      },
+      { id: 0, name: 'Apple iPhone 15 128GB Black', emoji: '📱', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Amazon', price: 2899, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 3050, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 3199, delivery: '3 days', rating: 4.5 }, { store: 'Carrefour', price: 3299, delivery: '4 days', rating: 4.3 }], desc: '6.1-inch Super Retina XDR display, 48MP camera, USB-C connector, A16 Bionic chip.' },
+      { id: 1, name: 'AirPods Pro 2nd Gen USB-C', emoji: '🎧', cat: 'Electronics', badge: '-18%', badgeType: 'hot', prices: [{ store: 'Noon', price: 729, delivery: 'Today', rating: 4.9 }, { store: 'Amazon', price: 799, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Carrefour', price: 849, delivery: '3 days', rating: 4.4 }, { store: 'KM Trading', price: 875, delivery: '5 days', rating: 4.2 }], desc: 'Active Noise Cancellation, Transparency mode, Adaptive Audio. Up to 30h total listening time.' },
+      { id: 2, name: 'MacBook Air M2 8GB 256GB', emoji: '💻', cat: 'Electronics', badge: '-12%', badgeType: '', prices: [{ store: 'KM Trading', price: 3799, delivery: '3 days', rating: 4.7 }, { store: 'Sharaf DG', price: 4050, delivery: '2 days', rating: 4.6 }, { store: 'Lulu', price: 4299, delivery: '3 days', rating: 4.4 }, { store: 'Amazon', price: 4399, delivery: 'Tomorrow', rating: 4.8 }], desc: 'M2 chip, 8-core CPU, 8-core GPU. Up to 18 hours battery. Fanless silent design.' },
+      { id: 3, name: 'Samsung 55″ 4K QLED Smart TV', emoji: '📺', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Nesto', price: 1899, delivery: '5 days', rating: 4.5 }, { store: 'Amazon', price: 2199, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 2349, delivery: '4 days', rating: 4.3 }, { store: 'Noon', price: 2399, delivery: '2 days', rating: 4.6 }], desc: 'Quantum Dot technology, 4K upscaling, Tizen Smart TV with voice control.' },
+      { id: 4, name: 'Logitech MX Keys S Keyboard', emoji: '⌨️', cat: 'Electronics', badge: '-22%', badgeType: '', prices: [{ store: 'Amazon', price: 379, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 419, delivery: '2 days', rating: 4.6 }, { store: 'Sharaf DG', price: 435, delivery: '2 days', rating: 4.5 }, { store: 'Carrefour', price: 449, delivery: '4 days', rating: 4.3 }], desc: 'Backlit keys, multi-device switching. Works with Mac, Windows, Linux.' },
+      { id: 5, name: 'Dell 27″ IPS FHD Monitor', emoji: '🖥️', cat: 'Electronics', badge: '-19%', badgeType: '', prices: [{ store: 'Noon', price: 649, delivery: '2 days', rating: 4.7 }, { store: 'Amazon', price: 699, delivery: 'Tomorrow', rating: 4.8 }, { store: 'KM Trading', price: 729, delivery: '4 days', rating: 4.4 }], desc: '27-inch FHD IPS, 75Hz, built-in USB hub, height adjustable stand.' },
+      { id: 6, name: 'Nescafé Classic 200g Jar', emoji: '☕', cat: 'Groceries', badge: 'HOT', badgeType: 'hot', prices: [{ store: 'KM Trading', price: 24, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 27, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 28, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 29, delivery: '2 days', rating: 4.3 }], desc: 'Rich aroma instant coffee. 200g jar. Best enjoyed hot or iced.' },
+      { id: 7, name: 'Nivea Body Lotion 400ml Cocoa', emoji: '🧴', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 18, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 22, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 25, delivery: 'Today', rating: 4.3 }], desc: 'Deep moisturising with natural cocoa butter. For dry to very dry skin.' },
+      { id: 8, name: 'PlayStation 5 Console Bundle', emoji: '🎮', cat: 'Gaming', badge: '-25%', badgeType: '', prices: [{ store: 'Amazon', price: 1649, delivery: 'Tomorrow', rating: 4.9 }, { store: 'Noon', price: 1799, delivery: '2 days', rating: 4.8 }, { store: 'Lulu', price: 1849, delivery: '3 days', rating: 4.6 }], desc: 'PS5 with DualSense controller. Ultra-fast SSD, ray tracing, 4K gaming.' },
+      { id: 9, name: 'HP DeskJet 2335 Printer', emoji: '🖨️', cat: 'Electronics', badge: '-40%', badgeType: '', prices: [{ store: 'Noon', price: 199, delivery: '2 days', rating: 4.4 }, { store: 'Amazon', price: 219, delivery: 'Tomorrow', rating: 4.5 }, { store: 'KM Trading', price: 235, delivery: '4 days', rating: 4.2 }], desc: 'Print, scan, copy. USB connectivity. Up to 7.5 ppm black print speed.' },
+      { id: 10, name: 'Samsung Galaxy Watch 6 44mm', emoji: '⌚', cat: 'Electronics', badge: '-30%', badgeType: '', prices: [{ store: 'Nesto', price: 699, delivery: '3 days', rating: 4.6 }, { store: 'Amazon', price: 799, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Noon', price: 849, delivery: '2 days', rating: 4.5 }], desc: 'Advanced health monitoring, Wear OS, 40h battery, 5ATM water resistance.' },
+      { id: 11, name: 'Dyson V15 Detect Cordless', emoji: '🧹', cat: 'Home & Living', badge: '-15%', badgeType: '', prices: [{ store: 'Amazon', price: 2199, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 2399, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 2549, delivery: '3 days', rating: 4.5 }], desc: 'Laser dust detection, HEPA filtration, 60-min run time. 7 accessories.' },
+      { id: 12, name: 'Basmati Rice Premium 5kg', emoji: '🌾', cat: 'Groceries', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Nesto', price: 28, delivery: 'Today', rating: 4.6 }, { store: 'KM Trading', price: 30, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 33, delivery: 'Today', rating: 4.4 }], desc: 'Premium long-grain aged basmati rice. Fluffy, aromatic, non-sticky.' },
+      { id: 13, name: 'Dettol Handwash 400ml', emoji: '🧼', cat: 'Health & Beauty', badge: '-15%', badgeType: '', prices: [{ store: 'Carrefour', price: 9, delivery: '2 days', rating: 4.5 }, { store: 'Lulu', price: 11, delivery: 'Today', rating: 4.4 }, { store: 'Nesto', price: 12, delivery: 'Today', rating: 4.3 }], desc: 'Kills 99.9% of bacteria and viruses. Moisturizing formula with aloe vera.' },
+      { id: 14, name: 'Nike Air Max 270 Men\'s', emoji: '👟', cat: 'Fashion', badge: '-30%', badgeType: '', prices: [{ store: 'Amazon', price: 399, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Noon', price: 449, delivery: '2 days', rating: 4.6 }, { store: 'Centrepoint', price: 469, delivery: '2 days', rating: 4.5 }], desc: 'Iconic Air unit in the heel, breathable mesh upper. Everyday comfort.' },
+      { id: 15, name: 'LEGO Technic Car 42177', emoji: '🧩', cat: 'Gaming', badge: '-20%', badgeType: '', prices: [{ store: 'Amazon', price: 189, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 209, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 229, delivery: '3 days', rating: 4.5 }], desc: '742 pieces, authentic details, functions. Age 10+.' },
     ];
 
     const DEALS = [
@@ -2991,27 +3172,18 @@
     ];
 
     const CATEGORIES = [
-      { name: 'Electronics', emoji: '📱', count: '1,240' },
-      { name: 'Groceries', emoji: '🛒', count: '3,800' },
-      { name: 'Fashion', emoji: '👗', count: '960' },
-      { name: 'Home & Living', emoji: '🏠', count: '720' },
-      { name: 'Health & Beauty', emoji: '💊', count: '540' },
-      { name: 'Gaming', emoji: '🎮', count: '320' },
-      { name: 'Pets', emoji: '🐾', count: '180' },
-      { name: 'Automotive', emoji: '🚗', count: '410' },
-      { name: 'Sports', emoji: '⚽', count: '295' },
-      { name: 'Books', emoji: '📚', count: '1100' },
-      { name: 'Toys', emoji: '🧸', count: '430' },
-      { name: 'Office', emoji: '🖊️', count: '270' },
+      { name: 'Electronics', emoji: '📱', count: '1,240' }, { name: 'Groceries', emoji: '🛒', count: '3,800' },
+      { name: 'Fashion', emoji: '👗', count: '960' }, { name: 'Home & Living', emoji: '🏠', count: '720' },
+      { name: 'Health & Beauty', emoji: '💊', count: '540' }, { name: 'Gaming', emoji: '🎮', count: '320' },
+      { name: 'Pets', emoji: '🐾', count: '180' }, { name: 'Automotive', emoji: '🚗', count: '410' },
+      { name: 'Sports', emoji: '⚽', count: '295' }, { name: 'Books', emoji: '📚', count: '1,100' },
+      { name: 'Toys', emoji: '🧸', count: '430' }, { name: 'Office', emoji: '🖊️', count: '270' },
     ];
 
     const LOCATIONS = [
-      { city: 'Ajman', sub: 'Ajman, UAE', flag: '🇦🇪' },
-      { city: 'Dubai', sub: 'Dubai, UAE', flag: '🇦🇪' },
-      { city: 'Abu Dhabi', sub: 'Abu Dhabi, UAE', flag: '🇦🇪' },
-      { city: 'Sharjah', sub: 'Sharjah, UAE', flag: '🇦🇪' },
-      { city: 'Ras Al Khaimah', sub: 'RAK, UAE', flag: '🇦🇪' },
-      { city: 'Mumbai', sub: 'Maharashtra, India', flag: '🇮🇳' },
+      { city: 'Ajman', sub: 'Ajman, UAE', flag: '🇦🇪' }, { city: 'Dubai', sub: 'Dubai, UAE', flag: '🇦🇪' },
+      { city: 'Abu Dhabi', sub: 'Abu Dhabi, UAE', flag: '🇦🇪' }, { city: 'Sharjah', sub: 'Sharjah, UAE', flag: '🇦🇪' },
+      { city: 'Ras Al Khaimah', sub: 'RAK, UAE', flag: '🇦🇪' }, { city: 'Mumbai', sub: 'Maharashtra, India', flag: '🇮🇳' },
       { city: 'Delhi', sub: 'NCR, India', flag: '🇮🇳' },
     ];
 
@@ -3020,49 +3192,504 @@
       { title: 'Your order #PH2847 shipped', sub: 'Samsung TV dispatched from Nesto', time: '1h ago', type: 'blue', unread: true, icon: '🚚' },
       { title: 'Mega Deal ends in 3 hours', sub: 'PS5 Bundle at Amazon – 25% off', time: '3h ago', type: 'yellow', unread: true, icon: '⏰' },
       { title: 'Wishlist item on sale', sub: 'MacBook Air M2 now AED 3,799 at KM Trading', time: '5h ago', type: 'green', unread: false, icon: '❤️' },
-      { title: 'New store added', sub: 'Spinney\'s is now on PriceHunt', time: '1d ago', type: 'blue', unread: false, icon: '🏪' },
+      { title: 'New store: Waitrose UAE added', sub: 'Browse their premium UAE offers on PriceHunt', time: '1d ago', type: 'blue', unread: false, icon: '🏪' },
       { title: 'Weekly deals summary', sub: '47 new deals this week across all stores', time: '2d ago', type: 'yellow', unread: false, icon: '📊' },
     ];
 
-    /* ══════════════════════════════════════
-       STATE
-    ══════════════════════════════════════ */
-    let cart = [];
-    let wishlist = [];
-    let recentIds = [6, 7, 11];
-    let selectedLocation = 'Ajman, UAE';
-    let timerSec = 3 * 3600 + 47 * 60 + 22;
-    let bannerIdx = 0;
-    let bannerTimer;
-    let unreadNotifs = 3;
+    /* ═══════ STORE DATA – UAE stores & supermarkets only ═══════ */
+    const STORES = [
+      {
+        key: 'Lulu', name: 'Lulu Hypermarket', logo: 'LuLu', bg: 'linear-gradient(135deg,#E31837,#9B1222)',
+        logoStyle: 'background:#E31837;color:#fff;font-size:10px;',
+        followers: '1.4M', products: '80K+', rating: '4.6',
+        desc: 'UAE\'s most loved hypermarket. Fresh food, electronics, fashion & household goods under one roof.',
+        following: false,
+        booklets: [
+          { title: 'Weekend Bonanza', badge: '🛒 Weekend', color: 'linear-gradient(135deg,#E31837,#9B1222)', date: 'Valid until Apr 6' },
+          { title: 'Fresh Produce Week', badge: '🥦 Fresh', color: 'linear-gradient(135deg,#2ECC71,#27AE60)', date: 'Valid until Apr 9' },
+          { title: 'Eid Special Offers', badge: '🌙 Eid', color: 'linear-gradient(135deg,#2C3E50,#4CA1AF)', date: 'Valid until Apr 15' },
+        ],
+        offers: [0, 3, 6, 7, 8, 12],
+      },
+      {
+        key: 'Nesto', name: 'Nesto Hypermarket', logo: 'NESTO', bg: 'linear-gradient(135deg,#00A651,#007A3B)',
+        logoStyle: 'background:#00A651;color:#fff;font-size:9px;',
+        followers: '620K', products: '32K+', rating: '4.5',
+        desc: 'Value-for-money hypermarket with branches across UAE. Fresh groceries, household & electronics.',
+        following: false,
+        booklets: [
+          { title: 'Ajman Grand Sale', badge: '🏙️ Ajman', color: 'linear-gradient(135deg,#00A651,#007A3B)', date: 'Valid until Apr 5' },
+          { title: 'Ramadan Savings', badge: '🌙 Ramadan', color: 'linear-gradient(135deg,#1A1A2E,#533483)', date: 'Valid until Apr 10' },
+          { title: 'Grocery Bonanza', badge: '🛒 Value', color: 'linear-gradient(135deg,#F39C12,#E67E22)', date: 'Valid until Apr 13' },
+        ],
+        offers: [6, 7, 10, 12, 13, 3],
+      },
+      {
+        key: 'Carrefour', name: 'Carrefour UAE', logo: 'Carr.', bg: 'linear-gradient(135deg,#003f96,#002060)',
+        logoStyle: 'background:#fff;color:#003f96;font-size:10px;',
+        followers: '1.1M', products: '70K+', rating: '4.4',
+        desc: 'One of UAE\'s biggest hypermarket chains. Groceries, electronics, fashion & fresh food daily.',
+        following: false,
+        booklets: [
+          { title: 'Digital Days', badge: '💻 Digital', color: 'linear-gradient(135deg,#003f96,#002060)', date: 'Valid until Apr 4' },
+          { title: 'Fresh Week', badge: '🥗 Fresh', color: 'linear-gradient(135deg,#16A34A,#0F7630)', date: 'Valid until Apr 8' },
+          { title: 'Kids & Baby Week', badge: '🍼 Kids', color: 'linear-gradient(135deg,#F97316,#EA580C)', date: 'Valid until Apr 14' },
+        ],
+        offers: [3, 4, 6, 7, 13, 14],
+      },
+      {
+        key: 'KM Trading', name: 'KM Trading', logo: 'KM', bg: 'linear-gradient(135deg,#003087,#001A50)',
+        logoStyle: 'background:#003087;color:#fff;',
+        followers: '380K', products: '25K+', rating: '4.4',
+        desc: 'Trusted UAE retailer for Indian groceries, household essentials & electronics at unbeatable prices.',
+        following: false,
+        booklets: [
+          { title: 'Indian Grocery Fiesta', badge: '🇮🇳 India', color: 'linear-gradient(135deg,#FF9933,#138808)', date: 'Valid until Apr 5' },
+          { title: 'Electronics Week', badge: '📱 Tech', color: 'linear-gradient(135deg,#003087,#001A50)', date: 'Valid until Apr 8' },
+          { title: 'Household Essentials', badge: '🏠 Home', color: 'linear-gradient(135deg,#2C3E50,#4CA1AF)', date: 'Valid until Apr 11' },
+        ],
+        offers: [2, 4, 5, 6, 9, 12],
+      },
+      {
+        key: 'Union Coop', name: 'Union Coop', logo: 'UCO', bg: 'linear-gradient(135deg,#008C45,#005A2B)',
+        logoStyle: 'background:#008C45;color:#fff;font-size:9px;',
+        followers: '590K', products: '20K+', rating: '4.6',
+        desc: 'UAE\'s largest consumer cooperative. Premium fresh food, bakery & household goods across Dubai.',
+        following: false,
+        booklets: [
+          { title: 'Ramadan Special', badge: '🌙 Ramadan', color: 'linear-gradient(135deg,#008C45,#005A2B)', date: 'Valid until Apr 6' },
+          { title: 'Weekly Fresh Deals', badge: '🥦 Fresh', color: 'linear-gradient(135deg,#2ECC71,#27AE60)', date: 'Valid until Apr 9' },
+          { title: 'Household Savings', badge: '🏠 Home', color: 'linear-gradient(135deg,#134E5E,#71B280)', date: 'Valid until Apr 12' },
+        ],
+        offers: [6, 7, 12, 13, 3, 0],
+      },
+      {
+        key: 'Géant', name: 'Géant UAE', logo: 'GNT', bg: 'linear-gradient(135deg,#C41E3A,#7B0020)',
+        logoStyle: 'background:#C41E3A;color:#fff;font-size:9px;',
+        followers: '370K', products: '24K+', rating: '4.3',
+        desc: 'French-inspired hypermarket in UAE Ibn Battuta Mall & other locations. Great everyday value.',
+        following: false,
+        booklets: [
+          { title: 'Géant Weekend Sale', badge: '🛒 Weekend', color: 'linear-gradient(135deg,#C41E3A,#7B0020)', date: 'Valid until Apr 5' },
+          { title: 'Electronics Bonanza', badge: '💻 Tech', color: 'linear-gradient(135deg,#1A1A2E,#16213E)', date: 'Valid until Apr 8' },
+          { title: 'Summer Ready Deals', badge: '☀️ Summer', color: 'linear-gradient(135deg,#F39C12,#E67E22)', date: 'Valid until Apr 14' },
+        ],
+        offers: [3, 5, 6, 7, 11, 13],
+      },
+      {
+        key: "Spinney's", name: "Spinney's", logo: 'Spin', bg: 'linear-gradient(135deg,#76B82A,#4A8A00)',
+        logoStyle: 'background:#76B82A;color:#fff;font-size:10px;',
+        followers: '460K', products: '16K+', rating: '4.7',
+        desc: 'Premium UAE supermarket. Finest fresh produce, organic, imported & specialty food products.',
+        following: false,
+        booklets: [
+          { title: 'Organic Living', badge: '🌱 Organic', color: 'linear-gradient(135deg,#76B82A,#4A8A00)', date: 'Valid until Apr 6' },
+          { title: 'International Foods', badge: '🌍 World', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 9' },
+          { title: 'Weekend Fresh Deals', badge: '🥦 Fresh', color: 'linear-gradient(135deg,#134E5E,#71B280)', date: 'Valid until Apr 12' },
+        ],
+        offers: [6, 7, 12, 13, 14, 1],
+      },
+      {
+        key: 'Sharaf DG', name: 'Sharaf DG', logo: 'SDG', bg: 'linear-gradient(135deg,#E30613,#8B0000)',
+        logoStyle: 'background:#E30613;color:#fff;font-size:9px;',
+        followers: '820K', products: '38K+', rating: '4.6',
+        desc: 'UAE\'s #1 electronics & technology retailer. 60+ stores. Expert staff & warranty assurance.',
+        following: false,
+        booklets: [
+          { title: 'Tech Fest UAE', badge: '📱 TechFest', color: 'linear-gradient(135deg,#E30613,#8B0000)', date: 'Valid until Apr 5' },
+          { title: 'TV & Audio Sale', badge: '📺 Audio', color: 'linear-gradient(135deg,#1A1A2E,#533483)', date: 'Valid until Apr 9' },
+          { title: 'Back to School Gadgets', badge: '🎒 School', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 13' },
+        ],
+        offers: [0, 1, 2, 4, 5, 10],
+      },
+      {
+        key: 'Centrepoint', name: 'Centrepoint', logo: 'CPT', bg: 'linear-gradient(135deg,#D4A800,#8B7000)',
+        logoStyle: 'background:#D4A800;color:#fff;font-size:9px;',
+        followers: '680K', products: '45K+', rating: '4.4',
+        desc: 'UAE\'s leading lifestyle retailer. Fashion, footwear, home décor & toys at affordable prices.',
+        following: false,
+        booklets: [
+          { title: 'Fashion Forward', badge: '👗 Fashion', color: 'linear-gradient(135deg,#D4A800,#8B7000)', date: 'Valid until Apr 6' },
+          { title: 'Kids & Toys Week', badge: '🧸 Kids', color: 'linear-gradient(135deg,#E94560,#C0392B)', date: 'Valid until Apr 10' },
+          { title: 'Home Décor Sale', badge: '🏠 Décor', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 14' },
+        ],
+        offers: [7, 11, 13, 14, 15, 12],
+      },
+      {
+        key: 'Danube Home', name: 'Danube Home', logo: 'DNB', bg: 'linear-gradient(135deg,#0056A2,#003470)',
+        logoStyle: 'background:#0056A2;color:#fff;font-size:9px;',
+        followers: '310K', products: '14K+', rating: '4.5',
+        desc: 'UAE\'s biggest home furnishing & décor superstore. Furniture, kitchenware, bedding & more.',
+        following: false,
+        booklets: [
+          { title: 'Home Makeover Sale', badge: '🏠 Makeover', color: 'linear-gradient(135deg,#0056A2,#003470)', date: 'Valid until Apr 5' },
+          { title: 'Furniture Fest', badge: '🛋️ Furniture', color: 'linear-gradient(135deg,#1A1A2E,#2D3561)', date: 'Valid until Apr 9' },
+          { title: 'Kitchen & Bath', badge: '🍳 Kitchen', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 12' },
+        ],
+        offers: [7, 11, 12, 13, 15, 6],
+      },
+      {
+        key: 'West Zone', name: 'West Zone Fresh', logo: 'WZF', bg: 'linear-gradient(135deg,#6A0DAD,#3A0070)',
+        logoStyle: 'background:#6A0DAD;color:#fff;font-size:9px;',
+        followers: '245K', products: '12K+', rating: '4.4',
+        desc: 'UAE supermarket chain focused on fresh produce, organic goods & daily essentials.',
+        following: false,
+        booklets: [
+          { title: 'Fresh Daily Picks', badge: '🥬 Fresh', color: 'linear-gradient(135deg,#6A0DAD,#3A0070)', date: 'Valid until Apr 5' },
+          { title: 'Organic Week', badge: '🌿 Organic', color: 'linear-gradient(135deg,#2ECC71,#27AE60)', date: 'Valid until Apr 8' },
+          { title: 'Family Savings', badge: '👨‍👩‍👧 Family', color: 'linear-gradient(135deg,#F39C12,#E67E22)', date: 'Valid until Apr 12' },
+        ],
+        offers: [6, 7, 12, 13, 7, 3],
+      },
+      {
+        key: 'Zoom', name: 'Zoom UAE', logo: 'ZOM', bg: 'linear-gradient(135deg,#FF4500,#CC2200)',
+        logoStyle: 'background:#FF4500;color:#fff;font-size:9px;',
+        followers: '230K', products: '9K+', rating: '4.3',
+        desc: 'UAE\'s leading convenience store chain. Quick essentials, snacks & beverages 24/7.',
+        following: false,
+        booklets: [
+          { title: 'Daily Essentials', badge: '⚡ Quick', color: 'linear-gradient(135deg,#FF4500,#CC2200)', date: 'Valid until Apr 4' },
+          { title: 'Snacks & Beverages', badge: '🥤 Snacks', color: 'linear-gradient(135deg,#F39C12,#E67E22)', date: 'Valid until Apr 7' },
+          { title: 'Travel & On-the-Go', badge: '✈️ Travel', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 11' },
+        ],
+        offers: [6, 7, 13, 12, 1, 3],
+      },
+      {
+        key: 'Al Maya', name: 'Al Maya Group', logo: 'ALM', bg: 'linear-gradient(135deg,#B8860B,#7A5900)',
+        logoStyle: 'background:#B8860B;color:#fff;font-size:9px;',
+        followers: '195K', products: '10K+', rating: '4.4',
+        desc: 'UAE-based retail chain with supermarkets & pharmacies. Fresh, local & imported groceries.',
+        following: false,
+        booklets: [
+          { title: 'Super Saver Week', badge: '💰 Saver', color: 'linear-gradient(135deg,#B8860B,#7A5900)', date: 'Valid until Apr 6' },
+          { title: 'Ramadan Groceries', badge: '🌙 Ramadan', color: 'linear-gradient(135deg,#1A1A2E,#533483)', date: 'Valid until Apr 10' },
+          { title: 'Fresh & Local', badge: '🥦 Local', color: 'linear-gradient(135deg,#2ECC71,#27AE60)', date: 'Valid until Apr 14' },
+        ],
+        offers: [6, 7, 12, 13, 7, 0],
+      },
+      {
+        key: 'Choithrams', name: 'Choithrams', logo: 'CHT', bg: 'linear-gradient(135deg,#1E3A5F,#0A1F3C)',
+        logoStyle: 'background:#1E3A5F;color:#fff;font-size:9px;',
+        followers: '175K', products: '8K+', rating: '4.5',
+        desc: 'Premium UAE supermarket with 40+ branches. Specialty imports, deli, bakery & health foods.',
+        following: false,
+        booklets: [
+          { title: 'Premium Imports Week', badge: '🌍 Import', color: 'linear-gradient(135deg,#1E3A5F,#0A1F3C)', date: 'Valid until Apr 5' },
+          { title: 'Deli & Bakery Fest', badge: '🥐 Deli', color: 'linear-gradient(135deg,#B8860B,#7A5900)', date: 'Valid until Apr 9' },
+          { title: 'Health & Wellness', badge: '💚 Health', color: 'linear-gradient(135deg,#16A34A,#0F7630)', date: 'Valid until Apr 13' },
+        ],
+        offers: [6, 7, 12, 13, 14, 1],
+      },
+      {
+        key: 'Viva', name: 'Viva Supermarket', logo: 'VIVA', bg: 'linear-gradient(135deg,#009688,#00695C)',
+        logoStyle: 'background:#009688;color:#fff;font-size:9px;',
+        followers: '155K', products: '7K+', rating: '4.3',
+        desc: 'Neighbourhood supermarket chain across UAE. Everyday groceries at competitive prices.',
+        following: false,
+        booklets: [
+          { title: 'Everyday Value', badge: '🛒 Value', color: 'linear-gradient(135deg,#009688,#00695C)', date: 'Valid until Apr 6' },
+          { title: 'Fresh Fruits & Veg', badge: '🍅 Fresh', color: 'linear-gradient(135deg,#2ECC71,#27AE60)', date: 'Valid until Apr 9' },
+          { title: 'Weekend Specials', badge: '🎉 Weekend', color: 'linear-gradient(135deg,#F39C12,#E67E22)', date: 'Valid until Apr 14' },
+        ],
+        offers: [6, 7, 12, 13, 0, 3],
+      },
+      {
+        key: 'Waitrose', name: 'Waitrose UAE', logo: 'WTR', bg: 'linear-gradient(135deg,#2C5364,#0A2133)',
+        logoStyle: 'background:#2C5364;color:#fff;font-size:9px;',
+        followers: '280K', products: '11K+', rating: '4.8',
+        desc: 'Iconic British supermarket in UAE. Premium quality groceries, finest deli & organic range.',
+        following: false,
+        booklets: [
+          { title: 'British Brands Week', badge: '🇬🇧 British', color: 'linear-gradient(135deg,#2C5364,#0A2133)', date: 'Valid until Apr 5' },
+          { title: 'Organic & Free-Range', badge: '🌱 Organic', color: 'linear-gradient(135deg,#76B82A,#4A8A00)', date: 'Valid until Apr 9' },
+          { title: 'Deli & Cheese Fest', badge: '🧀 Deli', color: 'linear-gradient(135deg,#B8860B,#7A5900)', date: 'Valid until Apr 13' },
+        ],
+        offers: [6, 7, 14, 12, 13, 1],
+      },
+      {
+        key: 'Day to Day', name: 'Day to Day', logo: 'D2D', bg: 'linear-gradient(135deg,#E65C00,#F9A800)',
+        logoStyle: 'background:#E65C00;color:#fff;font-size:9px;',
+        followers: '320K', products: '15K+', rating: '4.5',
+        desc: 'UAE\'s popular discount store chain. Household goods, stationery, toys & groceries at low prices.',
+        following: false,
+        booklets: [
+          { title: 'Everything Under AED 10', badge: '💰 Value', color: 'linear-gradient(135deg,#E65C00,#F9A800)', date: 'Valid until Apr 7' },
+          { title: 'Home Essentials Sale', badge: '🏠 Home', color: 'linear-gradient(135deg,#1A1A2E,#16213E)', date: 'Valid until Apr 10' },
+          { title: 'School & Office Week', badge: '📚 School', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 14' },
+        ],
+        offers: [7, 13, 15, 12, 6, 11],
+      },
+      {
+        key: 'Dreamland', name: 'Dreamland Center', logo: 'DLC', bg: 'linear-gradient(135deg,#7B2FF7,#4A00B4)',
+        logoStyle: 'background:#7B2FF7;color:#fff;font-size:9px;',
+        followers: '185K', products: '18K+', rating: '4.4',
+        desc: 'Ajman-based hypermarket & shopping centre. Electronics, fashion, groceries & toys under one roof.',
+        following: false,
+        booklets: [
+          { title: 'Ajman Mega Sale', badge: '🏙️ Ajman', color: 'linear-gradient(135deg,#7B2FF7,#4A00B4)', date: 'Valid until Apr 6' },
+          { title: 'Electronics & Gadgets', badge: '📱 Tech', color: 'linear-gradient(135deg,#1A1A2E,#533483)', date: 'Valid until Apr 9' },
+          { title: 'Family Shopping Fest', badge: '👨‍👩‍👧 Family', color: 'linear-gradient(135deg,#E94560,#C0392B)', date: 'Valid until Apr 13' },
+        ],
+        offers: [0, 3, 8, 15, 7, 12],
+      },
+      {
+        key: 'Amber', name: 'Amber Supermarket', logo: 'AMB', bg: 'linear-gradient(135deg,#FF6B00,#CC4400)',
+        logoStyle: 'background:#FF6B00;color:#fff;font-size:9px;',
+        followers: '98K', products: '6K+', rating: '4.3',
+        desc: 'Neighbourhood supermarket across UAE. Fresh produce, dairy, bakery & everyday essentials.',
+        following: false,
+        booklets: [
+          { title: 'Fresh Daily Offers', badge: '🥬 Fresh', color: 'linear-gradient(135deg,#FF6B00,#CC4400)', date: 'Valid until Apr 5' },
+          { title: 'Bakery & Dairy Week', badge: '🥐 Bakery', color: 'linear-gradient(135deg,#B8860B,#7A5900)', date: 'Valid until Apr 8' },
+          { title: 'Weekend Savings', badge: '🎉 Weekend', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 12' },
+        ],
+        offers: [6, 7, 12, 13, 3, 0],
+      },
+      {
+        key: 'Ansar Mall', name: 'Ansar Mall', logo: 'ANS', bg: 'linear-gradient(135deg,#1B5E20,#0A3D0A)',
+        logoStyle: 'background:#1B5E20;color:#fff;font-size:9px;',
+        followers: '145K', products: '22K+', rating: '4.4',
+        desc: 'Sharjah & Ajman based retail chain. Electronics, fashion, home goods & groceries all in one.',
+        following: false,
+        booklets: [
+          { title: 'Sharjah Summer Sale', badge: '☀️ Summer', color: 'linear-gradient(135deg,#1B5E20,#0A3D0A)', date: 'Valid until Apr 6' },
+          { title: 'Electronics Deals', badge: '📱 Tech', color: 'linear-gradient(135deg,#1A1A2E,#16213E)', date: 'Valid until Apr 10' },
+          { title: 'Fashion & Footwear', badge: '👟 Fashion', color: 'linear-gradient(135deg,#D4A800,#8B7000)', date: 'Valid until Apr 14' },
+        ],
+        offers: [0, 3, 4, 14, 11, 7],
+      },
+      {
+        key: 'Safari', name: 'Safari Hypermarket', logo: 'SFR', bg: 'linear-gradient(135deg,#FF8C00,#CC5500)',
+        logoStyle: 'background:#FF8C00;color:#fff;font-size:9px;',
+        followers: '210K', products: '25K+', rating: '4.4',
+        desc: 'UAE hypermarket with branches in Abu Dhabi, Dubai & Northern Emirates. Great value daily.',
+        following: false,
+        booklets: [
+          { title: 'Safari Weekend Blast', badge: '🛒 Blast', color: 'linear-gradient(135deg,#FF8C00,#CC5500)', date: 'Valid until Apr 5' },
+          { title: 'Fresh & Frozen Week', badge: '❄️ Frozen', color: 'linear-gradient(135deg,#00A8E0,#005EA6)', date: 'Valid until Apr 9' },
+          { title: 'Household Mega Sale', badge: '🏠 Mega', color: 'linear-gradient(135deg,#2C3E50,#4CA1AF)', date: 'Valid until Apr 13' },
+        ],
+        offers: [6, 7, 12, 13, 3, 11],
+      },
+      {
+        key: 'Madina', name: 'Madina Supermarket', logo: 'MDN', bg: 'linear-gradient(135deg,#00695C,#003D33)',
+        logoStyle: 'background:#00695C;color:#fff;font-size:9px;',
+        followers: '120K', products: '8K+', rating: '4.3',
+        desc: 'Popular community supermarket in Ajman & Sharjah. Indian groceries, fresh halal meat & spices.',
+        following: false,
+        booklets: [
+          { title: 'Indian Spice World', badge: '🌶️ Spice', color: 'linear-gradient(135deg,#00695C,#003D33)', date: 'Valid until Apr 6' },
+          { title: 'Halal Meat Festival', badge: '🥩 Halal', color: 'linear-gradient(135deg,#8B0000,#5A0000)', date: 'Valid until Apr 9' },
+          { title: 'Ramadan Grocery Pack', badge: '🌙 Ramadan', color: 'linear-gradient(135deg,#1A1A2E,#533483)', date: 'Valid until Apr 14' },
+        ],
+        offers: [6, 7, 12, 13, 0, 3],
+      },
+      {
+        key: 'City Centre', name: 'City Centre Mirdif', logo: 'CCM', bg: 'linear-gradient(135deg,#9C27B0,#6A0080)',
+        logoStyle: 'background:#9C27B0;color:#fff;font-size:9px;',
+        followers: '390K', products: '30K+', rating: '4.6',
+        desc: 'Majid Al Futtaim mall & retail hub. Fashion, electronics, dining & entertainment in Dubai.',
+        following: false,
+        booklets: [
+          { title: 'Summer Splash Sale', badge: '☀️ Summer', color: 'linear-gradient(135deg,#9C27B0,#6A0080)', date: 'Valid until Apr 7' },
+          { title: 'Tech & Gadgets Week', badge: '💻 Tech', color: 'linear-gradient(135deg,#1A1A2E,#16213E)', date: 'Valid until Apr 11' },
+          { title: 'Fashion Fiesta', badge: '👗 Fashion', color: 'linear-gradient(135deg,#E94560,#C0392B)', date: 'Valid until Apr 15' },
+        ],
+        offers: [0, 1, 4, 14, 11, 15],
+      },
+      {
+        key: 'Rawabi', name: 'Rawabi Hypermarket', logo: 'RWB', bg: 'linear-gradient(135deg,#1565C0,#0A3878)',
+        logoStyle: 'background:#1565C0;color:#fff;font-size:9px;',
+        followers: '160K', products: '20K+', rating: '4.4',
+        desc: 'Abu Dhabi based hypermarket. Wide range of fresh food, electronics & household products.',
+        following: false,
+        booklets: [
+          { title: 'Abu Dhabi Grand Sale', badge: '🏛️ AD', color: 'linear-gradient(135deg,#1565C0,#0A3878)', date: 'Valid until Apr 6' },
+          { title: 'Fresh & Organic', badge: '🌿 Organic', color: 'linear-gradient(135deg,#2ECC71,#27AE60)', date: 'Valid until Apr 9' },
+          { title: 'Eid Shopping Deals', badge: '🌙 Eid', color: 'linear-gradient(135deg,#2C3E50,#4CA1AF)', date: 'Valid until Apr 13' },
+        ],
+        offers: [6, 7, 3, 12, 13, 0],
+      },
+      {
+        key: 'Al Ain Co-op', name: 'Al Ain Co-op', logo: 'AAC', bg: 'linear-gradient(135deg,#2E7D32,#1B5E20)',
+        logoStyle: 'background:#2E7D32;color:#fff;font-size:9px;',
+        followers: '140K', products: '12K+', rating: '4.5',
+        desc: 'Al Ain\'s consumer cooperative. Fresh local produce, household goods & community pricing.',
+        following: false,
+        booklets: [
+          { title: 'Al Ain Local Deals', badge: '🌴 Local', color: 'linear-gradient(135deg,#2E7D32,#1B5E20)', date: 'Valid until Apr 5' },
+          { title: 'Co-op Member Offers', badge: '🤝 Co-op', color: 'linear-gradient(135deg,#0D7377,#14A085)', date: 'Valid until Apr 8' },
+          { title: 'Fresh Harvest Week', badge: '🌾 Harvest', color: 'linear-gradient(135deg,#F39C12,#E67E22)', date: 'Valid until Apr 12' },
+        ],
+        offers: [6, 7, 12, 13, 3, 0],
+      },
+    ];
 
-    /* ══════════════════════════════════════
-       INIT
-    ══════════════════════════════════════ */
+    /* ═══════ STATE ═══════ */
+    let cart = [], wishlist = [], recentIds = [6, 7, 11], selectedLocation = 'Ajman, UAE';
+    let bannerIdx = 0, bannerTimer;
+    let dealTimers = {};
+    /* bottom nav context tracking */
+    let bnCtx = [
+      { lbl: 'Home', action: () => goHome() },
+      { lbl: 'Categories', action: () => showCategoriesPage() },
+      { lbl: 'Deals', action: () => showDealsPage() },
+      { lbl: 'Cart', action: () => openCart() },
+      { lbl: 'Account', action: () => openAccount() },
+    ];
+    let bnActive = 0;
+
+    /* ═══════ INIT ═══════ */
     window.addEventListener('DOMContentLoaded', () => {
+      renderStoreStrip();
+      renderStoreCircles();
       renderBestSellers();
       renderMegaDeals();
       renderRecent();
       updateCartBadge();
       startBanner();
       startTimers();
-      renderSearchSuggestions('');
+      renderSearchSuggestions();
       document.getElementById('fakeInput').addEventListener('click', openSearch);
     });
 
-    /* ══════════════════════════════════════
-       RENDER HELPERS
-    ══════════════════════════════════════ */
-    function makeProductCard(p, compact = false) {
+    /* ═══════ STORE STRIP (top quick-access) ═══════ */
+    function renderStoreStrip() {
+      const el = document.getElementById('storeStrip');
+      const pills = STORES.map(s => `
+    <div class="sp-pill" onclick="openStorePage('${s.key}')" id="sppill_${s.key.replace(/[^a-z]/gi, '_')}">
+      <div class="sp-logo" style="${s.logoStyle}">${s.logo}</div>
+      <div>
+        <div class="sp-name">${s.name}</div>
+        <div class="sp-offer">${s.booklets[0].badge} ${s.booklets[0].title.split(' ').slice(0, 2).join(' ')}</div>
+      </div>
+    </div>`).join('');
+      el.innerHTML = `<span class="store-strip-lbl">Stores:</span>${pills}`;
+    }
+
+    function renderStoreCircles() {
+      document.getElementById('storeCircles').innerHTML = STORES.map(s => `
+    <div class="sti" onclick="openStorePage('${s.key}')">
+      <div class="stcircle" style="${s.logoStyle}">${s.logo}</div>
+      <div class="stnm">${s.name.split(' ')[0]}</div>
+    </div>`).join('');
+    }
+
+    /* ═══════ STORE PAGE ═══════ */
+    function openStorePage(key) {
+      const s = STORES.find(x => x.key === key);
+      if (!s) return;
+      const prods = s.offers.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+      /* update nav to show this store as context */
+      updateBnCtx({ lbl: s.name.split(' ')[0], action: () => openStorePage(key) }, 1);
+      const html = `
+    <!-- STORE HERO -->
+    <div class="store-hero" style="${s.bg}">
+      <div class="store-hero-inner">
+        <div class="store-hero-logo" style="${s.logoStyle}">${s.logo}</div>
+        <div class="store-hero-info">
+          <div class="store-hero-name">${s.name}</div>
+          <div class="store-hero-sub">${s.desc}</div>
+          <div class="store-hero-stats">
+            <div class="store-stat"><div class="store-stat-val">${s.followers}</div><div class="store-stat-lbl">Followers</div></div>
+            <div class="store-stat"><div class="store-stat-val">${s.products}</div><div class="store-stat-lbl">Products</div></div>
+            <div class="store-stat"><div class="store-stat-val">⭐${s.rating}</div><div class="store-stat-lbl">Rating</div></div>
+          </div>
+        </div>
+        <button class="store-follow-btn ${s.following ? 'following' : ''}" id="followBtn_${key.replace(/[^a-z]/gi, '_')}"
+          onclick="toggleFollow('${key}',this)">${s.following ? '✓ Following' : '+ Follow'}</button>
+      </div>
+    </div>
+
+    <!-- CURRENT OFFERS / BOOKLETS -->
+    <div class="sec-hd"><div class="sec-ttl"><span class="em">📋</span>Current Offer Booklets</div></div>
+    <div class="booklet-scroll">
+      ${s.booklets.map((b, i) => `
+        <div class="booklet-card" onclick="openBooklet('${key}',${i})">
+          <div class="booklet-cover" style="background:${b.color}">
+            <div class="booklet-badge">${b.badge}</div>
+            <div class="booklet-title">${b.title}</div>
+          </div>
+          <div class="booklet-footer">
+            <div class="booklet-date">📅 ${b.date}</div>
+            <div class="booklet-cta">View All <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <!-- BEST PRICE OFFERS AT THIS STORE -->
+    <div class="sec-hd" style="margin-top:24px;"><div class="sec-ttl"><span class="em">🏆</span>Best Offer Prices at ${s.name}</div></div>
+    <div class="offer-grid">
+      ${prods.map(p => makeStoreOfferCard(p, key)).join('')}
+    </div>
+
+    <!-- MORE FROM THIS STORE -->
+    <div class="sec-hd" style="margin-top:24px;"><div class="sec-ttl"><span class="em">🛒</span>More Products</div></div>
+    <div class="hrow">${prods.map(p => makeProductCard(p)).join('')}</div>
+    <div style="height:16px;"></div>
+  `;
+      showSubPage(html, `🏪 ${s.name}`);
+    }
+
+    function makeStoreOfferCard(p, storeKey) {
+      const storePr = p.prices.find(pr => pr.store === storeKey);
+      const best = p.prices[0];
+      const isBest = storePr && storePr.price === best.price;
+      const price = storePr ? storePr.price : best.price;
+      const saving = storePr ? Math.max(0, ...p.prices.map(pr => pr.price)) - storePr.price : 0;
+      return `
+  <div class="offer-card pc" style="flex:none;width:100%;" onclick="openProduct(${p.id})">
+    <div class="pimg" style="height:100px;">
+      <span>${p.emoji}</span>
+      ${isBest ? '<div class="pbadge best">BEST PRICE</div>' : ''}
+    </div>
+    <div class="pbody">
+      <div class="pname">${p.name}</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+        <span style="font-size:18px;font-weight:900;color:${isBest ? 'var(--green)' : 'var(--black)'}">AED ${price.toLocaleString()}</span>
+        ${saving > 0 ? `<span style="font-size:11px;color:var(--green);font-weight:700;">Save AED ${saving}</span>` : ''}
+      </div>
+      <button class="cbtn" onclick="addToCart(event,${p.id})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Add to Cart
+      </button>
+    </div>
+  </div>`;
+    }
+
+    function toggleFollow(key, btn) {
+      const s = STORES.find(x => x.key === key);
+      s.following = !s.following;
+      btn.textContent = s.following ? '✓ Following' : '+ Follow';
+      btn.className = 'store-follow-btn' + (s.following ? ' following' : '');
+      showToast(s.following ? `🔔 Following ${s.name}! You\'ll get price alerts.` : `Unfollowed ${s.name}`);
+    }
+
+    function openBooklet(key, idx) {
+      const s = STORES.find(x => x.key === key);
+      const b = s.booklets[idx];
+      const prods = s.offers.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+      const html = `
+    <div style="background:${b.color};border-radius:14px;padding:24px 20px;margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">${b.badge}</div>
+      <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.2;">${b.title}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:8px;">📅 ${b.date} · ${s.name}</div>
+    </div>
+    <div style="font-size:14px;font-weight:700;color:var(--black);margin-bottom:14px;">Featured Products in this Booklet</div>
+    <div class="offer-grid">${prods.map(p => makeStoreOfferCard(p, key)).join('')}</div>
+  `;
+      showSubPage(html, `📋 ${b.title}`);
+    }
+
+    /* ═══════ PRODUCT CARD ═══════ */
+    function makeProductCard(p) {
       const best = p.prices[0];
       const inWish = wishlist.find(w => w.id === p.id);
       const inCart = cart.find(c => c.id === p.id);
       const badgeHtml = p.badge ? `<div class="pbadge ${p.badgeType}">${p.badge}</div>` : '';
       return `
   <div class="pc" onclick="openProduct(${p.id})">
-    <div class="pimg">
-      <span>${p.emoji}</span>
-      ${badgeHtml}
+    <div class="pimg"><span>${p.emoji}</span>${badgeHtml}
       <button class="wb ${inWish ? 'on' : ''}" onclick="toggleWish(event,${p.id})">
         <svg viewBox="0 0 24 24" fill="${inWish ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </button>
@@ -3073,17 +3700,13 @@
         <div class="prow best"><span class="pstore">${best.store} <span class="blbl">BEST</span></span><span class="pprice">AED ${best.price.toLocaleString()}</span></div>
         ${p.prices.slice(1, 3).map(pr => `<div class="prow"><span class="pstore">${pr.store}</span><span class="pprice">AED ${pr.price.toLocaleString()}</span></div>`).join('')}
       </div>
-      <button class="cbtn" onclick="addToCart(event,${p.id})">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        ${inCart ? 'In Cart ✓' : 'Compare'}
-      </button>
+      <button class="cbtn" onclick="addToCart(event,${p.id})">${inCart ? '✓ In Cart' : 'Compare & Add'}</button>
     </div>
   </div>`;
     }
 
     function makeDealCard(deal) {
-      const p = PRODUCTS.find(x => x.id === deal.id);
-      const best = p.prices[0];
+      const p = PRODUCTS.find(x => x.id === deal.id); const best = p.prices[0];
       const orig = Math.round(best.price / (1 - parseInt(deal.discount) / 100));
       return `
   <div class="dc" onclick="openProduct(${p.id})">
@@ -3092,110 +3715,110 @@
       <div class="dnm">${p.name}</div>
       <div class="dprow"><div class="dnew">AED ${best.price.toLocaleString()}</div><div class="dold">AED ${orig.toLocaleString()}</div></div>
       <div class="stags">${p.prices.slice(0, 3).map((pr, i) => `<div class="stag ${i === 0 ? 'b' : ''}">✓ ${pr.store}</div>`).join('')}</div>
-      <div class="trow"><span class="tlbl">Ends in:</span><div class="tboxes" data-deal="${deal.id}">
-        <div class="tbox" id="dh${deal.id}">${String(deal.endH).padStart(2, '0')}</div>
-        <div class="tsep">:</div>
-        <div class="tbox" id="dm${deal.id}">${String(deal.endM).padStart(2, '0')}</div>
-        <div class="tsep">:</div>
+      <div class="trow"><span class="tlbl">Ends in:</span><div class="tboxes">
+        <div class="tbox" id="dh${deal.id}">${String(deal.endH).padStart(2, '0')}</div><div class="tsep">:</div>
+        <div class="tbox" id="dm${deal.id}">${String(deal.endM).padStart(2, '0')}</div><div class="tsep">:</div>
         <div class="tbox" id="ds${deal.id}">${String(deal.endS).padStart(2, '0')}</div>
       </div></div>
     </div>
   </div>`;
     }
 
-    function renderBestSellers() { document.getElementById('bestSellersRow').innerHTML = PRODUCTS.slice(0, 6).map(p => makeProductCard(p)).join(''); }
-    function renderMegaDeals() { document.getElementById('megaDealsRow').innerHTML = DEALS.map(d => makeDealCard(d)).join(''); }
+    function renderBestSellers() { document.getElementById('bestSellersRow').innerHTML = PRODUCTS.slice(0, 7).map(makeProductCard).join(''); }
+    function renderMegaDeals() { document.getElementById('megaDealsRow').innerHTML = DEALS.map(makeDealCard).join(''); }
     function renderRecent() {
-      const row = document.getElementById('recentRow');
-      if (!row) return;
+      const row = document.getElementById('recentRow'); if (!row) return;
       const ps = recentIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
-      row.innerHTML = ps.length ? ps.map(p => makeProductCard(p)).join('') : '<div style="color:var(--gray);font-size:14px;padding:20px">No recent items</div>';
+      row.innerHTML = ps.length ? ps.map(makeProductCard).join('') : '<div style="color:var(--gray);font-size:14px;padding:20px">No recent items</div>';
     }
 
-    /* ══════════════════════════════════════
-       BANNER
-    ══════════════════════════════════════ */
-    function startBanner() {
-      bannerTimer = setInterval(() => { nextBanner(); }, 3800);
-    }
+    /* ═══════ BANNER ═══════ */
+    function startBanner() { bannerTimer = setInterval(() => nextBanner(), 3800); }
     function nextBanner() {
-      const slides = document.querySelectorAll('.bslide'), dots = document.querySelectorAll('#bdots .bdot');
-      slides[bannerIdx].classList.remove('on'); dots[bannerIdx].classList.remove('on');
-      bannerIdx = (bannerIdx + 1) % slides.length;
-      slides[bannerIdx].classList.add('on'); dots[bannerIdx].classList.add('on');
+      const s = document.querySelectorAll('.bslide'), d = document.querySelectorAll('#bdots .bdot');
+      s[bannerIdx].classList.remove('on'); d[bannerIdx].classList.remove('on');
+      bannerIdx = (bannerIdx + 1) % s.length; s[bannerIdx].classList.add('on'); d[bannerIdx].classList.add('on');
     }
     function goBanner(i) {
-      const slides = document.querySelectorAll('.bslide'), dots = document.querySelectorAll('#bdots .bdot');
-      slides[bannerIdx].classList.remove('on'); dots[bannerIdx].classList.remove('on');
-      bannerIdx = i;
-      slides[bannerIdx].classList.add('on'); dots[bannerIdx].classList.add('on');
+      const s = document.querySelectorAll('.bslide'), d = document.querySelectorAll('#bdots .bdot');
+      s[bannerIdx].classList.remove('on'); d[bannerIdx].classList.remove('on');
+      bannerIdx = i; s[bannerIdx].classList.add('on'); d[bannerIdx].classList.add('on');
       clearInterval(bannerTimer); startBanner();
     }
-    function openDeal(i) { const products = [PRODUCTS[0], PRODUCTS[3], PRODUCTS[6], PRODUCTS[2]]; openProduct(products[i].id); }
 
-    /* ══════════════════════════════════════
-       TIMERS
-    ══════════════════════════════════════ */
-    let dealTimers = {};
+    /* ═══════ TIMERS ═══════ */
     function startTimers() {
       DEALS.forEach(d => { dealTimers[d.id] = d.endH * 3600 + d.endM * 60 + d.endS; });
       setInterval(() => {
         Object.keys(dealTimers).forEach(id => {
-          if (dealTimers[id] <= 0) return;
-          dealTimers[id]--;
-          const s = dealTimers[id];
-          const h = String(Math.floor(s / 3600)).padStart(2, '0'), m = String(Math.floor((s % 3600) / 60)).padStart(2, '0'), ss = String(s % 60).padStart(2, '0');
+          if (dealTimers[id] <= 0) return; dealTimers[id]--;
+          const sc = dealTimers[id], h = String(Math.floor(sc / 3600)).padStart(2, '0'), m = String(Math.floor((sc % 3600) / 60)).padStart(2, '0'), ss = String(sc % 60).padStart(2, '0');
           const eh = document.getElementById('dh' + id), em = document.getElementById('dm' + id), es = document.getElementById('ds' + id);
           if (eh) eh.textContent = h; if (em) em.textContent = m; if (es) es.textContent = ss;
         });
       }, 1000);
     }
 
-    /* ══════════════════════════════════════
-       NAVIGATION
-    ══════════════════════════════════════ */
+    /* ═══════ NAVIGATION ═══════ */
     function goHome() {
       document.getElementById('mainPage').style.display = '';
       document.getElementById('subPage').style.display = 'none';
       document.querySelectorAll('.dni').forEach(d => d.classList.remove('on'));
       document.querySelector('.dni').classList.add('on');
-      bNavActive('bnavHome');
+      setBnActive(0);
+      /* reset nav to default */
+      bnCtx = [
+        { lbl: 'Home', action: () => goHome() },
+        { lbl: 'Categories', action: () => showCategoriesPage() },
+        { lbl: 'Deals', action: () => showDealsPage() },
+        { lbl: 'Cart', action: () => openCart() },
+        { lbl: 'Account', action: () => openAccount() },
+      ];
+      refreshBnLabels();
     }
 
     function deskNav(el, type, extra) {
-      document.querySelectorAll('.dni').forEach(d => d.classList.remove('on'));
-      el.classList.add('on');
-      if (type === 'home') { goHome(); }
-      else if (type === 'categories') { showCategoriesPage(); }
-      else if (type === 'deals') { showDealsPage(); }
-      else if (type === 'cat') { openCategoryPage(extra, '📦'); }
+      document.querySelectorAll('.dni').forEach(d => d.classList.remove('on')); el.classList.add('on');
+      if (type === 'home') goHome();
+      else if (type === 'categories') showCategoriesPage();
+      else if (type === 'deals') showDealsPage();
+      else if (type === 'cat') openCategoryPage(extra, '📦');
     }
 
-    function bNav(el, type) {
+    /* ═══════ DYNAMIC BOTTOM NAV ═══════ */
+    function setBnActive(i) {
+      bnActive = i;
       document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
-      el.classList.add('on');
-      if (type === 'home') { goHome(); }
-      else if (type === 'categories') { showCategoriesPage(); }
-      else if (type === 'deals') { openCart(); }
-      else if (type === 'account') { openAccount(); }
+      const el = document.getElementById('bn' + i); if (el) el.classList.add('on');
+    }
+    function refreshBnLabels() {
+      for (let i = 0; i < 5; i++) {
+        const lbl = document.getElementById('bn' + i + 'lbl');
+        if (lbl) lbl.textContent = bnCtx[i]?.lbl || '';
+      }
+    }
+    function updateBnCtx(item, slot) {
+      /* When entering a store/category, update a slot contextually */
+      bnCtx[slot] = { ...item };
+      refreshBnLabels();
     }
 
-    function bNavActive(id) {
-      document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
-      const el = document.getElementById(id); if (el) el.classList.add('on');
+    function bNavClick(i) {
+      setBnActive(i);
+      if (bnCtx[i]) bnCtx[i].action();
     }
 
+    /* ═══════ SUB PAGE ═══════ */
     function showSubPage(html, title) {
       document.getElementById('mainPage').style.display = 'none';
       document.getElementById('subPage').style.display = '';
       document.getElementById('subPageContent').innerHTML = `
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-      <button onclick="goHome()" style="width:38px;height:38px;border-radius:10px;background:var(--white);border:1.5px solid var(--mg);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <div class="back-bar">
+      <button class="back-bar-btn" onclick="goHome()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       </button>
-      <h2 style="font-size:clamp(16px,2.5vw,22px);font-weight:900;">${title}</h2>
-    </div>
-    ${html}`;
+      <div class="back-bar-title">${title}</div>
+    </div>${html}`;
       window.scrollTo(0, 0);
     }
 
@@ -3207,42 +3830,33 @@
       <div class="cat-page-cnt">${c.count} products</div>
     </div>`).join('')}</div>`;
       showSubPage(html, '🗂️ All Categories');
-      bNavActive('bnavCats');
+      updateBnCtx({ lbl: 'Categories', action: () => showCategoriesPage() }, 1);
+      setBnActive(1);
     }
 
     function openCategoryPage(name, emoji) {
       const prods = PRODUCTS.filter(p => p.cat === name);
-      const html = prods.length ?
-        `<div class="sr-grid">${prods.map(p => makeProductCard(p)).join('')}</div>` :
-        `<div class="sr-no"><div style="font-size:48px;margin-bottom:12px;">${emoji}</div><p>No products in this category yet.<br>Check back soon!</p></div>`;
+      const html = prods.length ? `<div class="sr-grid">${prods.map(makeProductCard).join('')}</div>` : `<div class="sr-no"><div style="font-size:48px;margin-bottom:12px;">${emoji}</div><p>No products yet in ${name}.<br>Check back soon!</p></div>`;
       showSubPage(html, `${emoji} ${name}`);
+      updateBnCtx({ lbl: name.split(' ')[0], action: () => openCategoryPage(name, emoji) }, 1);
+      setBnActive(1);
     }
 
     function showDealsPage() {
-      const html = `<div class="deals-grid">${DEALS.map(d => makeDealCard(d)).join('')}</div>`;
+      const html = `<div class="deals-grid">${DEALS.map(makeDealCard).join('')}</div>`;
       showSubPage(html, "🔥 Today's Deals");
-      bNavActive('bnavDeals');
+      updateBnCtx({ lbl: 'Deals', action: () => showDealsPage() }, 2);
+      setBnActive(2);
     }
 
-    function showAllProducts(title) {
-      const html = `<div class="sr-grid">${PRODUCTS.map(p => makeProductCard(p)).join('')}</div>`;
+    function showAllProducts(title, arr) {
+      const html = `<div class="sr-grid">${arr.map(makeProductCard).join('')}</div>`;
       showSubPage(html, '⭐ ' + title);
     }
 
-    function openStorePage(store) {
-      const prods = PRODUCTS.filter(p => p.prices.some(pr => pr.store === store));
-      const html = prods.length ?
-        `<p style="font-size:13px;color:var(--gray);margin-bottom:16px;">${prods.length} products available at ${store}</p><div class="sr-grid">${prods.map(p => makeProductCard(p)).join('')}</div>` :
-        `<div class="sr-no">No products listed for ${store} yet.</div>`;
-      showSubPage(html, '🏪 ' + store);
-    }
-
-    /* ══════════════════════════════════════
-       PRODUCT DETAIL
-    ══════════════════════════════════════ */
+    /* ═══════ PRODUCT DETAIL ═══════ */
     function openProduct(id) {
-      const p = PRODUCTS.find(x => x.id === id);
-      if (!p) return;
+      const p = PRODUCTS.find(x => x.id === id); if (!p) return;
       if (!recentIds.includes(id)) { recentIds.unshift(id); if (recentIds.length > 6) recentIds.pop(); renderRecent(); }
       const inWish = wishlist.find(w => w.id === id);
       document.getElementById('pdTitle').textContent = p.name;
@@ -3255,13 +3869,10 @@
     </div>
     <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:18px;">${p.desc}</p>
     <div class="pd-section">
-      <div class="pd-section-title">Price Comparison Across Stores</div>
+      <div class="pd-section-title">Price Comparison</div>
       ${p.prices.map((pr, i) => `
         <div class="price-compare-row ${i === 0 ? 'best-store' : ''}" onclick="addToCartFromDetail(${p.id},'${pr.store}',${pr.price})">
-          <div>
-            <div class="pcr-store">${pr.store}${i === 0 ? ' 🏆 Best Price' : ''}</div>
-            <div class="pcr-del">🚚 ${pr.delivery} · ⭐ ${pr.rating}</div>
-          </div>
+          <div><div class="pcr-store">${pr.store}${i === 0 ? ' 🏆' : ''}</div><div class="pcr-del">🚚 ${pr.delivery} · ⭐ ${pr.rating}</div></div>
           <div class="pcr-price ${i === 0 ? 'cheapest' : ''}">AED ${pr.price.toLocaleString()}</div>
         </div>`).join('')}
     </div>
@@ -3271,7 +3882,7 @@
         ${inWish ? 'Saved' : 'Wishlist'}
       </button>
       <button class="pd-btn primary" onclick="addToCart(event,${p.id});closePD()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:17px;height:17px"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:17px;height:17px"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         Add Best Price to Cart
       </button>
     </div>`;
@@ -3281,48 +3892,34 @@
     function addToCartFromDetail(id, store, price) {
       const p = PRODUCTS.find(x => x.id === id);
       const ex = cart.find(c => c.id === id);
-      if (ex) { ex.qty++; showToast(`🛒 ${p.name} qty updated`); }
+      if (ex) { ex.qty++; showToast(`🛒 Qty updated`); }
       else { cart.push({ id, name: p.name, emoji: p.emoji, store, price, qty: 1 }); }
-      updateCartBadge();
-      showToast(`🛒 Added from ${store} – AED ${price.toLocaleString()}`);
+      updateCartBadge(); showToast(`🛒 Added from ${store} – AED ${price.toLocaleString()}`);
     }
-
     function closePD() { closeModal('pdModal', 'pdBackdrop'); }
 
-    /* ══════════════════════════════════════
-       CART
-    ══════════════════════════════════════ */
+    /* ═══════ CART ═══════ */
     function addToCart(e, id) {
       e.stopPropagation();
-      const p = PRODUCTS.find(x => x.id === id);
-      const best = p.prices[0];
+      const p = PRODUCTS.find(x => x.id === id); const best = p.prices[0];
       const ex = cart.find(c => c.id === id);
-      if (ex) { ex.qty++; showToast(`🛒 Qty updated to ${ex.qty}`); }
-      else { cart.push({ id, name: p.name, emoji: p.emoji, store: best.store, price: best.price, qty: 1 }); showToast(`✅ Added to cart!`); }
-      updateCartBadge();
-      renderBestSellers(); renderMegaDeals(); renderRecent();
+      if (ex) { ex.qty++; showToast('🛒 Qty updated to ' + ex.qty); }
+      else { cart.push({ id, name: p.name, emoji: p.emoji, store: best.store, price: best.price, qty: 1 }); showToast('✅ Added to cart!'); }
+      updateCartBadge(); renderBestSellers(); renderMegaDeals(); renderRecent();
     }
-
     function updateCartBadge() {
       const tot = cart.reduce((a, c) => a + c.qty, 0);
       document.getElementById('cartBadge').textContent = tot;
-      const bn = document.getElementById('bnavCartNum'); if (bn) bn.textContent = tot;
     }
-
     function openCart() {
-      renderCartDrawer();
-      openDrawer('cartDrawer');
-      bNavActive('bnavDeals');
+      renderCartDrawer(); openDrawer('cartDrawer');
+      updateBnCtx({ lbl: 'Cart', action: () => openCart() }, 3); setBnActive(3);
     }
-
     function renderCartDrawer() {
       const el = document.getElementById('cartBody');
-      if (!cart.length) {
-        el.innerHTML = `<div class="empty-cart"><div class="eci">🛒</div><p>Your cart is empty.<br>Start comparing prices!</p></div>`;
-        return;
-      }
-      const subtotal = cart.reduce((a, c) => a + c.price * c.qty, 0);
-      const delivery = 0; const savings = cart.reduce((a, c) => { const p = PRODUCTS.find(x => x.id === c.id); const max = Math.max(...p.prices.map(pr => pr.price)); return a + (max - c.price) * c.qty; }, 0);
+      if (!cart.length) { el.innerHTML = `<div class="empty-state"><div class="ei">🛒</div><p>Your cart is empty.<br>Start comparing prices!</p></div>`; return; }
+      const sub = cart.reduce((a, c) => a + c.price * c.qty, 0);
+      const sav = cart.reduce((a, c) => { const p = PRODUCTS.find(x => x.id === c.id); return a + (Math.max(...p.prices.map(pr => pr.price)) - c.price) * c.qty; }, 0);
       el.innerHTML = `
     ${cart.map(c => `
       <div class="cart-item">
@@ -3341,36 +3938,28 @@
         </div>
       </div>`).join('')}
     <div class="cart-total">
-      <div class="cart-total-row"><span>Subtotal</span><span>AED ${subtotal.toLocaleString()}</span></div>
+      <div class="cart-total-row"><span>Subtotal</span><span>AED ${sub.toLocaleString()}</span></div>
       <div class="cart-total-row"><span>Delivery</span><span style="color:var(--green)">FREE</span></div>
-      <div class="cart-total-row" style="color:var(--green)"><span>💰 You Save</span><span>AED ${savings.toLocaleString()}</span></div>
-      <div class="cart-total-row main"><span>Total</span><span>AED ${subtotal.toLocaleString()}</span></div>
+      <div class="cart-total-row" style="color:var(--green)"><span>💰 You Save</span><span>AED ${sav.toLocaleString()}</span></div>
+      <div class="cart-total-row main"><span>Total</span><span>AED ${sub.toLocaleString()}</span></div>
     </div>
     <button class="checkout-btn" onclick="checkout()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-      Checkout – AED ${subtotal.toLocaleString()}
+      Checkout – AED ${sub.toLocaleString()}
     </button>`;
     }
-
-    function qtyChange(id, delta) {
-      const item = cart.find(c => c.id === id);
-      if (!item) return;
-      item.qty += delta;
-      if (item.qty <= 0) { cart = cart.filter(c => c.id !== id); showToast('🗑️ Item removed from cart'); }
+    function qtyChange(id, d) {
+      const item = cart.find(c => c.id === id); if (!item) return;
+      item.qty += d;
+      if (item.qty <= 0) { cart = cart.filter(c => c.id !== id); showToast('🗑️ Item removed'); }
       updateCartBadge(); renderCartDrawer(); renderBestSellers();
     }
-
     function checkout() {
       closeDrawer('cartDrawer');
-      setTimeout(() => {
-        showToast('🎉 Order placed! Saving you the most on every item.');
-        cart = []; updateCartBadge(); renderBestSellers(); renderMegaDeals();
-      }, 300);
+      setTimeout(() => { showToast('🎉 Order placed! Best prices secured.'); cart = []; updateCartBadge(); renderBestSellers(); renderMegaDeals(); }, 300);
     }
 
-    /* ══════════════════════════════════════
-       WISHLIST
-    ══════════════════════════════════════ */
+    /* ═══════ WISHLIST ═══════ */
     function toggleWish(e, id) {
       e.stopPropagation();
       const p = PRODUCTS.find(x => x.id === id);
@@ -3380,50 +3969,37 @@
       renderBestSellers(); renderMegaDeals(); renderRecent();
       if (document.getElementById('wishDrawer').classList.contains('open')) renderWishDrawer();
     }
-
     function openWishlist() { renderWishDrawer(); openDrawer('wishDrawer'); }
-
     function renderWishDrawer() {
       const el = document.getElementById('wishBody');
-      if (!wishlist.length) { el.innerHTML = `<div class="empty-wl"><div class="ewi">❤️</div><p style="font-size:14px;font-weight:600;">Your wishlist is empty.<br>Save products you love!</p></div>`; return; }
+      if (!wishlist.length) { el.innerHTML = `<div class="empty-state"><div class="ei">❤️</div><p>Wishlist is empty.<br>Save products you love!</p></div>`; return; }
       el.innerHTML = wishlist.map(w => `
     <div class="wl-item" onclick="openProduct(${w.id})">
       <div class="wl-img">${w.emoji}</div>
-      <div class="wl-info">
-        <div class="wl-name">${w.name}</div>
-        <div class="wl-price">AED ${w.price.toLocaleString()}</div>
-        <div class="wl-store">Best at ${w.store}</div>
-      </div>
+      <div class="wl-info"><div class="wl-name">${w.name}</div><div class="wl-price">AED ${w.price.toLocaleString()}</div><div class="wl-store">Best at ${w.store}</div></div>
       <div class="wl-del" onclick="toggleWish(event,${w.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
     </div>`).join('');
     }
 
-    /* ══════════════════════════════════════
-       NOTIFICATIONS
-    ══════════════════════════════════════ */
+    /* ═══════ NOTIFICATIONS ═══════ */
     function openNotifications() {
-      unreadNotifs = 0;
       document.getElementById('notifBadge').style.display = 'none';
       renderNotifDrawer(); openDrawer('notifDrawer');
     }
-
     function renderNotifDrawer() {
       document.getElementById('notifBody').innerHTML = NOTIFS.map(n => `
     <div class="notif-item ${n.unread ? 'unread' : ''}">
       <div class="ni-icon ni-${n.type}">${n.icon}</div>
-      <div class="ni-info">
-        <div class="ni-title">${n.title}</div>
-        <div class="ni-sub">${n.sub}</div>
-      </div>
+      <div class="ni-info"><div class="ni-title">${n.title}</div><div class="ni-sub">${n.sub}</div></div>
       <div class="ni-time">${n.time}</div>
     </div>`).join('');
     }
 
-    /* ══════════════════════════════════════
-       ACCOUNT
-    ══════════════════════════════════════ */
-    function openAccount() { renderAcctDrawer(); openDrawer('acctDrawer'); bNavActive('bnavAcct'); }
-
+    /* ═══════ ACCOUNT ═══════ */
+    function openAccount() {
+      renderAcctDrawer(); openDrawer('acctDrawer');
+      updateBnCtx({ lbl: 'Account', action: () => openAccount() }, 4); setBnActive(4);
+    }
     function renderAcctDrawer() {
       document.getElementById('acctBody').innerHTML = `
     <div class="acct-header">
@@ -3432,7 +4008,7 @@
       <div class="acct-email">ahmed@example.com · 📍 ${selectedLocation}</div>
     </div>
     <div class="acct-stats">
-      <div class="acct-stat"><div class="acct-stat-val">${cart.length}</div><div class="acct-stat-lbl">In Cart</div></div>
+      <div class="acct-stat"><div class="acct-stat-val">${cart.reduce((a, c) => a + c.qty, 0)}</div><div class="acct-stat-lbl">In Cart</div></div>
       <div class="acct-stat"><div class="acct-stat-val">${wishlist.length}</div><div class="acct-stat-lbl">Wishlist</div></div>
       <div class="acct-stat"><div class="acct-stat-val">AED ${wishlist.reduce((a, w) => a + w.price, 0).toLocaleString()}</div><div class="acct-stat-lbl">Saved</div></div>
     </div>
@@ -3440,22 +4016,15 @@
       <div class="menu-item" onclick="closeDrawer('acctDrawer');openWishlist()"><div class="menu-icon r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--red)"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="menu-lbl">My Wishlist (${wishlist.length})</div><div class="menu-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>
       <div class="menu-item" onclick="closeDrawer('acctDrawer');openCart()"><div class="menu-icon y"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--yd)"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="menu-lbl">My Cart (${cart.reduce((a, c) => a + c.qty, 0)} items)</div><div class="menu-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>
       <div class="menu-item" onclick="closeDrawer('acctDrawer');openNotifications()"><div class="menu-icon b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div class="menu-lbl">Notifications</div><div class="menu-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>
-      <div class="menu-item" onclick="closeDrawer('acctDrawer');openLocation()"><div class="menu-icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg></div><div class="menu-lbl">Delivery Location: ${selectedLocation}</div><div class="menu-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>
+      <div class="menu-item" onclick="closeDrawer('acctDrawer');openLocation()"><div class="menu-icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg></div><div class="menu-lbl">Location: ${selectedLocation}</div><div class="menu-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>
     </div>
-    <button class="logout-btn" onclick="logout()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Sign Out
-    </button>`;
+    <button class="logout-btn" onclick="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>`;
     }
-
     function logout() { closeDrawer('acctDrawer'); setTimeout(() => showToast('👋 Signed out successfully'), 300); }
 
-    /* ══════════════════════════════════════
-       LOCATION
-    ══════════════════════════════════════ */
+    /* ═══════ LOCATION ═══════ */
     function openLocation() {
-      document.getElementById('locBody').innerHTML = `
-    <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Choose your delivery location to see the best local prices.</p>
+      document.getElementById('locBody').innerHTML = `<p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Choose your delivery location for best local prices.</p>
     ${LOCATIONS.map(l => `
       <div class="loc-option ${selectedLocation.includes(l.city) ? 'selected' : ''}" onclick="setLocation('${l.city}, UAE')">
         <span class="loc-em">${l.flag}</span>
@@ -3464,182 +4033,105 @@
       </div>`).join('')}`;
       showModal('locModal', 'locBackdrop');
     }
-
     function setLocation(loc) {
-      selectedLocation = loc;
-      document.getElementById('locLabel').textContent = loc;
-      closeModal('locModal', 'locBackdrop');
-      showToast(`📍 Delivery set to ${loc}`);
+      selectedLocation = loc; document.getElementById('locLabel').textContent = loc;
+      closeModal('locModal', 'locBackdrop'); showToast(`📍 Delivery set to ${loc}`);
     }
 
-    /* ══════════════════════════════════════
-       FILTER MODAL
-    ══════════════════════════════════════ */
+    /* ═══════ FILTER ═══════ */
     function openFilterModal() {
       document.getElementById('filterBody').innerHTML = `
-    <div class="filter-group">
-      <div class="filter-group-title">Store</div>
-      <div class="filter-chips">
-        ${['Amazon', 'Noon', 'Lulu', 'Nesto', 'KM Trading', 'Carrefour', 'Flipkart'].map(s => `<div class="fchip" onclick="this.classList.toggle('on')">${s}</div>`).join('')}
-      </div>
-    </div>
-    <div class="filter-group">
-      <div class="filter-group-title">Price Range (AED)</div>
-      <div class="price-range">
-        <input class="price-input" placeholder="Min" type="number" value="0">
-        <span style="color:var(--gray)">—</span>
-        <input class="price-input" placeholder="Max" type="number" value="5000">
-      </div>
-    </div>
-    <div class="filter-group">
-      <div class="filter-group-title">Delivery</div>
-      <div class="filter-chips">
-        <div class="fchip on" onclick="this.classList.toggle('on')">Any</div>
-        <div class="fchip" onclick="this.classList.toggle('on')">Today</div>
-        <div class="fchip" onclick="this.classList.toggle('on')">Tomorrow</div>
-        <div class="fchip" onclick="this.classList.toggle('on')">Within 3 days</div>
-      </div>
-    </div>
-    <div class="filter-group">
-      <div class="filter-group-title">Rating</div>
-      <div class="filter-chips">
-        <div class="fchip on" onclick="this.classList.toggle('on')">⭐ All</div>
-        <div class="fchip" onclick="this.classList.toggle('on')">⭐⭐⭐⭐+ (4+)</div>
-        <div class="fchip" onclick="this.classList.toggle('on')">⭐⭐⭐⭐⭐ (5)</div>
-      </div>
-    </div>
+    <div class="filter-group"><div class="filter-group-title">Store</div><div class="filter-chips">${STORES.map(s => `<div class="fchip" onclick="this.classList.toggle('on')">${s.name.split(' ')[0]}</div>`).join('')}</div></div>
+    <div class="filter-group"><div class="filter-group-title">Price Range (AED)</div><div class="price-range"><input class="price-input" placeholder="Min" type="number" value="0"><span style="color:var(--gray)">—</span><input class="price-input" placeholder="Max" type="number" value="5000"></div></div>
+    <div class="filter-group"><div class="filter-group-title">Delivery</div><div class="filter-chips"><div class="fchip on" onclick="this.classList.toggle('on')">Any</div><div class="fchip" onclick="this.classList.toggle('on')">Today</div><div class="fchip" onclick="this.classList.toggle('on')">Tomorrow</div><div class="fchip" onclick="this.classList.toggle('on')">Within 3 days</div></div></div>
+    <div class="filter-group"><div class="filter-group-title">Rating</div><div class="filter-chips"><div class="fchip on" onclick="this.classList.toggle('on')">⭐ All</div><div class="fchip" onclick="this.classList.toggle('on')">⭐⭐⭐⭐+ (4+)</div><div class="fchip" onclick="this.classList.toggle('on')">⭐⭐⭐⭐⭐ (5)</div></div></div>
     <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>`;
       showModal('filterModal', 'filterBackdrop');
     }
-
     function applyFilters() {
       const on = document.querySelectorAll('#filterBody .fchip.on');
-      closeModal('filterModal', 'filterBackdrop');
-      showToast(`✅ Filters applied – ${on.length} active`);
+      closeModal('filterModal', 'filterBackdrop'); showToast(`✅ Filters applied – ${on.length} active`);
     }
 
-    /* ══════════════════════════════════════
-       CAMERA
-    ══════════════════════════════════════ */
+    /* ═══════ CAMERA ═══════ */
     function openCamera() { showModal('camModal', 'camBackdrop'); }
 
-    /* ══════════════════════════════════════
-       RECHARGE
-    ══════════════════════════════════════ */
+    /* ═══════ RECHARGE ═══════ */
     function openRecharge(brand) {
       document.getElementById('rechargeTitle').textContent = `📱 ${brand} Recharge`;
-      const options = brand === 'du' ?
-        [{ v: 'AED 30', price: 30 }, { v: 'AED 50', price: 50 }, { v: 'AED 100', price: 100 }, { v: 'AED 200', price: 200 }] :
-        [{ v: 'AED 25', price: 25 }, { v: 'AED 50', price: 50 }, { v: 'AED 75', price: 75 }, { v: 'AED 150', price: 150 }];
-      document.getElementById('rechargeBody').innerHTML = `
-    <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Best prices compared across all retailers</p>
-    ${options.map(o => `
-      <div class="price-compare-row" onclick="showToast('✅ ${brand} ${o.v} recharge added to cart!')">
-        <div><div class="pcr-store">${brand} Recharge ${o.v}</div><div class="pcr-del">⚡ Instant delivery</div></div>
-        <div class="pcr-price cheapest">AED ${o.price}</div>
-      </div>`).join('')}`;
+      const opts = brand === 'du' ? [30, 50, 100, 200] : [25, 50, 75, 150];
+      document.getElementById('rechargeBody').innerHTML = `<p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Best prices compared across all retailers</p>
+    ${opts.map(v => `<div class="price-compare-row" onclick="showToast('✅ ${brand} AED ${v} added to cart!')"><div><div class="pcr-store">${brand} Recharge AED ${v}</div><div class="pcr-del">⚡ Instant delivery</div></div><div class="pcr-price cheapest">AED ${v}</div></div>`).join('')}`;
       showModal('rechargeModal', 'rechargeBackdrop');
     }
 
-    /* ══════════════════════════════════════
-       SEARCH
-    ══════════════════════════════════════ */
+    /* ═══════ SEARCH ═══════ */
     function openSearch() {
       document.getElementById('sovOverlay').classList.add('open');
       setTimeout(() => document.getElementById('sinput').focus(), 120);
-      renderSearchSuggestions('');
+      renderSearchSuggestions();
     }
-
     function closeSearch() {
       document.getElementById('sovOverlay').classList.remove('open');
       document.getElementById('sinput').value = '';
-      renderSearchSuggestions('');
+      renderSearchSuggestions();
     }
-
     function doSearch(val) {
-      if (!val.trim()) { renderSearchSuggestions(''); return; }
-      const results = PRODUCTS.filter(p => p.name.toLowerCase().includes(val.toLowerCase()) || p.cat.toLowerCase().includes(val.toLowerCase()));
+      if (!val.trim()) { renderSearchSuggestions(); return; }
+      const res = PRODUCTS.filter(p => p.name.toLowerCase().includes(val.toLowerCase()) || p.cat.toLowerCase().includes(val.toLowerCase()));
       const body = document.getElementById('searchBody');
-      if (!results.length) { body.innerHTML = `<div class="sr-no"><div style="font-size:48px;margin-bottom:12px">🔍</div><p>No results for "<strong>${val}</strong>"<br>Try a different keyword</p></div>`; return; }
-      body.innerHTML = `<div class="ssttl">${results.length} result${results.length !== 1 ? 's' : ''} for "${val}"</div><div class="sr-grid">${results.map(p => makeProductCard(p)).join('')}</div>`;
+      if (!res.length) { body.innerHTML = `<div class="sr-no"><div style="font-size:48px;margin-bottom:12px">🔍</div><p>No results for "<strong>${val}</strong>"</p></div>`; return; }
+      body.innerHTML = `<div class="ssttl">${res.length} result${res.length !== 1 ? 's' : ''} for "${val}"</div><div class="sr-grid">${res.map(makeProductCard).join('')}</div>`;
     }
-
-    function renderSearchSuggestions(val) {
-      const recent = [{ icon: '🕐', name: 'iPhone 15 Pro', sub: 'Electronics · 3 stores' }, { icon: '🕐', name: 'Basmati Rice 5kg', sub: 'Groceries · 5 stores' }, { icon: '🕐', name: 'Samsung Galaxy S25', sub: 'Electronics · 4 stores' }];
-      const trending = [{ icon: '📱', name: 'du Recharge AED 100', sub: 'Telecom · Best at Carrefour' }, { icon: '🧼', name: 'Dettol Handwash 400ml', sub: 'Health · Save AED 8 vs avg' }, { icon: '💻', name: 'Laptop Stand Adjustable', sub: 'Accessories · From AED 45' }];
+    function renderSearchSuggestions() {
       document.getElementById('searchBody').innerHTML = `
     <div class="ssttl">Recent Searches</div>
-    ${recent.map(r => `<div class="si" onclick="document.getElementById('sinput').value='${r.name}';doSearch('${r.name}')"><div class="sicn">${r.icon}</div><div class="stxt"><div class="snm">${r.name}</div><div class="ssb">${r.sub}</div></div><div class="sarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>`).join('')}
-    <div class="ssttl" style="margin-top:20px">🔥 Trending Now</div>
-    ${trending.map(t => `<div class="si" onclick="document.getElementById('sinput').value='${t.name}';doSearch('${t.name}')"><div class="sicn">${t.icon}</div><div class="stxt"><div class="snm">${t.name}</div><div class="ssb">${t.sub}</div></div><div class="sarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>`).join('')}`;
+    ${[{ icon: '🕐', n: 'iPhone 15 Pro', s: 'Electronics · 3 stores' }, { icon: '🕐', n: 'Basmati Rice 5kg', s: 'Groceries · 5 stores' }, { icon: '🕐', n: 'Samsung Galaxy S25', s: 'Electronics · 4 stores' }].map(r => `<div class="si" onclick="document.getElementById('sinput').value='${r.n}';doSearch('${r.n}')"><div class="sicn">${r.icon}</div><div class="stxt"><div class="snm">${r.n}</div><div class="ssb">${r.s}</div></div><div class="sarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>`).join('')}
+    <div class="ssttl" style="margin-top:20px">🔥 Trending</div>
+    ${[{ icon: '📱', n: 'du Recharge AED 100', s: 'Telecom · Best at Carrefour' }, { icon: '🧼', n: 'Dettol Handwash 400ml', s: 'Health · Save AED 8 vs avg' }, { icon: '💻', n: 'Laptop Stand', s: 'Accessories · From AED 45' }].map(t => `<div class="si" onclick="document.getElementById('sinput').value='${t.n}';doSearch('${t.n}')"><div class="sicn">${t.icon}</div><div class="stxt"><div class="snm">${t.n}</div><div class="ssb">${t.s}</div></div><div class="sarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>`).join('')}`;
     }
 
-    /* ══════════════════════════════════════
-       CHIPS / FILTERS
-    ══════════════════════════════════════ */
+    /* ═══════ CHIPS ═══════ */
     function pickChip(el, type) {
       document.querySelectorAll('.chip').forEach(c => { c.classList.remove('on'); c.classList.add('off'); });
       el.classList.remove('off'); el.classList.add('on');
-      const labels = { all: 'All products', low: 'Sorted by lowest price', fast: 'Fast delivery available', near: 'Nearby stores only', top: 'Top rated products', new: 'New arrivals' };
+      const labels = { all: 'All products', low: 'Sorted by lowest price', fast: 'Fast delivery', near: 'Nearby stores', top: 'Top rated', new: 'New arrivals' };
       if (labels[type]) showToast('✅ ' + labels[type]);
     }
 
-    /* ══════════════════════════════════════
-       RECENT
-    ══════════════════════════════════════ */
-    function clearRecent() { recentIds = []; renderRecent(); showToast('🗑️ Recent history cleared'); }
+    /* ═══════ RECENT ═══════ */
+    function clearRecent() { recentIds = []; renderRecent(); showToast('🗑️ History cleared'); }
 
-    /* ══════════════════════════════════════
-       DRAWER / MODAL HELPERS
-    ══════════════════════════════════════ */
+    /* ═══════ DRAWER HELPERS ═══════ */
     function openDrawer(id) {
-      const d = document.getElementById(id);
-      const bd = document.getElementById('backdrop');
-      d.classList.add('open');
-      bd.style.opacity = '1'; bd.style.pointerEvents = 'all';
-      bd.onclick = () => closeAllDrawers();
-      document.body.style.overflow = 'hidden';
+      const d = document.getElementById(id); const bd = document.getElementById('backdrop');
+      d.classList.add('open'); bd.style.opacity = '1'; bd.style.pointerEvents = 'all';
+      bd.onclick = () => closeAllDrawers(); document.body.style.overflow = 'hidden';
     }
-
     function closeDrawer(id) {
       document.getElementById(id).classList.remove('open');
-      const anyOpen = document.querySelectorAll('.drawer.open').length > 0;
-      if (!anyOpen) {
-        const bd = document.getElementById('backdrop');
-        bd.style.opacity = '0'; bd.style.pointerEvents = 'none';
-        document.body.style.overflow = '';
+      if (!document.querySelector('.drawer.open')) {
+        const bd = document.getElementById('backdrop'); bd.style.opacity = '0'; bd.style.pointerEvents = 'none'; document.body.style.overflow = '';
       }
     }
-
     function closeAllDrawers() {
       document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
-      const bd = document.getElementById('backdrop');
-      bd.style.opacity = '0'; bd.style.pointerEvents = 'none';
-      document.body.style.overflow = '';
+      const bd = document.getElementById('backdrop'); bd.style.opacity = '0'; bd.style.pointerEvents = 'none'; document.body.style.overflow = '';
+    }
+    function showModal(mId, bId) {
+      document.getElementById(mId).classList.add('open');
+      document.getElementById(bId).style.opacity = '1'; document.getElementById(bId).style.pointerEvents = 'all';
+      document.getElementById(bId).onclick = () => closeModal(mId, bId); document.body.style.overflow = 'hidden';
+    }
+    function closeModal(mId, bId) {
+      document.getElementById(mId).classList.remove('open');
+      document.getElementById(bId).style.opacity = '0'; document.getElementById(bId).style.pointerEvents = 'none'; document.body.style.overflow = '';
     }
 
-    function showModal(modalId, backdropId) {
-      document.getElementById(modalId).classList.add('open');
-      document.getElementById(backdropId).style.opacity = '1';
-      document.getElementById(backdropId).style.pointerEvents = 'all';
-      document.getElementById(backdropId).onclick = () => closeModal(modalId, backdropId);
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(modalId, backdropId) {
-      document.getElementById(modalId).classList.remove('open');
-      document.getElementById(backdropId).style.opacity = '0';
-      document.getElementById(backdropId).style.pointerEvents = 'none';
-      document.body.style.overflow = '';
-    }
-
-    /* ══════════════════════════════════════
-       TOAST
-    ══════════════════════════════════════ */
+    /* ═══════ TOAST ═══════ */
     let tTimer;
     function showToast(msg) {
-      const el = document.getElementById('toastEl');
-      el.innerHTML = msg; el.classList.add('show');
+      const el = document.getElementById('toastEl'); el.innerHTML = msg; el.classList.add('show');
       clearTimeout(tTimer); tTimer = setTimeout(() => el.classList.remove('show'), 2800);
     }
   </script>
