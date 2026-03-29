@@ -141,7 +141,7 @@
       font-weight: 700;
     }
 
-    @media(max-width:520px) {
+    @media(max-width:480px) {
       .loc-btn {
         display: none;
       }
@@ -2889,11 +2889,488 @@
       font-size: 28px;
     }
 
-    /* ═══════ PRICE ALERT MODAL ═══════ */
-    .alert-form {
+    /* ═══════ PRICE ALERT WIZARD ═══════ */
+
+    /* Step progress */
+    .alert-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .alert-step {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      align-items: center;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+
+    .alert-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--mg);
+      color: var(--gray);
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .25s;
+    }
+
+    .alert-step.active .alert-step-num {
+      background: var(--yellow);
+      color: var(--black);
+      box-shadow: 0 2px 8px rgba(245, 197, 24, .4);
+    }
+
+    .alert-step.done .alert-step-num {
+      background: var(--green);
+      color: var(--white);
+    }
+
+    .alert-step-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gray);
+      white-space: nowrap;
+    }
+
+    .alert-step.active .alert-step-lbl {
+      color: var(--black);
+    }
+
+    .alert-step.done .alert-step-lbl {
+      color: var(--green);
+    }
+
+    .alert-step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--mg);
+      margin: 0 6px;
+      margin-bottom: 14px;
+      min-width: 24px;
+      transition: background .25s;
+    }
+
+    .alert-step-line.done {
+      background: var(--green);
+    }
+
+    /* Step 1 – category search */
+    .alert-search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--lg);
+      border: 1.5px solid var(--mg);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      transition: border-color .2s;
+    }
+
+    .alert-search-box:focus-within {
+      border-color: var(--yellow);
+    }
+
+    .alert-search-box svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gray);
+      flex-shrink: 0;
+    }
+
+    .alert-search-box input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--black);
+    }
+
+    .alert-search-box input::placeholder {
+      color: var(--gray);
+    }
+
+    .alert-cat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media(max-width:420px) {
+      .alert-cat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .alert-cat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 8px;
+      border-radius: 14px;
+      border: 2px solid var(--mg);
+      background: var(--white);
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+    }
+
+    .alert-cat-card:hover {
+      border-color: var(--yellow);
+      background: var(--yl);
+      transform: translateY(-2px);
+    }
+
+    .alert-cat-card .ac-icon {
+      font-size: 30px;
+    }
+
+    .alert-cat-card .ac-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--black);
+      line-height: 1.2;
+    }
+
+    .alert-cat-card .ac-count {
+      font-size: 10px;
+      color: var(--gray);
+    }
+
+    /* Step 2 – variant list */
+    .alert-back-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .alert-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--lg);
+      border: 1.5px solid var(--mg);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .2s;
+      color: var(--black);
+    }
+
+    .alert-back-btn:hover {
+      border-color: var(--black);
+    }
+
+    .alert-chosen-cat {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--black);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .alert-variant-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+
+    .alert-variant-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 2px solid var(--mg);
+      background: var(--white);
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .alert-variant-card:hover {
+      border-color: var(--yellow);
+      background: var(--yl);
+    }
+
+    .alert-variant-card.selected {
+      border-color: var(--yellow);
+      background: var(--yl);
+    }
+
+    .avc-icon {
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .avc-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .avc-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .avc-store {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 1px;
+    }
+
+    .avc-prices {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .avc-best {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    .avc-high {
+      font-size: 10px;
+      color: var(--gray);
+      text-decoration: line-through;
+    }
+
+    .avc-select-btn {
+      padding: 5px 12px;
+      border-radius: 7px;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 11px;
+      font-weight: 800;
+      border: none;
+      font-family: var(--font);
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+
+    .avc-select-btn:hover {
+      background: var(--yd);
+    }
+
+    /* Step 3 – selected summary card */
+    .alert-selected-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--yl);
+      border: 2px solid var(--yellow);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .asc-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .asc-info {
+      flex: 1;
+    }
+
+    .asc-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--black);
+    }
+
+    .asc-cat {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .asc-price {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--green);
+      margin-top: 2px;
+    }
+
+    /* Notify via grid */
+    .alert-notify-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    @media(max-width:400px) {
+      .alert-notify-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .alert-notify-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 6px;
+      border-radius: 12px;
+      border: 2px solid var(--mg);
+      background: var(--white);
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+
+    .alert-notify-chip.active {
+      border-color: var(--yellow);
+      background: var(--yl);
+    }
+
+    .anc-icon {
+      font-size: 22px;
+    }
+
+    .anc-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .anc-check {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 9px;
+      font-weight: 900;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .alert-notify-chip.active .anc-check {
+      display: flex;
+    }
+
+    /* Active alerts list */
+    .active-alerts-hdr {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .active-alert-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--lg);
+      margin-bottom: 8px;
+    }
+
+    .aar-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .aar-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .aar-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--black);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .aar-target {
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .aar-via {
+      font-size: 10px;
+      color: var(--gray);
+      margin-top: 1px;
+    }
+
+    .aar-del {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #fee2e2;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+
+    .aar-del:hover {
+      background: #fecaca;
+    }
+
+    /* reuse existing classes */
+    .alert-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-bottom: 6px;
+    }
+
+    .alert-prefix {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--gray);
+      white-space: nowrap;
+    }
+
+    .alert-price-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 0;
     }
 
     .alert-label {
@@ -2933,6 +3410,328 @@
       font-weight: 800;
       color: var(--gray);
       white-space: nowrap;
+    }
+
+    /* ═══════ MODE TOGGLE ═══════ */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, .1);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .mode-tab {
+      padding: 5px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .55);
+      cursor: pointer;
+      transition: all .22s;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .mode-tab.active {
+      background: var(--yellow);
+      color: var(--black);
+      box-shadow: 0 2px 8px rgba(245, 197, 24, .4);
+    }
+
+    @media(max-width:400px) {
+      .mode-tab {
+        padding: 5px 9px;
+        font-size: 11px;
+      }
+    }
+
+    /* loc-btn now on right – compact */
+    .loc-btn {
+      max-width: 110px;
+    }
+
+    @media(max-width:480px) {
+      .loc-btn {
+        display: none;
+      }
+    }
+
+    /* ═══════ FOOD HERO BANNER ═══════ */
+    .food-hero-banner {
+      border-radius: var(--r);
+      overflow: hidden;
+      height: 220px;
+      position: relative;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    @media(max-width:600px) {
+      .food-hero-banner {
+        height: 185px;
+      }
+    }
+
+    .fhb-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .6s ease;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .fhb-slide.active {
+      opacity: 1;
+    }
+
+    .fhb-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .fhb-ov {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, .75) 0%, rgba(0, 0, 0, .1) 60%, transparent);
+    }
+
+    .fhb-con {
+      position: relative;
+      z-index: 2;
+      padding: 22px 26px;
+    }
+
+    .fhb-tag {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 11px;
+      border-radius: 20px;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .fhb-title {
+      color: var(--white);
+      font-size: clamp(16px, 2.4vw, 22px);
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .fhb-sub {
+      color: rgba(255, 255, 255, .75);
+      font-size: 12px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+
+    .fhb-btn {
+      background: var(--yellow);
+      color: var(--black);
+      border: none;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background .2s;
+    }
+
+    .fhb-btn:hover {
+      background: var(--yd);
+    }
+
+    .fhb-dots {
+      position: absolute;
+      bottom: 13px;
+      right: 16px;
+      display: flex;
+      gap: 6px;
+      z-index: 3;
+    }
+
+    .fhb-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .35);
+      transition: all .3s;
+      cursor: pointer;
+    }
+
+    .fhb-dot.active {
+      background: var(--yellow);
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    /* ═══════ CUISINE GRID (reuses cat classes for colour) ═══════ */
+    .food-cuisine-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 12px;
+    }
+
+    @media(max-width:860px) {
+      .food-cuisine-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .cuisine-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .cuisine-card span {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(22px, 3vw, 30px);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .cuisine-card:hover span {
+      transform: scale(1.08);
+      box-shadow: var(--sh1);
+    }
+
+    .cuisine-card div {
+      font-size: clamp(10px, 1.2vw, 12px);
+      font-weight: 600;
+      text-align: center;
+      color: var(--black);
+    }
+
+    /* ═══════ OPEN NOW GRID ═══════ */
+    .open-now-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .on-card {
+      background: var(--white);
+      border: 1px solid var(--mg);
+      border-radius: var(--r);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: var(--sh0);
+    }
+
+    .on-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sh1);
+    }
+
+    .on-card-top {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      position: relative;
+    }
+
+    .on-open-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--green);
+      color: var(--white);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .on-card-body {
+      padding: 10px 12px 12px;
+    }
+
+    .on-card-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 3px;
+    }
+
+    .on-card-meta {
+      font-size: 11px;
+      color: var(--gray);
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .on-dist {
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .on-rating {
+      color: var(--yd);
+      font-weight: 600;
+    }
+
+    .on-from {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .on-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .on-btn {
+      flex: 1;
+      padding: 7px 6px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font);
+      transition: all .18s;
+    }
+
+    .on-btn-order {
+      background: var(--yellow);
+      color: var(--black);
+    }
+
+    .on-btn-order:hover {
+      background: var(--yd);
+    }
+
+    .on-btn-visit {
+      background: var(--lg);
+      color: var(--black);
+      border: 1.5px solid var(--mg);
+    }
+
+    .on-btn-visit:hover {
+      border-color: var(--black);
     }
 
     @keyframes fadeUp {
@@ -2979,21 +3778,30 @@
      HEADER
 ════════════════════════════ -->
   <header class="site-header">
-    <!-- ROW 1: Logo · Location · Spacer · Wish · Notif -->
+    <!-- ROW 1: Logo · Mode Toggle · Spacer · Location · Wish · Notif -->
     <div class="hdr-top">
       <div class="logo" onclick="goHome()">Price<span>Hunt</span></div>
+      <!-- PRODUCTS / FOOD TOGGLE -->
+      <div class="mode-toggle">
+        <div class="mode-tab active" id="modeTabProducts" onclick="switchMode('products')">
+          🛒 Products
+        </div>
+        <div class="mode-tab" id="modeTabFoods" onclick="switchMode('foods')">
+          🍽️ Foods
+        </div>
+      </div>
+      <div class="hdr-spacer"></div>
       <div class="loc-btn" onclick="openLocation()">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path
             d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
         </svg>
-        Deliver to <strong id="locLabel">Ajman, UAE</strong>
+        <strong id="locLabel">Ajman</strong>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-          style="width:11px;height:11px;color:rgba(255,255,255,.35)">
+          style="width:10px;height:10px;color:rgba(255,255,255,.35)">
           <path d="m6 9 6 6 6-6" />
         </svg>
       </div>
-      <div class="hdr-spacer"></div>
       <div class="hdr-icons">
         <div class="hi" onclick="openWishlist()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -3098,246 +3906,393 @@
      MAIN HOME PAGE
 ════════════════════════════ -->
   <div id="mainPage">
-    <main class="page">
-      <!-- HERO -->
-      <div class="hero f2">
-        <div class="main-banner" id="mb">
-          <div class="bslide on" onclick="openProduct(0)">
-            <div class="bslide-bg" style="background:linear-gradient(135deg,#0F2027,#203A43,#2C5364)"></div>
-            <div class="bslide-ov"></div>
-            <div class="bcon">
-              <div class="btag">🔥 Flash Sale</div>
-              <div class="btitle">iPhone 15 Pro Max<br>Best Price Found!</div>
-              <div class="bsub">Compare across Amazon, Noon, Lulu &amp; more</div>
+    <!-- ═══ PRODUCTS MODE ═══ -->
+    <div id="productsMode">
+      <main class="page">
+        <!-- HERO -->
+        <div class="hero f2">
+          <div class="main-banner" id="mb">
+            <div class="bslide on" onclick="openProduct(0)">
+              <div class="bslide-bg" style="background:linear-gradient(135deg,#0F2027,#203A43,#2C5364)"></div>
+              <div class="bslide-ov"></div>
+              <div class="bcon">
+                <div class="btag">🔥 Flash Sale</div>
+                <div class="btitle">iPhone 15 Pro Max<br>Best Price Found!</div>
+                <div class="bsub">Compare across Amazon, Noon, Lulu &amp; more</div>
+              </div>
+            </div>
+            <div class="bslide" onclick="openProduct(3)">
+              <div class="bslide-bg" style="background:linear-gradient(135deg,#1A1A2E,#E94560)"></div>
+              <div class="bslide-ov"></div>
+              <div class="bcon">
+                <div class="btag">⚡ Limited Time</div>
+                <div class="btitle">Samsung Galaxy S25<br>Up to 30% Off!</div>
+                <div class="bsub">Available at Lulu, Carrefour &amp; more</div>
+              </div>
+            </div>
+            <div class="bslide" onclick="openCategoryPage('Groceries','🛒')">
+              <div class="bslide-bg" style="background:linear-gradient(135deg,#2D3561,#8B5CF6)"></div>
+              <div class="bslide-ov"></div>
+              <div class="bcon">
+                <div class="btag">🛒 Mega Deals</div>
+                <div class="btitle">Groceries &amp; Daily<br>Essentials Compared</div>
+                <div class="bsub">Lulu vs Nesto vs KM Trading</div>
+              </div>
+            </div>
+            <div class="bslide" onclick="openStorePage('KM Trading')">
+              <div class="bslide-bg" style="background:linear-gradient(135deg,#134E5E,#71B280)"></div>
+              <div class="bslide-ov"></div>
+              <div class="bcon">
+                <div class="btag">🏪 Store Offers</div>
+                <div class="btitle">KM Trading Weekend<br>Exclusive Discounts</div>
+                <div class="bsub">Household &amp; grocery deals live now</div>
+              </div>
+            </div>
+            <div class="bdots" id="bdots">
+              <div class="bdot on" onclick="goBanner(0)"></div>
+              <div class="bdot" onclick="goBanner(1)"></div>
+              <div class="bdot" onclick="goBanner(2)"></div>
+              <div class="bdot" onclick="goBanner(3)"></div>
             </div>
           </div>
-          <div class="bslide" onclick="openProduct(3)">
-            <div class="bslide-bg" style="background:linear-gradient(135deg,#1A1A2E,#E94560)"></div>
-            <div class="bslide-ov"></div>
-            <div class="bcon">
-              <div class="btag">⚡ Limited Time</div>
-              <div class="btitle">Samsung Galaxy S25<br>Up to 30% Off!</div>
-              <div class="bsub">Available at Lulu, Carrefour &amp; more</div>
+          <div class="sad-col">
+            <!-- Ad 1: Flash Sale -->
+            <div class="sad sad-1" onclick="openRecharge('du')">
+              <div class="sad-ad-tag">⚡ Flash Sale</div>
+              <div class="sad-ad-icon">📱</div>
+              <div class="sad-tt">du Recharge<br>from AED 30</div>
+              <div class="sad-ct">Get Deal <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m9 18 6-6-6-6" />
+                </svg></div>
             </div>
-          </div>
-          <div class="bslide" onclick="openCategoryPage('Groceries','🛒')">
-            <div class="bslide-bg" style="background:linear-gradient(135deg,#2D3561,#8B5CF6)"></div>
-            <div class="bslide-ov"></div>
-            <div class="bcon">
-              <div class="btag">🛒 Mega Deals</div>
-              <div class="btitle">Groceries &amp; Daily<br>Essentials Compared</div>
-              <div class="bsub">Lulu vs Nesto vs KM Trading</div>
+            <!-- Ad 2: Food Delivery -->
+            <div class="sad sad-food" onclick="showToast('🍕 Talabat – Order now & save!')">
+              <div class="sad-ad-tag">🍕 Food Delivery</div>
+              <div class="sad-ad-icon">🛵</div>
+              <div class="sad-tt">Talabat – Free<br>Delivery Today</div>
+              <div class="sad-ct">Order Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m9 18 6-6-6-6" />
+                </svg></div>
             </div>
-          </div>
-          <div class="bslide" onclick="openStorePage('KM Trading')">
-            <div class="bslide-bg" style="background:linear-gradient(135deg,#134E5E,#71B280)"></div>
-            <div class="bslide-ov"></div>
-            <div class="bcon">
-              <div class="btag">🏪 Store Offers</div>
-              <div class="btitle">KM Trading Weekend<br>Exclusive Discounts</div>
-              <div class="bsub">Household &amp; grocery deals live now</div>
+            <!-- Ad 3: Travel / Hotel -->
+            <div class="sad sad-travel" onclick="showToast('✈️ Booking.com – Best hotel rates!')">
+              <div class="sad-ad-tag">🏨 Travel</div>
+              <div class="sad-ad-icon">✈️</div>
+              <div class="sad-tt">Hotels from<br>AED 199/night</div>
+              <div class="sad-ct">Book Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m9 18 6-6-6-6" />
+                </svg></div>
             </div>
-          </div>
-          <div class="bdots" id="bdots">
-            <div class="bdot on" onclick="goBanner(0)"></div>
-            <div class="bdot" onclick="goBanner(1)"></div>
-            <div class="bdot" onclick="goBanner(2)"></div>
-            <div class="bdot" onclick="goBanner(3)"></div>
+            <!-- Ad 4: Grocery Deal -->
+            <div class="sad sad-grocery" onclick="openCategoryPage('Groceries','🛒')">
+              <div class="sad-ad-tag">🛒 Grocery</div>
+              <div class="sad-ad-icon">🥦</div>
+              <div class="sad-tt">Fresh Veggies<br>Up to 40% Off</div>
+              <div class="sad-ct">Shop Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m9 18 6-6-6-6" />
+                </svg></div>
+            </div>
           </div>
         </div>
-        <div class="sad-col">
-          <!-- Ad 1: Flash Sale -->
-          <div class="sad sad-1" onclick="openRecharge('du')">
-            <div class="sad-ad-tag">⚡ Flash Sale</div>
-            <div class="sad-ad-icon">📱</div>
-            <div class="sad-tt">du Recharge<br>from AED 30</div>
-            <div class="sad-ct">Get Deal <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+
+        <!-- CATEGORIES -->
+        <div class="sec f3">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">🗂️</span>Categories</div>
+            <div class="see-all" onclick="showCategoriesPage()">All <svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
                 <path d="m9 18 6-6-6-6" />
               </svg></div>
           </div>
-          <!-- Ad 2: Food Delivery -->
-          <div class="sad sad-food" onclick="showToast('🍕 Talabat – Order now & save!')">
-            <div class="sad-ad-tag">🍕 Food Delivery</div>
-            <div class="sad-ad-icon">🛵</div>
-            <div class="sad-tt">Talabat – Free<br>Delivery Today</div>
-            <div class="sad-ct">Order Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <div class="cats">
+            <div class="cat" onclick="openCategoryPage('Electronics','📱')">
+              <div class="caticon ci1">📱</div>
+              <div class="catnm">Electronics</div>
+            </div>
+            <div class="cat" onclick="openCategoryPage('Groceries','🛒')">
+              <div class="caticon ci2">🛒</div>
+              <div class="catnm">Groceries</div>
+            </div>
+            <div class="cat" onclick="openCategoryPage('Fashion','👗')">
+              <div class="caticon ci3">👗</div>
+              <div class="catnm">Fashion</div>
+            </div>
+            <div class="cat" onclick="openCategoryPage('Home & Living','🏠')">
+              <div class="caticon ci4">🏠</div>
+              <div class="catnm">Home &amp; Living</div>
+            </div>
+            <div class="cat" onclick="openCategoryPage('Health & Beauty','💊')">
+              <div class="caticon ci5">💊</div>
+              <div class="catnm">Health &amp; Beauty</div>
+            </div>
+            <div class="cat" onclick="openCategoryPage('Gaming','🎮')">
+              <div class="caticon ci6">🎮</div>
+              <div class="catnm">Gaming</div>
+            </div>
+            <div class="cat" onclick="openCategoryPage('Pets','🐾')">
+              <div class="caticon ci7">🐾</div>
+              <div class="catnm">Pets</div>
+            </div>
+            <div class="cat" onclick="openCategoryPage('Automotive','🚗')">
+              <div class="caticon ci8">🚗</div>
+              <div class="catnm">Automotive</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="div"></div>
+
+        <!-- BEST SELLERS -->
+        <div class="sec f4">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">⭐</span>Best Sellers</div>
+            <div class="see-all" onclick="showAllProducts('Best Sellers',PRODUCTS)">See All <svg viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="m9 18 6-6-6-6" />
               </svg></div>
           </div>
-          <!-- Ad 3: Travel / Hotel -->
-          <div class="sad sad-travel" onclick="showToast('✈️ Booking.com – Best hotel rates!')">
-            <div class="sad-ad-tag">🏨 Travel</div>
-            <div class="sad-ad-icon">✈️</div>
-            <div class="sad-tt">Hotels from<br>AED 199/night</div>
-            <div class="sad-ct">Book Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <div class="hrow" id="bestSellersRow"></div>
+        </div>
+
+        <div class="div"></div>
+
+        <!-- MEGA DEALS -->
+        <div class="sec f5">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">🔥</span>Mega Deals</div>
+            <div class="see-all" onclick="showDealsPage()">See All <svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
                 <path d="m9 18 6-6-6-6" />
               </svg></div>
           </div>
-          <!-- Ad 4: Grocery Deal -->
-          <div class="sad sad-grocery" onclick="openCategoryPage('Groceries','🛒')">
-            <div class="sad-ad-tag">🛒 Grocery</div>
-            <div class="sad-ad-icon">🥦</div>
-            <div class="sad-tt">Fresh Veggies<br>Up to 40% Off</div>
-            <div class="sad-ct">Shop Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <div class="hrow" id="megaDealsRow"></div>
+        </div>
+
+        <div class="div"></div>
+
+        <!-- FOOD & DINING (best-seller card style) -->
+        <div class="sec f6">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">🍽️</span>Food & Dining Near You</div>
+            <div class="see-all" onclick="showToast('🍽️ Showing all food items')">All <svg viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="m9 18 6-6-6-6" />
               </svg></div>
           </div>
-        </div>
-      </div>
-
-      <!-- CATEGORIES -->
-      <div class="sec f3">
-        <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">🗂️</span>Categories</div>
-          <div class="see-all" onclick="showCategoriesPage()">All <svg viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5">
-              <path d="m9 18 6-6-6-6" />
-            </svg></div>
-        </div>
-        <div class="cats">
-          <div class="cat" onclick="openCategoryPage('Electronics','📱')">
-            <div class="caticon ci1">📱</div>
-            <div class="catnm">Electronics</div>
+          <div class="food-cat-scroll">
+            <div class="food-cat-pill on" onclick="filterFoodCat(this,'all')">🍽️ All</div>
+            <div class="food-cat-pill" onclick="filterFoodCat(this,'arabic')">🥙 Arabic</div>
+            <div class="food-cat-pill" onclick="filterFoodCat(this,'pizza')">🍕 Pizza</div>
+            <div class="food-cat-pill" onclick="filterFoodCat(this,'sushi')">🍣 Sushi</div>
+            <div class="food-cat-pill" onclick="filterFoodCat(this,'burger')">🍔 Burger</div>
+            <div class="food-cat-pill" onclick="filterFoodCat(this,'dessert')">🍰 Dessert</div>
+            <div class="food-cat-pill" onclick="filterFoodCat(this,'coffee')">☕ Coffee</div>
           </div>
-          <div class="cat" onclick="openCategoryPage('Groceries','🛒')">
-            <div class="caticon ci2">🛒</div>
-            <div class="catnm">Groceries</div>
-          </div>
-          <div class="cat" onclick="openCategoryPage('Fashion','👗')">
-            <div class="caticon ci3">👗</div>
-            <div class="catnm">Fashion</div>
-          </div>
-          <div class="cat" onclick="openCategoryPage('Home & Living','🏠')">
-            <div class="caticon ci4">🏠</div>
-            <div class="catnm">Home &amp; Living</div>
-          </div>
-          <div class="cat" onclick="openCategoryPage('Health & Beauty','💊')">
-            <div class="caticon ci5">💊</div>
-            <div class="catnm">Health &amp; Beauty</div>
-          </div>
-          <div class="cat" onclick="openCategoryPage('Gaming','🎮')">
-            <div class="caticon ci6">🎮</div>
-            <div class="catnm">Gaming</div>
-          </div>
-          <div class="cat" onclick="openCategoryPage('Pets','🐾')">
-            <div class="caticon ci7">🐾</div>
-            <div class="catnm">Pets</div>
-          </div>
-          <div class="cat" onclick="openCategoryPage('Automotive','🚗')">
-            <div class="caticon ci8">🚗</div>
-            <div class="catnm">Automotive</div>
-          </div>
+          <div class="hrow" id="foodRow"><!-- rendered by JS --></div>
         </div>
-      </div>
 
-      <div class="div"></div>
+        <div class="div"></div>
 
-      <!-- BEST SELLERS -->
-      <div class="sec f4">
-        <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">⭐</span>Best Sellers</div>
-          <div class="see-all" onclick="showAllProducts('Best Sellers',PRODUCTS)">See All <svg viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="m9 18 6-6-6-6" />
-            </svg></div>
+        <!-- TRENDING NOW -->
+        <div class="sec">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">📈</span>Trending Now</div>
+            <div class="see-all" onclick="showAllProducts('Trending Now', PRODUCTS.slice().reverse())">See All <svg
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <div class="hrow" id="trendingRow"></div>
         </div>
-        <div class="hrow" id="bestSellersRow"></div>
-      </div>
 
-      <div class="div"></div>
+        <div class="div"></div>
 
-      <!-- MEGA DEALS -->
-      <div class="sec f5">
-        <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">🔥</span>Mega Deals</div>
-          <div class="see-all" onclick="showDealsPage()">See All <svg viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5">
-              <path d="m9 18 6-6-6-6" />
-            </svg></div>
+        <!-- PRICE ALERT BANNER -->
+        <div class="alert-banner">
+          <div class="alert-banner-left">
+            <div class="alert-banner-icon">🔔</div>
+            <div>
+              <div class="alert-banner-title">Set Price Alerts</div>
+              <div class="alert-banner-sub">Get notified when any product drops to your target price</div>
+            </div>
+          </div>
+          <button class="alert-banner-btn" onclick="openPriceAlert()">Set Alert</button>
         </div>
-        <div class="hrow" id="megaDealsRow"></div>
-      </div>
 
-      <div class="div"></div>
+        <div class="div"></div>
 
-      <!-- FOOD & DINING (best-seller card style) -->
-      <div class="sec f6">
-        <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">🍽️</span>Food & Dining Near You</div>
-          <div class="see-all" onclick="showToast('🍽️ Showing all food items')">All <svg viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="m9 18 6-6-6-6" />
-            </svg></div>
+        <!-- COMPARE TRAY -->
+        <div class="sec" id="compareSec" style="display:none;">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">⚖️</span>Compare Selected</div>
+            <div class="see-all" onclick="clearCompare()">Clear <svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <div id="compareTray" class="compare-tray"></div>
         </div>
-        <div class="food-cat-scroll">
-          <div class="food-cat-pill on" onclick="filterFoodCat(this,'all')">🍽️ All</div>
-          <div class="food-cat-pill" onclick="filterFoodCat(this,'arabic')">🥙 Arabic</div>
-          <div class="food-cat-pill" onclick="filterFoodCat(this,'pizza')">🍕 Pizza</div>
-          <div class="food-cat-pill" onclick="filterFoodCat(this,'sushi')">🍣 Sushi</div>
-          <div class="food-cat-pill" onclick="filterFoodCat(this,'burger')">🍔 Burger</div>
-          <div class="food-cat-pill" onclick="filterFoodCat(this,'dessert')">🍰 Dessert</div>
-          <div class="food-cat-pill" onclick="filterFoodCat(this,'coffee')">☕ Coffee</div>
+
+        <div class="div" id="compareDivider" style="display:none;"></div>
+
+        <!-- RECENTLY VIEWED -->
+        <div class="sec">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">👀</span>Recently Viewed</div>
+            <div class="see-all" onclick="clearRecent()">Clear <svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <div class="hrow" id="recentRow"></div>
         </div>
-        <div class="hrow" id="foodRow"><!-- rendered by JS --></div>
-      </div>
+        <div style="height:16px"></div>
+      </main>
+    </div><!-- /productsMode -->
 
-      <div class="div"></div>
-
-      <!-- TRENDING NOW -->
-      <div class="sec">
-        <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">📈</span>Trending Now</div>
-          <div class="see-all" onclick="showAllProducts('Trending Now', PRODUCTS.slice().reverse())">See All <svg
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="m9 18 6-6-6-6" />
-            </svg></div>
-        </div>
-        <div class="hrow" id="trendingRow"></div>
-      </div>
-
-      <div class="div"></div>
-
-      <!-- PRICE ALERT BANNER -->
-      <div class="alert-banner">
-        <div class="alert-banner-left">
-          <div class="alert-banner-icon">🔔</div>
-          <div>
-            <div class="alert-banner-title">Set Price Alerts</div>
-            <div class="alert-banner-sub">Get notified when any product drops to your target price</div>
+    <!-- ═══ FOODS MODE ═══ -->
+    <div id="foodsMode" style="display:none;">
+      <main class="page" id="foodsModePage">
+        <!-- FOOD HERO BANNER -->
+        <div class="food-hero-banner f2">
+          <div class="fhb-slide active">
+            <div class="fhb-bg" style="background:linear-gradient(135deg,#C0392B,#E67E22)"></div>
+            <div class="fhb-ov"></div>
+            <div class="fhb-con">
+              <div class="fhb-tag">🔥 Top Offer</div>
+              <div class="fhb-title">Chicken Shawarma<br>from AED 15 only!</div>
+              <div class="fhb-sub">Best price at Al Ameer · 0.4 km away</div>
+              <button class="fhb-btn" onclick="openFoodOrder(0)">Order Now →</button>
+            </div>
+          </div>
+          <div class="fhb-slide">
+            <div class="fhb-bg" style="background:linear-gradient(135deg,#1565C0,#0288D1)"></div>
+            <div class="fhb-ov"></div>
+            <div class="fhb-con">
+              <div class="fhb-tag">🍕 Best Deal</div>
+              <div class="fhb-title">Margherita Pizza<br>from AED 42 – 3 stores!</div>
+              <div class="fhb-sub">Compare Domino's · Napoli · Pizza Express</div>
+              <button class="fhb-btn" onclick="openFoodOrder(1)">Compare →</button>
+            </div>
+          </div>
+          <div class="fhb-slide">
+            <div class="fhb-bg" style="background:linear-gradient(135deg,#2E7D32,#66BB6A)"></div>
+            <div class="fhb-ov"></div>
+            <div class="fhb-con">
+              <div class="fhb-tag">☕ Morning Pick</div>
+              <div class="fhb-title">Flat White<br>from AED 22 nearby</div>
+              <div class="fhb-sub">Brew House · Costa · Starbucks compared</div>
+              <button class="fhb-btn" onclick="openFoodOrder(5)">See Prices →</button>
+            </div>
+          </div>
+          <div class="fhb-dots" id="fhbDots">
+            <div class="fhb-dot active" onclick="goFoodBanner(0)"></div>
+            <div class="fhb-dot" onclick="goFoodBanner(1)"></div>
+            <div class="fhb-dot" onclick="goFoodBanner(2)"></div>
           </div>
         </div>
-        <button class="alert-banner-btn" onclick="openPriceAlert()">Set Alert</button>
-      </div>
 
-      <div class="div"></div>
-
-      <!-- COMPARE TRAY -->
-      <div class="sec" id="compareSec" style="display:none;">
-        <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">⚖️</span>Compare Selected</div>
-          <div class="see-all" onclick="clearCompare()">Clear <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5">
-              <path d="m9 18 6-6-6-6" />
-            </svg></div>
+        <!-- CUISINE CATEGORIES -->
+        <div class="sec f3">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">🍴</span>Browse by Cuisine</div>
+          </div>
+          <div class="food-cuisine-grid">
+            <div class="cuisine-card ci1" onclick="filterFoodMode('arabic')"><span>🥙</span>
+              <div>Arabic</div>
+            </div>
+            <div class="cuisine-card ci2" onclick="filterFoodMode('pizza')"><span>🍕</span>
+              <div>Pizza</div>
+            </div>
+            <div class="cuisine-card ci3" onclick="filterFoodMode('burger')"><span>🍔</span>
+              <div>Burgers</div>
+            </div>
+            <div class="cuisine-card ci4" onclick="filterFoodMode('sushi')"><span>🍣</span>
+              <div>Sushi</div>
+            </div>
+            <div class="cuisine-card ci5" onclick="filterFoodMode('dessert')"><span>🍰</span>
+              <div>Desserts</div>
+            </div>
+            <div class="cuisine-card ci6" onclick="filterFoodMode('coffee')"><span>☕</span>
+              <div>Coffee</div>
+            </div>
+            <div class="cuisine-card ci7" onclick="filterFoodMode('all')"><span>🥗</span>
+              <div>Healthy</div>
+            </div>
+            <div class="cuisine-card ci8" onclick="filterFoodMode('all')"><span>🍜</span>
+              <div>Noodles</div>
+            </div>
+          </div>
         </div>
-        <div id="compareTray" class="compare-tray"></div>
-      </div>
 
-      <div class="div" id="compareDivider" style="display:none;"></div>
+        <div class="div"></div>
 
-      <!-- RECENTLY VIEWED -->
-      <div class="sec">
-        <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">👀</span>Recently Viewed</div>
-          <div class="see-all" onclick="clearRecent()">Clear <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5">
-              <path d="m9 18 6-6-6-6" />
-            </svg></div>
+        <!-- OFFER ITEMS FIRST -->
+        <div class="sec f4">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">🔥</span>Today's Food Offers</div>
+            <div class="see-all" onclick="filterFoodMode('all')">All <svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <div class="hrow" id="foodOffersRow"></div>
         </div>
-        <div class="hrow" id="recentRow"></div>
-      </div>
-      <div style="height:16px"></div>
-    </main>
+
+        <div class="div"></div>
+
+        <!-- ALL FOOD ITEMS with filter -->
+        <div class="sec f5">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">🍽️</span>All Dishes</div>
+            <div class="see-all" onclick="filterFoodMode('all')">All <svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <div class="food-cat-scroll" id="foodModeCatPills">
+            <div class="food-cat-pill on" onclick="filterFoodMode('all',this)">🍽️ All</div>
+            <div class="food-cat-pill" onclick="filterFoodMode('arabic',this)">🥙 Arabic</div>
+            <div class="food-cat-pill" onclick="filterFoodMode('pizza',this)">🍕 Pizza</div>
+            <div class="food-cat-pill" onclick="filterFoodMode('sushi',this)">🍣 Sushi</div>
+            <div class="food-cat-pill" onclick="filterFoodMode('burger',this)">🍔 Burger</div>
+            <div class="food-cat-pill" onclick="filterFoodMode('dessert',this)">🍰 Dessert</div>
+            <div class="food-cat-pill" onclick="filterFoodMode('coffee',this)">☕ Coffee</div>
+          </div>
+          <div class="hrow" id="foodAllRow"></div>
+        </div>
+
+        <div class="div"></div>
+
+        <!-- NEAREST OPEN NOW -->
+        <div class="sec f6">
+          <div class="sec-hd">
+            <div class="sec-ttl"><span class="em">📍</span>Open Now Near You</div>
+            <div class="see-all" onclick="showToast('📍 Showing all open restaurants')">Map View <svg
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <div id="openNowRow" class="open-now-grid"></div>
+        </div>
+
+        <div class="div"></div>
+
+        <!-- PRICE ALERT banner (food version) -->
+        <div class="alert-banner" style="margin-top:0;">
+          <div class="alert-banner-left">
+            <div class="alert-banner-icon">🔔</div>
+            <div>
+              <div class="alert-banner-title">Food Price Alerts</div>
+              <div class="alert-banner-sub">Get notified when your favourite dish drops price nearby</div>
+            </div>
+          </div>
+          <button class="alert-banner-btn" onclick="showToast('🔔 Food alerts coming soon!')">Set Alert</button>
+        </div>
+
+        <div style="height:16px"></div>
+      </main>
+    </div><!-- /foodsMode -->
   </div>
 
   <!-- SUB PAGE -->
@@ -3560,45 +4515,136 @@
 
   <div class="toast" id="toastEl"></div>
 
-  <!-- PRICE ALERT MODAL -->
+  <!-- PRICE ALERT MODAL – 3-step wizard -->
   <div id="alertBackdrop"
     style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;">
   </div>
   <div id="alertModal" class="modal">
-    <div class="modal-box">
-      <div class="modal-hdr">
-        <div class="modal-title">🔔 Set Price Alert</div>
-        <div class="modal-close" onclick="closeModal('alertModal','alertBackdrop')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
+    <div class="modal-box" style="max-width:540px;">
+
+      <!-- STICKY HEADER with step indicator -->
+      <div class="modal-hdr" style="flex-direction:column;align-items:stretch;gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="modal-title" id="alertModalTitle">🔔 Set Price Alert</div>
+          <div class="modal-close" onclick="closeModal('alertModal','alertBackdrop')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </div>
+        </div>
+        <!-- Step progress bar -->
+        <div class="alert-steps">
+          <div class="alert-step active" id="astep1">
+            <div class="alert-step-num">1</div>
+            <div class="alert-step-lbl">Category</div>
+          </div>
+          <div class="alert-step-line"></div>
+          <div class="alert-step" id="astep2">
+            <div class="alert-step-num">2</div>
+            <div class="alert-step-lbl">Product</div>
+          </div>
+          <div class="alert-step-line"></div>
+          <div class="alert-step" id="astep3">
+            <div class="alert-step-num">3</div>
+            <div class="alert-step-lbl">Alert</div>
+          </div>
         </div>
       </div>
-      <div class="modal-body">
-        <div class="alert-form">
-          <div>
-            <div class="alert-label">Choose Product</div>
-            <select class="alert-select" id="alertProduct">
-              <option value="">— Select a product —</option>
-            </select>
+
+      <div class="modal-body" style="padding:16px 20px;">
+
+        <!-- ── STEP 1: Search category ── -->
+        <div id="alertStep1">
+          <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Search for a product category to set your
+            price alert.</p>
+          <!-- Search box -->
+          <div class="alert-search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" id="alertCatSearch" placeholder="e.g. cooking oil, rice, phone…"
+              oninput="filterAlertCats(this.value)">
           </div>
-          <div>
+          <!-- Category cards grid -->
+          <div class="alert-cat-grid" id="alertCatGrid"></div>
+        </div>
+
+        <!-- ── STEP 2: Pick specific variant ── -->
+        <div id="alertStep2" style="display:none;">
+          <div class="alert-back-row">
+            <button class="alert-back-btn" onclick="goAlertStep(1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                style="width:14px;height:14px;">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              Back
+            </button>
+            <span class="alert-chosen-cat" id="alertChosenCatLbl"></span>
+          </div>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">Select the specific variant you want to track:
+          </p>
+          <div class="alert-variant-list" id="alertVariantList"></div>
+        </div>
+
+        <!-- ── STEP 3: Set price & notify ── -->
+        <div id="alertStep3" style="display:none;">
+          <div class="alert-back-row">
+            <button class="alert-back-btn" onclick="goAlertStep(2)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                style="width:14px;height:14px;">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              Back
+            </button>
+          </div>
+          <!-- Selected product summary -->
+          <div class="alert-selected-card" id="alertSelectedCard"></div>
+          <!-- Target price -->
+          <div style="margin-bottom:14px;">
             <div class="alert-label">Notify me when price drops below</div>
             <div class="alert-price-row">
               <span class="alert-prefix">AED</span>
-              <input class="price-input" id="alertPrice" type="number" placeholder="e.g. 2500" style="flex:1;">
+              <input class="price-input" id="alertPrice" type="number" placeholder="Enter target price"
+                style="flex:1;font-size:16px;font-weight:700;">
+              <span id="alertCurrentPriceLbl"
+                style="font-size:11px;color:var(--green);font-weight:700;white-space:nowrap;"></span>
             </div>
           </div>
-          <div>
+          <!-- Notify via -->
+          <div style="margin-bottom:16px;">
             <div class="alert-label">Notify via</div>
-            <div class="filter-chips" style="margin-top:4px;">
-              <div class="fchip on" onclick="this.classList.toggle('on')">📱 Push</div>
-              <div class="fchip" onclick="this.classList.toggle('on')">📧 Email</div>
-              <div class="fchip" onclick="this.classList.toggle('on')">💬 WhatsApp</div>
+            <div class="alert-notify-grid">
+              <div class="alert-notify-chip active" id="nvia-push" onclick="toggleNotifyVia(this,'push')">
+                <span class="anc-icon">📱</span>
+                <span class="anc-lbl">Push</span>
+                <div class="anc-check">✓</div>
+              </div>
+              <div class="alert-notify-chip" id="nvia-email" onclick="toggleNotifyVia(this,'email')">
+                <span class="anc-icon">📧</span>
+                <span class="anc-lbl">Email</span>
+                <div class="anc-check">✓</div>
+              </div>
+              <div class="alert-notify-chip" id="nvia-whatsapp" onclick="toggleNotifyVia(this,'whatsapp')">
+                <span class="anc-icon">💬</span>
+                <span class="anc-lbl">WhatsApp</span>
+                <div class="anc-check">✓</div>
+              </div>
+              <div class="alert-notify-chip" id="nvia-sms" onclick="toggleNotifyVia(this,'sms')">
+                <span class="anc-icon">✉️</span>
+                <span class="anc-lbl">SMS</span>
+                <div class="anc-check">✓</div>
+              </div>
             </div>
           </div>
-          <button class="apply-filter-btn" onclick="saveAlert()">🔔 Activate Alert</button>
+          <!-- Activate button -->
+          <button class="apply-filter-btn" id="alertActivateBtn" onclick="saveAlert()" style="font-size:15px;">
+            🔔 Activate Alert
+          </button>
+          <!-- Active alerts list -->
+          <div id="activeAlertsList" style="margin-top:20px;"></div>
         </div>
+
       </div>
     </div>
   </div>
@@ -4258,6 +5304,14 @@
         { lbl: 'Account', action: () => openAccount() },
       ];
       refreshBnLabels();
+      // Restore correct mode panels
+      if (currentMode === 'foods') {
+        document.getElementById('productsMode').style.display = 'none';
+        document.getElementById('foodsMode').style.display = '';
+      } else {
+        document.getElementById('productsMode').style.display = '';
+        document.getElementById('foodsMode').style.display = 'none';
+      }
     }
 
     function deskNav(el, type, extra) {
@@ -4618,6 +5672,106 @@
       clearTimeout(tTimer); tTimer = setTimeout(() => el.classList.remove('show'), 2800);
     }
 
+    /* ═══════ MODE SWITCH (Products ↔ Foods) ═══════ */
+    let currentMode = 'products';
+    function switchMode(mode) {
+      currentMode = mode;
+      const pm = document.getElementById('productsMode');
+      const fm = document.getElementById('foodsMode');
+      const tp = document.getElementById('modeTabProducts');
+      const tf = document.getElementById('modeTabFoods');
+      if (mode === 'products') {
+        pm.style.display = ''; fm.style.display = 'none';
+        tp.classList.add('active'); tf.classList.remove('active');
+      } else {
+        pm.style.display = 'none'; fm.style.display = '';
+        tf.classList.add('active'); tp.classList.remove('active');
+        renderFoodMode();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    /* ═══════ FOOD HERO BANNER SLIDER ═══════ */
+    let fhbIdx = 0, fhbTimer;
+    function startFoodBanner() {
+      fhbTimer = setInterval(() => {
+        const slides = document.querySelectorAll('.fhb-slide');
+        const dots = document.querySelectorAll('.fhb-dot');
+        if (!slides.length) return;
+        slides[fhbIdx].classList.remove('active'); dots[fhbIdx].classList.remove('active');
+        fhbIdx = (fhbIdx + 1) % slides.length;
+        slides[fhbIdx].classList.add('active'); dots[fhbIdx].classList.add('active');
+      }, 3600);
+    }
+    function goFoodBanner(i) {
+      const slides = document.querySelectorAll('.fhb-slide');
+      const dots = document.querySelectorAll('.fhb-dot');
+      slides[fhbIdx].classList.remove('active'); dots[fhbIdx].classList.remove('active');
+      fhbIdx = i;
+      slides[fhbIdx].classList.add('active'); dots[fhbIdx].classList.add('active');
+      clearInterval(fhbTimer); startFoodBanner();
+    }
+
+    /* ═══════ OPEN NOW DATA ═══════ */
+    const OPEN_NOW = [
+      { emoji: '🥙', name: 'Al Ameer Restaurant', type: 'Arabic', dist: '0.4 km', rating: '4.7', from: 15, bg: '#FF7043', orderItem: 0 },
+      { emoji: '🍔', name: 'Street Burger Co.', type: 'Burgers', dist: '0.3 km', rating: '4.4', from: 28, bg: '#F57F17', orderItem: 3 },
+      { emoji: '☕', name: 'Brew House Café', type: 'Coffee', dist: '0.5 km', rating: '4.6', from: 22, bg: '#4E342E', orderItem: 5 },
+      { emoji: '🍕', name: "Domino's Pizza", type: 'Pizza', dist: '1.3 km', rating: '4.3', from: 42, bg: '#E53935', orderItem: 1 },
+      { emoji: '🍰', name: 'Sweet Corner Bakery', type: 'Dessert', dist: '0.6 km', rating: '4.5', from: 20, bg: '#C2185B', orderItem: 4 },
+      { emoji: '🍜', name: 'Noodle House', type: 'Asian', dist: '1.4 km', rating: '4.3', from: 48, bg: '#0288D1', orderItem: 7 },
+    ];
+
+    function renderOpenNow() {
+      const el = document.getElementById('openNowRow');
+      if (!el) return;
+      el.innerHTML = OPEN_NOW.map(r => `
+      <div class="on-card">
+        <div class="on-card-top" style="background:${r.bg}22;">
+          <span>${r.emoji}</span>
+          <div class="on-open-badge">● OPEN</div>
+        </div>
+        <div class="on-card-body">
+          <div class="on-card-name">${r.name}</div>
+          <div class="on-card-meta">
+            <span>${r.type}</span>
+            <span class="on-dist">📍 ${r.dist}</span>
+            <span class="on-rating">⭐ ${r.rating}</span>
+          </div>
+          <div class="on-from" style="font-size:12px;margin-bottom:8px;">from AED ${r.from}</div>
+          <div class="on-actions">
+            <button class="on-btn on-btn-order" onclick="openFoodOrder(${r.orderItem})">🛵 Order</button>
+            <button class="on-btn on-btn-visit" onclick="showToast('📍 Directions to ${r.name.replace(/'/g, "\'")}…')">📍 Visit</button>
+          </div>
+        </div>
+      </div>`).join('');
+    }
+
+    /* ═══════ FOOD MODE RENDER ═══════ */
+    function renderFoodMode() {
+      // Offers row (offer items only)
+      const offerEl = document.getElementById('foodOffersRow');
+      if (offerEl) {
+        const offers = FOOD_ITEMS.filter(i => i.offer);
+        offerEl.innerHTML = offers.map(makeFoodCard).join('');
+      }
+      // All dishes row (all items)
+      const allEl = document.getElementById('foodAllRow');
+      if (allEl) allEl.innerHTML = FOOD_ITEMS.map(makeFoodCard).join('');
+      renderOpenNow();
+      startFoodBanner();
+    }
+
+    function filterFoodMode(cat, el) {
+      if (el) {
+        document.querySelectorAll('#foodModeCatPills .food-cat-pill').forEach(p => p.classList.remove('on'));
+        el.classList.add('on');
+      }
+      const list = cat === 'all' ? FOOD_ITEMS : FOOD_ITEMS.filter(i => i.cat === cat);
+      const allEl = document.getElementById('foodAllRow');
+      if (allEl) allEl.innerHTML = (list.length ? list : FOOD_ITEMS).map(makeFoodCard).join('');
+    }
+
     /* ═══════ TRENDING NOW ═══════ */
     function renderTrending() {
       const trending = [...PRODUCTS].sort((a, b) => a.prices[0].price - b.prices[0].price).slice(0, 8);
@@ -4674,22 +5828,265 @@
     }
 
     /* ═══════ PRICE ALERT ═══════ */
+    /* ═══════ PRICE ALERT WIZARD DATA ═══════ */
+    const ALERT_CATEGORIES = [
+      {
+        id: 'oil', icon: '🫙', name: 'Cooking Oil', count: '12 variants',
+        variants: [
+          { id: 'oil1', icon: '🫙', name: 'Sunflower Oil 1L', cat: 'Cooking Oil', prices: [{ store: 'KM Trading', price: 9 }, { store: 'Lulu', price: 11 }, { store: 'Nesto', price: 12 }, { store: 'Carrefour', price: 13 }] },
+          { id: 'oil2', icon: '🫙', name: 'Sunflower Oil 3L', cat: 'Cooking Oil', prices: [{ store: 'Nesto', price: 22 }, { store: 'KM Trading', price: 24 }, { store: 'Lulu', price: 26 }, { store: 'Carrefour', price: 28 }] },
+          { id: 'oil3', icon: '🫒', name: 'Olive Oil Extra Virgin 500ml', cat: 'Cooking Oil', prices: [{ store: 'Carrefour', price: 28 }, { store: 'Lulu', price: 31 }, { store: 'Amazon', price: 34 }, { store: 'Noon', price: 36 }] },
+          { id: 'oil4', icon: '🫒', name: 'Olive Oil 1L', cat: 'Cooking Oil', prices: [{ store: 'KM Trading', price: 39 }, { store: 'Lulu', price: 42 }, { store: 'Carrefour', price: 45 }, { store: 'Noon', price: 48 }] },
+          { id: 'oil5', icon: '🥥', name: 'Coconut Oil 500ml', cat: 'Cooking Oil', prices: [{ store: 'Lulu', price: 18 }, { store: 'Nesto', price: 19 }, { store: 'KM Trading', price: 21 }, { store: 'Carrefour', price: 23 }] },
+          { id: 'oil6', icon: '🫙', name: 'Canola Oil 2L', cat: 'Cooking Oil', prices: [{ store: 'Nesto', price: 16 }, { store: 'KM Trading', price: 17 }, { store: 'Lulu', price: 18 }, { store: 'Carrefour', price: 20 }] },
+        ]
+      },
+      {
+        id: 'rice', icon: '🌾', name: 'Basmati Rice', count: '8 variants',
+        variants: [
+          { id: 'rice1', icon: '🌾', name: 'Basmati Rice Premium 5kg', cat: 'Rice', prices: [{ store: 'Nesto', price: 28 }, { store: 'KM Trading', price: 30 }, { store: 'Lulu', price: 33 }, { store: 'Carrefour', price: 35 }] },
+          { id: 'rice2', icon: '🌾', name: 'Basmati Rice Economy 5kg', cat: 'Rice', prices: [{ store: 'KM Trading', price: 22 }, { store: 'Nesto', price: 24 }, { store: 'Lulu', price: 26 }, { store: 'Carrefour', price: 28 }] },
+          { id: 'rice3', icon: '🌾', name: 'Basmati Rice 10kg', cat: 'Rice', prices: [{ store: 'Nesto', price: 52 }, { store: 'KM Trading', price: 55 }, { store: 'Lulu', price: 59 }, { store: 'Carrefour', price: 62 }] },
+          { id: 'rice4', icon: '🍚', name: 'Jasmine Rice 5kg', cat: 'Rice', prices: [{ store: 'Lulu', price: 30 }, { store: 'KM Trading', price: 32 }, { store: 'Nesto', price: 34 }, { store: 'Carrefour', price: 36 }] },
+          { id: 'rice5', icon: '🍚', name: 'Brown Rice 1kg', cat: 'Rice', prices: [{ store: 'Carrefour', price: 12 }, { store: 'Lulu', price: 13 }, { store: 'Noon', price: 14 }, { store: 'Amazon', price: 15 }] },
+        ]
+      },
+      {
+        id: 'milk', icon: '🥛', name: 'Milk & Dairy', count: '10 variants',
+        variants: [
+          { id: 'milk1', icon: '🥛', name: 'Full Cream Milk 1L', cat: 'Dairy', prices: [{ store: 'Lulu', price: 4 }, { store: 'KM Trading', price: 4 }, { store: 'Nesto', price: 5 }, { store: 'Carrefour', price: 5 }] },
+          { id: 'milk2', icon: '🥛', name: 'Full Cream Milk 2L', cat: 'Dairy', prices: [{ store: 'KM Trading', price: 7 }, { store: 'Nesto', price: 7 }, { store: 'Lulu', price: 8 }, { store: 'Carrefour', price: 8 }] },
+          { id: 'milk3', icon: '🧀', name: 'Cheddar Cheese 200g', cat: 'Dairy', prices: [{ store: 'Lulu', price: 11 }, { store: 'KM Trading', price: 12 }, { store: 'Nesto', price: 13 }, { store: 'Carrefour', price: 14 }] },
+          { id: 'milk4', icon: '🧈', name: 'Butter Unsalted 200g', cat: 'Dairy', prices: [{ store: 'Nesto', price: 8 }, { store: 'KM Trading', price: 8 }, { store: 'Lulu', price: 9 }, { store: 'Carrefour', price: 10 }] },
+          { id: 'milk5', icon: '🍦', name: 'Greek Yoghurt 400g', cat: 'Dairy', prices: [{ store: 'Carrefour', price: 9 }, { store: 'Lulu', price: 10 }, { store: 'Noon', price: 11 }, { store: 'Amazon', price: 12 }] },
+        ]
+      },
+      {
+        id: 'phone', icon: '📱', name: 'Smartphones', count: '15 variants',
+        variants: [
+          { id: 'ph1', icon: '📱', name: 'iPhone 15 128GB', cat: 'Electronics', prices: [{ store: 'Amazon', price: 2899 }, { store: 'Noon', price: 3050 }, { store: 'Lulu', price: 3199 }, { store: 'Carrefour', price: 3299 }] },
+          { id: 'ph2', icon: '📱', name: 'Samsung Galaxy S25', cat: 'Electronics', prices: [{ store: 'Noon', price: 2499 }, { store: 'Amazon', price: 2599 }, { store: 'Lulu', price: 2699 }, { store: 'Carrefour', price: 2799 }] },
+          { id: 'ph3', icon: '📱', name: 'iPhone 14 128GB', cat: 'Electronics', prices: [{ store: 'KM Trading', price: 1999 }, { store: 'Amazon', price: 2099 }, { store: 'Noon', price: 2199 }, { store: 'Lulu', price: 2299 }] },
+          { id: 'ph4', icon: '📱', name: 'Pixel 8 Pro 128GB', cat: 'Electronics', prices: [{ store: 'Amazon', price: 2299 }, { store: 'Noon', price: 2399 }, { store: 'Sharaf DG', price: 2499 }, { store: 'Lulu', price: 2599 }] },
+        ]
+      },
+      {
+        id: 'sugar', icon: '🍬', name: 'Sugar & Sweeteners', count: '6 variants',
+        variants: [
+          { id: 'sug1', icon: '🍬', name: 'White Sugar 1kg', cat: 'Sugar', prices: [{ store: 'KM Trading', price: 4 }, { store: 'Nesto', price: 4 }, { store: 'Lulu', price: 5 }, { store: 'Carrefour', price: 5 }] },
+          { id: 'sug2', icon: '🍬', name: 'White Sugar 2kg', cat: 'Sugar', prices: [{ store: 'KM Trading', price: 7 }, { store: 'Nesto', price: 7 }, { store: 'Lulu', price: 8 }, { store: 'Carrefour', price: 9 }] },
+          { id: 'sug3', icon: '🍯', name: 'Honey Pure 500g', cat: 'Sugar', prices: [{ store: 'Carrefour', price: 22 }, { store: 'Lulu', price: 24 }, { store: 'Noon', price: 26 }, { store: 'Amazon', price: 28 }] },
+          { id: 'sug4', icon: '🟤', name: 'Brown Sugar 1kg', cat: 'Sugar', prices: [{ store: 'Lulu', price: 6 }, { store: 'KM Trading', price: 6 }, { store: 'Carrefour', price: 7 }, { store: 'Noon', price: 8 }] },
+        ]
+      },
+      {
+        id: 'tv', icon: '📺', name: 'Smart TVs', count: '9 variants',
+        variants: [
+          { id: 'tv1', icon: '📺', name: 'Samsung 55" 4K QLED', cat: 'Electronics', prices: [{ store: 'Nesto', price: 1899 }, { store: 'Amazon', price: 2199 }, { store: 'Carrefour', price: 2349 }, { store: 'Noon', price: 2399 }] },
+          { id: 'tv2', icon: '📺', name: 'LG 50" 4K OLED', cat: 'Electronics', prices: [{ store: 'Noon', price: 2299 }, { store: 'Amazon', price: 2499 }, { store: 'Lulu', price: 2599 }, { store: 'Carrefour', price: 2699 }] },
+          { id: 'tv3', icon: '📺', name: 'Sony 43" Full HD', cat: 'Electronics', prices: [{ store: 'Amazon', price: 999 }, { store: 'Noon', price: 1099 }, { store: 'KM Trading', price: 1149 }, { store: 'Lulu', price: 1199 }] },
+        ]
+      },
+      {
+        id: 'detergent', icon: '🧴', name: 'Detergents & Cleaning', count: '11 variants',
+        variants: [
+          { id: 'det1', icon: '🧴', name: 'Ariel Liquid 2L', cat: 'Cleaning', prices: [{ store: 'KM Trading', price: 18 }, { store: 'Lulu', price: 21 }, { store: 'Nesto', price: 22 }, { store: 'Carrefour', price: 24 }] },
+          { id: 'det2', icon: '🧴', name: 'Tide Powder 3kg', cat: 'Cleaning', prices: [{ store: 'Nesto', price: 22 }, { store: 'KM Trading', price: 23 }, { store: 'Lulu', price: 25 }, { store: 'Carrefour', price: 27 }] },
+          { id: 'det3', icon: '🧼', name: 'Dettol Handwash 400ml', cat: 'Cleaning', prices: [{ store: 'Carrefour', price: 9 }, { store: 'Lulu', price: 11 }, { store: 'Nesto', price: 12 }, { store: 'KM Trading', price: 12 }] },
+          { id: 'det4', icon: '✨', name: 'Flash Cleaner 750ml', cat: 'Cleaning', prices: [{ store: 'Lulu', price: 8 }, { store: 'KM Trading', price: 8 }, { store: 'Carrefour', price: 9 }, { store: 'Noon', price: 10 }] },
+        ]
+      },
+      {
+        id: 'laptop', icon: '💻', name: 'Laptops', count: '7 variants',
+        variants: [
+          { id: 'lap1', icon: '💻', name: 'MacBook Air M2 8GB 256GB', cat: 'Electronics', prices: [{ store: 'KM Trading', price: 3799 }, { store: 'Sharaf DG', price: 4050 }, { store: 'Lulu', price: 4299 }, { store: 'Amazon', price: 4399 }] },
+          { id: 'lap2', icon: '💻', name: 'Dell Inspiron 15 i5', cat: 'Electronics', prices: [{ store: 'Amazon', price: 1899 }, { store: 'Noon', price: 1999 }, { store: 'KM Trading', price: 2099 }, { store: 'Lulu', price: 2199 }] },
+          { id: 'lap3', icon: '💻', name: 'HP Pavilion 15 i7', cat: 'Electronics', prices: [{ store: 'Amazon', price: 2299 }, { store: 'Noon', price: 2399 }, { store: 'Sharaf DG', price: 2499 }, { store: 'Carrefour', price: 2599 }] },
+        ]
+      },
+      {
+        id: 'chicken', icon: '🍗', name: 'Chicken & Meat', count: '8 variants',
+        variants: [
+          { id: 'chk1', icon: '🍗', name: 'Whole Chicken 1kg', cat: 'Meat', prices: [{ store: 'Lulu', price: 16 }, { store: 'KM Trading', price: 17 }, { store: 'Nesto', price: 18 }, { store: 'Carrefour', price: 19 }] },
+          { id: 'chk2', icon: '🍖', name: 'Chicken Breast 500g', cat: 'Meat', prices: [{ store: 'KM Trading', price: 12 }, { store: 'Lulu', price: 13 }, { store: 'Nesto', price: 14 }, { store: 'Carrefour', price: 15 }] },
+          { id: 'chk3', icon: '🥩', name: 'Beef Mince 500g', cat: 'Meat', prices: [{ store: 'Nesto', price: 22 }, { store: 'KM Trading', price: 24 }, { store: 'Lulu', price: 26 }, { store: 'Carrefour', price: 28 }] },
+          { id: 'chk4', icon: '🍖', name: 'Lamb Leg 1kg', cat: 'Meat', prices: [{ store: 'Lulu', price: 55 }, { store: 'KM Trading', price: 58 }, { store: 'Nesto', price: 60 }, { store: 'Carrefour', price: 64 }] },
+        ]
+      },
+    ];
+
+    let alertStep = 1, alertChosenCat = null, alertChosenVariant = null;
+    let activeAlerts = [], notifyViaMethods = ['push'];
+
     function openPriceAlert() {
-      const sel = document.getElementById('alertProduct');
-      if (sel) {
-        sel.innerHTML = '<option value="">— Select a product —</option>' +
-          PRODUCTS.map(p => `<option value="${p.id}">${p.name} (from AED ${p.prices[0].price.toLocaleString()})</option>`).join('');
-      }
+      alertStep = 1; alertChosenCat = null; alertChosenVariant = null;
+      notifyViaMethods = ['push'];
+      goAlertStep(1);
+      renderAlertCats('');
       showModal('alertModal', 'alertBackdrop');
     }
+
+    function goAlertStep(step) {
+      alertStep = step;
+      [1, 2, 3].forEach(n => {
+        document.getElementById('alertStep' + n).style.display = n === step ? '' : 'none';
+        const s = document.getElementById('astep' + n);
+        s.classList.remove('active', 'done');
+        if (n < step) s.classList.add('done');
+        if (n === step) s.classList.add('active');
+        if (n < step) {
+          const line = s.nextElementSibling;
+          if (line && line.classList.contains('alert-step-line')) line.classList.add('done');
+        } else {
+          const line = s.nextElementSibling;
+          if (line && line.classList.contains('alert-step-line')) line.classList.remove('done');
+        }
+      });
+      // Update step numbers in header marks
+      if (step === 1) document.getElementById('alertModalTitle').textContent = '🔔 Set Price Alert';
+      if (step === 2) document.getElementById('alertModalTitle').textContent = '🔔 Choose Product';
+      if (step === 3) document.getElementById('alertModalTitle').textContent = '🔔 Alert Details';
+      document.querySelector('#alertModal .modal-box').scrollTop = 0;
+    }
+
+    function renderAlertCats(query) {
+      const q = query.toLowerCase();
+      const filtered = q
+        ? ALERT_CATEGORIES.filter(c => c.name.toLowerCase().includes(q) || c.variants.some(v => v.name.toLowerCase().includes(q)))
+        : ALERT_CATEGORIES;
+      const grid = document.getElementById('alertCatGrid');
+      if (!grid) return;
+      grid.innerHTML = filtered.map(c => `
+        <div class="alert-cat-card" onclick="selectAlertCat('${c.id}')">
+          <span class="ac-icon">${c.icon}</span>
+          <span class="ac-name">${c.name}</span>
+          <span class="ac-count">${c.count}</span>
+        </div>`).join('');
+    }
+
+    function filterAlertCats(val) { renderAlertCats(val); }
+
+    function selectAlertCat(id) {
+      alertChosenCat = ALERT_CATEGORIES.find(c => c.id === id);
+      if (!alertChosenCat) return;
+      document.getElementById('alertChosenCatLbl').innerHTML =
+        alertChosenCat.icon + ' ' + alertChosenCat.name;
+      renderAlertVariants();
+      goAlertStep(2);
+    }
+
+    function renderAlertVariants() {
+      const el = document.getElementById('alertVariantList');
+      if (!el || !alertChosenCat) return;
+      el.innerHTML = alertChosenCat.variants.map(v => {
+        const best = [...v.prices].sort((a, b) => a.price - b.price)[0];
+        const high = Math.max(...v.prices.map(p => p.price));
+        return `
+        <div class="alert-variant-card" id="avc_${v.id}">
+          <span class="avc-icon">${v.icon}</span>
+          <div class="avc-info">
+            <div class="avc-name">${v.name}</div>
+            <div class="avc-store">Best at ${best.store} · ${v.prices.length} stores</div>
+          </div>
+          <div class="avc-prices">
+            <span class="avc-best">AED ${best.price}</span>
+            ${high !== best.price ? `<span class="avc-high">AED ${high}</span>` : ''}
+            <button class="avc-select-btn" onclick="selectAlertVariant('${v.id}')">Select →</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function selectAlertVariant(id) {
+      if (!alertChosenCat) return;
+      alertChosenVariant = null;
+      for (const c of ALERT_CATEGORIES) {
+        const found = c.variants.find(v => v.id === id);
+        if (found) { alertChosenVariant = found; break; }
+      }
+      if (!alertChosenVariant) return;
+      document.querySelectorAll('.alert-variant-card').forEach(el => el.classList.remove('selected'));
+      const el = document.getElementById('avc_' + id);
+      if (el) el.classList.add('selected');
+
+      // Build step 3 summary card
+      const best = [...alertChosenVariant.prices].sort((a, b) => a.price - b.price)[0];
+      document.getElementById('alertSelectedCard').innerHTML = `
+        <span class="asc-icon">${alertChosenVariant.icon}</span>
+        <div class="asc-info">
+          <div class="asc-name">${alertChosenVariant.name}</div>
+          <div class="asc-cat">${alertChosenVariant.cat} · ${alertChosenVariant.prices.length} stores tracked</div>
+          <div class="asc-price">Current best: AED ${best.price} at ${best.store}</div>
+        </div>`;
+
+      document.getElementById('alertPrice').value = '';
+      document.getElementById('alertPrice').placeholder = 'Below AED ' + best.price;
+      document.getElementById('alertCurrentPriceLbl').textContent = 'Best now: AED ' + best.price;
+
+      // Reset notify chips
+      notifyViaMethods = ['push'];
+      document.querySelectorAll('.alert-notify-chip').forEach(c => c.classList.remove('active'));
+      document.getElementById('nvia-push').classList.add('active');
+
+      renderActiveAlerts();
+      goAlertStep(3);
+    }
+
+    function toggleNotifyVia(el, method) {
+      el.classList.toggle('active');
+      if (el.classList.contains('active')) {
+        if (!notifyViaMethods.includes(method)) notifyViaMethods.push(method);
+      } else {
+        notifyViaMethods = notifyViaMethods.filter(m => m !== method);
+      }
+    }
+
     function saveAlert() {
-      const prod = document.getElementById('alertProduct').value;
+      if (!alertChosenVariant) { showToast('⚠️ Please select a product first'); return; }
       const price = document.getElementById('alertPrice').value;
-      if (!prod) { showToast('⚠️ Please select a product'); return; }
-      if (!price) { showToast('⚠️ Please enter a target price'); return; }
-      const p = PRODUCTS.find(x => x.id === parseInt(prod));
-      closeModal('alertModal', 'alertBackdrop');
-      setTimeout(() => showToast(`🔔 Alert set! We'll notify you when ${p.name.split(' ').slice(0, 3).join(' ')} drops below AED ${parseInt(price).toLocaleString()}`), 300);
+      if (!price || parseFloat(price) <= 0) { showToast('⚠️ Please enter a valid target price'); return; }
+      if (!notifyViaMethods.length) { showToast('⚠️ Please choose at least one notification method'); return; }
+      const best = [...alertChosenVariant.prices].sort((a, b) => a.price - b.price)[0];
+      const alert = {
+        id: Date.now(),
+        icon: alertChosenVariant.icon,
+        name: alertChosenVariant.name,
+        target: parseFloat(price),
+        current: best.price,
+        via: [...notifyViaMethods],
+        active: true
+      };
+      activeAlerts.unshift(alert);
+      renderActiveAlerts();
+      showToast(`🔔 Alert set! Notify when ${alertChosenVariant.name.split(' ').slice(0, 3).join(' ')} drops below AED ${parseFloat(price).toLocaleString()}`);
+      // Reset for another alert
+      document.getElementById('alertPrice').value = '';
+    }
+
+    function deleteAlert(id) {
+      activeAlerts = activeAlerts.filter(a => a.id !== id);
+      renderActiveAlerts();
+      showToast('🗑️ Alert removed');
+    }
+
+    function renderActiveAlerts() {
+      const el = document.getElementById('activeAlertsList');
+      if (!el) return;
+      if (!activeAlerts.length) { el.innerHTML = ''; return; }
+      const viaLabels = { push: '📱', email: '📧', whatsapp: '💬', sms: '✉️' };
+      el.innerHTML = `<div class="active-alerts-hdr">
+          <span>📋 Active Alerts (${activeAlerts.length})</span>
+        </div>` +
+        activeAlerts.map(a => `
+        <div class="active-alert-row">
+          <span class="aar-icon">${a.icon}</span>
+          <div class="aar-info">
+            <div class="aar-name">${a.name}</div>
+            <div class="aar-target">Alert below AED ${a.target.toLocaleString()} · Now AED ${a.current}</div>
+            <div class="aar-via">Notify via ${a.via.map(v => viaLabels[v] || v).join(' ')}</div>
+          </div>
+          <div class="aar-del" onclick="deleteAlert(${a.id})">✕</div>
+        </div>`).join('');
     }
 
     /* ═══════════════════════════════════════
