@@ -213,6 +213,35 @@
       padding: 0 var(--pad) 10px;
     }
 
+    /* When placed between store-strip and filter-bar */
+    .hdr-search-row--inline {
+      background: var(--white);
+      border-bottom: 1px solid var(--mg);
+      padding: 10px var(--pad);
+    }
+
+    .hdr-search-row--inline .hdr-srch {
+      background: var(--lg);
+      border: 1.5px solid var(--mg);
+    }
+
+    .hdr-search-row--inline .hdr-srch:hover {
+      background: #e9eaec;
+      border-color: #ccc;
+    }
+
+    .hdr-search-row--inline .hdr-srch svg {
+      color: var(--gray);
+    }
+
+    .hdr-search-row--inline .hdr-srch input {
+      color: var(--black);
+    }
+
+    .hdr-search-row--inline .hdr-srch input::placeholder {
+      color: var(--gray);
+    }
+
     .hdr-srch-inner {
       max-width: var(--max);
       margin: 0 auto;
@@ -635,6 +664,32 @@
 
     .sad-4 {
       background: linear-gradient(135deg, #0D7377, #14A085);
+    }
+
+    .sad-food {
+      background: linear-gradient(135deg, #C0392B, #E67E22);
+    }
+
+    .sad-travel {
+      background: linear-gradient(135deg, #1565C0, #0288D1);
+    }
+
+    .sad-grocery {
+      background: linear-gradient(135deg, #2E7D32, #66BB6A);
+    }
+
+    .sad-ad-tag {
+      font-size: 9px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, .7);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 2px;
+    }
+
+    .sad-ad-icon {
+      font-size: 22px;
+      margin-bottom: 2px;
     }
 
     .sad-br {
@@ -2578,8 +2633,306 @@
       }
     }
 
-    .ty {
-      color: var(--yellow);
+    /* ═══════════ FOOD & DINING PARTNERS ═══════════ */
+    .food-cat-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .food-cat-pill {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1.5px solid var(--mg);
+      background: var(--white);
+      color: var(--gray);
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .food-cat-pill.on,
+    .food-cat-pill:hover {
+      background: var(--yellow);
+      border-color: var(--yd);
+      color: var(--black);
+    }
+
+    /* wider card to fit 3 restaurant price rows comfortably */
+    .fpc {
+      flex: 0 0 clamp(188px, 27vw, 226px);
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1px solid var(--mg);
+      box-shadow: var(--sh0);
+      overflow: hidden;
+      position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .fpc:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sh1);
+    }
+
+    .fpc .pimg {
+      width: 100%;
+      height: clamp(100px, 12vw, 130px);
+      background: var(--lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(36px, 5vw, 52px);
+      position: relative;
+    }
+
+    .fpc .pname {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 7px;
+      line-height: 1.3;
+    }
+
+    .fpc .pprices {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .fpc .prow {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .fpc .pstore {
+      font-size: 10.5px;
+      color: var(--gray);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 118px;
+    }
+
+    .fpc .prow.best .pstore {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .fpc .prow.best .pprice {
+      color: var(--green);
+      font-size: 12.5px;
+    }
+
+    .fpc .pprice {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    .fpc .fdist {
+      font-size: 9px;
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+
+
+    /* ═══════ PRICE ALERT BANNER ═══════ */
+    .alert-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: linear-gradient(135deg, #1A1A2E, #16213E);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      margin-top: 22px;
+    }
+
+    .alert-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .alert-banner-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .alert-banner-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+
+    .alert-banner-sub {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .6);
+      line-height: 1.4;
+    }
+
+    .alert-banner-btn {
+      flex-shrink: 0;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font);
+      transition: background .2s;
+    }
+
+    .alert-banner-btn:hover {
+      background: var(--yd);
+    }
+
+    /* ═══════ COMPARE TRAY ═══════ */
+    .compare-tray {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .compare-card {
+      flex: 0 0 clamp(160px, 22vw, 200px);
+      background: var(--white);
+      border: 2px solid var(--yellow);
+      border-radius: var(--r);
+      padding: 14px;
+      position: relative;
+      text-align: center;
+    }
+
+    .compare-card-em {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+
+    .compare-card-name {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .compare-card-price {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+
+    .compare-card-store {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .compare-remove {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .compare-add-slot {
+      flex: 0 0 clamp(160px, 22vw, 200px);
+      border: 2px dashed var(--mg);
+      border-radius: var(--r);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 20px;
+      color: var(--gray);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      min-height: 130px;
+    }
+
+    .compare-add-slot:hover {
+      border-color: var(--yellow);
+      color: var(--black);
+    }
+
+    .compare-add-slot span {
+      font-size: 28px;
+    }
+
+    /* ═══════ PRICE ALERT MODAL ═══════ */
+    .alert-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .alert-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-bottom: 4px;
+    }
+
+    .alert-select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--mg);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font);
+      background: var(--white);
+      cursor: pointer;
+    }
+
+    .alert-select:focus {
+      border-color: var(--yellow);
+      outline: none;
+    }
+
+    .alert-price-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .alert-prefix {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--gray);
+      white-space: nowrap;
     }
 
     @keyframes fadeUp {
@@ -2658,28 +3011,9 @@
       </div>
     </div>
 
-    <!-- ROW 2: Search bar + Camera (between top and desk-nav) -->
-    <div class="hdr-search-row">
-      <div class="hdr-srch-inner">
-        <div class="hdr-srch" onclick="openSearch()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-          <input id="fakeInput" placeholder="Search products, stores, brands…" readonly>
-        </div>
-        <button class="cam-btn" onclick="openCamera()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-            <circle cx="12" cy="13" r="4" />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- ROW 3: Desktop category nav -->
+    <!-- ROW 2: Desktop category nav -->
     <nav class="desk-nav">
-      <div class="desk-nav-inner">
+      <!-- <div class="desk-nav-inner">
         <div class="dni on" onclick="deskNav(this,'home')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -2705,7 +3039,7 @@
         <div class="dni" onclick="deskNav(this,'cat','Home & Living')">🏠 Home &amp; Living</div>
         <div class="dni" onclick="deskNav(this,'cat','Health & Beauty')">💊 Health &amp; Beauty</div>
         <div class="dni" onclick="deskNav(this,'cat','Gaming')">🎮 Gaming</div>
-      </div>
+      </div> -->
     </nav>
   </header>
 
@@ -2720,6 +3054,27 @@
   </div>
 
   <!-- ════════════════════════════
+     SEARCH ROW (between store-strip & filter-bar)
+════════════════════════════ -->
+  <div class="hdr-search-row hdr-search-row--inline">
+    <div class="hdr-srch-inner">
+      <div class="hdr-srch" onclick="openSearch()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input id="fakeInput" placeholder="Search products, stores, brands…" readonly>
+      </div>
+      <button class="cam-btn" onclick="openCamera()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+          <circle cx="12" cy="13" r="4" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
      FILTER BAR
 ════════════════════════════ -->
   <div class="filter-bar f1">
@@ -2729,11 +3084,12 @@
           <path d="M3 6h18M7 12h10M10 18h4" />
         </svg>All
       </div>
-      <div class="chip off" onclick="pickChip(this,'low')">💰 Lowest Price</div>
-      <div class="chip off" onclick="pickChip(this,'fast')">🚀 Fast Delivery</div>
+      <!-- <div class="chip off" onclick="pickChip(this,'low')">💰 Lowest Price</div>
+      <div class="chip off" onclick="pickChip(this,'fast')">🚀 Fast Delivery</div> -->
       <div class="chip off" onclick="pickChip(this,'near')">📍 Nearby</div>
-      <div class="chip off" onclick="pickChip(this,'top')">⭐ Top Rated</div>
+      <!-- <div class="chip off" onclick="pickChip(this,'top')">⭐ Top Rated</div> -->
       <div class="chip off" onclick="pickChip(this,'new')">🆕 New Arrivals</div>
+      <div class="chip off" onclick="pickChip(this,'sort')">↑↓ Sort By</div>
       <div class="chip off" onclick="openFilterModal()">⚙️ More Filters</div>
     </div>
   </div>
@@ -2790,31 +3146,39 @@
           </div>
         </div>
         <div class="sad-col">
+          <!-- Ad 1: Flash Sale -->
           <div class="sad sad-1" onclick="openRecharge('du')">
-            <div class="sad-br">du Telecom</div>
-            <div class="sad-tt">Recharge Cards from AED 30</div>
+            <div class="sad-ad-tag">⚡ Flash Sale</div>
+            <div class="sad-ad-icon">📱</div>
+            <div class="sad-tt">du Recharge<br>from AED 30</div>
             <div class="sad-ct">Get Deal <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                 <path d="m9 18 6-6-6-6" />
               </svg></div>
           </div>
-          <div class="sad sad-2" onclick="openRecharge('Etisalat')">
-            <div class="sad-br">Etisalat</div>
-            <div class="sad-tt">Data Plans 50% Off</div>
-            <div class="sad-ct">Explore <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <path d="m9 18 6-6-6-6" />
-              </svg></div>
-          </div>
-          <div class="sad sad-3" onclick="openProduct(8)">
-            <div class="sad-br">PlayStation</div>
-            <div class="sad-tt">PSN Cards Best Price</div>
-            <div class="sad-ct">Compare <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <path d="m9 18 6-6-6-6" />
-              </svg></div>
-          </div>
-          <div class="sad sad-4" onclick="showToast('☕ Noon Food – Free Delivery Today!')">
-            <div class="sad-br">Noon Food</div>
-            <div class="sad-tt">Free Delivery Today</div>
+          <!-- Ad 2: Food Delivery -->
+          <div class="sad sad-food" onclick="showToast('🍕 Talabat – Order now & save!')">
+            <div class="sad-ad-tag">🍕 Food Delivery</div>
+            <div class="sad-ad-icon">🛵</div>
+            <div class="sad-tt">Talabat – Free<br>Delivery Today</div>
             <div class="sad-ct">Order Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <!-- Ad 3: Travel / Hotel -->
+          <div class="sad sad-travel" onclick="showToast('✈️ Booking.com – Best hotel rates!')">
+            <div class="sad-ad-tag">🏨 Travel</div>
+            <div class="sad-ad-icon">✈️</div>
+            <div class="sad-tt">Hotels from<br>AED 199/night</div>
+            <div class="sad-ct">Book Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="m9 18 6-6-6-6" />
+              </svg></div>
+          </div>
+          <!-- Ad 4: Grocery Deal -->
+          <div class="sad sad-grocery" onclick="openCategoryPage('Groceries','🛒')">
+            <div class="sad-ad-tag">🛒 Grocery</div>
+            <div class="sad-ad-icon">🥦</div>
+            <div class="sad-tt">Fresh Veggies<br>Up to 40% Off</div>
+            <div class="sad-ct">Shop Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                 <path d="m9 18 6-6-6-6" />
               </svg></div>
           </div>
@@ -2896,19 +3260,70 @@
 
       <div class="div"></div>
 
-      <!-- STORE PARTNERS (full section in page) -->
+      <!-- FOOD & DINING (best-seller card style) -->
       <div class="sec f6">
         <div class="sec-hd">
-          <div class="sec-ttl"><span class="em">🏪</span>Store Partners in UAE</div>
-          <div class="see-all" onclick="showToast('🏪 25 UAE partner stores')">All <svg viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5">
+          <div class="sec-ttl"><span class="em">🍽️</span>Food & Dining Near You</div>
+          <div class="see-all" onclick="showToast('🍽️ Showing all food items')">All <svg viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="m9 18 6-6-6-6" />
             </svg></div>
         </div>
-        <div class="strow" id="storeCircles"></div>
+        <div class="food-cat-scroll">
+          <div class="food-cat-pill on" onclick="filterFoodCat(this,'all')">🍽️ All</div>
+          <div class="food-cat-pill" onclick="filterFoodCat(this,'arabic')">🥙 Arabic</div>
+          <div class="food-cat-pill" onclick="filterFoodCat(this,'pizza')">🍕 Pizza</div>
+          <div class="food-cat-pill" onclick="filterFoodCat(this,'sushi')">🍣 Sushi</div>
+          <div class="food-cat-pill" onclick="filterFoodCat(this,'burger')">🍔 Burger</div>
+          <div class="food-cat-pill" onclick="filterFoodCat(this,'dessert')">🍰 Dessert</div>
+          <div class="food-cat-pill" onclick="filterFoodCat(this,'coffee')">☕ Coffee</div>
+        </div>
+        <div class="hrow" id="foodRow"><!-- rendered by JS --></div>
       </div>
 
       <div class="div"></div>
+
+      <!-- TRENDING NOW -->
+      <div class="sec">
+        <div class="sec-hd">
+          <div class="sec-ttl"><span class="em">📈</span>Trending Now</div>
+          <div class="see-all" onclick="showAllProducts('Trending Now', PRODUCTS.slice().reverse())">See All <svg
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m9 18 6-6-6-6" />
+            </svg></div>
+        </div>
+        <div class="hrow" id="trendingRow"></div>
+      </div>
+
+      <div class="div"></div>
+
+      <!-- PRICE ALERT BANNER -->
+      <div class="alert-banner">
+        <div class="alert-banner-left">
+          <div class="alert-banner-icon">🔔</div>
+          <div>
+            <div class="alert-banner-title">Set Price Alerts</div>
+            <div class="alert-banner-sub">Get notified when any product drops to your target price</div>
+          </div>
+        </div>
+        <button class="alert-banner-btn" onclick="openPriceAlert()">Set Alert</button>
+      </div>
+
+      <div class="div"></div>
+
+      <!-- COMPARE TRAY -->
+      <div class="sec" id="compareSec" style="display:none;">
+        <div class="sec-hd">
+          <div class="sec-ttl"><span class="em">⚖️</span>Compare Selected</div>
+          <div class="see-all" onclick="clearCompare()">Clear <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <path d="m9 18 6-6-6-6" />
+            </svg></div>
+        </div>
+        <div id="compareTray" class="compare-tray"></div>
+      </div>
+
+      <div class="div" id="compareDivider" style="display:none;"></div>
 
       <!-- RECENTLY VIEWED -->
       <div class="sec">
@@ -3144,6 +3559,67 @@
   </div>
 
   <div class="toast" id="toastEl"></div>
+
+  <!-- PRICE ALERT MODAL -->
+  <div id="alertBackdrop"
+    style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;">
+  </div>
+  <div id="alertModal" class="modal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <div class="modal-title">🔔 Set Price Alert</div>
+        <div class="modal-close" onclick="closeModal('alertModal','alertBackdrop')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="alert-form">
+          <div>
+            <div class="alert-label">Choose Product</div>
+            <select class="alert-select" id="alertProduct">
+              <option value="">— Select a product —</option>
+            </select>
+          </div>
+          <div>
+            <div class="alert-label">Notify me when price drops below</div>
+            <div class="alert-price-row">
+              <span class="alert-prefix">AED</span>
+              <input class="price-input" id="alertPrice" type="number" placeholder="e.g. 2500" style="flex:1;">
+            </div>
+          </div>
+          <div>
+            <div class="alert-label">Notify via</div>
+            <div class="filter-chips" style="margin-top:4px;">
+              <div class="fchip on" onclick="this.classList.toggle('on')">📱 Push</div>
+              <div class="fchip" onclick="this.classList.toggle('on')">📧 Email</div>
+              <div class="fchip" onclick="this.classList.toggle('on')">💬 WhatsApp</div>
+            </div>
+          </div>
+          <button class="apply-filter-btn" onclick="saveAlert()">🔔 Activate Alert</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOD ORDER MODAL -->
+  <div id="foodOrderBackdrop"
+    style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;">
+  </div>
+  <div id="foodOrderModal" class="modal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <div class="modal-title" id="foodOrderTitle">Order Food</div>
+        <div class="modal-close" onclick="closeModal('foodOrderModal','foodOrderBackdrop')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </div>
+      </div>
+      <div class="modal-body" id="foodOrderBody"></div>
+    </div>
+  </div>
 
   <script>
     /* ══ DATA ══ */
@@ -3545,10 +4021,11 @@
     /* ═══════ INIT ═══════ */
     window.addEventListener('DOMContentLoaded', () => {
       renderStoreStrip();
-      renderStoreCircles();
       renderBestSellers();
       renderMegaDeals();
       renderRecent();
+      renderFoodSection('all');
+      renderTrending();
       updateCartBadge();
       startBanner();
       startTimers();
@@ -3703,7 +4180,10 @@
         <div class="prow best"><span class="pstore">${best.store} <span class="blbl">BEST</span></span><span class="pprice">AED ${best.price.toLocaleString()}</span></div>
         ${p.prices.slice(1, 3).map(pr => `<div class="prow"><span class="pstore">${pr.store}</span><span class="pprice">AED ${pr.price.toLocaleString()}</span></div>`).join('')}
       </div>
-      <button class="cbtn" onclick="addToCart(event,${p.id})">${inCart ? '✓ In Cart' : 'Compare & Add'}</button>
+      <div style="display:flex;gap:5px;">
+        <button class="cbtn" style="flex:1;" onclick="addToCart(event,${p.id})">${inCart ? '✓ In Cart' : 'Add to Cart'}</button>
+        <button class="cbtn" style="width:34px;flex-shrink:0;background:var(--lg);color:var(--black);" title="Compare" onclick="event.stopPropagation();addToCompare(${p.id})">⚖️</button>
+      </div>
     </div>
   </div>`;
     }
@@ -4136,6 +4616,220 @@
     function showToast(msg) {
       const el = document.getElementById('toastEl'); el.innerHTML = msg; el.classList.add('show');
       clearTimeout(tTimer); tTimer = setTimeout(() => el.classList.remove('show'), 2800);
+    }
+
+    /* ═══════ TRENDING NOW ═══════ */
+    function renderTrending() {
+      const trending = [...PRODUCTS].sort((a, b) => a.prices[0].price - b.prices[0].price).slice(0, 8);
+      const el = document.getElementById('trendingRow');
+      if (el) el.innerHTML = trending.map(makeProductCard).join('');
+    }
+
+    /* ═══════ COMPARE TRAY ═══════ */
+    let compareList = [];
+    function addToCompare(id) {
+      if (compareList.includes(id)) { showToast('Already in compare!'); return; }
+      if (compareList.length >= 3) { showToast('⚖️ Max 3 products to compare'); return; }
+      compareList.push(id);
+      renderCompareTray();
+      showToast('⚖️ Added to compare!');
+    }
+    function removeFromCompare(id) {
+      compareList = compareList.filter(i => i !== id);
+      renderCompareTray();
+    }
+    function clearCompare() {
+      compareList = [];
+      renderCompareTray();
+    }
+    function renderCompareTray() {
+      const sec = document.getElementById('compareSec');
+      const div = document.getElementById('compareDivider');
+      const tray = document.getElementById('compareTray');
+      if (!sec || !tray) return;
+      if (!compareList.length) {
+        sec.style.display = 'none';
+        if (div) div.style.display = 'none';
+        return;
+      }
+      sec.style.display = '';
+      if (div) div.style.display = '';
+      const slots = compareList.map(id => {
+        const p = PRODUCTS.find(x => x.id === id);
+        return `<div class="compare-card">
+          <div class="compare-remove" onclick="removeFromCompare(${id})">✕</div>
+          <div class="compare-card-em">${p.emoji}</div>
+          <div class="compare-card-name">${p.name}</div>
+          <div class="compare-card-price">AED ${p.prices[0].price.toLocaleString()}</div>
+          <div class="compare-card-store">Best: ${p.prices[0].store}</div>
+        </div>`;
+      });
+      if (compareList.length < 3) {
+        slots.push(`<div class="compare-add-slot" onclick="showToast('👆 Tap a product card to add it to compare')">
+          <span>➕</span>Add Product
+        </div>`);
+      }
+      tray.innerHTML = slots.join('');
+      // Show compare button in product cards
+    }
+
+    /* ═══════ PRICE ALERT ═══════ */
+    function openPriceAlert() {
+      const sel = document.getElementById('alertProduct');
+      if (sel) {
+        sel.innerHTML = '<option value="">— Select a product —</option>' +
+          PRODUCTS.map(p => `<option value="${p.id}">${p.name} (from AED ${p.prices[0].price.toLocaleString()})</option>`).join('');
+      }
+      showModal('alertModal', 'alertBackdrop');
+    }
+    function saveAlert() {
+      const prod = document.getElementById('alertProduct').value;
+      const price = document.getElementById('alertPrice').value;
+      if (!prod) { showToast('⚠️ Please select a product'); return; }
+      if (!price) { showToast('⚠️ Please enter a target price'); return; }
+      const p = PRODUCTS.find(x => x.id === parseInt(prod));
+      closeModal('alertModal', 'alertBackdrop');
+      setTimeout(() => showToast(`🔔 Alert set! We'll notify you when ${p.name.split(' ').slice(0, 3).join(' ')} drops below AED ${parseInt(price).toLocaleString()}`), 300);
+    }
+
+    /* ═══════════════════════════════════════
+       FOOD & DINING SECTION DATA + RENDER
+    ═══════════════════════════════════════ */
+
+    // offer:true  → shown first with 🔥 badge (always offer items first)
+    const FOOD_ITEMS = [
+      {
+        id: 0, emoji: '🥙', name: 'Chicken Shawarma', cat: 'arabic', offer: true,
+        stores: [
+          { name: 'Al Ameer Restaurant', dist: '0.4 km', price: 15 },
+          { name: 'Beirut Nights', dist: '0.8 km', price: 18 },
+          { name: 'Shawarma Palace', dist: '1.6 km', price: 22 },
+        ]
+      },
+      {
+        id: 1, emoji: '🍕', name: 'Margherita Pizza', cat: 'pizza', offer: true,
+        stores: [
+          { name: "Domino's Pizza", dist: '1.3 km', price: 42 },
+          { name: 'Napoli Pizza & Pasta', dist: '0.7 km', price: 45 },
+          { name: 'Pizza Express', dist: '1.0 km', price: 49 },
+        ]
+      },
+      {
+        id: 2, emoji: '🍔', name: 'Smash Burger', cat: 'burger', offer: true,
+        stores: [
+          { name: "McDonald's", dist: '0.6 km', price: 28 },
+          { name: 'Street Burger Co', dist: '0.3 km', price: 38 },
+          { name: 'The Burger Lab', dist: '0.9 km', price: 42 },
+        ]
+      },
+      {
+        id: 3, emoji: '🍣', name: 'Salmon Nigiri', cat: 'sushi', offer: false,
+        stores: [
+          { name: 'Maki & Roll', dist: '2.4 km', price: 65 },
+          { name: 'Tokyo Garden', dist: '2.0 km', price: 68 },
+          { name: 'Sakura Sushi', dist: '1.5 km', price: 72 },
+        ]
+      },
+      {
+        id: 4, emoji: '🍰', name: 'Kunafa', cat: 'dessert', offer: true,
+        stores: [
+          { name: 'Falamanki', dist: '1.5 km', price: 20 },
+          { name: 'Sweet Corner', dist: '0.6 km', price: 22 },
+          { name: 'Al Hallab Sweets', dist: '1.0 km', price: 25 },
+        ]
+      },
+      {
+        id: 5, emoji: '☕', name: 'Flat White', cat: 'coffee', offer: false,
+        stores: [
+          { name: 'Brew House Café', dist: '0.5 km', price: 22 },
+          { name: 'Costa Coffee', dist: '1.1 km', price: 26 },
+          { name: 'Starbucks', dist: '0.9 km', price: 28 },
+        ]
+      },
+      {
+        id: 6, emoji: '🥗', name: 'Caesar Salad', cat: 'arabic', offer: false,
+        stores: [
+          { name: 'Freshly Kitchen', dist: '1.8 km', price: 28 },
+          { name: 'Green Bowl Café', dist: '0.5 km', price: 32 },
+          { name: 'Ajman Palace Hotel', dist: '1.2 km', price: 55 },
+        ]
+      },
+      {
+        id: 7, emoji: '🍜', name: 'Ramen Bowl', cat: 'sushi', offer: false,
+        stores: [
+          { name: 'Noodle House', dist: '1.4 km', price: 48 },
+          { name: 'Ippudo Ramen', dist: '2.2 km', price: 55 },
+          { name: 'Wagamama', dist: '2.6 km', price: 60 },
+        ]
+      },
+    ];
+
+    function makeFoodCard(item) {
+      const sorted = [...item.stores].sort((a, b) => a.price - b.price);
+      const best = sorted[0];
+      const badgeHtml = item.offer ? `<div class="pbadge hot">🔥 OFFER</div>` : '';
+      const priceRows = sorted.map((s, i) => `
+        <div class="prow ${i === 0 ? 'best' : ''}">
+          <span class="pstore">${s.name.length > 16 ? s.name.slice(0, 15) + '…' : s.name}${i === 0 ? ' <span class="blbl">BEST</span>' : ''}</span>
+          <span class="pprice" style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;">
+            <span>AED ${s.price}</span>
+            <span class="fdist">📍 ${s.dist}</span>
+          </span>
+        </div>`).join('');
+      return `
+      <div class="fpc" onclick="openFoodOrder(${item.id})">
+        <div class="pimg">
+          <span>${item.emoji}</span>
+          ${badgeHtml}
+        </div>
+        <div class="pbody">
+          <div class="pname">${item.name}</div>
+          <div class="pprices">${priceRows}</div>
+          <button class="cbtn" onclick="event.stopPropagation();openFoodOrder(${item.id})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Find Best Option
+          </button>
+        </div>
+      </div>`;
+    }
+
+    function openFoodOrder(id) {
+      const item = FOOD_ITEMS.find(f => f.id === id);
+      if (!item) return;
+      const sorted = [...item.stores].sort((a, b) => a.price - b.price);
+      document.getElementById('foodOrderTitle').textContent = item.emoji + ' ' + item.name;
+      document.getElementById('foodOrderBody').innerHTML = `
+        <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Compare prices at nearest restaurants & order or visit the best option.</p>
+        ${sorted.map((s, i) => `
+        <div class="price-compare-row ${i === 0 ? 'best-store' : ''}" style="cursor:default;">
+          <div>
+            <div class="pcr-store">${s.name}${i === 0 ? ' 🏆' : ''}</div>
+            <div class="pcr-del">📍 ${s.dist} · ${i === 0 ? '<span style="color:var(--green);font-weight:700;">Cheapest nearby</span>' : 'Available nearby'}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <div class="pcr-price ${i === 0 ? 'cheapest' : ''}">AED ${s.price}</div>
+            <div style="display:flex;gap:5px;">
+              <button class="cbtn" style="padding:5px 10px;font-size:10px;border-radius:7px;width:auto;" onclick="showToast('🛵 Opening delivery for ${s.name.replace(/'/g, "\'")}…')">🛵 Order</button>
+              <button class="cbtn" style="padding:5px 10px;font-size:10px;border-radius:7px;width:auto;background:var(--lg);color:var(--black);" onclick="showToast('📍 Getting directions to ${s.name.replace(/'/g, "\'")}…')">📍 Visit</button>
+            </div>
+          </div>
+        </div>`).join('')}`;
+      showModal('foodOrderModal', 'foodOrderBackdrop');
+    }
+
+    function renderFoodSection(cat) {
+      const all = cat === 'all' ? FOOD_ITEMS : FOOD_ITEMS.filter(i => i.cat === cat);
+      const list = all.length ? all : FOOD_ITEMS;
+      // offer items always first
+      const ordered = [...list.filter(i => i.offer), ...list.filter(i => !i.offer)];
+      const el = document.getElementById('foodRow');
+      if (el) el.innerHTML = ordered.map(makeFoodCard).join('');
+    }
+
+    function filterFoodCat(el, cat) {
+      document.querySelectorAll('.food-cat-pill').forEach(p => p.classList.remove('on'));
+      el.classList.add('on');
+      renderFoodSection(cat);
     }
   </script>
 </body>
