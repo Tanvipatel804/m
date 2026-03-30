@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TruckUp - Driver Platform</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             height: 100vh;
@@ -35,9 +45,16 @@
             letter-spacing: 2px;
         }
 
-        .logo .up { color: #ff8c42; }
+        .logo .up {
+            color: #ff8c42;
+        }
 
-        .content { flex: 1; display: flex; align-items: center; justify-content: center; }
+        .content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         .button-container {
             position: absolute;
@@ -88,7 +105,9 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .btn:active { transform: translateY(0); }
+        .btn:active {
+            transform: translateY(0);
+        }
 
         .login-link {
             text-align: center;
@@ -104,38 +123,69 @@
             transition: color 0.3s ease;
         }
 
-        .login-link a:hover { color: #666; }
+        .login-link a:hover {
+            color: #666;
+        }
 
         @media (max-width: 768px) {
-            .logo { font-size: 36px; margin-top: 30px; }
-            .button-container { max-width: 90%; bottom: 40px; }
-            .btn { padding: 16px 25px; font-size: 18px; }
+            .logo {
+                font-size: 36px;
+                margin-top: 30px;
+            }
+
+            .button-container {
+                max-width: 90%;
+                bottom: 40px;
+            }
+
+            .btn {
+                padding: 16px 25px;
+                font-size: 18px;
+            }
         }
 
         @media (max-width: 480px) {
-            .logo { font-size: 28px; margin-top: 20px; }
-            .btn { padding: 14px 20px; font-size: 16px; }
+            .logo {
+                font-size: 28px;
+                margin-top: 20px;
+            }
+
+            .btn {
+                padding: 14px 20px;
+                font-size: 16px;
+            }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Iframe overlay (signup) */
         .iframe-overlay {
-            display: none;               /* hidden by default */
+            display: none;
+            /* hidden by default */
             position: fixed;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 9999;
             align-items: stretch;
             justify-content: center;
         }
 
-        .iframe-overlay.active { display: flex; }
+        .iframe-overlay.active {
+            display: flex;
+        }
 
         /* Container for the iframe so we can style a card-like area */
         .iframe-card {
@@ -148,7 +198,7 @@
             background: #222;
             border-radius: 12px;
             overflow: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
         }
@@ -174,7 +224,7 @@
         }
 
         .close-btn {
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             color: white;
             border: none;
             padding: 10px 12px;
@@ -184,14 +234,20 @@
             backdrop-filter: blur(4px);
         }
 
-        .close-btn:hover { background: rgba(0,0,0,0.8); }
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
 
         /* small responsive adjustments for iframe-card */
         @media (max-width: 520px) {
-            .iframe-card { margin: 10px; border-radius: 6px; }
+            .iframe-card {
+                margin: 10px;
+                border-radius: 6px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container" id="mainContainer">
         <div class="logo">LORRY <span class="up">Pilot</span></div>
@@ -206,7 +262,8 @@
         </div>
 
         <div class="login-link">
-            Already have your account? <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\2signin.html" onclick="handleLogin(event)">Log in</a>
+            Already have your account? <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\2signin.html"
+                onclick="handleLogin(event)">Log in</a>
         </div>
     </div>
 
@@ -236,7 +293,7 @@
          * This is the function requested: handleSignIn()
          */
         function handleSignUp() {
-             signupFrame.src = '3register.html';
+            signupFrame.src = '3register.html';
             // show overlay and hide main container
             iframeOverlay.classList.add('active');
             // optional: hide background for visual clarity
@@ -249,7 +306,7 @@
          * Also let Become a Transporter open the same signup page
          */
         function handleBecomeDriver() {
-             signupFrame.src = '3register.html';
+            signupFrame.src = '3register.html';
             // show overlay and hide main container
             iframeOverlay.classList.add('active');
             // optional: hide background for visual clarity
@@ -331,4 +388,5 @@
         });
     </script>
 </body>
+
 </html>
