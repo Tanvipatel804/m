@@ -1248,75 +1248,189 @@
             flex-direction: column;
         }
 
-        /* ── Trip selector bar (demo nav) ── */
-        .trip-selector {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, .6);
-            backdrop-filter: blur(8px);
+        /* ── App Header ── */
+        .app-header {
+            background: linear-gradient(135deg, #1565C0, #0D47A1);
+            color: white;
+            padding: 12px 16px;
             display: flex;
-            gap: 8px;
-            padding: 8px 12px;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .35);
             z-index: 3000;
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            gap: 12px;
         }
 
-        .trip-sel-btn {
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1.5px solid rgba(255, 255, 255, .25);
-            background: rgba(255, 255, 255, .08);
-            color: rgba(255, 255, 255, .7);
-            font-size: 12px;
-            font-weight: 700;
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-menu-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .15);
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: .2s;
+        }
+
+        .app-menu-btn:hover {
+            background: rgba(255, 255, 255, .25);
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: .02em;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .app-logo-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .app-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, .15);
+            padding: 5px 12px 5px 10px;
+            border-radius: 25px;
             cursor: pointer;
             transition: .2s;
         }
 
-        .trip-sel-btn:hover,
-        .trip-sel-btn.active {
-            background: #1565C0;
-            border-color: #1565C0;
-            color: white;
+        .app-status-toggle:hover {
+            background: rgba(255, 255, 255, .22);
         }
 
-        .trip-sel-label {
-            color: rgba(255, 255, 255, .4);
+        .app-status-text {
+            font-weight: 800;
             font-size: 12px;
+            letter-spacing: .05em;
+            color: #fff;
+            transition: .2s;
+        }
+
+        .app-toggle {
+            width: 42px;
+            height: 22px;
+            background: rgba(255, 255, 255, .3);
+            border-radius: 11px;
+            position: relative;
+            transition: .3s;
+            flex-shrink: 0;
+        }
+
+        .app-toggle.on {
+            background: rgba(255, 255, 255, .9);
+        }
+
+        .app-toggle-slider {
+            width: 18px;
+            height: 18px;
+            background: #0D47A1;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            transition: .3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+        }
+
+        .app-toggle.off .app-toggle-slider {
+            right: auto;
+            left: 2px;
+            background: #9ca3af;
+        }
+
+        .app-notif-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .15);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            margin-right: 4px;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: .2s;
+            position: relative;
+        }
+
+        .app-notif-btn:hover {
+            background: rgba(255, 255, 255, .25);
+        }
+
+        .app-notif-dot {
+            width: 8px;
+            height: 8px;
+            background: #f87171;
+            border-radius: 50%;
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            border: 1.5px solid #1565C0;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Demo trip switcher -->
-    <div class="trip-selector">
-        <span class="trip-sel-label">Open Trip:</span>
-        <button class="trip-sel-btn active"
-            onclick="openTripDetail(1);this.closest('.trip-selector').querySelectorAll('.trip-sel-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Trip
-            #001</button>
-        <button class="trip-sel-btn"
-            onclick="openTripDetail(2);this.closest('.trip-selector').querySelectorAll('.trip-sel-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Trip
-            #002</button>
-        <button class="trip-sel-btn"
-            onclick="openTripDetail(3);this.closest('.trip-selector').querySelectorAll('.trip-sel-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Trip
-            #003</button>
+    <!-- App Header -->
+    <div class="app-header">
+        <div class="app-header-left">
+            <button class="app-menu-btn" onclick="alert('Menu')"><i class="fas fa-bars"></i></button>
+            <div class="app-logo">
+                <span class="app-logo-icon">🚚</span>
+                LORRY
+            </div>
+        </div>
+        <div class="app-header-right">
+            <div class="app-status-toggle" id="appStatusToggle" onclick="toggleAppStatus()">
+                <span class="app-status-text" id="appStatusText">ONLINE</span>
+                <div class="app-toggle on" id="appToggle">
+                    <div class="app-toggle-slider"></div>
+                </div>
+            </div>
+            <button class="app-notif-btn" onclick="alert('Notifications')">
+                <i class="fas fa-bell"></i>
+                <div class="app-notif-dot"></div>
+            </button>
+        </div>
     </div>
 
     <!-- ══ TRIP DETAIL OVERLAY (full page) ══ -->
     <div id="tripDetailOverlay">
 
-        <!-- Header -->
-        <div class="td-header" style="margin-top:46px;">
-            <button class="td-back-btn"
-                onclick="alert('Back — in standalone mode this just closes. In the main app this returns to the trip list.')"><i
-                    class="fas fa-arrow-left"></i></button>
-            <div class="td-title" id="tdTitle">Trip #001 — Allotment</div>
+        <!-- Trip Detail Header -->
+        <div class="td-header">
+            <button class="td-back-btn" onclick="alert('Back')"><i class="fas fa-arrow-left"></i></button>
+            <div class="td-title" id="tdTitle">Trip #001 — Single Trip</div>
             <span class="td-trip-badge badge-inprogress" id="tdBadge">In Progress</span>
         </div>
 
@@ -2107,32 +2221,18 @@
     </div><!-- /tripDetailOverlay -->
 
     <script>
-        /* ── Trip Data ── */
+        /* ── Trip Data (single trip) ── */
         const tripData = {
             1: {
-                title: 'Trip #001 — Allotment', badge: 'In Progress', badgeClass: 'badge-inprogress',
+                title: 'Trip #001 — Single Trip', badge: 'In Progress', badgeClass: 'badge-inprogress',
                 senderName: 'Rajesh Kumar', senderAddr: '12, Industrial Area, Sector 5, Mumbai — 400001',
                 receiverName: 'Suresh Mehta', receiverAddr: 'Mehta Warehouse, NH-48, Pune — 411001',
                 payment: '₹20,000', weight: '5,000 KG', cargo: 'Cement (Packaged)', est: '~2.5 hrs', dist: '86 KM',
                 fare: '₹20,000', schedEta: '10:30 AM', schedInfo: 'Duration 2.5 hrs · Distance 86 km'
-            },
-            2: {
-                title: 'Trip #002 — Allotment', badge: 'Incomplete', badgeClass: 'badge-incomplete',
-                senderName: 'Anita Singh', senderAddr: 'Plot 7, MIDC, Nashik Road, Nashik — 422101',
-                receiverName: 'Kumar Logistics', receiverAddr: 'Kumar Cold Storage, Aurangabad — 431001',
-                payment: '₹15,000', weight: '8,000 KG', cargo: 'Industrial Goods', est: '~3.5 hrs', dist: '142 KM',
-                fare: '₹15,000', schedEta: '2:00 PM', schedInfo: 'Duration 3.5 hrs · Distance 142 km'
-            },
-            3: {
-                title: 'Trip #003 — Allotment', badge: 'Completed', badgeClass: 'badge-completed',
-                senderName: 'Deepak Sharma', senderAddr: '45, Logistics Park, Bhiwandi — 421302',
-                receiverName: 'Singh Distribution', receiverAddr: 'Singh DC, Thane West, Mumbai — 400601',
-                payment: '₹23,000', weight: '12,400 KG', cargo: 'FMCG Goods', est: '~2.5 hrs', dist: '58 KM',
-                fare: '₹23,000', schedEta: '7:15 AM', schedInfo: 'Duration 2.5 hrs · Distance 58 km'
             }
         };
 
-        var tripPageState = { 1: 1, 2: 1, 3: 7 };
+        var tripPageState = { 1: 1 };
 
         function openTripDetail(tripId) {
             var d = tripData[tripId] || tripData[1];
@@ -2289,6 +2389,16 @@
         function tdClearSig(id) { var c = document.getElementById(id); if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height); }
         function tdApprovePickup() { var c = document.getElementById('tdCvPickup'); var d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; if (!Array.from(d).some(function (v) { return v !== 0; })) { alert('Please sign before approving.'); return; } alert('✅ Pickup BOL approved! Trip started.'); tdGoTo(4); }
         function tdApproveDelivery() { alert('✅ Delivery receipt confirmed!'); tdGoTo(7); }
+
+        /* ── App Header — Online/Offline Toggle ── */
+        var appOnline = true;
+        function toggleAppStatus() {
+            appOnline = !appOnline;
+            var toggle = document.getElementById('appToggle');
+            var text = document.getElementById('appStatusText');
+            text.textContent = appOnline ? 'ONLINE' : 'OFFLINE';
+            toggle.className = 'app-toggle ' + (appOnline ? 'on' : 'off');
+        }
 
         /* ── Init ── */
         window.addEventListener('load', function () { openTripDetail(1); });
