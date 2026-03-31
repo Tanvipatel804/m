@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -23,7 +28,11 @@
             background: #e3e8ef;
             width: 100%;
         }
-        #map { width: 100%; height: 100%; }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
 
         .map-button {
             position: absolute;
@@ -36,15 +45,34 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
             transition: all 0.2s;
             z-index: 1000;
         }
-        .map-button:hover { background: #f5f5f5; box-shadow: 0 3px 8px rgba(0,0,0,0.4); }
-        .menu-btn      { top: 15px; left: 15px; }
-        .book-btn      { bottom: 20px; left: 15px; }
-        .location-btn  { top: 15px; right: 15px; }
-        .location-btn a { color: inherit; }
+
+        .map-button:hover {
+            background: #f5f5f5;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .menu-btn {
+            top: 15px;
+            left: 15px;
+        }
+
+        .book-btn {
+            bottom: 20px;
+            left: 15px;
+        }
+
+        .location-btn {
+            top: 15px;
+            right: 15px;
+        }
+
+        .location-btn a {
+            color: inherit;
+        }
 
         /* Zoom buttons — stacked vertically, joined */
         .zoom-group {
@@ -56,6 +84,7 @@
             gap: 0;
             z-index: 1000;
         }
+
         .zoom-group .map-button {
             position: static;
             border-radius: 0;
@@ -64,41 +93,38 @@
             width: 40px;
             height: 40px;
         }
+
         .zoom-group .map-button:first-child {
             border-radius: 8px 8px 0 0;
         }
+
         .zoom-group .map-button:last-child {
             border-radius: 0 0 8px 8px;
             border-bottom: none;
         }
+
         .zoom-group {
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
             border-radius: 8px;
             overflow: hidden;
         }
 
-        .search-btn   { bottom: 30px; right: 42%; width: 200px; border-radius: 20px; border: 2px solid white; }
-        .settings-btn { bottom: 15px; right: 15px; }
-        .settings-btn a { color: inherit; }
-
-        .go-offline-btn {
-            position: absolute;
-            top: 20px; left: 50%;
-            transform: translateX(-50%);
-            background: orangered;
-            color: white;
-            border: none;
-            padding: 12px 32px;
-            border-radius: 22px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-            transition: all 0.2s;
-            z-index: 1000;
+        .search-btn {
+            bottom: 30px;
+            right: 42%;
+            width: 200px;
+            border-radius: 20px;
+            border: 2px solid white;
         }
-        .go-offline-btn a { color: white; text-decoration: none; }
-        .go-offline-btn:hover { background: rgb(238,95,42); }
+
+        .settings-btn {
+            bottom: 15px;
+            right: 15px;
+        }
+
+        .settings-btn a {
+            color: inherit;
+        }
 
         /* ── Content ── */
         .content-container {
@@ -108,7 +134,7 @@
             position: relative;
             z-index: 10;
             min-height: 60vh;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
             padding-bottom: 90px;
         }
 
@@ -125,46 +151,90 @@
             position: relative;
             overflow: hidden;
         }
+
         .ad-banner::before {
             content: '';
             position: absolute;
-            top: -50%; right: -20px;
-            width: 100px; height: 200px;
-            background: rgba(255,255,255,0.1);
+            top: -50%;
+            right: -20px;
+            width: 100px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50px;
             transform: rotate(45deg);
         }
-        .ad-content { flex: 1; }
-        .ad-title   { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .ad-subtitle{ font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
-        .ad-button  {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white; padding: 8px 15px;
-            border-radius: 20px; font-size: 12px;
-            cursor: pointer; transition: all 0.3s;
+
+        .ad-content {
+            flex: 1;
         }
-        .ad-button:hover { background: rgba(255,255,255,0.3); }
+
+        .ad-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .ad-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .ad-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ad-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         .ad-icon {
-            width: 40px; height: 40px;
-            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; margin-left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-left: 15px;
         }
+
         .close-ad {
-            position: absolute; top: 10px; right: 15px;
-            background: rgba(255,255,255,0.2);
-            border: none; color: white;
-            width: 25px; height: 25px;
-            border-radius: 50%; cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
             font-size: 16px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* ── Trip Header ── */
-        .trip-header { padding: 20px 20px 0; }
-        .trip-title  { font-size: 26px; font-weight: bold; color: #333; margin-bottom: 16px; }
+        .trip-header {
+            padding: 20px 20px 0;
+        }
+
+        .trip-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 16px;
+        }
 
         /* ── Trip Options ── */
         .trip-options {
@@ -172,6 +242,7 @@
             gap: 15px;
             padding: 0 20px 20px;
         }
+
         .trip-option {
             flex: 1;
             background: #f8f9fa;
@@ -182,19 +253,49 @@
             transition: all 0.3s;
             border: 2px solid transparent;
         }
-        .trip-option:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .trip-option.active { background: #e3f2fd; border-color: #2196f3; }
+
+        .trip-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .trip-option.active {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
         .trip-icon {
-            width: 50px; height: 40px;
+            width: 50px;
+            height: 40px;
             margin: 0 auto 12px;
             border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 22px;
         }
-        .rides-icon    { background: linear-gradient(135deg, #4caf50, #45a049); color: white; }
-        .schedule-icon { background: linear-gradient(135deg, #2196f3, #1976d2); color: white; }
-        .trip-label    { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 3px; }
-        .trip-subtitle { font-size: 12px; color: #666; }
+
+        .rides-icon {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+        }
+
+        .schedule-icon {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+        }
+
+        .trip-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .trip-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
 
         /* ── Filter Bar ── */
         .filter-bar {
@@ -224,17 +325,21 @@
             font-weight: 600;
             color: #444;
             cursor: pointer;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             transition: all 0.2s;
             white-space: nowrap;
         }
+
         .filter-btn:hover {
             border-color: #2196f3;
             color: #2196f3;
             background: #e8f4fd;
-            box-shadow: 0 2px 8px rgba(33,150,243,0.15);
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.15);
         }
-        .filter-btn .btn-icon { font-size: 14px; }
+
+        .filter-btn .btn-icon {
+            font-size: 14px;
+        }
 
         .sort-select {
             display: flex;
@@ -248,9 +353,10 @@
             font-weight: 600;
             color: #444;
             cursor: pointer;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             transition: all 0.2s;
         }
+
         .sort-select select {
             border: none;
             outline: none;
@@ -260,20 +366,23 @@
             color: #444;
             cursor: pointer;
         }
+
         .sort-select:hover {
             border-color: #2196f3;
             color: #2196f3;
         }
 
         /* ── Trip Cards (MT-trips style) ── */
-        .transaction-cards { padding: 0 16px; }
+        .transaction-cards {
+            padding: 0 16px;
+        }
 
         .trip-card {
             background: white;
             border-radius: 10px;
             padding: 12px 14px;
             margin-bottom: 10px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.2s;
             border-left: 4px solid #ddd;
             display: grid;
@@ -281,15 +390,31 @@
             gap: 14px;
             align-items: center;
         }
+
         .trip-card:hover {
-            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
             transform: translateX(3px);
         }
-        .trip-card { cursor: pointer; }
-        .trip-card.single    { border-left-color: #f093fb; }
-        .trip-card.allotment { border-left-color: #4facfe; }
-        .trip-card.contract  { border-left-color: #43e97b; }
-        .trip-card.return    { border-left-color: #ffa94d; }
+
+        .trip-card {
+            cursor: pointer;
+        }
+
+        .trip-card.single {
+            border-left-color: #f093fb;
+        }
+
+        .trip-card.allotment {
+            border-left-color: #4facfe;
+        }
+
+        .trip-card.contract {
+            border-left-color: #43e97b;
+        }
+
+        .trip-card.return {
+            border-left-color: #ffa94d;
+        }
 
         /* LEFT col */
         .vehicle-compact {
@@ -298,6 +423,7 @@
             align-items: center;
             gap: 3px;
         }
+
         .truck-model-name {
             font-size: 0.61rem;
             font-weight: 800;
@@ -306,7 +432,12 @@
             letter-spacing: 0.04em;
             text-align: center;
         }
-        .vehicle-compact svg { width: 96px; height: 54px; }
+
+        .vehicle-compact svg {
+            width: 96px;
+            height: 54px;
+        }
+
         .truck-dims {
             font-size: 0.61rem;
             font-weight: 600;
@@ -320,17 +451,20 @@
             flex-direction: column;
             gap: 6px;
         }
+
         .price-badge-row {
             display: flex;
             align-items: center;
             gap: 8px;
         }
+
         .price-compact {
             font-size: 1.4rem;
             font-weight: 800;
             color: #2c3e50;
             line-height: 1;
         }
+
         .badge-mini {
             padding: 3px 10px;
             border-radius: 12px;
@@ -340,21 +474,54 @@
             color: white;
             white-space: nowrap;
         }
-        .badge-single    { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .badge-allotment { background: linear-gradient(135deg, #4facfe, #00f2fe); color: #003366; }
-        .badge-contract  { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a5c38; }
-        .badge-return    { background: linear-gradient(135deg, #ffa94d, #ff6b35); }
 
-        .route-stack { display: flex; flex-direction: column; align-items: flex-start; }
+        .badge-single {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .badge-allotment {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #003366;
+        }
+
+        .badge-contract {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: #1a5c38;
+        }
+
+        .badge-return {
+            background: linear-gradient(135deg, #ffa94d, #ff6b35);
+        }
+
+        .route-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
         .route-item {
             display: flex;
             align-items: center;
             gap: 5px;
             font-size: 0.77rem;
         }
-        .route-item .r-icon   { font-size: 0.82rem; width: 16px; flex-shrink: 0; }
-        .route-item .location { font-weight: 700; color: #2c3e50; }
-        .route-item .r-time   { color: #aaa; font-size: 0.68rem; margin-left: 4px; }
+
+        .route-item .r-icon {
+            font-size: 0.82rem;
+            width: 16px;
+            flex-shrink: 0;
+        }
+
+        .route-item .location {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .route-item .r-time {
+            color: #aaa;
+            font-size: 0.68rem;
+            margin-left: 4px;
+        }
 
         .route-connector {
             display: flex;
@@ -363,12 +530,15 @@
             padding: 3px 0 3px 7px;
             flex-wrap: wrap;
         }
+
         .connector-line {
-            width: 2px; height: 22px;
+            width: 2px;
+            height: 22px;
             background: #d0d0d0;
             border-radius: 2px;
             flex-shrink: 0;
         }
+
         .duration-pill {
             display: flex;
             align-items: center;
@@ -396,7 +566,12 @@
         }
 
         /* Contract middle */
-        .contract-middle { display: flex; flex-direction: column; gap: 7px; }
+        .contract-middle {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
         .contract-mini {
             background: #fffbf0;
             padding: 8px 10px;
@@ -404,33 +579,62 @@
             font-size: 0.74rem;
             border-left: 3px solid #ffc107;
         }
+
         .contract-mini .ctitle {
-            font-weight: 700; color: #333;
+            font-weight: 700;
+            color: #333;
             margin-bottom: 5px;
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.03em;
         }
-        .contract-mini .details { 
+
+        .contract-mini .details {
             gap: 5px;
         }
-        .contract-mini .item { display: flex; flex-direction: column; gap: 1px; }
+
+        .contract-mini .item {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
         .contract-mini .item-label {
-            font-size: 0.6rem; color: #aaa;
+            font-size: 0.6rem;
+            color: #aaa;
             text-transform: uppercase;
             letter-spacing: 0.03em;
         }
-        .contract-mini .item-value { font-weight: 700; color: #333; font-size: 0.71rem; }
+
+        .contract-mini .item-value {
+            font-weight: 700;
+            color: #333;
+            font-size: 0.71rem;
+        }
 
         /* Return trip */
-        .return-route-wrapper { display: flex; flex-direction: column; gap: 0; }
-        .trip-direction { display: flex; flex-direction: column; align-items: flex-start; }
-        .direction-label {
-            font-size: 0.6rem; font-weight: 800;
-            color: #ff8c42; text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 2px; padding-left: 2px;
+        .return-route-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
         }
+
+        .trip-direction {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .direction-label {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: #ff8c42;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+            padding-left: 2px;
+        }
+
         .return-separator {
             display: flex;
             align-items: center;
@@ -439,7 +643,11 @@
             margin: 2px 0;
             flex-wrap: wrap;
         }
-        .separator-icon { font-size: 0.85rem; color: #ff8c42; }
+
+        .separator-icon {
+            font-size: 0.85rem;
+            color: #ff8c42;
+        }
 
         /* Return trip right column — material top + material bottom */
         .return-right-col {
@@ -476,38 +684,72 @@
             gap: 3px;
             text-align: center;
         }
+
         .mat-photo-box {
-            width: 50px; height: 44px;
-            background: rgba(255,255,255,0.78);
+            width: 50px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.78);
             border-radius: 6px;
             border: 1px solid #ffc84a;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.7rem; line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            line-height: 1;
             margin-bottom: 3px;
         }
-        .mat-row { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+        .mat-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
         .mat-label {
-            font-size: 0.55rem; font-weight: 700;
-            color: #c08020; text-transform: uppercase;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #c08020;
+            text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        .mat-value { font-size: 0.68rem; font-weight: 700; color: #333; line-height: 1.25; }
+
+        .mat-value {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.25;
+        }
+
         .mat-kg {
-            font-size: 0.7rem; font-weight: 800; color: #555;
-            background: rgba(255,255,255,0.65);
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #555;
+            background: rgba(255, 255, 255, 0.65);
             border: 1px solid #ffd27a;
-            padding: 2px 10px; border-radius: 8px; margin-top: 2px;
+            padding: 2px 10px;
+            border-radius: 8px;
+            margin-top: 2px;
         }
 
         /* ── Smart Filters Modal ── */
         .distance-modal {
             display: none;
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
             z-index: 2000;
-            align-items: flex-end; justify-content: center;
+            align-items: flex-end;
+            justify-content: center;
         }
-        .distance-modal.active { display: flex; }
+
+        .distance-modal.active {
+            display: flex;
+        }
+
         .distance-content {
             background: #1a1f2e;
             border-radius: 20px 20px 0 0;
@@ -518,19 +760,33 @@
             padding: 0 0 20px 0;
             animation: slideUp 0.3s ease;
         }
+
         @keyframes slideUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to   { transform: translateY(0);    opacity: 1; }
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
+
         .sf-header {
             padding: 20px 20px 16px;
             border-bottom: 1px solid #2a3044;
         }
+
         .sf-title {
-            font-size: 20px; font-weight: 800; color: white;
-            letter-spacing: 0.08em; text-transform: uppercase;
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             font-family: 'Courier New', monospace;
         }
+
         .sf-section {
             margin: 14px 16px;
             background: #1e2538;
@@ -538,67 +794,123 @@
             padding: 16px 18px;
             border: 1px solid #2a3044;
         }
-        .sf-section.active-green  { border-color: #00c853; box-shadow: 0 0 0 1px #00c853; }
+
+        .sf-section.active-green {
+            border-color: #00c853;
+            box-shadow: 0 0 0 1px #00c853;
+        }
+
         .sf-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
+
         .sf-label {
-            font-size: 13px; font-weight: 800; color: white;
-            letter-spacing: 0.07em; text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
             font-family: 'Courier New', monospace;
         }
+
         .sf-sublabel {
-            font-size: 11px; color: #7a8aaa;
+            font-size: 11px;
+            color: #7a8aaa;
             margin-top: 3px;
             font-family: 'Courier New', monospace;
         }
+
         /* Toggle */
         .sf-toggle {
-            position: relative; width: 52px; height: 28px;
-            cursor: pointer; flex-shrink: 0;
+            position: relative;
+            width: 52px;
+            height: 28px;
+            cursor: pointer;
+            flex-shrink: 0;
         }
-        .sf-toggle input { opacity: 0; width: 0; height: 0; }
+
+        .sf-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
         .sf-toggle-track {
-            position: absolute; inset: 0;
+            position: absolute;
+            inset: 0;
             border-radius: 14px;
             background: #2a3044;
             transition: background 0.3s;
         }
-        .sf-toggle input:checked ~ .sf-toggle-track { background: #00c853; }
-        .sf-toggle-thumb {
-            position: absolute; top: 3px; left: 3px;
-            width: 22px; height: 22px;
-            border-radius: 50%; background: white;
-            transition: transform 0.3s;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+
+        .sf-toggle input:checked~.sf-toggle-track {
+            background: #00c853;
         }
-        .sf-toggle input:checked ~ .sf-toggle-thumb { transform: translateX(24px); }
+
+        .sf-toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            transition: transform 0.3s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .sf-toggle input:checked~.sf-toggle-thumb {
+            transform: translateX(24px);
+        }
+
         /* Blue toggle variant */
-        .sf-toggle.blue input:checked ~ .sf-toggle-track { background: #2979ff; }
+        .sf-toggle.blue input:checked~.sf-toggle-track {
+            background: #2979ff;
+        }
+
         /* Slider */
-        .sf-slider-wrap { margin-top: 14px; }
+        .sf-slider-wrap {
+            margin-top: 14px;
+        }
+
         .sf-slider-labels {
-            display: flex; justify-content: space-between;
-            font-size: 11px; color: #7a8aaa; margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #7a8aaa;
+            margin-bottom: 6px;
             font-family: 'Courier New', monospace;
         }
-        .sf-value { color: #ff9800; font-weight: 800; font-size: 13px; font-family: 'Courier New', monospace; }
-        input[type=range].sf-range {
-            width: 100%; height: 6px; 
-            background: linear-gradient(to right, #ff9800 0%, #ff9800 50%, #2a3044 50%, #2a3044 100%);
-            border-radius: 3px; outline: none; cursor: pointer;
+
+        .sf-value {
+            color: #ff9800;
+            font-weight: 800;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
         }
+
+        input[type=range].sf-range {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, #ff9800 0%, #ff9800 50%, #2a3044 50%, #2a3044 100%);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
         input[type=range].sf-range::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px; height: 20px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #ff9800;
             border: 3px solid #1a1f2e;
             box-shadow: 0 0 0 2px #ff9800;
             cursor: pointer;
         }
+
         /* Load type buttons */
         .sf-load-grid {
             display: grid;
@@ -606,95 +918,170 @@
             gap: 10px;
             margin-top: 14px;
         }
+
         .sf-load-btn {
             background: #1a1f2e;
             border: 1px solid #2a3044;
             border-radius: 10px;
             padding: 12px 4px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 6px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .sf-load-btn:hover { border-color: #ff9800; }
+
+        .sf-load-btn:hover {
+            border-color: #ff9800;
+        }
+
         .sf-load-btn.selected {
             background: #2a2000;
             border-color: #ff9800;
             box-shadow: 0 0 0 1px #ff9800;
         }
-        .sf-load-btn .sf-load-icon { font-size: 22px; }
+
+        .sf-load-btn .sf-load-icon {
+            font-size: 22px;
+        }
+
         .sf-load-btn .sf-load-label {
-            font-size: 9px; font-weight: 700; color: #9aa0b0;
-            text-transform: uppercase; letter-spacing: 0.06em;
+            font-size: 9px;
+            font-weight: 700;
+            color: #9aa0b0;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             font-family: 'Courier New', monospace;
         }
-        .sf-load-btn.selected .sf-load-label { color: #ff9800; }
+
+        .sf-load-btn.selected .sf-load-label {
+            color: #ff9800;
+        }
+
         /* Pickup time pills */
         .sf-pill-row {
-            display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
         }
+
         .sf-pill {
             padding: 7px 14px;
             border-radius: 20px;
-            font-size: 12px; font-weight: 700;
-            background: #1a1f2e; border: 1px solid #2a3044;
-            color: #9aa0b0; cursor: pointer; transition: all 0.2s;
+            font-size: 12px;
+            font-weight: 700;
+            background: #1a1f2e;
+            border: 1px solid #2a3044;
+            color: #9aa0b0;
+            cursor: pointer;
+            transition: all 0.2s;
             font-family: 'Courier New', monospace;
         }
-        .sf-pill:hover { border-color: #7c4dff; color: #c0b0ff; }
+
+        .sf-pill:hover {
+            border-color: #7c4dff;
+            color: #c0b0ff;
+        }
+
         .sf-pill.selected {
-            background: #3d1e8f; border-color: #7c4dff;
+            background: #3d1e8f;
+            border-color: #7c4dff;
             color: white;
         }
+
         /* Direction pills */
         .sf-dir-row {
-            display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
         }
+
         .sf-dir-btn {
             padding: 7px 16px;
             border-radius: 20px;
-            font-size: 12px; font-weight: 700;
-            background: #1a1f2e; border: 1px solid #2a3044;
-            color: #9aa0b0; cursor: pointer; transition: all 0.2s;
+            font-size: 12px;
+            font-weight: 700;
+            background: #1a1f2e;
+            border: 1px solid #2a3044;
+            color: #9aa0b0;
+            cursor: pointer;
+            transition: all 0.2s;
             font-family: 'Courier New', monospace;
         }
-        .sf-dir-btn:hover { border-color: #2979ff; color: #a0c4ff; }
+
+        .sf-dir-btn:hover {
+            border-color: #2979ff;
+            color: #a0c4ff;
+        }
+
         .sf-dir-btn.selected {
-            background: #0d1e44; border-color: #2979ff;
+            background: #0d1e44;
+            border-color: #2979ff;
             color: white;
         }
+
         /* Apply button */
         .sf-apply-btn {
-            display: block; width: calc(100% - 32px);
+            display: block;
+            width: calc(100% - 32px);
             margin: 16px 16px 4px;
             background: #ff9800;
-            border: none; border-radius: 14px;
+            border: none;
+            border-radius: 14px;
             padding: 16px;
-            font-size: 14px; font-weight: 800; color: #1a1200;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            cursor: pointer; transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 800;
+            color: #1a1200;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
             font-family: 'Courier New', monospace;
         }
-        .sf-apply-btn:hover { background: #ffb300; box-shadow: 0 4px 16px rgba(255,152,0,0.4); }
+
+        .sf-apply-btn:hover {
+            background: #ffb300;
+            box-shadow: 0 4px 16px rgba(255, 152, 0, 0.4);
+        }
 
         /* Sort Modal */
         .sort-modal {
             display: none;
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
             z-index: 2000;
-            align-items: center; justify-content: center;
+            align-items: center;
+            justify-content: center;
         }
-        .sort-modal.active { display: flex; }
+
+        .sort-modal.active {
+            display: flex;
+        }
+
         .sort-content {
             background: white;
             padding: 28px;
             border-radius: 20px;
             margin: 20px;
-            max-width: 360px; width: 100%;
+            max-width: 360px;
+            width: 100%;
         }
-        .sort-title { font-size: 18px; font-weight: bold; margin-bottom: 18px; text-align: center; }
+
+        .sort-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
         .sort-option {
             padding: 14px 18px;
             border: 2px solid #f0f0f0;
@@ -702,63 +1089,112 @@
             margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex; align-items: center; gap: 10px;
-            font-weight: 600; font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 14px;
         }
-        .sort-option:hover    { border-color: #2196f3; background: #f8f9fa; }
-        .sort-option.selected { border-color: #2196f3; background: #e3f2fd; color: #2196f3; }
+
+        .sort-option:hover {
+            border-color: #2196f3;
+            background: #f8f9fa;
+        }
+
+        .sort-option.selected {
+            border-color: #2196f3;
+            background: #e3f2fd;
+            color: #2196f3;
+        }
 
         /* ── Bottom Nav ── */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: white;
             border-top: 1px solid #e0e0e0;
             display: flex;
             padding: 2px 0;
             z-index: 100;
         }
+
         .nav-item {
-            flex: 1; text-align: center;
-            padding: 10px; cursor: pointer;
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
             transition: all 0.3s;
         }
-        .nav-item:hover  { background: #f8f9fa; }
-        .nav-item.active { color: #2196f3; }
-        .nav-icon  { font-size: 24px; margin-bottom: 4px; display: block; }
-        .nav-label { font-size: 13px; font-weight: 500; }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+
+        .nav-item.active {
+            color: #2196f3;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .nav-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
             .trip-card {
                 grid-template-columns: 88px 1fr;
             }
+
             .material-block {
                 grid-column: 1 / 3;
                 flex-direction: row;
                 justify-content: center;
                 gap: 12px;
             }
-            .trip-title  { font-size: 22px; }
-            .price-compact { font-size: 1.2rem; }
+
+            .trip-title {
+                font-size: 22px;
+            }
+
+            .price-compact {
+                font-size: 1.2rem;
+            }
         }
+
         @media (max-width: 500px) {
             .trip-card {
                 grid-template-columns: 1fr;
             }
+
             .material-block {
                 grid-column: 1;
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: center;
             }
+
             .filter-bar {
                 justify-content: flex-end;
                 gap: 8px;
             }
-            .trip-options { gap: 10px; }
+
+            .trip-options {
+                gap: 10px;
+            }
         }
+
         @media (max-width: 380px) {
-            .filter-btn, .sort-select {
+
+            .filter-btn,
+            .sort-select {
                 padding: 7px 12px;
                 font-size: 12px;
             }
@@ -777,50 +1213,88 @@
             box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
             overflow-y: auto;
         }
-        .sidebar-menu.open { left: 0; }
+
+        .sidebar-menu.open {
+            left: 0;
+        }
+
         .sidebar-menu-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 1999;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .sidebar-menu-overlay.open { opacity: 1; visibility: visible; }
+
+        .sidebar-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .sidebar-menu-header {
             padding: 30px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
         }
+
         .close-menu-btn {
             position: absolute;
-            top: 15px; right: 15px;
+            top: 15px;
+            right: 15px;
             background: transparent;
             border: none;
             color: #fff;
             font-size: 24px;
             cursor: pointer;
-            width: 35px; height: 35px;
-            display: flex; align-items: center; justify-content: center;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 50%;
             transition: background 0.2s;
         }
-        .close-menu-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .close-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .profile-avatar {
-            width: 80px; height: 80px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             margin: 0 auto 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 35px; color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: white;
             border: 3px solid rgba(255, 255, 255, 0.2);
         }
-        .profile-name { color: white; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-        .profile-rating { color: #bbb; font-size: 13px; }
-        .sidebar-menu-items { padding: 10px 0; }
+
+        .profile-name {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .profile-rating {
+            color: #bbb;
+            font-size: 13px;
+        }
+
+        .sidebar-menu-items {
+            padding: 10px 0;
+        }
+
         .sidebar-menu-item {
             padding: 16px 25px;
             color: #e0e0e0;
@@ -832,291 +1306,1407 @@
             gap: 12px;
             border-left: 3px solid transparent;
         }
+
         .sidebar-menu-item a {
             margin-left: 10px;
             color: inherit;
             text-decoration: none;
         }
+
         .sidebar-menu-item:hover {
             background: rgba(255, 255, 255, 0.05);
             border-left-color: #667eea;
             color: white;
         }
-        .sidebar-menu-item i { width: 20px; font-size: 16px; }
+
+        .sidebar-menu-item i {
+            width: 20px;
+            font-size: 16px;
+        }
 
         /* ═══════════════════════════════════════════════
            FULL-SCREEN PREFERENCE PAGE  —  DARK THEME
         ═══════════════════════════════════════════════ */
         .pref-modal-overlay {
-            display: none; position: fixed; inset: 0;
-            z-index: 5000; flex-direction: column;
-            background: #0d1120; overflow: hidden;
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            flex-direction: column;
+            background: #0d1120;
+            overflow: hidden;
         }
-        .pref-modal-overlay.active { display: flex; }
+
+        .pref-modal-overlay.active {
+            display: flex;
+        }
 
         /* Top bar */
         .pref-topbar {
             background: #141829;
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 16px; flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            flex-shrink: 0;
             border-bottom: 1px solid #1e2538;
         }
+
         .pref-back {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: #1e2538; border: 1px solid #2a3044;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px; cursor: pointer; color: #aaa;
-            flex-shrink: 0; transition: background 0.2s;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1e2538;
+            border: 1px solid #2a3044;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            color: #aaa;
+            flex-shrink: 0;
+            transition: background 0.2s;
         }
-        .pref-back:hover { background: #2a3044; color: #fff; }
+
+        .pref-back:hover {
+            background: #2a3044;
+            color: #fff;
+        }
+
         .pref-page-title {
-            font-size: 16px; font-weight: 800; color: #fff;
-            font-family: 'Courier New', monospace; letter-spacing: 0.06em;
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.06em;
         }
 
         /* Main toggle pills */
         .pref-main-tabs {
-            background: #141829; padding: 10px 16px 12px;
-            border-bottom: 1px solid #1e2538; flex-shrink: 0;
+            background: #141829;
+            padding: 10px 16px 12px;
+            border-bottom: 1px solid #1e2538;
+            flex-shrink: 0;
         }
+
         .pref-pill-row {
-            display: flex; background: #0d1120;
-            border-radius: 14px; padding: 4px; gap: 4px;
+            display: flex;
+            background: #0d1120;
+            border-radius: 14px;
+            padding: 4px;
+            gap: 4px;
             border: 1px solid #1e2538;
         }
-        .pmain-tab {
-            flex: 1; padding: 10px 0; border: none; border-radius: 11px;
-            font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s;
-            background: transparent; color: #5a6a88;
-            display: flex; align-items: center; justify-content: center; gap: 7px;
-        }
-        .pmain-tab.active { background: #1e2a50; color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
 
-        .pref-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+        .pmain-tab {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            border-radius: 11px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: transparent;
+            color: #5a6a88;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .pmain-tab.active {
+            background: #1e2a50;
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .pref-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
 
         /* ═══════════ MESSAGES TAB — dark ═══════════ */
-        .pref-msg-page { display: none; flex: 1; flex-direction: column; overflow: hidden; }
-        .pref-msg-page.active { display: flex; }
+        .pref-msg-page {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .pref-msg-page.active {
+            display: flex;
+        }
 
         /* Category sidebar */
         .msg-sidebar {
-            background: #141829; display: flex; flex-direction: row;
-            border-bottom: 1px solid #1e2538; flex-shrink: 0; overflow-x: auto;
+            background: #141829;
+            display: flex;
+            flex-direction: row;
+            border-bottom: 1px solid #1e2538;
+            flex-shrink: 0;
+            overflow-x: auto;
         }
+
         .msg-tab-btn {
-            flex: 1; min-width: 90px; display: flex; flex-direction: column; align-items: center;
-            padding: 11px 6px 9px; border: none; background: transparent; cursor: pointer;
-            transition: all 0.2s; border-bottom: 3px solid transparent; gap: 4px; position: relative;
+            flex: 1;
+            min-width: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 11px 6px 9px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            gap: 4px;
+            position: relative;
         }
-        .msg-tab-btn.active         { border-bottom-color: #4caf50; background: #0a1a0d; }
-        .msg-tab-btn.active.opp     { border-bottom-color: #ff9800; background: #1a0e00; }
-        .msg-tab-btn.active.svc     { border-bottom-color: #7c4dff; background: #0f0a1e; }
+
+        .msg-tab-btn.active {
+            border-bottom-color: #4caf50;
+            background: #0a1a0d;
+        }
+
+        .msg-tab-btn.active.opp {
+            border-bottom-color: #ff9800;
+            background: #1a0e00;
+        }
+
+        .msg-tab-btn.active.svc {
+            border-bottom-color: #7c4dff;
+            background: #0f0a1e;
+        }
+
         .msg-tab-icon {
-            width: 40px; height: 40px; border-radius: 11px;
-            display: flex; align-items: center; justify-content: center; font-size: 19px;
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
         }
-        .msg-tab-btn.trips .msg-tab-icon        { background: #0e2014; }
-        .msg-tab-btn.opp .msg-tab-icon          { background: #1e1200; }
-        .msg-tab-btn.svc .msg-tab-icon          { background: #160d2a; }
-        .msg-tab-btn.active.trips .msg-tab-icon { background: #2a7a2a; }
-        .msg-tab-btn.active.opp .msg-tab-icon   { background: #a05000; }
-        .msg-tab-btn.active.svc .msg-tab-icon   { background: #4a2aaa; }
+
+        .msg-tab-btn.trips .msg-tab-icon {
+            background: #0e2014;
+        }
+
+        .msg-tab-btn.opp .msg-tab-icon {
+            background: #1e1200;
+        }
+
+        .msg-tab-btn.svc .msg-tab-icon {
+            background: #160d2a;
+        }
+
+        .msg-tab-btn.active.trips .msg-tab-icon {
+            background: #2a7a2a;
+        }
+
+        .msg-tab-btn.active.opp .msg-tab-icon {
+            background: #a05000;
+        }
+
+        .msg-tab-btn.active.svc .msg-tab-icon {
+            background: #4a2aaa;
+        }
+
         .msg-tab-label {
-            font-size: 10px; font-weight: 700; color: #5a6a88;
-            text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+            font-size: 10px;
+            font-weight: 700;
+            color: #5a6a88;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
             font-family: 'Courier New', monospace;
         }
-        .msg-tab-btn.active .msg-tab-label { color: #c0d0e0; }
+
+        .msg-tab-btn.active .msg-tab-label {
+            color: #c0d0e0;
+        }
+
         .msg-tab-badge {
-            position: absolute; top: 7px; right: 8px;
-            background: #f44336; color: #fff; font-size: 9px; font-weight: 800;
-            min-width: 16px; height: 16px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; padding: 0 3px;
+            position: absolute;
+            top: 7px;
+            right: 8px;
+            background: #f44336;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
         }
 
         /* Search bar — dark */
         .msg-searchbar {
-            background: #141829; display: flex; align-items: center; gap: 10px;
-            padding: 9px 14px; border-bottom: 1px solid #1e2538; flex-shrink: 0;
+            background: #141829;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border-bottom: 1px solid #1e2538;
+            flex-shrink: 0;
         }
+
         .msg-search-wrap {
-            flex: 1; display: flex; align-items: center; background: #0d1120;
-            border-radius: 22px; padding: 7px 14px; gap: 8px; border: 1px solid #2a3044;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #0d1120;
+            border-radius: 22px;
+            padding: 7px 14px;
+            gap: 8px;
+            border: 1px solid #2a3044;
         }
-        .msg-search-wrap i { color: #5a6a88; font-size: 13px; }
+
+        .msg-search-wrap i {
+            color: #5a6a88;
+            font-size: 13px;
+        }
+
         .msg-search-wrap input {
-            border: none; background: transparent; font-size: 13px;
-            outline: none; color: #d0d8f0; flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            outline: none;
+            color: #d0d8f0;
+            flex: 1;
         }
-        .msg-search-wrap input::placeholder { color: #4a5a72; }
+
+        .msg-search-wrap input::placeholder {
+            color: #4a5a72;
+        }
+
         .msg-clear-btn {
-            background: #2a3044; color: #aaa; border: 1px solid #3a4060;
-            border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 700;
-            cursor: pointer; flex-shrink: 0; white-space: nowrap; transition: all 0.2s;
+            background: #2a3044;
+            color: #aaa;
+            border: 1px solid #3a4060;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+            white-space: nowrap;
+            transition: all 0.2s;
         }
-        .msg-clear-btn:hover { background: #3a4060; color: #fff; }
+
+        .msg-clear-btn:hover {
+            background: #3a4060;
+            color: #fff;
+        }
 
         /* Message list */
-        .msg-list-scroll { flex: 1; overflow-y: auto; background: #0d1120; }
-        .msg-panel { display: none; padding: 4px 0 20px; }
-        .msg-panel.active { display: block; }
+        .msg-list-scroll {
+            flex: 1;
+            overflow-y: auto;
+            background: #0d1120;
+        }
+
+        .msg-panel {
+            display: none;
+            padding: 4px 0 20px;
+        }
+
+        .msg-panel.active {
+            display: block;
+        }
 
         /* Message card — dark */
         .msg-card {
-            background: #141829; margin: 8px 12px; border-radius: 12px;
-            border-left: 4px solid #2a7a2a; padding: 14px 15px;
-            border-top: 1px solid #1e2538; border-right: 1px solid #1e2538; border-bottom: 1px solid #1e2538;
-            cursor: pointer; transition: all 0.2s;
+            background: #141829;
+            margin: 8px 12px;
+            border-radius: 12px;
+            border-left: 4px solid #2a7a2a;
+            padding: 14px 15px;
+            border-top: 1px solid #1e2538;
+            border-right: 1px solid #1e2538;
+            border-bottom: 1px solid #1e2538;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .msg-card:hover { background: #1a2040; border-top-color: #2a3044; }
-        .msg-card.opp { border-left-color: #c07000; }
-        .msg-card.svc { border-left-color: #5a3acc; }
-        .mc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
-        .mc-title { font-size: 14px; font-weight: 700; color: #e0e8ff; }
-        .mc-meta  { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
-        .mc-time  { font-size: 11px; color: #5a6a88; white-space: nowrap; font-family: 'Courier New', monospace; }
-        .mc-badge { font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 20px; white-space: nowrap; color: #fff; }
-        .mc-badge.high   { background: #c0220a; }
-        .mc-badge.medium { background: #a05800; }
-        .mc-badge.low    { background: #3a4a5a; }
-        .mc-badge.info   { background: #1a5aaa; }
-        .mc-body  { font-size: 13px; color: #8a9ab8; line-height: 1.55; }
-        .mc-body2 { font-size: 12px; color: #5a6a88; margin-top: 4px; line-height: 1.4; }
+
+        .msg-card:hover {
+            background: #1a2040;
+            border-top-color: #2a3044;
+        }
+
+        .msg-card.opp {
+            border-left-color: #c07000;
+        }
+
+        .msg-card.svc {
+            border-left-color: #5a3acc;
+        }
+
+        .mc-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+
+        .mc-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #e0e8ff;
+        }
+
+        .mc-meta {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .mc-time {
+            font-size: 11px;
+            color: #5a6a88;
+            white-space: nowrap;
+            font-family: 'Courier New', monospace;
+        }
+
+        .mc-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            color: #fff;
+        }
+
+        .mc-badge.high {
+            background: #c0220a;
+        }
+
+        .mc-badge.medium {
+            background: #a05800;
+        }
+
+        .mc-badge.low {
+            background: #3a4a5a;
+        }
+
+        .mc-badge.info {
+            background: #1a5aaa;
+        }
+
+        .mc-body {
+            font-size: 13px;
+            color: #8a9ab8;
+            line-height: 1.55;
+        }
+
+        .mc-body2 {
+            font-size: 12px;
+            color: #5a6a88;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
 
         /* ═══════════ TRIP TAB — dark ═══════════ */
-        .pref-trip-page { display: none; flex: 1; flex-direction: column; overflow: hidden; }
-        .pref-trip-page.active { display: flex; }
+        .pref-trip-page {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .pref-trip-page.active {
+            display: flex;
+        }
 
         .trip-subtabs {
-            background: #141829; padding: 10px 14px;
-            border-bottom: 1px solid #1e2538; display: flex; gap: 8px; flex-shrink: 0;
+            background: #141829;
+            padding: 10px 14px;
+            border-bottom: 1px solid #1e2538;
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
         }
-        .trip-stab {
-            flex: 1; padding: 10px 0; border: 1px solid #2a3044; border-radius: 12px;
-            font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.22s;
-            background: #0d1120; color: #5a6a88;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            font-family: 'Courier New', monospace; letter-spacing: 0.04em;
-        }
-        .trip-stab.active { background: #1e2a50; border-color: #2979ff; color: #fff; box-shadow: 0 2px 12px rgba(41,121,255,0.25); }
 
-        .trip-panel { display: none; flex: 1; overflow-y: auto; }
-        .trip-panel.active { display: block; }
+        .trip-stab {
+            flex: 1;
+            padding: 10px 0;
+            border: 1px solid #2a3044;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.22s;
+            background: #0d1120;
+            color: #5a6a88;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.04em;
+        }
+
+        .trip-stab.active {
+            background: #1e2a50;
+            border-color: #2979ff;
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(41, 121, 255, 0.25);
+        }
+
+        .trip-panel {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .trip-panel.active {
+            display: block;
+        }
 
         /* ─── DASHBOARD ─── */
-        .dash-wrap { background: #0d1120; min-height: 100%; padding: 16px; }
-        .db-toprow { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
-        .db-title  { font-size: 26px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; letter-spacing: 0.04em; }
-        .db-date   { font-size: 12px; color: #5a6a88; font-family: 'Courier New', monospace; margin-top: 2px; }
+        .dash-wrap {
+            background: #0d1120;
+            min-height: 100%;
+            padding: 16px;
+        }
+
+        .db-toprow {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .db-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.04em;
+        }
+
+        .db-date {
+            font-size: 12px;
+            color: #5a6a88;
+            font-family: 'Courier New', monospace;
+            margin-top: 2px;
+        }
 
         /* Status badge — clickable */
         .db-status {
-            background: #141829; border: 1.5px solid #2a3044; border-radius: 12px;
-            padding: 8px 14px; text-align: center; cursor: pointer;
-            transition: all 0.2s; position: relative; min-width: 100px;
+            background: #141829;
+            border: 1.5px solid #2a3044;
+            border-radius: 12px;
+            padding: 8px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            min-width: 100px;
         }
-        .db-status:hover { border-color: #4a5a88; background: #1e2538; }
-        .db-status-lbl { font-size: 9px; color: #5a6a88; font-family: 'Courier New', monospace; letter-spacing: 0.1em; display: block; margin-bottom: 3px; }
-        .db-status-val { font-size: 12px; font-weight: 900; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .db-status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .db-status-chevron { font-size: 9px; color: #5a6a88; margin-left: 2px; }
+
+        .db-status:hover {
+            border-color: #4a5a88;
+            background: #1e2538;
+        }
+
+        .db-status-lbl {
+            font-size: 9px;
+            color: #5a6a88;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .db-status-val {
+            font-size: 12px;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .db-status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .db-status-chevron {
+            font-size: 9px;
+            color: #5a6a88;
+            margin-left: 2px;
+        }
 
         /* Status dropdown */
         .db-status-dropdown {
-            display: none; position: absolute; top: calc(100% + 6px); right: 0;
-            background: #141829; border: 1px solid #2a3044; border-radius: 12px;
-            overflow: hidden; z-index: 100; min-width: 160px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background: #141829;
+            border: 1px solid #2a3044;
+            border-radius: 12px;
+            overflow: hidden;
+            z-index: 100;
+            min-width: 160px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
-        .db-status-dropdown.open { display: block; }
+
+        .db-status-dropdown.open {
+            display: block;
+        }
+
         .db-status-opt {
-            display: flex; align-items: center; gap: 10px;
-            padding: 11px 14px; cursor: pointer; transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            cursor: pointer;
+            transition: background 0.15s;
             border-bottom: 1px solid #1e2538;
         }
-        .db-status-opt:last-child { border-bottom: none; }
-        .db-status-opt:hover { background: #1e2538; }
-        .db-status-opt.selected { background: #1a2540; }
-        .db-status-opt .opt-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-        .db-status-opt .opt-label { font-size: 12px; font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 0.05em; }
-        .db-status-opt .opt-check { margin-left: auto; font-size: 12px; color: #43e97b; display: none; }
-        .db-status-opt.selected .opt-check { display: block; }
 
-        .db-card { background: #141829; border-radius: 16px; padding: 16px; margin-bottom: 14px; border: 1px solid #1e2538; }
-        .db-card-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .db-card-title { font-size: 11px; font-weight: 800; color: #7a8aaa; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Courier New', monospace; }
-        .db-card-badge { font-size: 10px; color: #5a6a88; font-family: 'Courier New', monospace; }
-        .db-gauges { display: flex; justify-content: space-around; gap: 8px; }
-        .db-gauge  { text-align: center; flex: 1; }
-        .db-gauge svg { display: block; margin: 0 auto 4px; }
-        .db-gauge-lbl { font-size: 10px; font-weight: 700; color: #7a8aaa; letter-spacing: 0.06em; font-family: 'Courier New', monospace; }
-        .db-gauge-sub { font-size: 10px; color: #5a6a88; font-family: 'Courier New', monospace; }
-        .db-load-hdr   { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .db-load-title { font-size: 13px; font-weight: 900; color: #ffa94d; letter-spacing: 0.08em; font-family: 'Courier New', monospace; }
-        .db-enroute    { background: #0a2a1a; border: 1px solid #43e97b; border-radius: 8px; padding: 3px 10px; font-size: 10px; color: #43e97b; font-family: 'Courier New', monospace; }
-        .db-route-row  { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .db-route-city { flex: 1; }
-        .db-route-tag  { font-size: 9px; color: #5a6a88; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
-        .db-route-name { font-size: 16px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; }
-        .db-route-sub  { font-size: 10px; color: #5a6a88; }
-        .db-arrow      { font-size: 18px; color: #ffa94d; }
-        .db-prog-lbl   { display: flex; justify-content: space-between; font-size: 10px; color: #7a8aaa; font-family: 'Courier New', monospace; margin-bottom: 5px; }
-        .db-prog-track { background: #1e2538; border-radius: 4px; height: 8px; margin-bottom: 14px; overflow: hidden; }
-        .db-prog-fill  { height: 100%; background: linear-gradient(90deg,#ffa94d,#ff6b35); border-radius: 4px; width: 68%; }
-        .db-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-        .db-stat  { background: #0d1120; border-radius: 10px; padding: 10px 6px; text-align: center; border: 1px solid #1e2538; }
-        .db-stat-icon { font-size: 16px; }
-        .db-stat-lbl  { font-size: 9px; color: #5a6a88; font-family: 'Courier New', monospace; letter-spacing: 0.06em; margin-top: 2px; }
-        .db-stat-val  { font-size: 13px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; }
-        .db-reload { background: #141829; border-radius: 14px; padding: 14px 16px; border: 1px solid #1e2538; display: flex; align-items: center; gap: 12px; }
-        .db-reload-dot   { width: 10px; height: 10px; border-radius: 50%; background: #43e97b; flex-shrink: 0; }
-        .db-reload-info  { flex: 1; }
-        .db-reload-title { font-size: 13px; font-weight: 900; color: #43e97b; font-family: 'Courier New', monospace; letter-spacing: 0.05em; }
-        .db-reload-sub   { font-size: 11px; color: #5a6a88; }
-        .db-reload-btn   { background: #43e97b; color: #0a1a10; border: none; border-radius: 10px; padding: 9px 16px; font-size: 12px; font-weight: 900; cursor: pointer; font-family: 'Courier New', monospace; white-space: nowrap; transition: background 0.2s; }
-        .db-reload-btn:hover { background: #6effa0; }
+        .db-status-opt:last-child {
+            border-bottom: none;
+        }
+
+        .db-status-opt:hover {
+            background: #1e2538;
+        }
+
+        .db-status-opt.selected {
+            background: #1a2540;
+        }
+
+        .db-status-opt .opt-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .db-status-opt .opt-label {
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .db-status-opt .opt-check {
+            margin-left: auto;
+            font-size: 12px;
+            color: #43e97b;
+            display: none;
+        }
+
+        .db-status-opt.selected .opt-check {
+            display: block;
+        }
+
+        .db-card {
+            background: #141829;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid #1e2538;
+        }
+
+        .db-card-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .db-card-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #7a8aaa;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-card-badge {
+            font-size: 10px;
+            color: #5a6a88;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-gauges {
+            display: flex;
+            justify-content: space-around;
+            gap: 8px;
+        }
+
+        .db-gauge {
+            text-align: center;
+            flex: 1;
+        }
+
+        .db-gauge svg {
+            display: block;
+            margin: 0 auto 4px;
+        }
+
+        .db-gauge-lbl {
+            font-size: 10px;
+            font-weight: 700;
+            color: #7a8aaa;
+            letter-spacing: 0.06em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-gauge-sub {
+            font-size: 10px;
+            color: #5a6a88;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-load-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .db-load-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: #ffa94d;
+            letter-spacing: 0.08em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-enroute {
+            background: #0a2a1a;
+            border: 1px solid #43e97b;
+            border-radius: 8px;
+            padding: 3px 10px;
+            font-size: 10px;
+            color: #43e97b;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-route-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .db-route-city {
+            flex: 1;
+        }
+
+        .db-route-tag {
+            font-size: 9px;
+            color: #5a6a88;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .db-route-name {
+            font-size: 16px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-route-sub {
+            font-size: 10px;
+            color: #5a6a88;
+        }
+
+        .db-arrow {
+            font-size: 18px;
+            color: #ffa94d;
+        }
+
+        .db-prog-lbl {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #7a8aaa;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 5px;
+        }
+
+        .db-prog-track {
+            background: #1e2538;
+            border-radius: 4px;
+            height: 8px;
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        .db-prog-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffa94d, #ff6b35);
+            border-radius: 4px;
+            width: 68%;
+        }
+
+        .db-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .db-stat {
+            background: #0d1120;
+            border-radius: 10px;
+            padding: 10px 6px;
+            text-align: center;
+            border: 1px solid #1e2538;
+        }
+
+        .db-stat-icon {
+            font-size: 16px;
+        }
+
+        .db-stat-lbl {
+            font-size: 9px;
+            color: #5a6a88;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.06em;
+            margin-top: 2px;
+        }
+
+        .db-stat-val {
+            font-size: 13px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+
+        .db-reload {
+            background: #141829;
+            border-radius: 14px;
+            padding: 14px 16px;
+            border: 1px solid #1e2538;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .db-reload-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #43e97b;
+            flex-shrink: 0;
+        }
+
+        .db-reload-info {
+            flex: 1;
+        }
+
+        .db-reload-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: #43e97b;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .db-reload-sub {
+            font-size: 11px;
+            color: #5a6a88;
+        }
+
+        .db-reload-btn {
+            background: #43e97b;
+            color: #0a1a10;
+            border: none;
+            border-radius: 10px;
+            padding: 9px 16px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .db-reload-btn:hover {
+            background: #6effa0;
+        }
 
         /* ─── TRIP PLANNER ─── */
-        .tp-wrap  { background: #0a0d16; min-height: 100%; padding: 16px; }
-        .tp-live-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
-        .tp-live-dot { width: 10px; height: 10px; border-radius: 50%; background: #43e97b; animation: tpPulse 1.4s infinite; }
-        @keyframes tpPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.35)} }
-        .tp-live-lbl { font-size: 11px; font-weight: 800; color: #43e97b; letter-spacing: 0.1em; font-family: 'Courier New', monospace; }
-        .tp-heading  { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 2px; }
-        .tp-timer    { font-size: 40px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; margin-bottom: 18px; }
-        .tp-card     { background: #141829; border-radius: 16px; margin-bottom: 20px; overflow: hidden; border: 1px solid #1e2538; }
-        .tp-card-hdr { padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
-        .tp-avatar   { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-        .tp-avatar.org { background: linear-gradient(135deg,#e65100,#ff9800); }
-        .tp-avatar.blu { background: linear-gradient(135deg,#1565c0,#2979ff); }
-        .tp-info   { flex: 1; }
-        .tp-name   { font-size: 15px; font-weight: 800; color: #fff; }
-        .tp-addr   { font-size: 12px; color: #7a8aaa; }
-        .tp-drop   { font-size: 12px; color: #7a8aaa; }
-        .tp-drop b { color: #fff; font-weight: 600; }
-        .tp-fav    { display: inline-flex; align-items: center; gap: 5px; background: #2a1800; border-radius: 10px; padding: 3px 10px; margin-top: 5px; font-size: 11px; color: #ff9800; font-weight: 700; }
-        .tp-menu-btn { background: none; border: none; color: #7a8aaa; font-size: 20px; cursor: pointer; }
-        .tp-map    { background: #1a2030; height: 165px; position: relative; overflow: hidden; }
-        .tp-grid   { position: absolute; inset: 0; background-image: linear-gradient(#1e2540 1px,transparent 1px),linear-gradient(90deg,#1e2540 1px,transparent 1px); background-size: 36px 36px; }
-        .tp-route-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-        .tp-map-lbl { position: absolute; font-size: 9px; font-weight: 700; color: #5a6a88; font-family: 'Courier New', monospace; letter-spacing: 0.06em; }
-        .tp-map-lbl.pu { bottom: 10px; left: 12px; }
-        .tp-map-lbl.do { top: 8px; right: 10px; }
-        .tp-pin    { position: absolute; font-size: 22px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
-        .tp-pin.pu { bottom: 30px; left: 88px; }
-        .tp-pin.do { top: 22px; right: 58px; }
-        .tp-next-title  { font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-        .tp-next-footer { padding: 12px 16px; background: #0f1420; display: flex; align-items: center; gap: 12px; border-top: 1px solid #1e2538; }
-        .tp-ready-icon  { font-size: 18px; color: #7a8aaa; }
-        .tp-ready-info  { flex: 1; }
-        .tp-ready-lbl   { font-size: 12px; font-weight: 700; color: #fff; }
-        .tp-ready-route { font-size: 11px; color: #7a8aaa; }
-        .tp-accept-btn  { background: #2979ff; color: #fff; border: none; border-radius: 10px; padding: 10px 22px; font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
-        .tp-accept-btn:hover { background: #1565c0; }
-        .tp-loc-icon { color: #f44336; font-size: 20px; align-self: flex-start; margin-top: 2px; }
+        .tp-wrap {
+            background: #0a0d16;
+            min-height: 100%;
+            padding: 16px;
+        }
+
+        .tp-live-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 5px;
+        }
+
+        .tp-live-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #43e97b;
+            animation: tpPulse 1.4s infinite;
+        }
+
+        @keyframes tpPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.35)
+            }
+        }
+
+        .tp-live-lbl {
+            font-size: 11px;
+            font-weight: 800;
+            color: #43e97b;
+            letter-spacing: 0.1em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tp-heading {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .tp-timer {
+            font-size: 40px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 18px;
+        }
+
+        .tp-card {
+            background: #141829;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #1e2538;
+        }
+
+        .tp-card-hdr {
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .tp-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .tp-avatar.org {
+            background: linear-gradient(135deg, #e65100, #ff9800);
+        }
+
+        .tp-avatar.blu {
+            background: linear-gradient(135deg, #1565c0, #2979ff);
+        }
+
+        .tp-info {
+            flex: 1;
+        }
+
+        .tp-name {
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .tp-addr {
+            font-size: 12px;
+            color: #7a8aaa;
+        }
+
+        .tp-drop {
+            font-size: 12px;
+            color: #7a8aaa;
+        }
+
+        .tp-drop b {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .tp-fav {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #2a1800;
+            border-radius: 10px;
+            padding: 3px 10px;
+            margin-top: 5px;
+            font-size: 11px;
+            color: #ff9800;
+            font-weight: 700;
+        }
+
+        .tp-menu-btn {
+            background: none;
+            border: none;
+            color: #7a8aaa;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .tp-map {
+            background: #1a2030;
+            height: 165px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tp-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(#1e2540 1px, transparent 1px), linear-gradient(90deg, #1e2540 1px, transparent 1px);
+            background-size: 36px 36px;
+        }
+
+        .tp-route-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tp-map-lbl {
+            position: absolute;
+            font-size: 9px;
+            font-weight: 700;
+            color: #5a6a88;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.06em;
+        }
+
+        .tp-map-lbl.pu {
+            bottom: 10px;
+            left: 12px;
+        }
+
+        .tp-map-lbl.do {
+            top: 8px;
+            right: 10px;
+        }
+
+        .tp-pin {
+            position: absolute;
+            font-size: 22px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .5));
+        }
+
+        .tp-pin.pu {
+            bottom: 30px;
+            left: 88px;
+        }
+
+        .tp-pin.do {
+            top: 22px;
+            right: 58px;
+        }
+
+        .tp-next-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .tp-next-footer {
+            padding: 12px 16px;
+            background: #0f1420;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid #1e2538;
+        }
+
+        .tp-ready-icon {
+            font-size: 18px;
+            color: #7a8aaa;
+        }
+
+        .tp-ready-info {
+            flex: 1;
+        }
+
+        .tp-ready-lbl {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .tp-ready-route {
+            font-size: 11px;
+            color: #7a8aaa;
+        }
+
+        .tp-accept-btn {
+            background: #2979ff;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 22px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .tp-accept-btn:hover {
+            background: #1565c0;
+        }
+
+        .tp-loc-icon {
+            color: #f44336;
+            font-size: 20px;
+            align-self: flex-start;
+            margin-top: 2px;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            height: 52px;
+            background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            z-index: 1500;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-menu-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+
+        .header-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .app-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        /* Notification */
+        .notif-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .notif-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #FF5252;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 9px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #0D47A1;
+        }
+
+        .notif-dropdown {
+            position: absolute;
+            top: 52px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            z-index: 2500;
+            display: none;
+            overflow: hidden;
+        }
+
+        .notif-dropdown.open {
+            display: block;
+        }
+
+        .notif-dropdown-header {
+            padding: 14px 18px;
+            background: #1565C0;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notif-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .notif-item {
+            padding: 13px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .notif-item:hover {
+            background: #f5f9ff;
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .notif-dot.urgent {
+            background: #e74c3c;
+        }
+
+        .notif-dot.info {
+            background: #3498db;
+        }
+
+        .notif-dot.success {
+            background: #2ecc71;
+        }
+
+        .notif-dot.warn {
+            background: #f39c12;
+        }
+
+        .notif-text {
+            flex: 1;
+        }
+
+        .notif-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+
+        .notif-desc {
+            font-size: 11px;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        .notif-time {
+            font-size: 10px;
+            color: #bbb;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        /* Status toggle */
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .status-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            min-width: 44px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #546E7A;
+            border-radius: 26px;
+            transition: 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background: #4CAF50;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Raise sidebar-menu z-index above header */
+        .sidebar-menu {
+            z-index: 3000;
+        }
+
+        .sidebar-menu-overlay {
+            z-index: 2999;
+        }
     </style>
 </head>
+
 <body>
+
+    <!-- ===== PAGE HEADER ===== -->
+    <header class="page-header">
+        <div class="header-left">
+            <button class="header-menu-btn" id="headerMenuBtn" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="app-name">
+                <span>💎⃤</span>
+                <span>LORRY</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="notif-btn" id="notifBtn" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notif-badge">4</span>
+            </button>
+            <div class="status-toggle">
+                <span class="status-label" id="statusLabel">Online</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="statusToggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <!-- Notification Dropdown -->
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-dropdown-header">
+                    <i class="fas fa-bell"></i> Trip Notifications
+                </div>
+                <div class="notif-list" id="notifList"></div>
+            </div>
+        </div>
+    </header>
 
     <!-- Sidebar Menu Overlay -->
     <div class="sidebar-menu-overlay" id="menuOverlay"></div>
@@ -1181,14 +2771,12 @@
     <!-- MAP -->
     <div class="map-section">
         <div id="map"></div>
-        <button class="map-button menu-btn">
-            <i class="fas fa-bars" style="font-size:18px;"></i>
-        </button>
         <button class="map-button book-btn">
             <i class="fas fa-book" style="font-size:16px;"></i>
         </button>
         <button class="map-button location-btn">
-            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\14 settings3sle.html"><i class="fas fa-shield-halved" style="font-size:16px;"></i></a>
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\14 settings3sle.html"><i
+                    class="fas fa-shield-halved" style="font-size:16px;"></i></a>
         </button>
         <div class="zoom-group">
             <button class="map-button" onclick="map.zoomIn()" title="Zoom In">
@@ -1202,10 +2790,8 @@
             <i class="fas fa-search" style="font-size:14px;"></i> Search location
         </button>
         <button class="map-button settings-btn">
-            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\13 filtersetting.html"><i class="fas fa-cog" style="font-size:18px;"></i></a>
-        </button>
-        <button class="go-offline-btn">
-            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\11practice-connect.html">Go Offline</a>
+            <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\13 filtersetting.html"><i class="fas fa-cog"
+                    style="font-size:18px;"></i></a>
         </button>
     </div>
 
@@ -1280,8 +2866,8 @@
         <!-- Main toggle: Messages | Trip -->
         <div class="pref-main-tabs">
             <div class="pref-pill-row">
-                <button class="pmain-tab active" id="pmTab-msg"  onclick="switchPrefTab('msg')">💬 Messages</button>
-                <button class="pmain-tab"         id="pmTab-trip" onclick="switchPrefTab('trip')">🚚 Trip</button>
+                <button class="pmain-tab active" id="pmTab-msg" onclick="switchPrefTab('msg')">💬 Messages</button>
+                <button class="pmain-tab" id="pmTab-trip" onclick="switchPrefTab('trip')">🚚 Trip</button>
             </div>
         </div>
 
@@ -1312,7 +2898,8 @@
                 <div class="msg-searchbar">
                     <div class="msg-search-wrap">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="msgSearchInput" placeholder="Search messages..." oninput="filterMsgCards()">
+                        <input type="text" id="msgSearchInput" placeholder="Search messages..."
+                            oninput="filterMsgCards()">
                     </div>
                     <button class="msg-clear-btn" onclick="clearMsgSearch()">Clear</button>
                 </div>
@@ -1323,72 +2910,145 @@
                     <!-- TRIPS -->
                     <div class="msg-panel active" id="msgp-trips">
                         <div class="msg-card">
-                            <div class="mc-top"><div class="mc-title">Urgent Pickup Request — Dubai Marina</div><div class="mc-meta"><span class="mc-time">8 min ago</span><span class="mc-badge high">HIGH</span></div></div>
-                            <div class="mc-body">High-priority cargo delivery needed from Dubai Marina to Abu Dhabi International Airport. Cargo type: Medical supplies (1.3 tons).</div>
-                            <div class="mc-body2">Time-sensitive delivery required within 3 hours. Premium rate: $280. Client has excellent rating history.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Urgent Pickup Request — Dubai Marina</div>
+                                <div class="mc-meta"><span class="mc-time">8 min ago</span><span
+                                        class="mc-badge high">HIGH</span></div>
+                            </div>
+                            <div class="mc-body">High-priority cargo delivery needed from Dubai Marina to Abu Dhabi
+                                International Airport. Cargo type: Medical supplies (1.3 tons).</div>
+                            <div class="mc-body2">Time-sensitive delivery required within 3 hours. Premium rate: $280.
+                                Client has excellent rating history.</div>
                         </div>
                         <div class="msg-card">
-                            <div class="mc-top"><div class="mc-title">Active Trip Progress Update</div><div class="mc-meta"><span class="mc-time">23 min ago</span><span class="mc-badge medium">MEDIUM</span></div></div>
-                            <div class="mc-body">Current delivery to Sharjah Industrial Area is 85% complete. GPS shows clear traffic ahead. Estimated arrival: 18 minutes.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Active Trip Progress Update</div>
+                                <div class="mc-meta"><span class="mc-time">23 min ago</span><span
+                                        class="mc-badge medium">MEDIUM</span></div>
+                            </div>
+                            <div class="mc-body">Current delivery to Sharjah Industrial Area is 85% complete. GPS shows
+                                clear traffic ahead. Estimated arrival: 18 minutes.</div>
                             <div class="mc-body2">Customer has been notified and is preparing for receipt.</div>
                         </div>
                         <div class="msg-card">
-                            <div class="mc-top"><div class="mc-title">Delivery Completed Successfully</div><div class="mc-meta"><span class="mc-time">1 hour ago</span><span class="mc-badge low">LOW</span></div></div>
-                            <div class="mc-body">Furniture delivery to Al Ain residential complex completed. Customer satisfaction: 5 stars. Payment received: $195 + $25 tip.</div>
-                            <div class="mc-body2">Loading/unloading assistance was appreciated. Customer requests future bookings.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Delivery Completed Successfully</div>
+                                <div class="mc-meta"><span class="mc-time">1 hour ago</span><span
+                                        class="mc-badge low">LOW</span></div>
+                            </div>
+                            <div class="mc-body">Furniture delivery to Al Ain residential complex completed. Customer
+                                satisfaction: 5 stars. Payment received: $195 + $25 tip.</div>
+                            <div class="mc-body2">Loading/unloading assistance was appreciated. Customer requests future
+                                bookings.</div>
                         </div>
                         <div class="msg-card">
-                            <div class="mc-top"><div class="mc-title">Route Change — Traffic on Sheikh Zayed Rd</div><div class="mc-meta"><span class="mc-time">2 hours ago</span><span class="mc-badge medium">MEDIUM</span></div></div>
-                            <div class="mc-body">Traffic delay detected. Alternate route via Al Khail Road recommended. ETA adjusted by +12 minutes.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Route Change — Traffic on Sheikh Zayed Rd</div>
+                                <div class="mc-meta"><span class="mc-time">2 hours ago</span><span
+                                        class="mc-badge medium">MEDIUM</span></div>
+                            </div>
+                            <div class="mc-body">Traffic delay detected. Alternate route via Al Khail Road recommended.
+                                ETA adjusted by +12 minutes.</div>
                         </div>
                         <div class="msg-card">
-                            <div class="mc-top"><div class="mc-title">Load #4821 — Rate Confirmation</div><div class="mc-meta"><span class="mc-time">Yesterday</span><span class="mc-badge info">INFO</span></div></div>
-                            <div class="mc-body">Rate confirmation for load #4821 attached. Please sign and return before pickup window. Broker: FastFreight LLC.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Load #4821 — Rate Confirmation</div>
+                                <div class="mc-meta"><span class="mc-time">Yesterday</span><span
+                                        class="mc-badge info">INFO</span></div>
+                            </div>
+                            <div class="mc-body">Rate confirmation for load #4821 attached. Please sign and return
+                                before pickup window. Broker: FastFreight LLC.</div>
                         </div>
                     </div>
 
                     <!-- OPPORTUNITIES -->
                     <div class="msg-panel" id="msgp-opp">
                         <div class="msg-card opp">
-                            <div class="mc-top"><div class="mc-title">Hot Load — Chicago → Detroit</div><div class="mc-meta"><span class="mc-time">Just now</span><span class="mc-badge high">HOT 🔥</span></div></div>
-                            <div class="mc-body">$1,850 · 284 mi · 38,000 lbs Dry Van. Pickup today 3:00 PM. Rate above market +22%.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Hot Load — Chicago → Detroit</div>
+                                <div class="mc-meta"><span class="mc-time">Just now</span><span
+                                        class="mc-badge high">HOT 🔥</span></div>
+                            </div>
+                            <div class="mc-body">$1,850 · 284 mi · 38,000 lbs Dry Van. Pickup today 3:00 PM. Rate above
+                                market +22%.</div>
                         </div>
                         <div class="msg-card opp">
-                            <div class="mc-top"><div class="mc-title">Reload Match — 12 mi from Drop</div><div class="mc-meta"><span class="mc-time">5 min ago</span><span class="mc-badge medium">MATCH</span></div></div>
-                            <div class="mc-body">$850 · Columbus → Pittsburgh. 4h fits your HOS. Dry Van. Pickup 4:00 PM.</div>
-                            <div class="mc-body2">12 miles from your current destination. Perfectly fits remaining drive time.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Reload Match — 12 mi from Drop</div>
+                                <div class="mc-meta"><span class="mc-time">5 min ago</span><span
+                                        class="mc-badge medium">MATCH</span></div>
+                            </div>
+                            <div class="mc-body">$850 · Columbus → Pittsburgh. 4h fits your HOS. Dry Van. Pickup 4:00
+                                PM.</div>
+                            <div class="mc-body2">12 miles from your current destination. Perfectly fits remaining drive
+                                time.</div>
                         </div>
                         <div class="msg-card opp">
-                            <div class="mc-top"><div class="mc-title">Contract Offer — Midwest Freight</div><div class="mc-meta"><span class="mc-time">32 min ago</span><span class="mc-badge info">CONTRACT</span></div></div>
-                            <div class="mc-body">3-month dedicated lane Chicago → Indianapolis. $3,200/week guaranteed. Respond by 5 PM today.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Contract Offer — Midwest Freight</div>
+                                <div class="mc-meta"><span class="mc-time">32 min ago</span><span
+                                        class="mc-badge info">CONTRACT</span></div>
+                            </div>
+                            <div class="mc-body">3-month dedicated lane Chicago → Indianapolis. $3,200/week guaranteed.
+                                Respond by 5 PM today.</div>
                         </div>
                         <div class="msg-card opp">
-                            <div class="mc-top"><div class="mc-title">Backhaul — Cincinnati → Chicago</div><div class="mc-meta"><span class="mc-time">2h ago</span><span class="mc-badge low">BACKHAUL</span></div></div>
-                            <div class="mc-body">$720 · 302 mi · Return to home base. Available tomorrow AM. Flatbed required.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Backhaul — Cincinnati → Chicago</div>
+                                <div class="mc-meta"><span class="mc-time">2h ago</span><span
+                                        class="mc-badge low">BACKHAUL</span></div>
+                            </div>
+                            <div class="mc-body">$720 · 302 mi · Return to home base. Available tomorrow AM. Flatbed
+                                required.</div>
                         </div>
                     </div>
 
                     <!-- SERVICE -->
                     <div class="msg-panel" id="msgp-svc">
                         <div class="msg-card svc">
-                            <div class="mc-top"><div class="mc-title">Maintenance Due — Unit #TRK-441</div><div class="mc-meta"><span class="mc-time">Today 8:00 AM</span><span class="mc-badge high">ACTION</span></div></div>
-                            <div class="mc-body">Oil change overdue by 1,200 mi. Schedule service at nearest authorized shop to avoid penalty.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Maintenance Due — Unit #TRK-441</div>
+                                <div class="mc-meta"><span class="mc-time">Today 8:00 AM</span><span
+                                        class="mc-badge high">ACTION</span></div>
+                            </div>
+                            <div class="mc-body">Oil change overdue by 1,200 mi. Schedule service at nearest authorized
+                                shop to avoid penalty.</div>
                         </div>
                         <div class="msg-card svc">
-                            <div class="mc-top"><div class="mc-title">Tire Pressure Alert — Left Rear</div><div class="mc-meta"><span class="mc-time">9:15 AM</span><span class="mc-badge high">URGENT</span></div></div>
-                            <div class="mc-body">Left rear tire reading 88 PSI (recommended 110 PSI). Check at next stop.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Tire Pressure Alert — Left Rear</div>
+                                <div class="mc-meta"><span class="mc-time">9:15 AM</span><span
+                                        class="mc-badge high">URGENT</span></div>
+                            </div>
+                            <div class="mc-body">Left rear tire reading 88 PSI (recommended 110 PSI). Check at next
+                                stop.</div>
                         </div>
                         <div class="msg-card svc">
-                            <div class="mc-top"><div class="mc-title">Insurance Renewal — Due in 14 Days</div><div class="mc-meta"><span class="mc-time">Feb 20</span><span class="mc-badge medium">REMINDER</span></div></div>
-                            <div class="mc-body">Commercial auto policy expires Mar 7. Contact your agent or renew online to avoid coverage gap.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Insurance Renewal — Due in 14 Days</div>
+                                <div class="mc-meta"><span class="mc-time">Feb 20</span><span
+                                        class="mc-badge medium">REMINDER</span></div>
+                            </div>
+                            <div class="mc-body">Commercial auto policy expires Mar 7. Contact your agent or renew
+                                online to avoid coverage gap.</div>
                         </div>
                         <div class="msg-card svc">
-                            <div class="mc-top"><div class="mc-title">ELD Sync Complete</div><div class="mc-meta"><span class="mc-time">11:00 PM</span><span class="mc-badge info">OK</span></div></div>
-                            <div class="mc-body">Logs synced successfully. FMCSA compliance status: OK. Next HOS reset in 3h 22min.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">ELD Sync Complete</div>
+                                <div class="mc-meta"><span class="mc-time">11:00 PM</span><span
+                                        class="mc-badge info">OK</span></div>
+                            </div>
+                            <div class="mc-body">Logs synced successfully. FMCSA compliance status: OK. Next HOS reset
+                                in 3h 22min.</div>
                         </div>
                         <div class="msg-card svc">
-                            <div class="mc-top"><div class="mc-title">Fuel Card — Low Balance</div><div class="mc-meta"><span class="mc-time">Feb 19</span><span class="mc-badge low">LOW</span></div></div>
-                            <div class="mc-body">Comdata card balance is $124.80. Reload recommended before next fuel stop on I-70.</div>
+                            <div class="mc-top">
+                                <div class="mc-title">Fuel Card — Low Balance</div>
+                                <div class="mc-meta"><span class="mc-time">Feb 19</span><span
+                                        class="mc-badge low">LOW</span></div>
+                            </div>
+                            <div class="mc-body">Comdata card balance is $124.80. Reload recommended before next fuel
+                                stop on I-70.</div>
                         </div>
                     </div>
 
@@ -1399,8 +3059,10 @@
             <div class="pref-trip-page" id="prefTripPage">
 
                 <div class="trip-subtabs">
-                    <button class="trip-stab active" id="tstab-dash"    onclick="switchTripTab('dash')">📊 Dashboard</button>
-                    <button class="trip-stab"        id="tstab-planner" onclick="switchTripTab('planner')">🗺️ Trip Planner</button>
+                    <button class="trip-stab active" id="tstab-dash" onclick="switchTripTab('dash')">📊
+                        Dashboard</button>
+                    <button class="trip-stab" id="tstab-planner" onclick="switchTripTab('planner')">🗺️ Trip
+                        Planner</button>
                 </div>
 
                 <!-- DASHBOARD panel -->
@@ -1421,7 +3083,8 @@
                                 </div>
                                 <!-- Dropdown options -->
                                 <div class="db-status-dropdown" id="dbStatusDropdown">
-                                    <div class="db-status-opt selected" onclick="setStatus(event,'ON DUTY','#7aee30','#a8f030')">
+                                    <div class="db-status-opt selected"
+                                        onclick="setStatus(event,'ON DUTY','#7aee30','#a8f030')">
                                         <span class="opt-dot" style="background:#7aee30;"></span>
                                         <span class="opt-label" style="color:#a8f030;">ON DUTY</span>
                                         <span class="opt-check">✓</span>
@@ -1431,7 +3094,8 @@
                                         <span class="opt-label" style="color:#ffa94d;">DRIVING</span>
                                         <span class="opt-check">✓</span>
                                     </div>
-                                    <div class="db-status-opt" onclick="setStatus(event,'OFF DUTY','#5a6a88','#8a9ab8')">
+                                    <div class="db-status-opt"
+                                        onclick="setStatus(event,'OFF DUTY','#5a6a88','#8a9ab8')">
                                         <span class="opt-dot" style="background:#5a6a88;"></span>
                                         <span class="opt-label" style="color:#8a9ab8;">OFF DUTY</span>
                                         <span class="opt-check">✓</span>
@@ -1454,27 +3118,36 @@
                             <div class="db-gauges">
                                 <div class="db-gauge">
                                     <svg width="74" height="74" viewBox="0 0 74 74">
-                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7"/>
-                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#ffa94d" stroke-width="7" stroke-dasharray="182" stroke-dashoffset="91" stroke-linecap="round" transform="rotate(-90 37 37)"/>
-                                        <text x="37" y="42" text-anchor="middle" font-size="14" font-weight="900" fill="#ffa94d" font-family="Courier New">3.5</text>
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7" />
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#ffa94d" stroke-width="7"
+                                            stroke-dasharray="182" stroke-dashoffset="91" stroke-linecap="round"
+                                            transform="rotate(-90 37 37)" />
+                                        <text x="37" y="42" text-anchor="middle" font-size="14" font-weight="900"
+                                            fill="#ffa94d" font-family="Courier New">3.5</text>
                                     </svg>
                                     <div class="db-gauge-lbl">DRIVE</div>
                                     <div class="db-gauge-sub">3.5h left</div>
                                 </div>
                                 <div class="db-gauge">
                                     <svg width="74" height="74" viewBox="0 0 74 74">
-                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7"/>
-                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#2979ff" stroke-width="7" stroke-dasharray="182" stroke-dashoffset="91" stroke-linecap="round" transform="rotate(-90 37 37)"/>
-                                        <text x="37" y="42" text-anchor="middle" font-size="14" font-weight="900" fill="#2979ff" font-family="Courier New">3.5</text>
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7" />
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#2979ff" stroke-width="7"
+                                            stroke-dasharray="182" stroke-dashoffset="91" stroke-linecap="round"
+                                            transform="rotate(-90 37 37)" />
+                                        <text x="37" y="42" text-anchor="middle" font-size="14" font-weight="900"
+                                            fill="#2979ff" font-family="Courier New">3.5</text>
                                     </svg>
                                     <div class="db-gauge-lbl">ON DUTY</div>
                                     <div class="db-gauge-sub">3.5h left</div>
                                 </div>
                                 <div class="db-gauge">
                                     <svg width="74" height="74" viewBox="0 0 74 74">
-                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7"/>
-                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#a855f7" stroke-width="7" stroke-dasharray="182" stroke-dashoffset="30" stroke-linecap="round" transform="rotate(-90 37 37)"/>
-                                        <text x="37" y="42" text-anchor="middle" font-size="13" font-weight="900" fill="#a855f7" font-family="Courier New">18.0</text>
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#1e2538" stroke-width="7" />
+                                        <circle cx="37" cy="37" r="29" fill="none" stroke="#a855f7" stroke-width="7"
+                                            stroke-dasharray="182" stroke-dashoffset="30" stroke-linecap="round"
+                                            transform="rotate(-90 37 37)" />
+                                        <text x="37" y="42" text-anchor="middle" font-size="13" font-weight="900"
+                                            fill="#a855f7" font-family="Courier New">18.0</text>
                                     </svg>
                                     <div class="db-gauge-lbl">CYCLE</div>
                                     <div class="db-gauge-sub">18.0h left</div>
@@ -1501,12 +3174,27 @@
                                     <div class="db-route-sub">Warehouse Gate 4</div>
                                 </div>
                             </div>
-                            <div class="db-prog-lbl"><span>PROGRESS</span><span style="color:#ffa94d">68% · 112 mi left</span></div>
-                            <div class="db-prog-track"><div class="db-prog-fill"></div></div>
+                            <div class="db-prog-lbl"><span>PROGRESS</span><span style="color:#ffa94d">68% · 112 mi
+                                    left</span></div>
+                            <div class="db-prog-track">
+                                <div class="db-prog-fill"></div>
+                            </div>
                             <div class="db-stats">
-                                <div class="db-stat"><div class="db-stat-icon">⏰</div><div class="db-stat-lbl">ETA</div><div class="db-stat-val">2:45 PM</div></div>
-                                <div class="db-stat"><div class="db-stat-icon">💰</div><div class="db-stat-lbl">RATE</div><div class="db-stat-val">$1,240</div></div>
-                                <div class="db-stat"><div class="db-stat-icon">⚖️</div><div class="db-stat-lbl">WEIGHT</div><div class="db-stat-val">38,400</div></div>
+                                <div class="db-stat">
+                                    <div class="db-stat-icon">⏰</div>
+                                    <div class="db-stat-lbl">ETA</div>
+                                    <div class="db-stat-val">2:45 PM</div>
+                                </div>
+                                <div class="db-stat">
+                                    <div class="db-stat-icon">💰</div>
+                                    <div class="db-stat-lbl">RATE</div>
+                                    <div class="db-stat-val">$1,240</div>
+                                </div>
+                                <div class="db-stat">
+                                    <div class="db-stat-icon">⚖️</div>
+                                    <div class="db-stat-lbl">WEIGHT</div>
+                                    <div class="db-stat-val">38,400</div>
+                                </div>
                             </div>
                         </div>
 
@@ -1545,7 +3233,8 @@
                             <div class="tp-map">
                                 <div class="tp-grid"></div>
                                 <svg class="tp-route-svg" viewBox="0 0 340 165" preserveAspectRatio="none">
-                                    <polyline points="118,128 118,68 232,68 232,38" fill="none" stroke="#ff9800" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <polyline points="118,128 118,68 232,68 232,38" fill="none" stroke="#ff9800"
+                                        stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                                 <div class="tp-map-lbl pu">PICKUP: 123 ASH ST</div>
                                 <div class="tp-map-lbl do">DROPOFF: 456 ELM AVE</div>
@@ -1720,26 +3409,26 @@
     </div> -->
 
     <script>
-    /* ── Map ── */
-    const map = L.map('map', { zoomControl: false, attributionControl: false })
-        .setView([24.4539, 54.3773], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-    [
-        [24.4539, 54.3773],
-        [24.4239, 54.4373]
-    ].forEach(pos => {
-        L.marker(pos, {
-            icon: L.divIcon({
-                className: 'custom-marker',
-                html: '<i class="fas fa-map-marker-alt" style="font-size:28px;color:#ff4444;"></i>',
-                iconSize: [30, 30], iconAnchor: [15, 30]
-            })
-        }).addTo(map);
-    });
+        /* ── Map ── */
+        const map = L.map('map', { zoomControl: false, attributionControl: false })
+            .setView([24.4539, 54.3773], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        [
+            [24.4539, 54.3773],
+            [24.4239, 54.4373]
+        ].forEach(pos => {
+            L.marker(pos, {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<i class="fas fa-map-marker-alt" style="font-size:28px;color:#ff4444;"></i>',
+                    iconSize: [30, 30], iconAnchor: [15, 30]
+                })
+            }).addTo(map);
+        });
 
-    /* ── Truck SVGs ── */
-    function flatbedSVG(color) {
-        return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+        /* ── Truck SVGs ── */
+        function flatbedSVG(color) {
+            return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
             <rect x="10" y="66" width="196" height="7" fill="#444" rx="2"/>
             <rect x="58" y="54" width="146" height="13" fill="${color}" rx="2"/>
             <rect x="58" y="54" width="146" height="3" fill="rgba(255,255,255,0.2)" rx="1"/>
@@ -1756,9 +3445,9 @@
             <circle cx="190" cy="81" r="13" fill="#222"/><circle cx="190" cy="81" r="6" fill="#555"/>
             <circle cx="38"  cy="81" r="13" fill="#222"/><circle cx="38"  cy="81" r="6" fill="#555"/>
         </svg>`;
-    }
-    function containerSVG(color) {
-        return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+        }
+        function containerSVG(color) {
+            return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
             <rect x="10" y="68" width="200" height="7" fill="#444" rx="2"/>
             <rect x="58" y="25" width="148" height="45" fill="${color}" rx="3"/>
             <rect x="58" y="25" width="148" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
@@ -1776,9 +3465,9 @@
             <circle cx="188" cy="83" r="13" fill="#222"/><circle cx="188" cy="83" r="6" fill="#555"/>
             <circle cx="38"  cy="83" r="13" fill="#222"/><circle cx="38"  cy="83" r="6" fill="#555"/>
         </svg>`;
-    }
-    function openBoxSVG(color) {
-        return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+        }
+        function openBoxSVG(color) {
+            return `<svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
             <rect x="10" y="68" width="200" height="7" fill="#444" rx="2"/>
             <rect x="58" y="57" width="148" height="12" fill="${color}" rx="1"/>
             <rect x="58" y="32" width="7" height="27" fill="${color}" rx="1"/>
@@ -1796,146 +3485,146 @@
             <circle cx="188" cy="83" r="13" fill="#222"/><circle cx="188" cy="83" r="6" fill="#555"/>
             <circle cx="38"  cy="83" r="13" fill="#222"/><circle cx="38"  cy="83" r="6" fill="#555"/>
         </svg>`;
-    }
-    function getTruckSVG(truckType, color) {
-        if (truckType === 'Flatbed Truck')   return flatbedSVG(color);
-        if (truckType === 'Container Truck') return containerSVG(color);
-        return openBoxSVG(color);
-    }
-
-    /* ── Data ── */
-    const transactions = [
-        {
-            type: 'single',
-            price: '₹80,000',
-            tripType: 'Single',
-            truckType: 'Flatbed Truck',
-            pickupLocation: 'Surat, NCR',
-            pickupDate: '26-10-2024, 10:00am',
-            dropLocation: 'Delhi, DL',
-            dropDate: '26-10-2024, 08:00pm',
-            durationHours: '10 hrs',
-            weight: '18,000 KG',
-            dimensions: '15m × 2.5 × 4m',
-            materialType: 'Solid',
-            materialName: 'General Cargo',
-            materialEmoji: '📦',
-            vehicleColor: '#d64545',
-            distance: '< 100 km',
-            distanceKm: '75 km',
-            priceNum: 80000
-        },
-        {
-            type: 'allotment',
-            price: '₹80,000',
-            tripType: 'Allotment',
-            truckType: 'Container Truck',
-            pickupLocation: 'Delhi, NCR',
-            pickupDate: '26-10-2024, 10:00am',
-            dropLocation: 'Delhi, DJ',
-            dropDate: '26-10-2024, 11:00pm',
-            durationHours: '10 hrs',
-            weight: '18,000 KG',
-            dimensions: '15m × 2.5 × 4m',
-            materialType: 'Liquid',
-            materialName: 'Juice Bottles',
-            materialEmoji: '🧃',
-            vehicleColor: '#5a9fb5',
-            distance: '100-300 km',
-            distanceKm: '210 km',
-            priceNum: 80000
-        },
-        {
-            type: 'return',
-            price: '₹1,20,000',
-            tripType: 'Return',
-            truckType: 'Open-Box Truck',
-            pickupLocation: 'Mumbai, MH',
-            pickupDate: '27-10-2024, 08:00am',
-            dropLocation: 'Bangalore, KA',
-            dropDate: '27-10-2024, 06:00pm',
-            durationHours: '10 hrs',
-            returnPickupLocation: 'Bangalore, KA',
-            returnPickupDate: '28-10-2024, 09:00am',
-            returnDropLocation: 'Mumbai, MH',
-            returnDropDate: '28-10-2024, 07:00pm',
-            returnDurationHours: '10 hrs',
-            layoverDuration: '2 hrs',
-            layoverDistanceKm: '40 km',
-            weight: '18,000 KG',
-            dimensions: '15m × 2.5 × 4m',
-            materialType: 'Liquid',
-            materialName: 'Body-wash Bottles',
-            materialEmoji: '🧴',
-            returnMaterialType: 'Liquid',
-            returnMaterialName: 'Empty Bottles',
-            returnMaterialEmoji: '🫙',
-            returnWeight: '8,000 KG',
-            vehicleColor: '#e07b39',
-            distance: '600+ km',
-            distanceKm: '980 km',
-            priceNum: 120000
-        },
-        {
-            type: 'contract',
-            price: '₹1,50,000',
-            priceNote: '/ 30 Days',
-            tripType: 'Contract',
-            truckType: 'Container Truck',
-            companyAddress: 'GMDC, Mandvi-Gujarat',
-            durationPerDay: '8 hrs/day (6 days/week)',
-            contractPeriod: 'Yearly (24-08-2024 to 23-08-2025)',
-            billingCycle: 'Every 30 days',
-            weight: '18,000 KG',
-            dimensions: '15m × 2.5 × 4m',
-            materialType: 'Glass',
-            materialName: 'Cosmetic Items',
-            materialEmoji: '💄',
-            vehicleColor: '#5a9fb5',
-            distance: '300-600 km',
-            distanceKm: '430 km',
-            priceNum: 150000
-        },
-        {
-            type: 'single',
-            price: '₹95,000',
-            tripType: 'Single',
-            truckType: 'Flatbed Truck',
-            pickupLocation: 'Mumbai, MH',
-            pickupDate: '27-10-2024, 09:00am',
-            dropLocation: 'Pune, MH',
-            dropDate: '27-10-2024, 03:00pm',
-            durationHours: '6 hrs',
-            weight: '12,000 KG',
-            dimensions: '12m × 2.3 × 3.8m',
-            materialType: 'Solid',
-            materialName: 'General Cargo',
-            materialEmoji: '📦',
-            vehicleColor: '#c44539',
-            distance: '< 100 km',
-            distanceKm: '150 km',
-            priceNum: 95000
         }
-    ];
+        function getTruckSVG(truckType, color) {
+            if (truckType === 'Flatbed Truck') return flatbedSVG(color);
+            if (truckType === 'Container Truck') return containerSVG(color);
+            return openBoxSVG(color);
+        }
 
-    let currentFilter = 'Any distance';
-    let currentSort   = null;
+        /* ── Data ── */
+        const transactions = [
+            {
+                type: 'single',
+                price: '₹80,000',
+                tripType: 'Single',
+                truckType: 'Flatbed Truck',
+                pickupLocation: 'Surat, NCR',
+                pickupDate: '26-10-2024, 10:00am',
+                dropLocation: 'Delhi, DL',
+                dropDate: '26-10-2024, 08:00pm',
+                durationHours: '10 hrs',
+                weight: '18,000 KG',
+                dimensions: '15m × 2.5 × 4m',
+                materialType: 'Solid',
+                materialName: 'General Cargo',
+                materialEmoji: '📦',
+                vehicleColor: '#d64545',
+                distance: '< 100 km',
+                distanceKm: '75 km',
+                priceNum: 80000
+            },
+            {
+                type: 'allotment',
+                price: '₹80,000',
+                tripType: 'Allotment',
+                truckType: 'Container Truck',
+                pickupLocation: 'Delhi, NCR',
+                pickupDate: '26-10-2024, 10:00am',
+                dropLocation: 'Delhi, DJ',
+                dropDate: '26-10-2024, 11:00pm',
+                durationHours: '10 hrs',
+                weight: '18,000 KG',
+                dimensions: '15m × 2.5 × 4m',
+                materialType: 'Liquid',
+                materialName: 'Juice Bottles',
+                materialEmoji: '🧃',
+                vehicleColor: '#5a9fb5',
+                distance: '100-300 km',
+                distanceKm: '210 km',
+                priceNum: 80000
+            },
+            {
+                type: 'return',
+                price: '₹1,20,000',
+                tripType: 'Return',
+                truckType: 'Open-Box Truck',
+                pickupLocation: 'Mumbai, MH',
+                pickupDate: '27-10-2024, 08:00am',
+                dropLocation: 'Bangalore, KA',
+                dropDate: '27-10-2024, 06:00pm',
+                durationHours: '10 hrs',
+                returnPickupLocation: 'Bangalore, KA',
+                returnPickupDate: '28-10-2024, 09:00am',
+                returnDropLocation: 'Mumbai, MH',
+                returnDropDate: '28-10-2024, 07:00pm',
+                returnDurationHours: '10 hrs',
+                layoverDuration: '2 hrs',
+                layoverDistanceKm: '40 km',
+                weight: '18,000 KG',
+                dimensions: '15m × 2.5 × 4m',
+                materialType: 'Liquid',
+                materialName: 'Body-wash Bottles',
+                materialEmoji: '🧴',
+                returnMaterialType: 'Liquid',
+                returnMaterialName: 'Empty Bottles',
+                returnMaterialEmoji: '🫙',
+                returnWeight: '8,000 KG',
+                vehicleColor: '#e07b39',
+                distance: '600+ km',
+                distanceKm: '980 km',
+                priceNum: 120000
+            },
+            {
+                type: 'contract',
+                price: '₹1,50,000',
+                priceNote: '/ 30 Days',
+                tripType: 'Contract',
+                truckType: 'Container Truck',
+                companyAddress: 'GMDC, Mandvi-Gujarat',
+                durationPerDay: '8 hrs/day (6 days/week)',
+                contractPeriod: 'Yearly (24-08-2024 to 23-08-2025)',
+                billingCycle: 'Every 30 days',
+                weight: '18,000 KG',
+                dimensions: '15m × 2.5 × 4m',
+                materialType: 'Glass',
+                materialName: 'Cosmetic Items',
+                materialEmoji: '💄',
+                vehicleColor: '#5a9fb5',
+                distance: '300-600 km',
+                distanceKm: '430 km',
+                priceNum: 150000
+            },
+            {
+                type: 'single',
+                price: '₹95,000',
+                tripType: 'Single',
+                truckType: 'Flatbed Truck',
+                pickupLocation: 'Mumbai, MH',
+                pickupDate: '27-10-2024, 09:00am',
+                dropLocation: 'Pune, MH',
+                dropDate: '27-10-2024, 03:00pm',
+                durationHours: '6 hrs',
+                weight: '12,000 KG',
+                dimensions: '12m × 2.3 × 3.8m',
+                materialType: 'Solid',
+                materialName: 'General Cargo',
+                materialEmoji: '📦',
+                vehicleColor: '#c44539',
+                distance: '< 100 km',
+                distanceKm: '150 km',
+                priceNum: 95000
+            }
+        ];
 
-    /* ── Card Builder ── */
-    function createTripCard(trip) {
-        const leftCol = `
+        let currentFilter = 'Any distance';
+        let currentSort = null;
+
+        /* ── Card Builder ── */
+        function createTripCard(trip) {
+            const leftCol = `
             <div class="vehicle-compact">
                 <div class="truck-model-name">${trip.truckType}</div>
                 ${getTruckSVG(trip.truckType, trip.vehicleColor)}
                 <div class="truck-dims">${trip.dimensions}</div>
             </div>`;
 
-        let middleCol = '';
-        if (trip.type === 'contract') {
-            middleCol = `
+            let middleCol = '';
+            if (trip.type === 'contract') {
+                middleCol = `
                 <div class="contract-middle">
                     <div class="price-badge-row">
-                        <div class="price-compact">${trip.price}<span style="font-size:0.78rem;font-weight:600;color:#999;"> ${trip.priceNote||''}</span></div>
+                        <div class="price-compact">${trip.price}<span style="font-size:0.78rem;font-weight:600;color:#999;"> ${trip.priceNote || ''}</span></div>
                         <div class="badge-mini badge-${trip.type}">${trip.tripType}</div>
                     </div>
                     <div class="contract-mini">
@@ -1948,8 +3637,8 @@
                         </div>
                     </div>
                 </div>`;
-        } else if (trip.type === 'return') {
-            middleCol = `
+            } else if (trip.type === 'return') {
+                middleCol = `
                 <div class="trip-middle">
                     <div class="price-badge-row">
                         <div class="price-compact">${trip.price}</div>
@@ -1979,8 +3668,8 @@
                         </div>
                     </div>
                 </div>`;
-        } else {
-            middleCol = `
+            } else {
+                middleCol = `
                 <div class="trip-middle">
                     <div class="price-badge-row">
                         <div class="price-compact">${trip.price}</div>
@@ -1992,11 +3681,11 @@
                         <div class="route-item"><span class="r-icon">🎯</span><span class="location">${trip.dropLocation}</span><span class="r-time">${trip.dropDate}</span></div>
                     </div>
                 </div>`;
-        }
+            }
 
-        let rightCol = '';
-        if (trip.type === 'return') {
-            rightCol = `
+            let rightCol = '';
+            if (trip.type === 'return') {
+                rightCol = `
                 <div class="return-right-col">
                     <div class="material-block">
                         <div class="mat-photo-box">${trip.materialEmoji}</div>
@@ -2011,596 +3700,799 @@
                         <div class="mat-kg">${trip.returnWeight}</div>
                     </div>
                 </div>`;
-        } else {
-            rightCol = `
+            } else {
+                rightCol = `
                 <div class="material-block">
                     <div class="mat-photo-box">${trip.materialEmoji}</div>
                     <div class="mat-row"><div class="mat-value">${trip.materialType}</div></div>
                     <div class="mat-row"><div class="mat-value">${trip.materialName}</div></div>
                     <div class="mat-kg">${trip.weight}</div>
                 </div>`;
+            }
+
+            const pageMap = {
+                single: 'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_singletrip.html',
+                return: 'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_returntrip.html',
+                allotment: 'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_allotment.html',
+                contract: 'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_longterm-contract.html'
+            };
+            const targetPage = pageMap[trip.type] || '#';
+            return `<div class="trip-card ${trip.type}" onclick="window.location.href='${targetPage}?type=${trip.type}'" title="Click to view ${trip.tripType} trip details">${leftCol}${middleCol}${rightCol}</div>`;
         }
 
-        const pageMap = {
-            single:     'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_singletrip.html',
-            return:     'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_returntrip.html',
-            allotment:  'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_allotment.html',
-            contract:   'C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/d_longterm-contract.html'
-        };
-        const targetPage = pageMap[trip.type] || '#';
-        return `<div class="trip-card ${trip.type}" onclick="window.location.href='${targetPage}?type=${trip.type}'" title="Click to view ${trip.tripType} trip details">${leftCol}${middleCol}${rightCol}</div>`;
-    }
+        function renderTransactions(list = transactions) {
+            document.getElementById('transactionCards').innerHTML =
+                list.length ? list.map(createTripCard).join('') :
+                    '<p style="text-align:center;color:#aaa;padding:40px 0;">No trips found for this filter.</p>';
+        }
 
-    function renderTransactions(list = transactions) {
-        document.getElementById('transactionCards').innerHTML =
-            list.length ? list.map(createTripCard).join('') :
-            '<p style="text-align:center;color:#aaa;padding:40px 0;">No trips found for this filter.</p>';
-    }
+        /* ── Smart Filters JS ── */
+        function updateSliderBg(input) {
+            const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
+            input.style.background = `linear-gradient(to right, #ff9800 0%, #ff9800 ${pct}%, #2a3044 ${pct}%, #2a3044 100%)`;
+        }
 
-    /* ── Smart Filters JS ── */
-    function updateSliderBg(input) {
-        const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
-        input.style.background = `linear-gradient(to right, #ff9800 0%, #ff9800 ${pct}%, #2a3044 ${pct}%, #2a3044 100%)`;
-    }
+        function selectLoadType(el) {
+            el.closest('.sf-load-grid').querySelectorAll('.sf-load-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
 
-    function selectLoadType(el) {
-        el.closest('.sf-load-grid').querySelectorAll('.sf-load-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-    }
+        function selectPill(el, group) {
+            el.closest('.sf-pill-row').querySelectorAll('.sf-pill').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+        }
 
-    function selectPill(el, group) {
-        el.closest('.sf-pill-row').querySelectorAll('.sf-pill').forEach(p => p.classList.remove('selected'));
-        el.classList.add('selected');
-    }
+        function selectDir(el) {
+            el.closest('.sf-dir-row').querySelectorAll('.sf-dir-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
 
-    function selectDir(el) {
-        el.closest('.sf-dir-row').querySelectorAll('.sf-dir-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-    }
+        function applySmartFilters() {
+            const loadType = document.querySelector('.sf-load-btn.selected .sf-load-label')?.textContent || 'All';
+            document.getElementById('distanceText').textContent = loadType;
+            closeDistanceModal();
+            applyFiltersAndSort();
+        }
 
-    function applySmartFilters() {
-        const loadType = document.querySelector('.sf-load-btn.selected .sf-load-label')?.textContent || 'All';
-        document.getElementById('distanceText').textContent = loadType;
-        closeDistanceModal();
-        applyFiltersAndSort();
-    }
+        /* ── Filter (open/close) ── */
+        function openDistanceModal() { document.getElementById('distanceModal').classList.add('active'); }
+        function closeDistanceModal() { document.getElementById('distanceModal').classList.remove('active'); }
 
-    /* ── Filter (open/close) ── */
-    function openDistanceModal()  { document.getElementById('distanceModal').classList.add('active'); }
-    function closeDistanceModal() { document.getElementById('distanceModal').classList.remove('active'); }
+        function selectDistance(distance, shortName) {
+            currentFilter = distance;
+            document.getElementById('distanceText').textContent = shortName;
+            document.querySelectorAll('.distance-option').forEach(o => o.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            closeDistanceModal();
+            applyFiltersAndSort();
+        }
 
-    function selectDistance(distance, shortName) {
-        currentFilter = distance;
-        document.getElementById('distanceText').textContent = shortName;
-        document.querySelectorAll('.distance-option').forEach(o => o.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-        closeDistanceModal();
-        applyFiltersAndSort();
-    }
+        /* ── Sort ── */
+        function openSortModal() { document.getElementById('sortModal').classList.add('active'); }
+        function closeSortModal() { document.getElementById('sortModal').classList.remove('active'); }
 
-    /* ── Sort ── */
-    function openSortModal()  { document.getElementById('sortModal').classList.add('active'); }
-    function closeSortModal() { document.getElementById('sortModal').classList.remove('active'); }
+        function selectSort(sortKey, label) {
+            currentSort = sortKey;
+            document.getElementById('sortText').textContent = label;
+            document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            closeSortModal();
+            applyFiltersAndSort();
+        }
 
-    function selectSort(sortKey, label) {
-        currentSort = sortKey;
-        document.getElementById('sortText').textContent = label;
-        document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-        closeSortModal();
-        applyFiltersAndSort();
-    }
+        function applyFiltersAndSort() {
+            let result = currentFilter === 'Any distance'
+                ? [...transactions]
+                : transactions.filter(t => t.distance === currentFilter);
 
-    function applyFiltersAndSort() {
-        let result = currentFilter === 'Any distance'
-            ? [...transactions]
-            : transactions.filter(t => t.distance === currentFilter);
+            if (currentSort === 'price-asc') result.sort((a, b) => a.priceNum - b.priceNum);
+            else if (currentSort === 'price-desc') result.sort((a, b) => b.priceNum - a.priceNum);
+            else if (currentSort === 'duration-asc') result.sort((a, b) => {
+                const hrs = t => parseInt((t.durationHours || '0').replace(/\D/g, ''));
+                return hrs(a) - hrs(b);
+            });
+            else if (currentSort === 'type') result.sort((a, b) => a.type.localeCompare(b.type));
 
-        if (currentSort === 'price-asc')      result.sort((a,b) => a.priceNum - b.priceNum);
-        else if (currentSort === 'price-desc') result.sort((a,b) => b.priceNum - a.priceNum);
-        else if (currentSort === 'duration-asc') result.sort((a,b) => {
-            const hrs = t => parseInt((t.durationHours||'0').replace(/\D/g,''));
-            return hrs(a) - hrs(b);
+            renderTransactions(result);
+        }
+
+        /* ── Other ── */
+        function selectTripOption(el, type) {
+            document.querySelectorAll('.trip-option').forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+        }
+        function closeAd() {
+            const b = document.getElementById('adBanner');
+            b.style.transition = 'all 0.3s'; b.style.opacity = '0'; b.style.transform = 'translateX(100%)';
+            setTimeout(() => b.style.display = 'none', 300);
+        }
+        function viewAdDetails() { alert('30% off your next 5 rides! Use code SAVE30. Valid until end of month.'); }
+
+        /* ── Preference Full-Screen Page ── */
+        function openPrefModal() {
+            document.getElementById('prefModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closePrefModal() {
+            document.getElementById('prefModal').classList.remove('active');
+            document.body.style.overflow = '';
+            closeStatusDropdown();
+        }
+
+        function switchPrefTab(tab) {
+            document.getElementById('pmTab-msg').classList.toggle('active', tab === 'msg');
+            document.getElementById('pmTab-trip').classList.toggle('active', tab === 'trip');
+            document.getElementById('prefMsgPage').classList.toggle('active', tab === 'msg');
+            document.getElementById('prefTripPage').classList.toggle('active', tab === 'trip');
+            closeStatusDropdown();
+        }
+
+        function switchMsgTab(key) {
+            ['trips', 'opp', 'svc'].forEach(k => {
+                document.getElementById('msgt-' + k).classList.toggle('active', k === key);
+                document.getElementById('msgp-' + k).classList.toggle('active', k === key);
+            });
+        }
+
+        function switchTripTab(key) {
+            ['dash', 'planner'].forEach(k => {
+                document.getElementById('tstab-' + k).classList.toggle('active', k === key);
+                document.getElementById('tripPanel-' + k).classList.toggle('active', k === key);
+            });
+            closeStatusDropdown();
+        }
+
+        function filterMsgCards() {
+            const q = document.getElementById('msgSearchInput').value.toLowerCase();
+            document.querySelectorAll('.msg-card').forEach(c => {
+                c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+        function clearMsgSearch() {
+            document.getElementById('msgSearchInput').value = '';
+            document.querySelectorAll('.msg-card').forEach(c => c.style.display = '');
+        }
+
+        /* Status dropdown */
+        function toggleStatusDropdown(e) {
+            e.stopPropagation();
+            document.getElementById('dbStatusDropdown').classList.toggle('open');
+        }
+        function closeStatusDropdown() {
+            const d = document.getElementById('dbStatusDropdown');
+            if (d) d.classList.remove('open');
+        }
+        function setStatus(e, label, dotColor, textColor) {
+            e.stopPropagation();
+            document.getElementById('dbStatusText').textContent = label;
+            document.getElementById('dbStatusText').style.color = textColor;
+            document.getElementById('dbStatusDot').style.background = dotColor;
+            document.querySelectorAll('.db-status-opt').forEach(o => o.classList.remove('selected'));
+            e.currentTarget.classList.add('selected');
+            closeStatusDropdown();
+        }
+        /* Close dropdown on outside click */
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('#dbStatusBadge')) closeStatusDropdown();
         });
-        else if (currentSort === 'type') result.sort((a,b) => a.type.localeCompare(b.type));
 
-        renderTransactions(result);
-    }
+        function togglePrefSection() { }
+        function handlePrefNav() { }
 
-    /* ── Other ── */
-    function selectTripOption(el, type) {
-        document.querySelectorAll('.trip-option').forEach(o => o.classList.remove('active'));
-        el.classList.add('active');
-    }
-    function closeAd() {
-        const b = document.getElementById('adBanner');
-        b.style.transition = 'all 0.3s'; b.style.opacity = '0'; b.style.transform = 'translateX(100%)';
-        setTimeout(() => b.style.display = 'none', 300);
-    }
-    function viewAdDetails() { alert('30% off your next 5 rides! Use code SAVE30. Valid until end of month.'); }
+        /* Close other modals on outside click */
+        document.getElementById('distanceModal').addEventListener('click', function (e) { if (e.target === this) closeDistanceModal(); });
+        document.getElementById('sortModal').addEventListener('click', function (e) { if (e.target === this) closeSortModal(); });
 
-    /* ── Preference Full-Screen Page ── */
-    function openPrefModal() {
-        document.getElementById('prefModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closePrefModal() {
-        document.getElementById('prefModal').classList.remove('active');
-        document.body.style.overflow = '';
-        closeStatusDropdown();
-    }
-
-    function switchPrefTab(tab) {
-        document.getElementById('pmTab-msg').classList.toggle('active',   tab === 'msg');
-        document.getElementById('pmTab-trip').classList.toggle('active',  tab === 'trip');
-        document.getElementById('prefMsgPage').classList.toggle('active', tab === 'msg');
-        document.getElementById('prefTripPage').classList.toggle('active',tab === 'trip');
-        closeStatusDropdown();
-    }
-
-    function switchMsgTab(key) {
-        ['trips','opp','svc'].forEach(k => {
-            document.getElementById('msgt-' + k).classList.toggle('active', k === key);
-            document.getElementById('msgp-' + k).classList.toggle('active', k === key);
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
-    }
 
-    function switchTripTab(key) {
-        ['dash','planner'].forEach(k => {
-            document.getElementById('tstab-'     + k).classList.toggle('active', k === key);
-            document.getElementById('tripPanel-' + k).classList.toggle('active', k === key);
+        /* Init */
+        renderTransactions();
+
+        /* Sidebar Menu */
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+        function openMenu() {
+            sidebarMenu.classList.add('open');
+            menuOverlay.classList.add('open');
+        }
+        function closeMenu() {
+            sidebarMenu.classList.remove('open');
+            menuOverlay.classList.remove('open');
+        }
+
+        document.getElementById('headerMenuBtn').addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+
+        document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+            item.addEventListener('click', function () { closeMenu(); });
         });
-        closeStatusDropdown();
-    }
 
-    function filterMsgCards() {
-        const q = document.getElementById('msgSearchInput').value.toLowerCase();
-        document.querySelectorAll('.msg-card').forEach(c => {
-            c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+        /* Online/Offline toggle — persists via sessionStorage */
+        const statusToggle = document.getElementById('statusToggle');
+        const statusLabel = document.getElementById('statusLabel');
+
+        // This page = Online state; ensure sessionStorage reflects that
+        sessionStorage.setItem('driverStatus', 'online');
+        statusToggle.checked = true;
+        statusLabel.textContent = 'Online';
+
+        statusToggle.addEventListener('change', function () {
+            if (!this.checked) {
+                sessionStorage.removeItem('driverStatus');
+                statusLabel.textContent = 'Offline';
+                window.location.href = "C:\\Users\\DADAGA\\Desktop\\Dadaga\\HtmlCss\\Lorry Pilot\\10practice.html";
+            }
         });
-    }
-    function clearMsgSearch() {
-        document.getElementById('msgSearchInput').value = '';
-        document.querySelectorAll('.msg-card').forEach(c => c.style.display = '');
-    }
 
-    /* Status dropdown */
-    function toggleStatusDropdown(e) {
-        e.stopPropagation();
-        document.getElementById('dbStatusDropdown').classList.toggle('open');
-    }
-    function closeStatusDropdown() {
-        const d = document.getElementById('dbStatusDropdown');
-        if (d) d.classList.remove('open');
-    }
-    function setStatus(e, label, dotColor, textColor) {
-        e.stopPropagation();
-        document.getElementById('dbStatusText').textContent = label;
-        document.getElementById('dbStatusText').style.color = textColor;
-        document.getElementById('dbStatusDot').style.background = dotColor;
-        document.querySelectorAll('.db-status-opt').forEach(o => o.classList.remove('selected'));
-        e.currentTarget.classList.add('selected');
-        closeStatusDropdown();
-    }
-    /* Close dropdown on outside click */
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#dbStatusBadge')) closeStatusDropdown();
-    });
+        /* Notifications */
+        const notifications = [
+            { type: 'urgent', title: 'New Urgent Trip Request', desc: 'Dubai Marina → Abu Dhabi Airport. Cargo: Medical supplies 1.3t. Rate: $280.', time: '2 min ago' },
+            { type: 'info', title: 'Trip Progress Update', desc: 'Your Sharjah delivery is 85% complete. ETA: 18 minutes.', time: '20 min ago' },
+            { type: 'success', title: 'Delivery Completed', desc: 'Al Ain delivery done! Rating: ⭐5 | Earned: $195 + $25 tip.', time: '1 hr ago' },
+            { type: 'warn', title: 'New Opportunity Available', desc: 'Long-haul Ras Al Khaimah run. Earn up to $420. Act fast!', time: '2 hr ago' },
+        ];
+        const notifList = document.getElementById('notifList');
+        notifList.innerHTML = notifications.map(n => `
+        <div class="notif-item">
+            <div class="notif-dot ${n.type}"></div>
+            <div class="notif-text">
+                <div class="notif-title">${n.title}</div>
+                <div class="notif-desc">${n.desc}</div>
+            </div>
+            <div class="notif-time">${n.time}</div>
+        </div>
+    `).join('');
 
-    function togglePrefSection() {}
-    function handlePrefNav()       {}
-
-    /* Close other modals on outside click */
-    document.getElementById('distanceModal').addEventListener('click', function(e){ if(e.target===this) closeDistanceModal(); });
-    document.getElementById('sortModal').addEventListener('click', function(e){ if(e.target===this) closeSortModal(); });
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-
-    /* Init */
-    renderTransactions();
-
-    /* Sidebar Menu */
-    const menuBtn      = document.querySelector('.menu-btn');
-    const sidebarMenu  = document.getElementById('sidebarMenu');
-    const menuOverlay  = document.getElementById('menuOverlay');
-    const closeMenuBtn = document.getElementById('closeMenuBtn');
-
-    function openMenu() {
-        sidebarMenu.classList.add('open');
-        menuOverlay.classList.add('open');
-    }
-    function closeMenu() {
-        sidebarMenu.classList.remove('open');
-        menuOverlay.classList.remove('open');
-    }
-
-    menuBtn.addEventListener('click', openMenu);
-    closeMenuBtn.addEventListener('click', closeMenu);
-    menuOverlay.addEventListener('click', closeMenu);
-
-    document.querySelectorAll('.sidebar-menu-item').forEach(item => {
-        item.addEventListener('click', function () { closeMenu(); });
-    });
+        const notifBtn = document.getElementById('notifBtn');
+        const notifDropdown = document.getElementById('notifDropdown');
+        notifBtn.addEventListener('click', e => { e.stopPropagation(); notifDropdown.classList.toggle('open'); });
+        document.addEventListener('click', () => notifDropdown.classList.remove('open'));
+        notifDropdown.addEventListener('click', e => e.stopPropagation());
     </script>
 
-<!-- ═══════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════
      SCHEDULE TRIP OVERLAY (embedded from 16_schedule-trip.html)
 ════════════════════════════════════════════════════ -->
-<div id="schedulePage" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:#e8e8e8; overflow-y:auto;">
+    <div id="schedulePage"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:#e8e8e8; overflow-y:auto;">
 
-  <style>
-    /* ── Schedule page scoped styles ── */
-    #schedulePage .st-header {
-        background: #3d3d3d;
-        color: white;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: left;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    #schedulePage .st-back-btn {
-        font-size: 28px;
-        cursor: pointer;
-        background: none;
-        border: none;
-        color: white;
-        line-height: 1;
-    }
-    #schedulePage .st-header h1 {
-        width: auto;
-        height: auto;
-        flex: 1;
-        text-align: center;
-        font-size: 25px;
-        color: white;
-        border-radius: 0;
-        background: none;
-        display: block;
-    }
-    #schedulePage .st-section {
-        background: white;
-        border-radius: 15px;
-        padding: 30px;
-        margin: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    #schedulePage .st-section-title {
-        font-size: 28px;
-        font-weight: bold;
-        margin-bottom: 30px;
-        color: #000;
-    }
-    #schedulePage .st-subtitle {
-        font-size: 18px;
-        font-weight: bold;
-        margin: 25px 0 15px 0;
-        color: #000;
-    }
-    #schedulePage .st-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    #schedulePage .st-grid-2 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    #schedulePage .st-opt-btn {
-        background: #f5f5f5;
-        border: 2px solid transparent;
-        border-radius: 20px;
-        padding: 20px;
-        font-size: 16px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 60px;
-        position: relative;
-    }
-    #schedulePage .st-opt-btn.selected {
-        background: #7cb342;
-        color: white;
-        border-color: #7cb342;
-    }
-    #schedulePage .st-opt-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    #schedulePage .st-checkmark {
-        position: absolute;
-        top: 10px; right: 10px;
-        width: 25px; height: 25px;
-        background: white;
-        border-radius: 50%;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        color: #7cb342;
-        font-size: 16px;
-    }
-    #schedulePage .st-opt-btn.selected .st-checkmark { display: flex; }
-    #schedulePage .st-input-row {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-    #schedulePage .st-input-field {
-        flex: 1;
-        padding: 18px;
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        font-size: 16px;
-        background: #f9f9f9;
-        font-family: inherit;
-    }
-    #schedulePage .st-input-field:focus {
-        outline: none;
-        border-color: #7cb342;
-    }
-    #schedulePage .st-input-with-icon {
-        position: relative;
-        flex: 1;
-    }
-    #schedulePage .st-input-with-icon .st-icon {
-        position: absolute;
-        left: 15px; top: 50%;
-        transform: translateY(-50%);
-        font-size: 20px;
-        color: #7cb342;
-    }
-    #schedulePage .st-input-with-icon input {
-        padding-left: 50px;
-        width: 100%;
-    }
-    #schedulePage textarea.st-input-field {
-        min-height: 100px;
-        width: 100%;
-        resize: vertical;
-    }
-    #schedulePage .st-submit-btn {
-        width: 100%;
-        padding: 20px;
-        background: #7cb342;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 20px;
-    }
-    #schedulePage .st-submit-btn:hover {
-        background: #689f38;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(124,179,66,0.4);
-    }
-    #schedulePage .st-date-btn {
-        flex: 1;
-        padding: 15px;
-        background: #f5f5f5;
-        border: 2px solid transparent;
-        border-radius: 10px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    #schedulePage .st-date-btn.selected {
-        background: #7cb342;
-        color: white;
-    }
-    /* Scroll row */
-    #schedulePage .st-scroll-row {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-        gap: 12px;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        scrollbar-width: thin;
-        scrollbar-color: #7cb342 #f0f0f0;
-    }
-    #schedulePage .st-scroll-row::-webkit-scrollbar { height: 6px; }
-    #schedulePage .st-scroll-row::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 10px; }
-    #schedulePage .st-scroll-row::-webkit-scrollbar-thumb { background: #7cb342; border-radius: 10px; }
-    #schedulePage .st-scroll-row .st-opt-btn {
-        flex: 0 0 auto;
-        min-width: 120px;
-        max-width: 140px;
-        white-space: normal;
-        word-break: break-word;
-        text-align: center;
-    }
-    #schedulePage img { height: 40px; width: 50px; }
-    @media (max-width: 768px) {
-        #schedulePage .st-grid { grid-template-columns: repeat(2, 1fr); }
-        #schedulePage .st-input-row { flex-direction: column; }
-    }
-    @media (max-width: 480px) {
-        #schedulePage .st-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+        <style>
+            /* ── Schedule page scoped styles ── */
+            #schedulePage .st-header {
+                background: #3d3d3d;
+                color: white;
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: left;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
 
-  <!-- Header -->
-  <div class="st-header">
-    <button class="st-back-btn" onclick="closeSchedulePage()">‹</button>
-    <h1>Schedule Trip</h1>
-  </div>
+            #schedulePage .st-back-btn {
+                font-size: 28px;
+                cursor: pointer;
+                background: none;
+                border: none;
+                color: white;
+                line-height: 1;
+            }
 
-  <div class="st-section">
+            #schedulePage .st-header h1 {
+                width: auto;
+                height: auto;
+                flex: 1;
+                text-align: center;
+                font-size: 25px;
+                color: white;
+                border-radius: 0;
+                background: none;
+                display: block;
+            }
 
-    <!-- Truck Type -->
-    <h2 class="st-section-title">What is Your Truck Type?</h2>
-    <div class="st-grid st-scroll-row">
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed Isolated</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Open Box</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Close Box</div></button>
-      <button class="st-opt-btn selected" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Stack</div><span class="st-checkmark">✓</span></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\reefer truck.jpg"><br>Reefer</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\dump truck.jpg"><br>Dump</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\Concrete transport truck.jpg"><br>Concrete Transport</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fly ash transport truck.jpg"><br>Fly Ash Transport</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\tanker truck.jpg"><br>Tanker</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\car transport truck.jpg"><br>Car Transport</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div><image src="C:\Users\DADAGA\Pictures\Saved Pictures\fixed crane truck.jpg"><br>Fixed Crane</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')"><div>Special...</div></button>
+            #schedulePage .st-section {
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                margin: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            #schedulePage .st-section-title {
+                font-size: 28px;
+                font-weight: bold;
+                margin-bottom: 30px;
+                color: #000;
+            }
+
+            #schedulePage .st-subtitle {
+                font-size: 18px;
+                font-weight: bold;
+                margin: 25px 0 15px 0;
+                color: #000;
+            }
+
+            #schedulePage .st-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            #schedulePage .st-grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            #schedulePage .st-opt-btn {
+                background: #f5f5f5;
+                border: 2px solid transparent;
+                border-radius: 20px;
+                padding: 20px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 60px;
+                position: relative;
+            }
+
+            #schedulePage .st-opt-btn.selected {
+                background: #7cb342;
+                color: white;
+                border-color: #7cb342;
+            }
+
+            #schedulePage .st-opt-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            #schedulePage .st-checkmark {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 25px;
+                height: 25px;
+                background: white;
+                border-radius: 50%;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                color: #7cb342;
+                font-size: 16px;
+            }
+
+            #schedulePage .st-opt-btn.selected .st-checkmark {
+                display: flex;
+            }
+
+            #schedulePage .st-input-row {
+                display: flex;
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+
+            #schedulePage .st-input-field {
+                flex: 1;
+                padding: 18px;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                font-size: 16px;
+                background: #f9f9f9;
+                font-family: inherit;
+            }
+
+            #schedulePage .st-input-field:focus {
+                outline: none;
+                border-color: #7cb342;
+            }
+
+            #schedulePage .st-input-with-icon {
+                position: relative;
+                flex: 1;
+            }
+
+            #schedulePage .st-input-with-icon .st-icon {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 20px;
+                color: #7cb342;
+            }
+
+            #schedulePage .st-input-with-icon input {
+                padding-left: 50px;
+                width: 100%;
+            }
+
+            #schedulePage textarea.st-input-field {
+                min-height: 100px;
+                width: 100%;
+                resize: vertical;
+            }
+
+            #schedulePage .st-submit-btn {
+                width: 100%;
+                padding: 20px;
+                background: #7cb342;
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-size: 20px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 20px;
+            }
+
+            #schedulePage .st-submit-btn:hover {
+                background: #689f38;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(124, 179, 66, 0.4);
+            }
+
+            #schedulePage .st-date-btn {
+                flex: 1;
+                padding: 15px;
+                background: #f5f5f5;
+                border: 2px solid transparent;
+                border-radius: 10px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            #schedulePage .st-date-btn.selected {
+                background: #7cb342;
+                color: white;
+            }
+
+            /* Scroll row */
+            #schedulePage .st-scroll-row {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                gap: 12px;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+                scrollbar-width: thin;
+                scrollbar-color: #7cb342 #f0f0f0;
+            }
+
+            #schedulePage .st-scroll-row::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            #schedulePage .st-scroll-row::-webkit-scrollbar-track {
+                background: #f0f0f0;
+                border-radius: 10px;
+            }
+
+            #schedulePage .st-scroll-row::-webkit-scrollbar-thumb {
+                background: #7cb342;
+                border-radius: 10px;
+            }
+
+            #schedulePage .st-scroll-row .st-opt-btn {
+                flex: 0 0 auto;
+                min-width: 120px;
+                max-width: 140px;
+                white-space: normal;
+                word-break: break-word;
+                text-align: center;
+            }
+
+            #schedulePage img {
+                height: 40px;
+                width: 50px;
+            }
+
+            @media (max-width: 768px) {
+                #schedulePage .st-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                #schedulePage .st-input-row {
+                    flex-direction: column;
+                }
+            }
+
+            @media (max-width: 480px) {
+                #schedulePage .st-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+
+        <!-- Header -->
+        <div class="st-header">
+            <button class="st-back-btn" onclick="closeSchedulePage()">‹</button>
+            <h1>Schedule Trip</h1>
+        </div>
+
+        <div class="st-section">
+
+            <!-- Truck Type -->
+            <h2 class="st-section-title">What is Your Truck Type?</h2>
+            <div class="st-grid st-scroll-row">
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Flatbed Isolated
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Open Box
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Close Box
+                    </div>
+                </button>
+                <button class="st-opt-btn selected" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\flatbed truck.jpg"><br>Stack
+                    </div><span class="st-checkmark">✓</span>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\reefer truck.jpg"><br>Reefer
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\dump truck.jpg"><br>Dump
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\Concrete transport truck.jpg"><br>Concrete
+                            Transport
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\fly ash transport truck.jpg"><br>Fly Ash
+                            Transport
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\tanker truck.jpg"><br>Tanker
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\car transport truck.jpg"><br>Car Transport
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>
+                        <image src="C:\Users\DADAGA\Pictures\Saved Pictures\fixed crane truck.jpg"><br>Fixed Crane
+                    </div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'truck-type')">
+                    <div>Special...</div>
+                </button>
+            </div>
+
+            <!-- Load Details -->
+            <h2 class="st-section-title">How Heavy & What Kind of Load?</h2>
+            <h3 class="st-subtitle">Maximum Load Weight (KG)</h3>
+            <div class="st-grid">
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">&lt; 1000 KG</button>
+                <button class="st-opt-btn selected" onclick="stSelectOption(this,'weight')">1000 - 3000 KG<span
+                        class="st-checkmark">✓</span></button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">3000 - 6000 KG</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">6000 - 10000 KG</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">10000 - 15000 KG</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">15000 - 20000 KG</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">20000 - 30000 KG</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">30000 - 40000 KG</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">&gt; 40000 KG</button>
+            </div>
+
+            <h3 class="st-subtitle">What Kind of Load?</h3>
+            <div class="st-grid st-scroll-row">
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">📦</div>
+                    <div>Packaged / Bags</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">⛰️</div>
+                    <div>Powdered / Grain</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🛢️</div>
+                    <div>Liquid / Gas</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">❄️</div>
+                    <div>Frozen / Food</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🧱</div>
+                    <div>Solid</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🧻</div>
+                    <div>Bulky</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🍽️</div>
+                    <div>Fragile</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🚪🛏️</div>
+                    <div>Furniture</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">⚒️</div>
+                    <div>fragmented / Scrap</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">⚛︎ 🧬 🧫 🧪</div>
+                    <div>Hazardous</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🖥️</div>
+                    <div>Electrical</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🏗️</div>
+                    <div>Equipments</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🚢</div>
+                    <div>Containers</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">💉</div>
+                    <div>Medical</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🎻</div>
+                    <div>Instrument</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🐘🦏🦒🦁🦓</div>
+                    <div>Living Beings</div>
+                </button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')">
+                    <div class="st-icon">🌱🌱</div>
+                    <div>Others</div>
+                </button>
+            </div>
+
+            <!-- Availability -->
+            <h2 class="st-section-title">When Are You Available 📅🗺️📍</h2>
+            <h3 class="st-subtitle">Available Dates</h3>
+            <div class="st-input-row">
+                <div class="st-input-with-icon">
+                    <span class="st-icon">📅</span>
+                    <input type="text" class="st-input-field" placeholder="Start Date">
+                </div>
+                <button class="st-opt-btn" style="flex:0.4;">Anytime</button>
+            </div>
+
+            <!-- Location -->
+            <h2 class="st-section-title">Where & When Are You Available? 📍</h2>
+            <div class="st-input-row">
+                <div class="st-input-with-icon">
+                    <span class="st-icon">📍</span>
+                    <input type="text" class="st-input-field" placeholder="Current City, State">
+                </div>
+                <button class="st-opt-btn" style="flex:0.4;">Anywhere</button>
+            </div>
+
+            <h3 class="st-subtitle">Your Location<br><br>Where You Want To Go?</h3>
+            <div class="st-input-row">
+                <div class="st-input-with-icon">
+                    <span class="st-icon">🌐</span>
+                    <input type="text" class="st-input-field" placeholder="Destination City, State">
+                </div>
+                <button class="st-opt-btn" style="flex:0.4;">Anywhere</button>
+            </div>
+
+            <!-- Trip Details -->
+            <h3 class="st-subtitle">Trip Details</h3>
+            <div class="st-subtitle" style="font-size:16px;margin-top:15px;">Distance Range (KM)</div>
+            <div class="st-grid">
+                <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">&lt; 200 KM</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">200 - 500 KM</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">500 - 1000 KM</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">&gt; 1000 KM</button>
+            </div>
+
+            <div class="st-subtitle" style="font-size:16px;margin-top:15px;">Trip-type</div>
+            <div class="st-grid">
+                <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Single Trip</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Return Trip</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Allotment Trip</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Long-Term Trip</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">All</button>
+            </div>
+
+            <!-- Delivery & Pay -->
+            <h2 class="st-section-title">⭐ Delivery, Pay & Ratings</h2>
+            <h3 class="st-subtitle">Delivery Mode</h3>
+            <div class="st-grid">
+                <button class="st-opt-btn selected" onclick="stSelectOption(this,'delivery')">✓ Normal<span
+                        class="st-checkmark">✓</span></button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'delivery')">⚡ Express</button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'delivery')">⚡ Both</button>
+            </div>
+
+            <h3 class="st-subtitle">Payment Preffered</h3>
+            <div class="st-grid st-grid-2">
+                <button class="st-opt-btn selected" onclick="stSelectOption(this,'payment-final')">Cash Preferred<span
+                        class="st-checkmark">✓</span></button>
+                <button class="st-opt-btn" onclick="stSelectOption(this,'payment-final')">Digital Pay</button>
+            </div>
+
+            <!-- Order Time & Notes -->
+            <h2 class="st-section-title">Order Time & Final Notes ⏰📝</h2>
+            <h3 class="st-subtitle">When Can You Confirm?</h3>
+            <div class="st-input-row">
+                <button class="st-date-btn selected">Confirm Order Time</button>
+                <button class="st-date-btn">Flexible Time</button>
+            </div>
+
+            <h3 class="st-subtitle">Additional Comments</h3>
+            <textarea class="st-input-field" placeholder="Write any extra details here..."></textarea>
+
+            <button class="st-submit-btn" onclick="stSubmitForm()">Post My Trip!</button>
+        </div>
     </div>
 
-    <!-- Load Details -->
-    <h2 class="st-section-title">How Heavy & What Kind of Load?</h2>
-    <h3 class="st-subtitle">Maximum Load Weight (KG)</h3>
-    <div class="st-grid">
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">&lt; 1000 KG</button>
-      <button class="st-opt-btn selected" onclick="stSelectOption(this,'weight')">1000 - 3000 KG<span class="st-checkmark">✓</span></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">3000 - 6000 KG</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">6000 - 10000 KG</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">10000 - 15000 KG</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">15000 - 20000 KG</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">20000 - 30000 KG</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">30000 - 40000 KG</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'weight')">&gt; 40000 KG</button>
-    </div>
-
-    <h3 class="st-subtitle">What Kind of Load?</h3>
-    <div class="st-grid st-scroll-row">
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">📦</div><div>Packaged / Bags</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">⛰️</div><div>Powdered / Grain</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🛢️</div><div>Liquid / Gas</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">❄️</div><div>Frozen / Food</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🧱</div><div>Solid</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🧻</div><div>Bulky</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🍽️</div><div>Fragile</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🚪🛏️</div><div>Furniture</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">⚒️</div><div>fragmented / Scrap</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">⚛︎ 🧬 🧫 🧪</div><div>Hazardous</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🖥️</div><div>Electrical</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🏗️</div><div>Equipments</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🚢</div><div>Containers</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">💉</div><div>Medical</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🎻</div><div>Instrument</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🐘🦏🦒🦁🦓</div><div>Living Beings</div></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'load-type')"><div class="st-icon">🌱🌱</div><div>Others</div></button>
-    </div>
-
-    <!-- Availability -->
-    <h2 class="st-section-title">When Are You Available 📅🗺️📍</h2>
-    <h3 class="st-subtitle">Available Dates</h3>
-    <div class="st-input-row">
-      <div class="st-input-with-icon">
-        <span class="st-icon">📅</span>
-        <input type="text" class="st-input-field" placeholder="Start Date">
-      </div>
-      <button class="st-opt-btn" style="flex:0.4;">Anytime</button>
-    </div>
-
-    <!-- Location -->
-    <h2 class="st-section-title">Where & When Are You Available? 📍</h2>
-    <div class="st-input-row">
-      <div class="st-input-with-icon">
-        <span class="st-icon">📍</span>
-        <input type="text" class="st-input-field" placeholder="Current City, State">
-      </div>
-      <button class="st-opt-btn" style="flex:0.4;">Anywhere</button>
-    </div>
-
-    <h3 class="st-subtitle">Your Location<br><br>Where You Want To Go?</h3>
-    <div class="st-input-row">
-      <div class="st-input-with-icon">
-        <span class="st-icon">🌐</span>
-        <input type="text" class="st-input-field" placeholder="Destination City, State">
-      </div>
-      <button class="st-opt-btn" style="flex:0.4;">Anywhere</button>
-    </div>
-
-    <!-- Trip Details -->
-    <h3 class="st-subtitle">Trip Details</h3>
-    <div class="st-subtitle" style="font-size:16px;margin-top:15px;">Distance Range (KM)</div>
-    <div class="st-grid">
-      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">&lt; 200 KM</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">200 - 500 KM</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">500 - 1000 KM</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'distance')">&gt; 1000 KM</button>
-    </div>
-
-    <div class="st-subtitle" style="font-size:16px;margin-top:15px;">Trip-type</div>
-    <div class="st-grid">
-      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Single Trip</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Return Trip</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Allotment Trip</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">Long-Term Trip</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'trip-type')">All</button>
-    </div>
-
-    <!-- Delivery & Pay -->
-    <h2 class="st-section-title">⭐ Delivery, Pay & Ratings</h2>
-    <h3 class="st-subtitle">Delivery Mode</h3>
-    <div class="st-grid">
-      <button class="st-opt-btn selected" onclick="stSelectOption(this,'delivery')">✓ Normal<span class="st-checkmark">✓</span></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'delivery')">⚡ Express</button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'delivery')">⚡ Both</button>
-    </div>
-
-    <h3 class="st-subtitle">Payment Preffered</h3>
-    <div class="st-grid st-grid-2">
-      <button class="st-opt-btn selected" onclick="stSelectOption(this,'payment-final')">Cash Preferred<span class="st-checkmark">✓</span></button>
-      <button class="st-opt-btn" onclick="stSelectOption(this,'payment-final')">Digital Pay</button>
-    </div>
-
-    <!-- Order Time & Notes -->
-    <h2 class="st-section-title">Order Time & Final Notes ⏰📝</h2>
-    <h3 class="st-subtitle">When Can You Confirm?</h3>
-    <div class="st-input-row">
-      <button class="st-date-btn selected">Confirm Order Time</button>
-      <button class="st-date-btn">Flexible Time</button>
-    </div>
-
-    <h3 class="st-subtitle">Additional Comments</h3>
-    <textarea class="st-input-field" placeholder="Write any extra details here..."></textarea>
-
-    <button class="st-submit-btn" onclick="stSubmitForm()">Post My Trip!</button>
-  </div>
-</div>
-
-<script>
-  function openSchedulePage() {
-    document.getElementById('schedulePage').style.display = 'block';
-    document.body.style.overflow = 'hidden';
-  }
-  function closeSchedulePage() {
-    document.getElementById('schedulePage').style.display = 'none';
-    document.body.style.overflow = '';
-  }
-  function stSelectOption(btn, group) {
-    const section = btn.closest('.st-section');
-    section.querySelectorAll(`.st-opt-btn[onclick*="${group}"]`).forEach(b => {
-      b.classList.remove('selected');
-      const check = b.querySelector('.st-checkmark');
-      if (check) check.style.display = 'none';
-    });
-    btn.classList.add('selected');
-    const checkmark = btn.querySelector('.st-checkmark');
-    if (checkmark) checkmark.style.display = 'flex';
-  }
-  function stSubmitForm() {
-    alert('Trip posted successfully! 🎉');
-  }
-</script>
+    <script>
+        function openSchedulePage() {
+            document.getElementById('schedulePage').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSchedulePage() {
+            document.getElementById('schedulePage').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        function stSelectOption(btn, group) {
+            const section = btn.closest('.st-section');
+            section.querySelectorAll(`.st-opt-btn[onclick*="${group}"]`).forEach(b => {
+                b.classList.remove('selected');
+                const check = b.querySelector('.st-checkmark');
+                if (check) check.style.display = 'none';
+            });
+            btn.classList.add('selected');
+            const checkmark = btn.querySelector('.st-checkmark');
+            if (checkmark) checkmark.style.display = 'flex';
+        }
+        function stSubmitForm() {
+            alert('Trip posted successfully! 🎉');
+        }
+    </script>
 
 </body>
+
 </html>
