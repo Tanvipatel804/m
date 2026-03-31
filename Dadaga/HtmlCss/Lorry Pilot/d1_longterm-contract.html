@@ -640,97 +640,7 @@
                 opacity: 0.7;
             }
         }
-
-        /* Modal Overlay */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-box {
-            background: #1e293b;
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            border-radius: 20px;
-            padding: 28px 24px;
-            max-width: 340px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes modalIn {
-            from {
-                transform: scale(0.85);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .modal-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(16, 185, 129, 0.15);
-            border: 2px solid #10b981;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 18px;
-        }
-
-        .modal-icon i {
-            font-size: 1.6rem;
-            color: #10b981;
-        }
-
-        .modal-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #f8fafc;
-            margin-bottom: 12px;
-        }
-
-        .modal-message {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            line-height: 1.65;
-            margin-bottom: 24px;
-        }
-
-        .modal-ok-btn {
-            width: 100%;
-            padding: 13px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
-            transition: transform 0.15s;
-        }
-
-        .modal-ok-btn:active {
-            transform: scale(0.97);
-        }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -1023,9 +933,7 @@
                         <div class="detail-icon">📧</div>
                         <div>
                             <div style="font-size: 12px; color: #999;">Email Address</div>
-                            <div style="font-weight: 600;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                    data-cfemail="8cede2e5e0a2e8e9ffe4e1f9e7e4ccf8e9efe4e9e0e9eff8fee3e2e5efffa2efe3e1">[email&#160;protected]</a>
-                            </div>
+                            <div style="font-weight: 600;">anil.deshmukh@techelectronics.com</div>
                         </div>
                     </div>
                     <div class="company-detail">
@@ -1045,22 +953,6 @@
             </div>
         </div>
 
-        <!-- Accept Confirmation Modal -->
-        <div class="modal-overlay" id="acceptModal">
-            <div class="modal-box">
-                <div class="modal-icon">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
-                <div class="modal-title">Acceptance Forwarded!</div>
-                <div class="modal-message">
-                    Your acceptance has been forwarded to the customer. Once the customer approves your request, you
-                    will
-                    receive a notification to start the pickup.
-                </div>
-                <button class="modal-ok-btn" onclick="closeAcceptModal()">OK</button>
-            </div>
-        </div>
-
         <!-- Action Buttons -->
         <div class="action-buttons">
             <button class="action-button decline-btn" onclick="declineContract()">
@@ -1072,7 +964,6 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
         // Sample contract data
         const contractData = {
@@ -1130,24 +1021,30 @@
 
         // Accept contract function
         function acceptContract() {
-            const tnc = document.getElementById('tnc');
-            const isChecked = tnc.style.background === 'rgb(16, 185, 129)';
+            const confirmed = confirm(
+                `Are you sure you want to accept this long-term contract?\n\n` +
+                `Contract ID: ${contractData.contractId}\n` +
+                `Duration: ${contractData.duration.totalDays} days (${contractData.duration.startDate} to ${contractData.duration.endDate})\n` +
+                `Trucks Required: ${contractData.vehicle.numberOfTrucks}\n` +
+                `Total Contract Value: ₹${contractData.pricing.totalAmount.toLocaleString()}\n\n` +
+                `This is a commitment for 6 months.`
+            );
 
-            if (!isChecked) {
-                alert("Please agree to the Terms & Conditions first.");
-                return;
+            if (confirmed) {
+                console.log('Contract Accepted:', contractData);
+                alert(
+                    '✅ Contract Accepted Successfully!\n\n' +
+                    'Next Steps:\n' +
+                    '1. You will receive the contract documents via email\n' +
+                    '2. Please review and sign the agreement\n' +
+                    '3. Submit required compliance documents\n' +
+                    '4. Vehicle inspection will be scheduled\n' +
+                    '5. Contract begins on ' + contractData.duration.startDate
+                );
+                // In real app, redirect to contract management page
+                window.location.href = "C:/Users/DADAGA/Desktop/Dadaga/HtmlCss/Lorry Pilot/15 MT-maintrip.html";
             }
-            document.getElementById('acceptModal').classList.add('active');
         }
-
-        function closeAcceptModal() {
-            document.getElementById('acceptModal').classList.remove('active');
-        }
-
-        // Close modal when clicking outside the box
-        document.getElementById('acceptModal').addEventListener('click', function (e) {
-            if (e.target === this) closeAcceptModal();
-        });
 
         // Decline contract function
         function declineContract() {
@@ -1202,22 +1099,11 @@
                 if (text.includes('@')) {
                     const email = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
                     if (email) emailContact(email[0]);
-                } else if (text.includes('+91') || text.includes('phone') || /\d{10}/.test(text)) {
-                    const phone = text.match(/[\+\d][\d\s\-]{9,}/);
-                    if (phone) callContact(phone[0].trim());
+                } else if (text.includes('+91')) {
+                    const phone = text.match(/\+91\s*\d+\s*\d+\s*\d+/);
+                    if (phone) callContact(phone[0].replace(/\s/g, ''));
                 }
             });
-        });
-
-        // Toggle TnC checkbox
-        document.getElementById('tnc').addEventListener('click', function () {
-            if (this.style.background === 'rgb(16, 185, 129)') {
-                this.style.background = '';
-                this.innerHTML = '';
-            } else {
-                this.style.background = '#10b981';
-                this.innerHTML = '<span style="color:white;font-size:0.75rem;font-weight:700;">✓</span>';
-            }
         });
     </script>
 </body>
