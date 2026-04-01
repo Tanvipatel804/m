@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💎 LORRY - Driver Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            height: 52px;
+            background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            z-index: 1500;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-menu-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+
+        .header-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .app-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-name .gem {
+            font-size: 22px;
+        }
+
+        /* Online/Offline Toggle */
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            min-width: 44px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #546E7A;
+            border-radius: 26px;
+            transition: 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background: #4CAF50;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Header Right */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notif-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .notif-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #FF5252;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 9px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #0D47A1;
+        }
+
+        /* Notification Dropdown */
+        .notif-dropdown {
+            position: absolute;
+            top: 52px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            z-index: 2500;
+            display: none;
+            overflow: hidden;
+        }
+
+        .notif-dropdown.open {
+            display: block;
+        }
+
+        .notif-dropdown-header {
+            padding: 14px 18px;
+            background: #1565C0;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notif-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .notif-item {
+            padding: 13px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .notif-item:hover {
+            background: #f5f9ff;
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .notif-dot.urgent {
+            background: #e74c3c;
+        }
+
+        .notif-dot.info {
+            background: #3498db;
+        }
+
+        .notif-dot.success {
+            background: #2ecc71;
+        }
+
+        .notif-dot.warn {
+            background: #f39c12;
+        }
+
+        .notif-text {
+            flex: 1;
+        }
+
+        .notif-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+
+        .notif-desc {
+            font-size: 11px;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        .notif-time {
+            font-size: 10px;
+            color: #bbb;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 52px);
+        }
+
+        /* Map Section */
+        .map-section {
+            position: relative;
+            height: 300px;
+            background: #e3e8ef;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-button {
+            position: absolute;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .map-button:hover {
+            background: #f5f5f5;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .menu-btn {
+            top: 15px;
+            left: 15px;
+        }
+
+        .book-btn {
+            bottom: 20px;
+            left: 15px;
+        }
+
+        .location-btn {
+            top: 15px;
+            right: 15px;
+        }
+
+        .location-btn a {
+            color: inherit;
+        }
+
+        .zoom-btn {
+            top: 70px;
+            right: 15px;
+        }
+
+        .settings-btn {
+            bottom: 15px;
+            right: 15px;
+        }
+
+        .settings-btn a {
+            color: inherit;
+        }
+
+
+
+        /* Content Below Map */
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 90px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            border: none;
+            outline: none;
+            position: relative;
+        }
+
+        .sidebar-item:nth-child(1) {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .sidebar-item:nth-child(2) {
+            background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+        }
+
+        .sidebar-item:nth-child(3) {
+            background: linear-gradient(135deg, #7E57C2 0%, #5E35B1 100%);
+        }
+
+        .sidebar-item:hover {
+            filter: brightness(1.12);
+        }
+
+        .sidebar-item.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .sidebar-item.active {
+            filter: brightness(1.15);
+            box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: flex;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .stat-card {
+            flex: 1;
+            padding: 14px 10px;
+            text-align: center;
+            background: #FFF9E6;
+            border-right: 1px solid #E8DDB5;
+        }
+
+        .stat-card:nth-child(2) {
+            background: #FFF4E6;
+        }
+
+        .stat-card:nth-child(3) {
+            background: #FFFACD;
+            border-right: none;
+        }
+
+        .stat-icon {
+            font-size: 36px;
+            margin-bottom: 6px;
+        }
+
+        .stat-icon.money {
+            color: #D4A017;
+        }
+
+        .stat-icon.distance {
+            color: #8B4513;
+        }
+
+        .stat-icon.score {
+            color: #FFD700;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== SECTIONS (rides / opportunities / other services) ===== */
+        .section-panel {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .section-panel.active {
+            display: flex;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .search-bar {
+            flex: 1;
+            padding: 7px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            background: #f9f9f9;
+        }
+
+        .search-bar::placeholder {
+            color: #999;
+        }
+
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .clear-btn:hover {
+            background: #5a6268;
+        }
+
+        .section-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f9fafb;
+        }
+
+        /* Cards (shared style) */
+        .ride-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid #ddd;
+        }
+
+        .ride-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transform: translateX(2px);
+        }
+
+        .ride-card.high-priority {
+            border-left-color: #e74c3c;
+        }
+
+        .ride-card.medium-priority {
+            border-left-color: #f39c12;
+        }
+
+        .ride-card.low-priority {
+            border-left-color: #95a5a6;
+        }
+
+        .ride-card.green-priority {
+            border-left-color: #4CAF50;
+        }
+
+        .ride-card.blue-priority {
+            border-left-color: #3498db;
+        }
+
+        .ride-card.purple-priority {
+            border-left-color: #9b59b6;
+        }
+
+        .ride-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .ride-title-wrapper {
+            flex: 1;
+        }
+
+        .ride-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .ride-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ride-time {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .ride-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-high {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .badge-medium {
+            background: #f39c12;
+            color: white;
+        }
+
+        .badge-low {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .badge-green {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .badge-blue {
+            background: #3498db;
+            color: white;
+        }
+
+        .badge-purple {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .ride-description {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .ride-details {
+            font-size: 11px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        /* ===== SEARCH WRAPPER & CATEGORY DROPDOWN ===== */
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .search-bar {
+            flex: 1;
+            padding: 7px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            background: #f9f9f9;
+            cursor: pointer;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #1565C0;
+            background: white;
+            cursor: text;
+        }
+
+        .category-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 50px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: none;
+            overflow: hidden;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .category-dropdown.open {
+            display: block;
+        }
+
+        .cat-group {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cat-group:last-child {
+            border-bottom: none;
+        }
+
+        .cat-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px 8px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #1565C0;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            cursor: pointer;
+            user-select: none;
+            background: #f4f8ff;
+            border-bottom: 1px solid #e0ecff;
+        }
+
+        .cat-group-header .cat-icon {
+            font-size: 15px;
+        }
+
+        .cat-group-header .cat-arrow {
+            margin-left: auto;
+            font-size: 11px;
+            color: #999;
+            transition: transform 0.2s;
+        }
+
+        .cat-group-header.collapsed .cat-arrow {
+            transform: rotate(-90deg);
+        }
+
+        .cat-subcategories {
+            padding: 4px 0;
+        }
+
+        .cat-subcategories.hidden {
+            display: none;
+        }
+
+        .subcat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 18px 9px 28px;
+            font-size: 12px;
+            color: #444;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 3px solid transparent;
+        }
+
+        .subcat-item:hover {
+            background: #f0f7ff;
+            border-left-color: #1565C0;
+            color: #1565C0;
+        }
+
+        .subcat-item .subcat-name {
+            font-weight: 600;
+            font-size: 11.5px;
+        }
+
+        .subcat-item .subcat-example {
+            font-size: 10.5px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .subcat-item .subcat-priority {
+            margin-left: auto;
+            padding: 2px 7px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .priority-high-tag {
+            background: #fde8e8;
+            color: #c0392b;
+        }
+
+        .priority-medium-tag {
+            background: #fef3e2;
+            color: #e67e22;
+        }
+
+        .priority-low-tag {
+            background: #eafaf1;
+            color: #27ae60;
+        }
+
+        /* ===== FILTER CHIPS ===== */
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 6px 12px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            min-height: 0;
+        }
+
+        .filter-chips:empty {
+            display: none;
+        }
+
+        .filter-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #e8f0fe;
+            color: #1565C0;
+            border: 1px solid #c5d8fb;
+            border-radius: 20px;
+            padding: 3px 10px 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .filter-chip .chip-x {
+            font-size: 13px;
+            line-height: 1;
+            color: #1565C0;
+            margin-left: 2px;
+        }
+
+        .filter-chip:hover {
+            background: #c5d8fb;
+        }
+
+        /* ===== PRIORITY GROUP HEADERS inside list ===== */
+        .priority-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px 6px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            margin-top: 4px;
+        }
+
+        .priority-group-header.high {
+            color: #c0392b;
+            background: #fde8e8;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .priority-group-header.medium {
+            color: #d35400;
+            background: #fef3e2;
+            border-left: 4px solid #f39c12;
+        }
+
+        .priority-group-header.low {
+            color: #27ae60;
+            background: #eafaf1;
+            border-left: 4px solid #95a5a6;
+        }
+
+        /* ===== SIDEBAR SLIDE-OUT MENU ===== */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1d29 0%, #2c3e50 100%);
+            z-index: 3000;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+
+        .sidebar-menu.open {
+            left: 0;
+        }
+
+        .sidebar-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .sidebar-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-menu-header {
+            padding: 28px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .close-menu-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-name {
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .profile-rating {
+            color: #bbb;
+            font-size: 13px;
+        }
+
+        .sidebar-menu-items {
+            padding: 8px 0;
+        }
+
+        .sidebar-menu-item {
+            padding: 14px 22px;
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu-item a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .sidebar-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: #667eea;
+            color: white;
+        }
+
+        .sidebar-menu-item i {
+            width: 20px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== PAGE HEADER ===== -->
+    <header class="page-header">
+        <!-- Left: Hamburger + App Name -->
+        <div class="header-left">
+            <button class="header-menu-btn" id="headerMenuBtn" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="app-name">
+                <span class="gem">🔺</span>
+                <span>LORRY</span>
+            </div>
+        </div>
+
+        <!-- Right: Notification Bell + Online/Offline Toggle -->
+        <div class="header-right" style="position:relative;">
+
+            <div class="status-toggle">
+                <span class="status-label" id="statusLabel">Offline</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="statusToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <button class="notif-btn" id="notifBtn" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notif-badge" id="notifBadge">4</span>
+            </button>
+
+            <!-- Notification Dropdown -->
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-dropdown-header">
+                    <i class="fas fa-bell"></i> Trip Notifications
+                </div>
+                <div class="notif-list" id="notifList">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== SIDEBAR SLIDE-OUT MENU ===== -->
+    <div class="sidebar-menu-overlay" id="menuOverlay"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-menu-header">
+            <button class="close-menu-btn" id="closeMenuBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <div class="profile-name">Profile Name</div>
+            <div class="profile-rating">Rating ★★★★★</div>
+        </div>
+        <div class="sidebar-menu-items">
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.1 inbox.html">
+                    <i class="fas fa-inbox"></i><span>Inbox</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.2 earning.html">
+                    <i class="fas fa-dollar-sign"></i><span>Earning</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.3 opportunity.html">
+                    <i class="fas fa-briefcase"></i><span>Opportunities</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.4 poolmember.html">
+                    <i class="fas fa-users"></i><span>Pool Members</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.5 wallet.html">
+                    <i class="fas fa-wallet"></i><span>Wallet</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.6 account.html">
+                    <i class="fas fa-user-circle"></i><span>Account</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.7 vehicle recovery.html">
+                    <i class="fas fa-car"></i><span>Vehicle Recovery</span>
+                </a>
+            </div>
+            <div class="sidebar-menu-item">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\12.8 invitefrds.html">
+                    <i class="fas fa-user-plus"></i><span>Refer Friends</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTAINER ===== -->
+    <div class="container">
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <div id="map"></div>
+
+
+            <button class="map-button book-btn">
+                <i class="fas fa-book" style="font-size:16px;"></i>
+            </button>
+            <button class="map-button location-btn" id="locationBtn">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\14 settings3sle.html">
+                    <i class="fas fa-shield-halved" style="font-size:16px;"></i>
+                </a>
+            </button>
+            <button class="map-button zoom-btn" id="zoomBtn">
+                <i class="fas fa-search-plus" style="font-size:16px;"></i>
+            </button>
+            <button class="map-button settings-btn">
+                <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry Pilot\13 filtersetting.html">
+                    <i class="fas fa-cog" style="font-size:18px;"></i>
+                </a>
+            </button>
+
+        </div>
+
+        <!-- Content Below Map -->
+        <div class="content-wrapper">
+
+            <!-- Sidebar Tab Buttons -->
+            <div class="sidebar">
+                <button class="sidebar-item active" data-tab="rides">
+                    <div class="sidebar-icon"><i class="fas fa-truck"></i></div>
+                    <span>Rides</span>
+                </button>
+                <button class="sidebar-item" data-tab="opportunities">
+                    <div class="sidebar-icon"><i class="fas fa-briefcase"></i></div>
+                    <span>Opportunities</span>
+                </button>
+                <button class="sidebar-item" data-tab="other-services">
+                    <div class="sidebar-icon"><i class="fas fa-cog"></i></div>
+                    <span>Other Services</span>
+                </button>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <div class="stat-card">
+                        <div class="stat-icon money"><i class="fas fa-sack-dollar"></i></div>
+                        <div class="stat-value" id="statEarnings">$0.00</div>
+                        <div class="stat-label">Today's Earnings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon distance"><i class="fas fa-road"></i></div>
+                        <div class="stat-value" id="statDistance">0 km</div>
+                        <div class="stat-label">Total Distance</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon score"><i class="fas fa-star"></i></div>
+                        <div class="stat-value" id="statScore">0%</div>
+                        <div class="stat-label">Score</div>
+                    </div>
+                </div>
+
+                <!-- ===== RIDES SECTION ===== -->
+                <div class="section-panel active" id="rides-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-truck" style="color:#4CAF50;"></i>
+                            <span>Rides</span>
+                        </div>
+                        <div class="search-wrapper" id="ridesSearchWrapper">
+                            <input type="text" class="search-bar" id="ridesSearchInput"
+                                placeholder="Search or filter rides..." oninput="filterCards(this,'ridesList')"
+                                onfocus="openCategoryDropdown('rides')" autocomplete="off" readonly>
+                            <button class="clear-btn" onclick="clearSearchFull('rides','ridesList')">Clear</button>
+                            <div class="category-dropdown" id="ridesCatDropdown"></div>
+                        </div>
+                    </div>
+                    <!-- Active filter chips -->
+                    <div class="filter-chips" id="ridesFilterChips"></div>
+                    <div class="section-list" id="ridesList"></div>
+                </div>
+
+                <!-- ===== OPPORTUNITIES SECTION ===== -->
+                <div class="section-panel" id="opportunities-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-briefcase" style="color:#FFA726;"></i>
+                            <span>Opportunities</span>
+                        </div>
+                        <div class="search-wrapper" id="opportunitiesSearchWrapper">
+                            <input type="text" class="search-bar" id="opportunitiesSearchInput"
+                                placeholder="Search or filter opportunities..."
+                                oninput="filterCards(this,'opportunitiesList')"
+                                onfocus="openCategoryDropdown('opportunities')" autocomplete="off" readonly>
+                            <button class="clear-btn"
+                                onclick="clearSearchFull('opportunities','opportunitiesList')">Clear</button>
+                            <div class="category-dropdown" id="opportunitiesCatDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="filter-chips" id="opportunitiesFilterChips"></div>
+                    <div class="section-list" id="opportunitiesList"></div>
+                </div>
+
+                <!-- ===== OTHER SERVICES SECTION ===== -->
+                <div class="section-panel" id="other-services-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-cog" style="color:#7E57C2;"></i>
+                            <span>Other Services</span>
+                        </div>
+                        <div class="search-wrapper" id="otherServicesSearchWrapper">
+                            <input type="text" class="search-bar" id="otherServicesSearchInput"
+                                placeholder="Search or filter services..." oninput="filterCards(this,'servicesList')"
+                                onfocus="openCategoryDropdown('other-services')" autocomplete="off" readonly>
+                            <button class="clear-btn"
+                                onclick="clearSearchFull('other-services','servicesList')">Clear</button>
+                            <div class="category-dropdown" id="otherServicesCatDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="filter-chips" id="otherServicesFilterChips"></div>
+                    <div class="section-list" id="servicesList"></div>
+                </div>
+
+            </div><!-- /main-content -->
+        </div><!-- /content-wrapper -->
+    </div><!-- /container -->
+
+    <script>
+        // ===================================================
+        // MAP
+        // ===================================================
+        const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([25.2048, 55.2708], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        L.marker([25.2048, 55.2708], {
+            icon: L.divIcon({
+                className: 'custom-marker',
+                html: '<i class="fas fa-map-marker-alt" style="font-size:40px;color:#e74c3c;"></i>',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40]
+            })
+        }).addTo(map);
+
+        document.getElementById('zoomBtn').addEventListener('click', () => map.zoomIn());
+        document.getElementById('locationBtn').addEventListener('click', () => map.setView([25.2048, 55.2708], 12));
+
+        // ===================================================
+        // NOTIFICATION DATA
+        // ===================================================
+        const notifications = [
+            { type: 'urgent', title: 'New Urgent Trip Request', desc: 'Dubai Marina → Abu Dhabi Airport. Cargo: Medical supplies 1.3t. Rate: $280.', time: '2 min ago' },
+            { type: 'info', title: 'Trip Progress Update', desc: 'Your Sharjah delivery is 85% complete. ETA: 18 minutes.', time: '20 min ago' },
+            { type: 'success', title: 'Delivery Completed', desc: 'Al Ain delivery done! Rating: ⭐5 | Earned: $195 + $25 tip.', time: '1 hr ago' },
+            { type: 'warn', title: 'New Opportunity Available', desc: 'Long-haul Ras Al Khaimah run. Earn up to $420. Act fast!', time: '2 hr ago' },
+        ];
+
+        function renderNotifications() {
+            const list = document.getElementById('notifList');
+            list.innerHTML = notifications.map(n => `
+                <div class="notif-item">
+                    <div class="notif-dot ${n.type}"></div>
+                    <div class="notif-text">
+                        <div class="notif-title">${n.title}</div>
+                        <div class="notif-desc">${n.desc}</div>
+                    </div>
+                    <div class="notif-time">${n.time}</div>
+                </div>
+            `).join('');
+        }
+        renderNotifications();
+
+        // Toggle notification dropdown
+        const notifBtn = document.getElementById('notifBtn');
+        const notifDropdown = document.getElementById('notifDropdown');
+        notifBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('open');
+        });
+        document.addEventListener('click', () => notifDropdown.classList.remove('open'));
+        notifDropdown.addEventListener('click', e => e.stopPropagation());
+
+        // ===================================================
+        // ONLINE / OFFLINE — vars used later by toggle handler
+        // ===================================================
+        const statusToggle = document.getElementById('statusToggle');
+        const statusLabel = document.getElementById('statusLabel');
+
+        // ===================================================
+        // SIDEBAR SLIDE-OUT MENU (header hamburger)
+        // ===================================================
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+        function openMenu() { sidebarMenu.classList.add('open'); menuOverlay.classList.add('open'); }
+        function closeMenu() { sidebarMenu.classList.remove('open'); menuOverlay.classList.remove('open'); }
+
+        document.getElementById('headerMenuBtn').addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+        document.querySelectorAll('.sidebar-menu-item').forEach(item => item.addEventListener('click', closeMenu));
+
+        // ===================================================
+        // TAB SWITCHING (Rides / Opportunities / Other Services)
+        // ===================================================
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        const sectionPanels = document.querySelectorAll('.section-panel');
+
+        sidebarItems.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const tab = this.dataset.tab;
+                // Update active tab button
+                sidebarItems.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // Show matching section
+                sectionPanels.forEach(panel => {
+                    panel.classList.remove('active');
+                    if (panel.id === tab + '-section') panel.classList.add('active');
+                });
+            });
+        });
+
+        // ===================================================
+        // DATA
+        // ===================================================
+
+        // ---- RIDES DATA (with categories & subcategories) ----
+        const ridesData = [
+            // === HIGH PRIORITY ===
+            // 1. CONFIRMED TRIP
+            { category: 'CONFIRMED TRIP', subcategory: 'TRIP_CONFIRMED', title: '✅ Trip Confirmed — #TR123', description: 'Your trip #TR123 has been confirmed for 2 April, 10:00 AM.', details: 'Please ensure your vehicle is ready 30 min early.', time: '2 min ago', priority: 'high' },
+            { category: 'CONFIRMED TRIP', subcategory: 'DRIVER_ASSIGNED', title: '🧑‍✈️ Driver Assigned', description: 'Driver Ahmed (050XXXXXXX) has been assigned to your trip.', details: 'Contact driver for coordination.', time: '5 min ago', priority: 'high' },
+            { category: 'CONFIRMED TRIP', subcategory: 'VEHICLE_ASSIGNED', title: '🚛 Vehicle Allocated', description: 'Truck (Plate: UAE12345) has been allocated to your booking.', details: 'Verify vehicle condition before departure.', time: '8 min ago', priority: 'high' },
+            { category: 'CONFIRMED TRIP', subcategory: 'TRIP_SCHEDULED', title: '📅 Trip Scheduled', description: 'Trip scheduled for pickup at 10:00 AM from Dubai Warehouse.', details: '', time: '10 min ago', priority: 'high' },
+            // 2. NEW TRIP REQUEST
+            { category: 'NEW TRIP REQUEST', subcategory: 'BOOKING_REQUEST_CREATED', title: '📦 New Trip Request — Ajman to Abu Dhabi', description: 'New trip request created from Ajman to Abu Dhabi.', details: 'Estimated distance: 140 km. Confirm or decline.', time: '3 min ago', priority: 'high' },
+            { category: 'NEW TRIP REQUEST', subcategory: 'PRICE_QUOTATION_SENT', title: '💰 Quotation Sent', description: 'Your trip quotation is AED 850.', details: 'Valid for 30 minutes. Respond promptly.', time: '6 min ago', priority: 'high' },
+            { category: 'NEW TRIP REQUEST', subcategory: 'DRIVER_ACCEPTANCE_PENDING', title: '⏳ Awaiting Driver Confirmation', description: 'Waiting for driver confirmation on your booking.', details: '', time: '9 min ago', priority: 'high' },
+            { category: 'NEW TRIP REQUEST', subcategory: 'REQUEST_EXPIRED', title: '⛔ Booking Request Expired', description: 'Your booking request has expired due to no response.', details: 'Please create a new request.', time: '14 min ago', priority: 'high' },
+            // UNDER TRIP ACTIVE — ISSUES (critical → high)
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'ACCIDENT_REPORTED', title: '🚨 Accident Reported!', description: 'Truck met with an accident near Sheikh Zayed Road. Assistance required.', details: 'Emergency team dispatched. Stay safe.', time: '1 min ago', priority: 'high' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'BREAKDOWN_REPORTED', title: '🔧 Vehicle Breakdown', description: 'Vehicle breakdown reported on E311 highway.', details: 'Roadside assistance notified.', time: '4 min ago', priority: 'high' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'LOAD_DAMAGE_REPORTED', title: '📦 Load Damage Reported', description: 'Some goods reported damaged during transit.', details: 'Document with photos immediately.', time: '7 min ago', priority: 'high' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'GOODS_MISSING_REPORTED', title: '🔍 Goods Missing at Delivery', description: 'Some items missing at delivery location.', details: 'Report to support team immediately.', time: '11 min ago', priority: 'high' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'EMERGENCY_SOS_TRIGGERED', title: '🆘 SOS Alert Triggered!', description: 'SOS alert triggered by driver. Location shared with emergency contact.', details: '', time: '2 min ago', priority: 'high' },
+
+            // === MEDIUM PRIORITY ===
+            // 3. TRIP PROGRESS UPDATE
+            { category: 'TRIP PROGRESS UPDATE', subcategory: 'TRIP_STARTED', title: '🚦 Trip Started', description: 'Driver has started the trip from Dubai Marina.', details: 'Track live location in the app.', time: '20 min ago', priority: 'medium' },
+            { category: 'TRIP PROGRESS UPDATE', subcategory: 'ARRIVED_AT_PICKUP', title: '📍 Driver at Pickup Location', description: 'Driver reached pickup location at Deira Warehouse.', details: 'Please be ready to load goods.', time: '25 min ago', priority: 'medium' },
+            { category: 'TRIP PROGRESS UPDATE', subcategory: 'PICKUP_COMPLETED', title: '✅ Goods Loaded', description: 'Goods successfully loaded at pickup point.', details: 'In transit to destination.', time: '30 min ago', priority: 'medium' },
+            { category: 'TRIP PROGRESS UPDATE', subcategory: 'IN_TRANSIT', title: '🛣️ In Transit', description: 'Truck is on the way to destination. ETA: 45 min.', details: '', time: '35 min ago', priority: 'medium' },
+            { category: 'TRIP PROGRESS UPDATE', subcategory: 'ARRIVED_AT_DESTINATION', title: '🏁 Arrived at Destination', description: 'Truck reached delivery location at Abu Dhabi Warehouse.', details: 'Awaiting unloading confirmation.', time: '40 min ago', priority: 'medium' },
+            // UNDER TRIP ACTIVE — non-critical
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'TRIP_DELAY_REPORTED', title: '⚠️ Trip Delay Alert', description: 'Delay due to traffic on E11. New ETA: 3:30 PM.', details: 'Customer has been notified.', time: '15 min ago', priority: 'medium' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'ROUTE_DEVIATION_ALERT', title: '🗺️ Route Deviation Alert', description: 'Driver deviated from planned route near Al Quoz.', details: 'Please confirm alternate route.', time: '18 min ago', priority: 'medium' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'OVERLOAD_ISSUE_REPORTED', title: '⚠️ Truck Overloaded', description: 'Truck overloaded beyond permitted limit.', details: 'Offload excess cargo before continuing.', time: '22 min ago', priority: 'medium' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'WEATHER_DELAY_ALERT', title: '🌧️ Weather Delay', description: 'Delay due to bad weather conditions in Fujairah.', details: 'ETA updated. Stay safe.', time: '28 min ago', priority: 'medium' },
+            // PAYMENT RELATED (medium)
+            { category: 'PAYMENT RELATED', subcategory: 'PAYMENT_PENDING', title: '💳 Payment Pending', description: 'Payment of AED 850 is pending for trip #TR123.', details: 'Due within 24 hours.', time: '1 hr ago', priority: 'medium' },
+            { category: 'PAYMENT RELATED', subcategory: 'INVOICE_GENERATED', title: '🧾 Invoice Generated', description: 'Invoice #INV123 has been generated for your trip.', details: 'Download from Wallet section.', time: '2 hr ago', priority: 'medium' },
+            { category: 'PAYMENT RELATED', subcategory: 'PARTIAL_PAYMENT_RECEIVED', title: '💰 Partial Payment Received', description: 'Partial payment of AED 400 received for trip #TR456.', details: 'Balance AED 450 still due.', time: '3 hr ago', priority: 'medium' },
+            // CANCEL / POSTPONE
+            { category: 'CANCEL / POSTPONE TRIP', subcategory: 'TRIP_POSTPONED', title: '📅 Trip Postponed', description: 'Trip postponed to next day due to customer request.', details: 'New slot confirmed for 3 April, 9 AM.', time: '45 min ago', priority: 'medium' },
+            { category: 'CANCEL / POSTPONE TRIP', subcategory: 'TRIP_RESCHEDULED', title: '🔄 Trip Rescheduled', description: 'Trip rescheduled to 3 April, 2:00 PM.', details: '', time: '50 min ago', priority: 'medium' },
+            // COMMUNICATION
+            { category: 'COMMUNICATION / SUPPORT', subcategory: 'CHAT_MESSAGE_SENT', title: '💬 Driver Message', description: 'Driver: "I will reach in 10 minutes. Please be ready."', details: '', time: '12 min ago', priority: 'medium' },
+            { category: 'COMMUNICATION / SUPPORT', subcategory: 'SUPPORT_TICKET_CREATED', title: '🎫 Support Ticket Created', description: 'Support ticket #SUP123 created for your complaint.', details: 'Expected response within 2 hours.', time: '2 hr ago', priority: 'medium' },
+
+            // === LOW PRIORITY ===
+            // 4. TRIP COMPLETED
+            { category: 'TRIP COMPLETED', subcategory: 'DELIVERY_COMPLETED', title: '✅ Delivery Completed', description: 'Delivery completed successfully at Al Ain residential complex.', details: 'Customer satisfaction: ⭐5. Payment: AED 195 + AED 25 tip.', time: '1 hr ago', priority: 'low' },
+            { category: 'TRIP COMPLETED', subcategory: 'PROOF_OF_DELIVERY_UPLOADED', title: '📷 Delivery Proof Uploaded', description: 'Delivery proof uploaded (signature & image) for trip #TR123.', details: '', time: '1.5 hr ago', priority: 'low' },
+            { category: 'TRIP COMPLETED', subcategory: 'CUSTOMER_CONFIRMED', title: '👍 Customer Confirmed Delivery', description: 'Customer confirmed delivery receipt for the Fujairah shipment.', details: '', time: '2 hr ago', priority: 'low' },
+            { category: 'TRIP COMPLETED', subcategory: 'TRIP_CLOSED', title: '🔒 Trip Closed', description: 'Trip #TR123 has been officially closed.', details: 'Rating and earnings updated in your profile.', time: '2.5 hr ago', priority: 'low' },
+            // CANCEL
+            { category: 'CANCEL / POSTPONE TRIP', subcategory: 'TRIP_CANCELLED_BY_CUSTOMER', title: '❌ Trip Cancelled by Customer', description: 'Trip cancelled by customer before pickup.', details: 'Cancellation fee applied.', time: '3 hr ago', priority: 'low' },
+            { category: 'CANCEL / POSTPONE TRIP', subcategory: 'TRIP_CANCELLED_BY_DRIVER', title: '❌ Trip Cancelled by Driver', description: 'Driver cancelled the trip. New driver being assigned.', details: '', time: '3.5 hr ago', priority: 'low' },
+            { category: 'CANCEL / POSTPONE TRIP', subcategory: 'TRIP_CANCELLED_BY_SYSTEM', title: '❌ Trip Cancelled by System', description: 'Trip cancelled due to a system issue. Full refund initiated.', details: '', time: '4 hr ago', priority: 'low' },
+            // PAYMENT — completed/refund
+            { category: 'PAYMENT RELATED', subcategory: 'PAYMENT_COMPLETED', title: '✅ Payment Received', description: 'Payment of AED 850 received successfully for trip #TR123.', details: 'Credited to your wallet.', time: '2 hr ago', priority: 'low' },
+            { category: 'PAYMENT RELATED', subcategory: 'REFUND_INITIATED', title: '💸 Refund Initiated', description: 'Refund of AED 200 initiated for cancelled booking.', details: 'Expected in 2-3 business days.', time: '3 hr ago', priority: 'low' },
+            { category: 'PAYMENT RELATED', subcategory: 'PAYMENT_FAILED', title: '⚠️ Payment Transaction Failed', description: 'Payment transaction failed. Please retry or use another method.', details: '', time: '4 hr ago', priority: 'low' },
+            // COMMUNICATION
+            { category: 'COMMUNICATION / SUPPORT', subcategory: 'SUPPORT_RESPONSE_RECEIVED', title: '📩 Support Team Replied', description: 'Support team replied to your ticket #SUP123.', details: 'Check your inbox for details.', time: '3 hr ago', priority: 'low' },
+            { category: 'UNDER TRIP ACTIVE', subcategory: 'MISBEHAVIOR_REPORTED', title: '🚩 Driver Complaint', description: 'Complaint raised against driver behavior during trip.', details: 'Investigation initiated.', time: '5 hr ago', priority: 'low' },
+        ];
+
+        // ---- OPPORTUNITIES DATA ----
+        const opportunitiesData = [
+            { category: 'LONG HAUL', subcategory: 'FULL_LOAD', title: "Long-Haul — Dubai to Ras Al Khaimah", description: "Full truckload opportunity: Construction materials (12 tons) from Jebel Ali to Ras Al Khaimah industrial zone.", details: "Same-day delivery. Earn up to $420. Client rating: 4.9★.", time: "5 min ago", priority: "green" },
+            { category: 'CONTRACT', subcategory: 'WEEKLY_CONTRACT', title: "Recurring Weekly Contract Available", description: "Weekly delivery contract offered by Al Futtaim Logistics — 5 trips/week between Dubai and Abu Dhabi.", details: "Estimated earnings: $1,800/week. Apply before 5:00 PM.", time: "30 min ago", priority: "blue" },
+            { category: 'EXPRESS', subcategory: 'PARCEL_BATCH', title: "Express Parcel Batch — Ajman", description: "15 parcels to be delivered across Ajman within 2 hours. Bonus incentive of $40 for on-time completion.", details: "Parcels pre-sorted and ready for pickup at Ajman hub.", time: "1 hr ago", priority: "green" },
+            { category: 'PARTNERSHIP', subcategory: 'AIRPORT_FREIGHT', title: "Airport Freight Partnership", description: "Dubai Cargo Village is looking for licensed drivers for regular airport freight runs.", details: "Minimum 3 trips daily. Average $150/trip.", time: "3 hr ago", priority: "blue" },
+        ];
+
+        // ---- OTHER SERVICES DATA ----
+        const otherServicesData = [
+            { category: 'MAINTENANCE', subcategory: 'SERVICE_REMINDER', title: "Vehicle Maintenance Reminder", description: "Your next scheduled service is due in 320 km. Visit any approved LORRY service center.", details: "Use promo code: LORRY20 for 20% off.", time: "Today", priority: "purple" },
+            { category: 'FUEL', subcategory: 'FUEL_DISCOUNT', title: "Fuel Discount Partner — ENOC", description: "LORRY drivers enjoy 8% cashback on fuel at all ENOC stations.", details: "Already saved: $62.40 this month.", time: "Yesterday", priority: "blue" },
+            { category: 'INSURANCE', subcategory: 'RENEWAL_NOTICE', title: "Insurance Renewal Notice", description: "Your commercial vehicle insurance expires in 12 days. Renew now through the app.", details: "Renewal takes 5 minutes. Documents auto-filled.", time: "2 days ago", priority: "purple" },
+            { category: 'TRAINING', subcategory: 'SAFETY_MODULE', title: "Driver Training — Safety Module", description: "Complete the Safety & Compliance training module to unlock Platinum Driver status.", details: "Module takes ~30 minutes. Earn +5 score points.", time: "3 days ago", priority: "green" },
+        ];
+
+        // ===================================================
+        // CATEGORY DEFINITIONS per sidebar
+        // ===================================================
+        const categoryDefs = {
+            rides: [
+                {
+                    name: 'CONFIRMED TRIP', icon: '✅', color: '#27ae60',
+                    subs: [
+                        { name: 'TRIP_CONFIRMED', example: 'Trip #TR123 confirmed for 2 April, 10:00 AM', priority: 'high' },
+                        { name: 'DRIVER_ASSIGNED', example: 'Driver Ahmed (050XXXXXXX) assigned', priority: 'high' },
+                        { name: 'VEHICLE_ASSIGNED', example: 'Truck (Plate: UAE12345) allocated', priority: 'high' },
+                        { name: 'TRIP_SCHEDULED', example: 'Pickup at 10:00 AM from Dubai Warehouse', priority: 'high' },
+                    ]
+                },
+                {
+                    name: 'NEW TRIP REQUEST', icon: '📦', color: '#2980b9',
+                    subs: [
+                        { name: 'BOOKING_REQUEST_CREATED', example: 'New trip request: Ajman to Abu Dhabi', priority: 'high' },
+                        { name: 'PRICE_QUOTATION_SENT', example: 'Quotation: AED 850', priority: 'high' },
+                        { name: 'DRIVER_ACCEPTANCE_PENDING', example: 'Waiting for driver confirmation', priority: 'high' },
+                        { name: 'REQUEST_EXPIRED', example: 'Booking request expired (no response)', priority: 'high' },
+                    ]
+                },
+                {
+                    name: 'TRIP PROGRESS UPDATE', icon: '🚦', color: '#8e44ad',
+                    subs: [
+                        { name: 'TRIP_STARTED', example: 'Driver has started the trip', priority: 'medium' },
+                        { name: 'ARRIVED_AT_PICKUP', example: 'Driver reached pickup location', priority: 'medium' },
+                        { name: 'PICKUP_COMPLETED', example: 'Goods successfully loaded', priority: 'medium' },
+                        { name: 'IN_TRANSIT', example: 'Truck on the way to destination', priority: 'medium' },
+                        { name: 'ARRIVED_AT_DESTINATION', example: 'Truck reached delivery location', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'TRIP COMPLETED', icon: '✅', color: '#16a085',
+                    subs: [
+                        { name: 'DELIVERY_COMPLETED', example: 'Delivery completed successfully', priority: 'low' },
+                        { name: 'PROOF_OF_DELIVERY_UPLOADED', example: 'Proof uploaded (signature/image)', priority: 'low' },
+                        { name: 'CUSTOMER_CONFIRMED', example: 'Customer confirmed delivery', priority: 'low' },
+                        { name: 'TRIP_CLOSED', example: 'Trip has been closed', priority: 'low' },
+                    ]
+                },
+                {
+                    name: 'UNDER TRIP ACTIVE', icon: '⚠️', color: '#c0392b',
+                    subs: [
+                        { name: 'TRIP_DELAY_REPORTED', example: 'Delay due to traffic. New ETA: 3:30 PM', priority: 'medium' },
+                        { name: 'LOAD_DAMAGE_REPORTED', example: 'Goods reported damaged during transit', priority: 'high' },
+                        { name: 'ACCIDENT_REPORTED', example: 'Truck met with an accident', priority: 'high' },
+                        { name: 'BREAKDOWN_REPORTED', example: 'Vehicle breakdown reported', priority: 'high' },
+                        { name: 'ROUTE_DEVIATION_ALERT', example: 'Driver deviated from planned route', priority: 'medium' },
+                        { name: 'MISBEHAVIOR_REPORTED', example: 'Complaint against driver behavior', priority: 'low' },
+                        { name: 'GOODS_MISSING_REPORTED', example: 'Items missing at delivery', priority: 'high' },
+                        { name: 'OVERLOAD_ISSUE_REPORTED', example: 'Truck overloaded beyond limit', priority: 'medium' },
+                        { name: 'WEATHER_DELAY_ALERT', example: 'Delay due to bad weather', priority: 'medium' },
+                        { name: 'EMERGENCY_SOS_TRIGGERED', example: 'SOS alert triggered by driver', priority: 'high' },
+                    ]
+                },
+                {
+                    name: 'CANCEL / POSTPONE TRIP', icon: '❌', color: '#e74c3c',
+                    subs: [
+                        { name: 'TRIP_CANCELLED_BY_CUSTOMER', example: 'Trip cancelled by customer', priority: 'low' },
+                        { name: 'TRIP_CANCELLED_BY_DRIVER', example: 'Driver cancelled the trip', priority: 'low' },
+                        { name: 'TRIP_CANCELLED_BY_SYSTEM', example: 'Trip cancelled due to system issue', priority: 'low' },
+                        { name: 'TRIP_POSTPONED', example: 'Trip postponed to next day', priority: 'medium' },
+                        { name: 'TRIP_RESCHEDULED', example: 'Trip rescheduled to 3 April, 2 PM', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'PAYMENT RELATED', icon: '💳', color: '#d35400',
+                    subs: [
+                        { name: 'PAYMENT_PENDING', example: 'Payment of AED 850 is pending', priority: 'medium' },
+                        { name: 'PAYMENT_COMPLETED', example: 'Payment received successfully', priority: 'low' },
+                        { name: 'PARTIAL_PAYMENT_RECEIVED', example: 'Partial payment of AED 400 received', priority: 'medium' },
+                        { name: 'INVOICE_GENERATED', example: 'Invoice #INV123 generated', priority: 'medium' },
+                        { name: 'REFUND_INITIATED', example: 'Refund of AED 200 initiated', priority: 'low' },
+                        { name: 'PAYMENT_FAILED', example: 'Payment transaction failed', priority: 'low' },
+                    ]
+                },
+                {
+                    name: 'COMMUNICATION / SUPPORT', icon: '💬', color: '#2980b9',
+                    subs: [
+                        { name: 'CHAT_MESSAGE_SENT', example: 'Driver: I will reach in 10 minutes', priority: 'medium' },
+                        { name: 'SUPPORT_TICKET_CREATED', example: 'Support ticket #SUP123 created', priority: 'medium' },
+                        { name: 'SUPPORT_RESPONSE_RECEIVED', example: 'Support team replied', priority: 'low' },
+                    ]
+                },
+            ],
+            opportunities: [
+                {
+                    name: 'LONG HAUL', icon: '🚛', color: '#27ae60',
+                    subs: [
+                        { name: 'FULL_LOAD', example: 'Dubai to RAK — 12 tons construction materials', priority: 'medium' },
+                        { name: 'PARTIAL_LOAD', example: 'Partial load available — Dubai to Sharjah', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'CONTRACT', icon: '📋', color: '#2980b9',
+                    subs: [
+                        { name: 'WEEKLY_CONTRACT', example: 'Weekly contract — 5 trips/week', priority: 'medium' },
+                        { name: 'MONTHLY_CONTRACT', example: 'Monthly freight agreement available', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'EXPRESS', icon: '⚡', color: '#e67e22',
+                    subs: [
+                        { name: 'PARCEL_BATCH', example: '15 parcels across Ajman in 2 hours', priority: 'medium' },
+                        { name: 'URGENT_DELIVERY', example: 'Urgent 1-hour delivery available', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'PARTNERSHIP', icon: '🤝', color: '#8e44ad',
+                    subs: [
+                        { name: 'AIRPORT_FREIGHT', example: 'Dubai Cargo Village airport runs', priority: 'medium' },
+                        { name: 'CORPORATE_FLEET', example: 'Corporate fleet partner program', priority: 'medium' },
+                    ]
+                },
+            ],
+            'other-services': [
+                {
+                    name: 'MAINTENANCE', icon: '🔧', color: '#7E57C2',
+                    subs: [
+                        { name: 'SERVICE_REMINDER', example: 'Next service due in 320 km', priority: 'medium' },
+                        { name: 'TIRE_CHECK', example: 'Tire inspection recommended', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'FUEL', icon: '⛽', color: '#3498db',
+                    subs: [
+                        { name: 'FUEL_DISCOUNT', example: '8% cashback at ENOC stations', priority: 'low' },
+                        { name: 'FUEL_ALERT', example: 'Low fuel level detected', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'INSURANCE', icon: '🛡️', color: '#9b59b6',
+                    subs: [
+                        { name: 'RENEWAL_NOTICE', example: 'Insurance expires in 12 days', priority: 'medium' },
+                        { name: 'CLAIM_UPDATE', example: 'Insurance claim status updated', priority: 'medium' },
+                    ]
+                },
+                {
+                    name: 'TRAINING', icon: '🎓', color: '#27ae60',
+                    subs: [
+                        { name: 'SAFETY_MODULE', example: 'Safety & Compliance module available', priority: 'low' },
+                        { name: 'CERTIFICATION', example: 'New certification course added', priority: 'low' },
+                    ]
+                },
+            ]
+        };
+
+        // ===================================================
+        // ACTIVE FILTERS STATE
+        // ===================================================
+        const activeFilters = { rides: [], opportunities: [], 'other-services': [] };
+
+        // ===================================================
+        // RENDER CARDS with priority grouping
+        // ===================================================
+        function renderCards(containerId, data, filterSubs) {
+            const container = document.getElementById(containerId);
+
+            let filtered = data;
+            if (filterSubs && filterSubs.length > 0) {
+                filtered = data.filter(item => filterSubs.includes(item.subcategory));
+            }
+
+            if (containerId === 'ridesList') {
+                // Group by priority
+                const groups = { high: [], medium: [], low: [] };
+                filtered.forEach(item => {
+                    if (groups[item.priority]) groups[item.priority].push(item);
+                });
+
+                const groupLabels = {
+                    high: { label: '🔴 High Priority', cls: 'high' },
+                    medium: { label: '🟡 Medium Priority', cls: 'medium' },
+                    low: { label: '🟢 Low Priority', cls: 'low' },
+                };
+
+                let html = '';
+                ['high', 'medium', 'low'].forEach(p => {
+                    if (groups[p].length === 0) return;
+                    html += `<div class="priority-group-header ${groupLabels[p].cls}">${groupLabels[p].label} <span style="margin-left:auto;font-size:10px;font-weight:600;">${groups[p].length} message${groups[p].length > 1 ? 's' : ''}</span></div>`;
+                    groups[p].forEach(item => {
+                        html += buildCard(item);
+                    });
+                });
+
+                container.innerHTML = html || '<div style="padding:20px;text-align:center;color:#999;font-size:13px;">No messages found.</div>';
+            } else {
+                container.innerHTML = filtered.map(buildCard).join('') || '<div style="padding:20px;text-align:center;color:#999;font-size:13px;">No messages found.</div>';
+            }
+        }
+
+        function buildCard(item) {
+            return `
+                <div class="ride-card ${item.priority}-priority" data-text="${(item.title + ' ' + item.description + ' ' + item.category + ' ' + item.subcategory).toLowerCase()}" data-subcategory="${item.subcategory}" data-category="${item.category}">
+                    <div class="ride-header">
+                        <div class="ride-title-wrapper">
+                            <div class="ride-title">${item.title}</div>
+                            <div style="font-size:10px;color:#aaa;margin-top:2px;">${item.category} › ${item.subcategory}</div>
+                        </div>
+                        <div class="ride-meta">
+                            <span class="ride-time">${item.time}</span>
+                            <span class="ride-badge badge-${item.priority}">${item.priority}</span>
+                        </div>
+                    </div>
+                    <div class="ride-description">${item.description}</div>
+                    ${item.details ? `<div class="ride-details">${item.details}</div>` : ''}
+                </div>
+            `;
+        }
+
+        renderCards('ridesList', ridesData);
+        renderCards('opportunitiesList', opportunitiesData);
+        renderCards('servicesList', otherServicesData);
+
+        // ===================================================
+        // CATEGORY DROPDOWN LOGIC
+        // ===================================================
+        const dropdownMap = {
+            rides: { dropdownId: 'ridesCatDropdown', inputId: 'ridesSearchInput', listId: 'ridesList', data: ridesData, chipsId: 'ridesFilterChips' },
+            opportunities: { dropdownId: 'opportunitiesCatDropdown', inputId: 'opportunitiesSearchInput', listId: 'opportunitiesList', data: opportunitiesData, chipsId: 'opportunitiesFilterChips' },
+            'other-services': { dropdownId: 'otherServicesCatDropdown', inputId: 'otherServicesSearchInput', listId: 'servicesList', data: otherServicesData, chipsId: 'otherServicesFilterChips' },
+        };
+
+        function buildDropdown(tab) {
+            const map = dropdownMap[tab];
+            const cats = categoryDefs[tab];
+            const dropdown = document.getElementById(map.dropdownId);
+
+            dropdown.innerHTML = cats.map((cat, ci) => `
+                <div class="cat-group" data-catidx="${ci}">
+                    <div class="cat-group-header" onclick="toggleCatGroup(this)">
+                        <span class="cat-icon">${cat.icon}</span>
+                        <span>${cat.name}</span>
+                        <i class="fas fa-chevron-down cat-arrow"></i>
+                    </div>
+                    <div class="cat-subcategories">
+                        ${cat.subs.map(sub => `
+                            <div class="subcat-item" onclick="applyFilter('${tab}','${sub.name}','${cat.name}')">
+                                <div>
+                                    <div class="subcat-name">${sub.name}</div>
+                                    <div class="subcat-example">${sub.example}</div>
+                                </div>
+                                <span class="subcat-priority priority-${sub.priority}-tag">${sub.priority}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCatGroup(header) {
+            const subs = header.nextElementSibling;
+            header.classList.toggle('collapsed');
+            subs.classList.toggle('hidden');
+        }
+
+        function openCategoryDropdown(tab) {
+            // Close all dropdowns first
+            document.querySelectorAll('.category-dropdown').forEach(d => d.classList.remove('open'));
+            buildDropdown(tab);
+            const dd = document.getElementById(dropdownMap[tab].dropdownId);
+            dd.classList.add('open');
+        }
+
+        function closeCategoryDropdowns() {
+            document.querySelectorAll('.category-dropdown').forEach(d => d.classList.remove('open'));
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.search-wrapper')) {
+                closeCategoryDropdowns();
+            }
+        });
+
+        // ===================================================
+        // APPLY FILTER (subcategory chip)
+        // ===================================================
+        function applyFilter(tab, subcatName, catName) {
+            closeCategoryDropdowns();
+            const map = dropdownMap[tab];
+            const filters = activeFilters[tab];
+
+            if (!filters.includes(subcatName)) {
+                filters.push(subcatName);
+            }
+
+            renderFilterChips(tab);
+            applyAllFilters(tab);
+        }
+
+        function removeFilter(tab, subcatName) {
+            const filters = activeFilters[tab];
+            const idx = filters.indexOf(subcatName);
+            if (idx > -1) filters.splice(idx, 1);
+            renderFilterChips(tab);
+            applyAllFilters(tab);
+        }
+
+        function renderFilterChips(tab) {
+            const map = dropdownMap[tab];
+            const chipsEl = document.getElementById(map.chipsId);
+            const filters = activeFilters[tab];
+            chipsEl.innerHTML = filters.map(f => `
+                <div class="filter-chip" onclick="removeFilter('${tab}','${f}')">
+                    <span>${f}</span><span class="chip-x">×</span>
+                </div>
+            `).join('');
+        }
+
+        function applyAllFilters(tab) {
+            const map = dropdownMap[tab];
+            const filters = activeFilters[tab];
+            renderCards(map.listId, map.data, filters.length > 0 ? filters : null);
+        }
+
+        // ===================================================
+        // SEARCH / FILTER (text search)
+        // ===================================================
+        function filterCards(input, listId) {
+            const q = input.value.toLowerCase();
+            document.querySelectorAll(`#${listId} .ride-card`).forEach(card => {
+                card.style.display = card.dataset.text.includes(q) ? '' : 'none';
+            });
+            // also hide empty priority group headers
+            document.querySelectorAll(`#${listId} .priority-group-header`).forEach(h => {
+                const next = h.nextElementSibling;
+                h.style.display = (next && next.style.display !== 'none') ? '' : 'none';
+            });
+        }
+
+        function clearSearchFull(tab, listId) {
+            const map = dropdownMap[tab];
+            document.getElementById(map.inputId).value = '';
+            activeFilters[tab] = [];
+            renderFilterChips(tab);
+            renderCards(listId, map.data);
+        }
+
+        // ===================================================
+        // STATS — animated counting from real data
+        // ===================================================
+        const targetEarnings = 400.15;
+        const targetDistance = 521;
+        const targetScore = 95;
+
+        function animateCount(elementId, target, prefix, suffix, decimals, duration) {
+            const el = document.getElementById(elementId);
+            const start = performance.now();
+            function update(now) {
+                const elapsed = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - elapsed, 3);
+                const current = eased * target;
+                el.textContent = prefix + current.toFixed(decimals) + suffix;
+                if (elapsed < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        setTimeout(() => {
+            animateCount('statEarnings', targetEarnings, '$', '', 2, 1800);
+            animateCount('statDistance', targetDistance, '', ' km', 0, 1600);
+            animateCount('statScore', targetScore, '', '%', 0, 1400);
+        }, 400);
+
+        // ===================================================
+        // ONLINE / OFFLINE TOGGLE
+        // ===================================================
+        if (sessionStorage.getItem('driverStatus') === 'online') {
+            statusToggle.checked = true;
+            statusLabel.textContent = 'Online';
+        }
+
+        statusToggle.addEventListener('change', function () {
+            if (this.checked) {
+                sessionStorage.setItem('driverStatus', 'online');
+                statusLabel.textContent = 'Online';
+                window.location.href = "C://Users//DADAGA//Desktop//Dadaga//HtmlCss//Lorry Pilot//11practice-connect.html";
+            } else {
+                sessionStorage.removeItem('driverStatus');
+                statusLabel.textContent = 'Offline';
+            }
+        });
+    </script>
+</body>
+
+</html>
