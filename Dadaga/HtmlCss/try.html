@@ -1957,6 +1957,294 @@
       height: 17px;
     }
 
+    /* ═══ ENHANCED PRODUCT DETAIL ═══ */
+    .pd-store-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .pd-store-card {
+      border: 2px solid var(--mg);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all .2s;
+      position: relative;
+    }
+
+    .pd-store-card:hover {
+      border-color: var(--yellow);
+      box-shadow: var(--sh1);
+      transform: translateY(-2px);
+    }
+
+    .pd-store-card.best-deal {
+      border-color: var(--green);
+      background: linear-gradient(135deg, #f0fdf4, #fff);
+    }
+
+    .pd-store-card.best-deal::before {
+      content: '🏆 BEST PRICE';
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--green);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 3px 10px;
+      border-radius: 0 12px 0 10px;
+      letter-spacing: .4px;
+    }
+
+    .psc-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px 8px;
+    }
+
+    .psc-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      flex-shrink: 0;
+      border: 1.5px solid var(--mg);
+    }
+
+    .psc-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .psc-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--black);
+    }
+
+    .psc-meta {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+
+    .psc-price-col {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .psc-price {
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .psc-price.best {
+      color: var(--green);
+    }
+
+    .psc-save {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--green);
+      margin-top: 2px;
+    }
+
+    .psc-original {
+      font-size: 11px;
+      color: var(--gray);
+      text-decoration: line-through;
+    }
+
+    .psc-bar-row {
+      padding: 0 14px 4px;
+    }
+
+    .psc-bar-bg {
+      height: 5px;
+      background: var(--mg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .psc-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .6s ease;
+    }
+
+    .psc-bottom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px 12px;
+      border-top: 1px solid var(--lg);
+    }
+
+    .psc-tags {
+      display: flex;
+      gap: 5px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .psc-tag {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray);
+      background: var(--lg);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+
+    .psc-tag.green {
+      background: #dcfce7;
+      color: var(--green);
+    }
+
+    .psc-tag.blue {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .psc-tag.orange {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .shop-now-btn {
+      padding: 8px 16px;
+      background: var(--yellow);
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--black);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .shop-now-btn:hover {
+      background: var(--yd);
+      transform: scale(1.03);
+    }
+
+    .shop-now-btn.secondary {
+      background: var(--lg);
+      color: var(--black);
+      border: 1.5px solid var(--mg);
+    }
+
+    .shop-now-btn.secondary:hover {
+      background: var(--mg);
+    }
+
+    .shop-now-btn svg {
+      width: 12px;
+      height: 12px;
+      pointer-events: none;
+    }
+
+    .pd-compare-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .pd-compare-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .pd-store-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--blue);
+      background: #dbeafe;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    .pd-savings-banner {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .pd-savings-em {
+      font-size: 26px;
+    }
+
+    .pd-savings-info {
+      flex: 1;
+    }
+
+    .pd-savings-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .pd-savings-sub {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .8);
+      margin-top: 2px;
+    }
+
+    .pd-savings-amt {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .pd-spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .pd-spec-item {
+      background: var(--lg);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .pd-spec-label {
+      font-size: 10px;
+      color: var(--gray);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .pd-spec-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--black);
+      margin-top: 2px;
+    }
+
     /* cart / wish / notif / account – same as before */
     .cart-item {
       display: flex;
@@ -5210,9 +5498,11 @@
     /* ═══════ PRODUCT CARD ═══════ */
     function makeProductCard(p) {
       const best = p.prices[0];
+      const worst = p.prices[p.prices.length - 1];
       const inWish = wishlist.find(w => w.id === p.id);
       const inCart = cart.find(c => c.id === p.id);
       const badgeHtml = p.badge ? `<div class="pbadge ${p.badgeType}">${p.badge}</div>` : '';
+      const saving = worst.price - best.price;
       return `
   <div class="pc" onclick="openProduct(${p.id})">
     <div class="pimg"><span>${p.emoji}</span>${badgeHtml}
@@ -5224,11 +5514,13 @@
       <div class="pname">${p.name}</div>
       <div class="pprices">
         <div class="prow best"><span class="pstore">${best.store} <span class="blbl">BEST</span></span><span class="pprice">AED ${best.price.toLocaleString()}</span></div>
-        ${p.prices.slice(1, 3).map(pr => `<div class="prow"><span class="pstore">${pr.store}</span><span class="pprice">AED ${pr.price.toLocaleString()}</span></div>`).join('')}
+        ${p.prices.slice(1, 2).map(pr => `<div class="prow"><span class="pstore">${pr.store}</span><span class="pprice">AED ${pr.price.toLocaleString()}</span></div>`).join('')}
+        ${p.prices.length > 2 ? `<div class="prow" style="opacity:.65"><span class="pstore" style="font-size:10px;">+${p.prices.length - 2} more store${p.prices.length - 2 > 1 ? 's' : ''}</span><span class="pprice" style="font-size:10px;color:var(--blue);">Compare →</span></div>` : ''}
       </div>
+      ${saving > 0 ? `<div style="font-size:10px;font-weight:700;color:var(--green);background:#dcfce7;border-radius:6px;padding:3px 7px;margin-bottom:7px;display:inline-block;">💰 Save up to AED ${saving}</div>` : ''}
       <div style="display:flex;gap:5px;">
         <button class="cbtn" style="flex:1;" onclick="addToCart(event,${p.id})">${inCart ? '✓ In Cart' : 'Add to Cart'}</button>
-        <button class="cbtn" style="width:34px;flex-shrink:0;background:var(--lg);color:var(--black);" title="Compare" onclick="event.stopPropagation();addToCompare(${p.id})">⚖️</button>
+        <button class="cbtn" style="width:34px;flex-shrink:0;background:var(--lg);color:var(--black);" title="Compare Prices" onclick="event.stopPropagation();openProduct(${p.id})">⚖️</button>
       </div>
     </div>
   </div>`;
@@ -5391,28 +5683,137 @@
       showSubPage(html, '⭐ ' + title);
     }
 
+    /* ═══════ STORE OFFICIAL URLS ═══════ */
+    const STORE_URLS = {
+      'Lulu': 'https://www.luluhypermarket.com',
+      'Nesto': 'https://www.nestohypermarket.com',
+      'Carrefour': 'https://www.carrefouruae.com',
+      'KM Trading': 'https://www.kmtrading.ae',
+      'Union Coop': 'https://www.unioncoop.ae',
+      'Géant': 'https://www.geantarabia.com',
+      "Spinney's": 'https://www.spinneys.com',
+      'Sharaf DG': 'https://www.sharafdg.com',
+      'Centrepoint': 'https://www.centrepointme.com',
+      'Danube Home': 'https://www.danubehome.com',
+      'West Zone': 'https://www.westzonegroup.com',
+      'Zoom': 'https://www.zoomuae.com',
+      'Al Maya': 'https://www.almaya.ae',
+      'Choithrams': 'https://www.choithrams.com',
+      'Viva': 'https://www.viva.ae',
+      'Waitrose': 'https://www.waitrose.ae',
+      'Day to Day': 'https://www.daytodayuae.com',
+      'Dreamland': 'https://www.dreamlandajman.com',
+      'Amber': 'https://www.ambersupermarket.com',
+      'Ansar Mall': 'https://www.ansarmall.com',
+      'Safari': 'https://www.safariuae.com',
+      'Madina': 'https://www.madinasupermarket.ae',
+    };
+
     /* ═══════ PRODUCT DETAIL ═══════ */
     function openProduct(id) {
       const p = PRODUCTS.find(x => x.id === id); if (!p) return;
       if (!recentIds.includes(id)) { recentIds.unshift(id); if (recentIds.length > 6) recentIds.pop(); renderRecent(); }
       const inWish = wishlist.find(w => w.id === id);
+      const sorted = [...p.prices].sort((a, b) => a.price - b.price);
+      const best = sorted[0];
+      const worst = sorted[sorted.length - 1];
+      const maxSaving = worst.price - best.price;
+      const reviewCount = Math.floor(Math.random() * 800 + 100);
+
+      // Store logo color helper
+      function storeColor(storeName) {
+        const colors = {
+          'Lulu': '#E31837', 'Nesto': '#00A651', 'Carrefour': '#003f96', 'KM Trading': '#003087',
+          'Union Coop': '#008C45', 'Géant': '#C41E3A', "Spinney's": '#76B82A', 'Sharaf DG': '#E30613',
+          'Centrepoint': '#D4A800', 'Danube Home': '#0056A2', 'West Zone': '#6A0DAD', 'Zoom': '#FF4500',
+          'Al Maya': '#B8860B', 'Choithrams': '#1E3A5F', 'Viva': '#009688', 'Waitrose': '#2C5364',
+          'Day to Day': '#E65C00', 'Dreamland': '#7B2FF7', 'Amber': '#FF6B00', 'Ansar Mall': '#1B5E20',
+          'Safari': '#FF8C00', 'Madina': '#00695C',
+        };
+        return colors[storeName] || '#555';
+      }
+
       document.getElementById('pdTitle').textContent = p.name;
       document.getElementById('pdBody').innerHTML = `
     <div class="pd-img">${p.emoji}</div>
     <div class="pd-name">${p.name}</div>
     <div class="pd-rating">
-      <span class="stars">${'★'.repeat(Math.round(p.prices[0].rating))}${'☆'.repeat(5 - Math.round(p.prices[0].rating))}</span>
-      <span class="pd-cnt">${p.prices[0].rating} · ${Math.floor(Math.random() * 800 + 100)} reviews</span>
+      <span class="stars">${'★'.repeat(Math.round(best.rating))}${'☆'.repeat(5 - Math.round(best.rating))}</span>
+      <span class="pd-cnt">${best.rating} · ${reviewCount} reviews</span>
     </div>
-    <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:18px;">${p.desc}</p>
-    <div class="pd-section">
-      <div class="pd-section-title">Price Comparison</div>
-      ${p.prices.map((pr, i) => `
-        <div class="price-compare-row ${i === 0 ? 'best-store' : ''}" onclick="addToCartFromDetail(${p.id},'${pr.store}',${pr.price})">
-          <div><div class="pcr-store">${pr.store}${i === 0 ? ' 🏆' : ''}</div><div class="pcr-del">🚚 ${pr.delivery} · ⭐ ${pr.rating}</div></div>
-          <div class="pcr-price ${i === 0 ? 'cheapest' : ''}">AED ${pr.price.toLocaleString()}</div>
-        </div>`).join('')}
+    <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:16px;">${p.desc}</p>
+
+    ${maxSaving > 0 ? `
+    <div class="pd-savings-banner">
+      <div class="pd-savings-em">💰</div>
+      <div class="pd-savings-info">
+        <div class="pd-savings-title">Compare & Save!</div>
+        <div class="pd-savings-sub">Best at ${best.store} vs priciest store</div>
+      </div>
+      <div class="pd-savings-amt">AED ${maxSaving}</div>
+    </div>` : ''}
+
+    <div class="pd-spec-grid">
+      <div class="pd-spec-item"><div class="pd-spec-label">Best Price</div><div class="pd-spec-val" style="color:var(--green)">AED ${best.price.toLocaleString()}</div></div>
+      <div class="pd-spec-item"><div class="pd-spec-label">Stores Tracked</div><div class="pd-spec-val">${sorted.length} stores</div></div>
+      <div class="pd-spec-item"><div class="pd-spec-label">Fastest Delivery</div><div class="pd-spec-val">${sorted.map(x => x.delivery).sort()[0]}</div></div>
+      <div class="pd-spec-item"><div class="pd-spec-label">Avg Rating</div><div class="pd-spec-val">⭐ ${(sorted.reduce((a, x) => a + x.rating, 0) / sorted.length).toFixed(1)}</div></div>
     </div>
+
+    <div class="pd-compare-header">
+      <div class="pd-compare-title">Price Comparison</div>
+      <div class="pd-store-count">${sorted.length} stores</div>
+    </div>
+    <div class="pd-store-cards">
+      ${sorted.map((pr, i) => {
+        const pct = worst.price > best.price ? Math.round(((worst.price - pr.price) / (worst.price - best.price)) * 100) : 100;
+        const barWidth = worst.price === best.price ? 100 : Math.round(((pr.price - best.price) / (worst.price - best.price)) * 100);
+        const savingVsWorst = worst.price - pr.price;
+        const storeUrl = STORE_URLS[pr.store] || '#';
+        const shortStore = STORES.find(s => pr.store.includes(s.key) || s.key.includes(pr.store.split(' ')[0])) || null;
+        const logoStyle = shortStore ? shortStore.logoStyle : `background:${storeColor(pr.store)};color:#fff;`;
+        const logoText = shortStore ? shortStore.logo : pr.store.slice(0, 3).toUpperCase();
+        const deliveryIcon = pr.delivery.includes('Same') ? '⚡' : pr.delivery.includes('1') ? '🚀' : '🚚';
+        const inStock = pr.inStock !== false;
+        return `
+        <div class="pd-store-card ${i === 0 ? 'best-deal' : ''}" style="${!inStock ? 'opacity:.6' : ''}">
+          <div class="psc-top">
+            <div class="psc-logo" style="${logoStyle}">${logoText}</div>
+            <div class="psc-info">
+              <div class="psc-name">${pr.store}</div>
+              <div class="psc-meta">${deliveryIcon} ${pr.delivery} &nbsp;·&nbsp; ⭐ ${pr.rating}${!inStock ? ' &nbsp;·&nbsp; <span style="color:var(--red);font-weight:700;">Out of Stock</span>' : ''}</div>
+            </div>
+            <div class="psc-price-col">
+              <div class="psc-price ${i === 0 ? 'best' : ''}">AED ${pr.price.toLocaleString()}</div>
+              ${i === 0 ? '<div class="psc-save">Cheapest!</div>' : savingVsWorst > 0 ? `<div class="psc-save" style="color:var(--gray)">Save AED ${savingVsWorst} vs max</div>` : '<div class="psc-original">Highest price</div>'}
+            </div>
+          </div>
+          <div class="psc-bar-row">
+            <div class="psc-bar-bg">
+              <div class="psc-bar-fill" style="width:${100 - barWidth}%;background:${i === 0 ? 'var(--green)' : i === sorted.length - 1 ? 'var(--red)' : 'var(--yellow)'}"></div>
+            </div>
+          </div>
+          <div class="psc-bottom">
+            <div class="psc-tags">
+              ${i === 0 ? '<span class="psc-tag green">✓ Best Deal</span>' : ''}
+              ${pr.delivery.includes('Same') || pr.delivery.includes('1') ? '<span class="psc-tag blue">⚡ Fast Delivery</span>' : ''}
+              ${pr.rating >= 4.5 ? '<span class="psc-tag green">⭐ Top Rated</span>' : ''}
+              ${savingVsWorst > 50 ? `<span class="psc-tag orange">💰 Save AED ${savingVsWorst}</span>` : ''}
+            </div>
+            ${inStock ? `
+            <div style="display:flex;gap:6px;">
+              <button class="shop-now-btn secondary" onclick="addToCartFromDetail(${p.id},'${pr.store}',${pr.price});event.stopPropagation()">
+                🛒 Cart
+              </button>
+              <a class="shop-now-btn" href="${storeUrl}" target="_blank" rel="noopener" onclick="showToast('🛍️ Opening ${pr.store.replace(/'/g, "\\'")}…');event.stopPropagation()">
+                Shop Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>` : `<span class="psc-tag" style="color:var(--red);background:#fee2e2;">Out of Stock</span>`}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
     <div class="pd-actions">
       <button class="pd-btn secondary" onclick="toggleWish(event,${p.id});this.innerHTML='${inWish ? '♡ Wishlist' : '❤️ Saved'}'">
         <svg viewBox="0 0 24 24" fill="${inWish ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;color:var(--red)"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -6194,23 +6595,61 @@
       const item = FOOD_ITEMS.find(f => f.id === id);
       if (!item) return;
       const sorted = [...item.stores].sort((a, b) => a.price - b.price);
+      const best = sorted[0];
+      const worst = sorted[sorted.length - 1];
+      const maxSave = worst.price - best.price;
       document.getElementById('foodOrderTitle').textContent = item.emoji + ' ' + item.name;
       document.getElementById('foodOrderBody').innerHTML = `
-        <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Compare prices at nearest restaurants & order or visit the best option.</p>
-        ${sorted.map((s, i) => `
-        <div class="price-compare-row ${i === 0 ? 'best-store' : ''}" style="cursor:default;">
-          <div>
-            <div class="pcr-store">${s.name}${i === 0 ? ' 🏆' : ''}</div>
-            <div class="pcr-del">📍 ${s.dist} · ${i === 0 ? '<span style="color:var(--green);font-weight:700;">Cheapest nearby</span>' : 'Available nearby'}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-            <div class="pcr-price ${i === 0 ? 'cheapest' : ''}">AED ${s.price}</div>
-            <div style="display:flex;gap:5px;">
-              <button class="cbtn" style="padding:5px 10px;font-size:10px;border-radius:7px;width:auto;" onclick="showToast('🛵 Opening delivery for ${s.name.replace(/'/g, "\'")}…')">🛵 Order</button>
-              <button class="cbtn" style="padding:5px 10px;font-size:10px;border-radius:7px;width:auto;background:var(--lg);color:var(--black);" onclick="showToast('📍 Getting directions to ${s.name.replace(/'/g, "\'")}…')">📍 Visit</button>
+        ${maxSave > 0 ? `<div class="pd-savings-banner" style="margin-bottom:14px;">
+          <div class="pd-savings-em">🍽️</div>
+          <div class="pd-savings-info"><div class="pd-savings-title">Best deal nearby!</div><div class="pd-savings-sub">${best.name} is cheapest</div></div>
+          <div class="pd-savings-amt">Save AED ${maxSave}</div>
+        </div>` : ''}
+        ${sorted.map((s, i) => {
+        const barW = worst.price > best.price ? Math.round(((s.price - best.price) / (worst.price - best.price)) * 100) : 0;
+        const talabatUrl = `https://www.talabat.com/uae/search?q=${encodeURIComponent(s.name)}`;
+        const careem = `https://www.careem.com/en-ae/food/`;
+        const noon = `https://food.noon.com/`;
+        return `
+        <div class="pd-store-card ${i === 0 ? 'best-deal' : ''}" style="margin-bottom:0;">
+          <div class="psc-top">
+            <div class="psc-logo" style="background:${i === 0 ? '#16a34a' : i === 1 ? '#f97316' : '#6b7280'};color:#fff;font-size:11px;">${s.name.slice(0, 3).toUpperCase()}</div>
+            <div class="psc-info">
+              <div class="psc-name">${s.name}${i === 0 ? ' 🏆' : ''}</div>
+              <div class="psc-meta">📍 ${s.dist} away &nbsp;·&nbsp; ${i === 0 ? '<span style="color:var(--green);font-weight:700;">Cheapest Nearby</span>' : 'Available Nearby'}</div>
+            </div>
+            <div class="psc-price-col">
+              <div class="psc-price ${i === 0 ? 'best' : ''}">AED ${s.price}</div>
+              ${i === 0 ? '<div class="psc-save">Best!</div>' : i === sorted.length - 1 ? '<div class="psc-original">Most Exp.</div>' : ''}
             </div>
           </div>
-        </div>`).join('')}`;
+          <div class="psc-bar-row">
+            <div class="psc-bar-bg"><div class="psc-bar-fill" style="width:${100 - barW}%;background:${i === 0 ? 'var(--green)' : i === sorted.length - 1 ? 'var(--red)' : 'var(--yellow)'}"></div></div>
+          </div>
+          <div class="psc-bottom">
+            <div class="psc-tags">
+              ${i === 0 ? '<span class="psc-tag green">✓ Cheapest</span>' : ''}
+              <span class="psc-tag blue">📍 ${s.dist}</span>
+            </div>
+            <div style="display:flex;gap:5px;">
+              <a class="shop-now-btn secondary" href="${talabatUrl}" target="_blank" rel="noopener" onclick="showToast('🛵 Opening Talabat for ${s.name.replace(/'/g, "\\'")}…');" style="font-size:11px;padding:6px 10px;">
+                🛵 Order
+              </a>
+              <button class="shop-now-btn" style="font-size:11px;padding:6px 10px;" onclick="showToast('📍 Directions to ${s.name.replace(/'/g, "\\'")} (${s.dist})…')">
+                📍 Visit
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+        <div style="margin-top:14px;padding:12px;background:var(--lg);border-radius:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Also Available On</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <a href="https://www.talabat.com/uae" target="_blank" class="shop-now-btn" style="font-size:11px;padding:7px 13px;background:#ff6600;color:#fff;">🛵 Talabat</a>
+            <a href="https://www.careem.com/en-ae/food/" target="_blank" class="shop-now-btn" style="font-size:11px;padding:7px 13px;background:#1dbf73;color:#fff;">🟢 Careem</a>
+            <a href="https://food.noon.com/" target="_blank" class="shop-now-btn" style="font-size:11px;padding:7px 13px;background:#feee00;color:#111;">🌟 Noon Food</a>
+          </div>
+        </div>`;
       showModal('foodOrderModal', 'foodOrderBackdrop');
     }
 
