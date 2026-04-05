@@ -505,16 +505,10 @@
 
     /* HERO */
     .hero {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
       margin-top: 20px;
-    }
-
-    @media(max-width:860px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
     }
 
     .main-banner {
@@ -523,6 +517,7 @@
       height: 250px;
       position: relative;
       cursor: pointer;
+      width: 100%;
     }
 
     @media(max-width:600px) {
@@ -615,38 +610,35 @@
 
     .sad-col {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    @media(max-width:860px) {
-      .sad-col {
-        flex-direction: row;
-        overflow-x: auto;
-        padding-bottom: 4px;
-      }
+      flex-direction: row;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
     }
 
     .sad {
       flex: 1;
-      min-height: 72px;
+      min-width: 130px;
+      min-height: 86px;
       border-radius: 12px;
       cursor: pointer;
-      padding: 13px 15px;
+      padding: 12px 13px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transition: transform .2s;
+      flex-shrink: 0;
     }
 
     .sad:hover {
       transform: scale(1.02);
     }
 
-    @media(max-width:860px) {
+    @media(max-width:600px) {
       .sad {
-        flex: 0 0 140px;
-        min-height: 78px;
+        min-width: 120px;
+        min-height: 80px;
+        padding: 10px 11px;
       }
     }
 
@@ -719,6 +711,63 @@
     .sad-ct svg {
       width: 10px;
       height: 10px;
+    }
+
+    /* live offer badge on sad cards */
+    .sad-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, .18);
+      border-radius: 20px;
+      padding: 2px 7px;
+      font-size: 9px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .4px;
+      margin-bottom: 3px;
+      width: fit-content;
+    }
+
+    .sad-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: sadpulse 1.4s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes sadpulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .5;
+        transform: scale(.7);
+      }
+    }
+
+    .sad-discount {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 10px;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 5px;
+      margin-left: 4px;
+    }
+
+    .sad-expires {
+      font-size: 9px;
+      color: rgba(255, 255, 255, .65);
+      margin-top: 1px;
     }
 
     /* sections */
@@ -4180,10 +4229,10 @@
           <path d="M3 6h18M7 12h10M10 18h4" />
         </svg>All
       </div>
-      <!-- <div class="chip off" onclick="pickChip(this,'low')">💰 Lowest Price</div>
-      <div class="chip off" onclick="pickChip(this,'fast')">🚀 Fast Delivery</div> -->
+      <div class="chip off" onclick="pickChip(this,'low')">💰 Lowest Price</div>
+      <div class="chip off" onclick="pickChip(this,'fast')">🚀 Fast Delivery</div>
       <div class="chip off" onclick="pickChip(this,'near')">📍 Nearby</div>
-      <!-- <div class="chip off" onclick="pickChip(this,'top')">⭐ Top Rated</div> -->
+      <div class="chip off" onclick="pickChip(this,'top')">⭐ Top Rated</div>
       <div class="chip off" onclick="pickChip(this,'new')">🆕 New Arrivals</div>
       <div class="chip off" onclick="pickChip(this,'sort')">↑↓ Sort By</div>
       <div class="chip off" onclick="openFilterModal()">⚙️ More Filters</div>
@@ -4243,44 +4292,7 @@
               <div class="bdot" onclick="goBanner(3)"></div>
             </div>
           </div>
-          <div class="sad-col">
-            <!-- Ad 1: Flash Sale -->
-            <div class="sad sad-1" onclick="openRecharge('du')">
-              <div class="sad-ad-tag">⚡ Flash Sale</div>
-              <div class="sad-ad-icon">📱</div>
-              <div class="sad-tt">du Recharge<br>from AED 30</div>
-              <div class="sad-ct">Get Deal <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <path d="m9 18 6-6-6-6" />
-                </svg></div>
-            </div>
-            <!-- Ad 2: Food Delivery -->
-            <div class="sad sad-food" onclick="showToast('🍕 Talabat – Order now & save!')">
-              <div class="sad-ad-tag">🍕 Food Delivery</div>
-              <div class="sad-ad-icon">🛵</div>
-              <div class="sad-tt">Talabat – Free<br>Delivery Today</div>
-              <div class="sad-ct">Order Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <path d="m9 18 6-6-6-6" />
-                </svg></div>
-            </div>
-            <!-- Ad 3: Travel / Hotel -->
-            <div class="sad sad-travel" onclick="showToast('✈️ Booking.com – Best hotel rates!')">
-              <div class="sad-ad-tag">🏨 Travel</div>
-              <div class="sad-ad-icon">✈️</div>
-              <div class="sad-tt">Hotels from<br>AED 199/night</div>
-              <div class="sad-ct">Book Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <path d="m9 18 6-6-6-6" />
-                </svg></div>
-            </div>
-            <!-- Ad 4: Grocery Deal -->
-            <div class="sad sad-grocery" onclick="openCategoryPage('Groceries','🛒')">
-              <div class="sad-ad-tag">🛒 Grocery</div>
-              <div class="sad-ad-icon">🥦</div>
-              <div class="sad-tt">Fresh Veggies<br>Up to 40% Off</div>
-              <div class="sad-ct">Shop Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <path d="m9 18 6-6-6-6" />
-                </svg></div>
-            </div>
-          </div>
+          <div class="sad-col" id="sadCol"></div>
         </div>
 
         <!-- CATEGORIES -->
@@ -4958,39 +4970,170 @@
   <script>
     /* ══ DATA ══ */
     const PRODUCTS = [
-      { id: 0, name: 'Apple iPhone 15 128GB Black', emoji: '📱', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Amazon', price: 2899, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 3050, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 3199, delivery: '3 days', rating: 4.5 }, { store: 'Carrefour', price: 3299, delivery: '4 days', rating: 4.3 }], desc: '6.1-inch Super Retina XDR display, 48MP camera, USB-C connector, A16 Bionic chip.' },
-      { id: 1, name: 'AirPods Pro 2nd Gen USB-C', emoji: '🎧', cat: 'Electronics', badge: '-18%', badgeType: 'hot', prices: [{ store: 'Noon', price: 729, delivery: 'Today', rating: 4.9 }, { store: 'Amazon', price: 799, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Carrefour', price: 849, delivery: '3 days', rating: 4.4 }, { store: 'KM Trading', price: 875, delivery: '5 days', rating: 4.2 }], desc: 'Active Noise Cancellation, Transparency mode, Adaptive Audio. Up to 30h total listening time.' },
-      { id: 2, name: 'MacBook Air M2 8GB 256GB', emoji: '💻', cat: 'Electronics', badge: '-12%', badgeType: '', prices: [{ store: 'KM Trading', price: 3799, delivery: '3 days', rating: 4.7 }, { store: 'Sharaf DG', price: 4050, delivery: '2 days', rating: 4.6 }, { store: 'Lulu', price: 4299, delivery: '3 days', rating: 4.4 }, { store: 'Amazon', price: 4399, delivery: 'Tomorrow', rating: 4.8 }], desc: 'M2 chip, 8-core CPU, 8-core GPU. Up to 18 hours battery. Fanless silent design.' },
-      { id: 3, name: 'Samsung 55″ 4K QLED Smart TV', emoji: '📺', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Nesto', price: 1899, delivery: '5 days', rating: 4.5 }, { store: 'Amazon', price: 2199, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 2349, delivery: '4 days', rating: 4.3 }, { store: 'Noon', price: 2399, delivery: '2 days', rating: 4.6 }], desc: 'Quantum Dot technology, 4K upscaling, Tizen Smart TV with voice control.' },
-      { id: 4, name: 'Logitech MX Keys S Keyboard', emoji: '⌨️', cat: 'Electronics', badge: '-22%', badgeType: '', prices: [{ store: 'Amazon', price: 379, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 419, delivery: '2 days', rating: 4.6 }, { store: 'Sharaf DG', price: 435, delivery: '2 days', rating: 4.5 }, { store: 'Carrefour', price: 449, delivery: '4 days', rating: 4.3 }], desc: 'Backlit keys, multi-device switching. Works with Mac, Windows, Linux.' },
-      { id: 5, name: 'Dell 27″ IPS FHD Monitor', emoji: '🖥️', cat: 'Electronics', badge: '-19%', badgeType: '', prices: [{ store: 'Noon', price: 649, delivery: '2 days', rating: 4.7 }, { store: 'Amazon', price: 699, delivery: 'Tomorrow', rating: 4.8 }, { store: 'KM Trading', price: 729, delivery: '4 days', rating: 4.4 }], desc: '27-inch FHD IPS, 75Hz, built-in USB hub, height adjustable stand.' },
-      { id: 6, name: 'Nescafé Classic 200g Jar', emoji: '☕', cat: 'Groceries', badge: 'HOT', badgeType: 'hot', prices: [{ store: 'KM Trading', price: 24, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 27, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 28, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 29, delivery: '2 days', rating: 4.3 }], desc: 'Rich aroma instant coffee. 200g jar. Best enjoyed hot or iced.' },
-      { id: 7, name: 'Nivea Body Lotion 400ml Cocoa', emoji: '🧴', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 18, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 22, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 25, delivery: 'Today', rating: 4.3 }], desc: 'Deep moisturising with natural cocoa butter. For dry to very dry skin.' },
-      { id: 8, name: 'PlayStation 5 Console Bundle', emoji: '🎮', cat: 'Gaming', badge: '-25%', badgeType: '', prices: [{ store: 'Amazon', price: 1649, delivery: 'Tomorrow', rating: 4.9 }, { store: 'Noon', price: 1799, delivery: '2 days', rating: 4.8 }, { store: 'Lulu', price: 1849, delivery: '3 days', rating: 4.6 }], desc: 'PS5 with DualSense controller. Ultra-fast SSD, ray tracing, 4K gaming.' },
-      { id: 9, name: 'HP DeskJet 2335 Printer', emoji: '🖨️', cat: 'Electronics', badge: '-40%', badgeType: '', prices: [{ store: 'Noon', price: 199, delivery: '2 days', rating: 4.4 }, { store: 'Amazon', price: 219, delivery: 'Tomorrow', rating: 4.5 }, { store: 'KM Trading', price: 235, delivery: '4 days', rating: 4.2 }], desc: 'Print, scan, copy. USB connectivity. Up to 7.5 ppm black print speed.' },
-      { id: 10, name: 'Samsung Galaxy Watch 6 44mm', emoji: '⌚', cat: 'Electronics', badge: '-30%', badgeType: '', prices: [{ store: 'Nesto', price: 699, delivery: '3 days', rating: 4.6 }, { store: 'Amazon', price: 799, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Noon', price: 849, delivery: '2 days', rating: 4.5 }], desc: 'Advanced health monitoring, Wear OS, 40h battery, 5ATM water resistance.' },
-      { id: 11, name: 'Dyson V15 Detect Cordless', emoji: '🧹', cat: 'Home & Living', badge: '-15%', badgeType: '', prices: [{ store: 'Amazon', price: 2199, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 2399, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 2549, delivery: '3 days', rating: 4.5 }], desc: 'Laser dust detection, HEPA filtration, 60-min run time. 7 accessories.' },
-      { id: 12, name: 'Basmati Rice Premium 5kg', emoji: '🌾', cat: 'Groceries', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Nesto', price: 28, delivery: 'Today', rating: 4.6 }, { store: 'KM Trading', price: 30, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 33, delivery: 'Today', rating: 4.4 }], desc: 'Premium long-grain aged basmati rice. Fluffy, aromatic, non-sticky.' },
-      { id: 13, name: 'Dettol Handwash 400ml', emoji: '🧼', cat: 'Health & Beauty', badge: '-15%', badgeType: '', prices: [{ store: 'Carrefour', price: 9, delivery: '2 days', rating: 4.5 }, { store: 'Lulu', price: 11, delivery: 'Today', rating: 4.4 }, { store: 'Nesto', price: 12, delivery: 'Today', rating: 4.3 }], desc: 'Kills 99.9% of bacteria and viruses. Moisturizing formula with aloe vera.' },
-      { id: 14, name: 'Nike Air Max 270 Men\'s', emoji: '👟', cat: 'Fashion', badge: '-30%', badgeType: '', prices: [{ store: 'Amazon', price: 399, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Noon', price: 449, delivery: '2 days', rating: 4.6 }, { store: 'Centrepoint', price: 469, delivery: '2 days', rating: 4.5 }], desc: 'Iconic Air unit in the heel, breathable mesh upper. Everyday comfort.' },
-      { id: 15, name: 'LEGO Technic Car 42177', emoji: '🧩', cat: 'Gaming', badge: '-20%', badgeType: '', prices: [{ store: 'Amazon', price: 189, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Noon', price: 209, delivery: '2 days', rating: 4.7 }, { store: 'Lulu', price: 229, delivery: '3 days', rating: 4.5 }], desc: '742 pieces, authentic details, functions. Age 10+.' },
+      /* ── ELECTRONICS ── */
+      { id: 0, name: 'Apple iPhone 15 128GB Black', emoji: '📱', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Sharaf DG', price: 2849, delivery: 'Same Day', rating: 4.8 }, { store: 'Lulu', price: 2999, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 3099, delivery: '2 days', rating: 4.4 }, { store: 'Nesto', price: 3199, delivery: '3 days', rating: 4.3 }], desc: '6.1-inch Super Retina XDR, 48MP camera, USB-C, A16 Bionic chip.' },
+      { id: 1, name: 'AirPods Pro 2nd Gen USB-C', emoji: '🎧', cat: 'Electronics', badge: '-18%', badgeType: 'hot', prices: [{ store: 'Sharaf DG', price: 729, delivery: 'Same Day', rating: 4.9 }, { store: 'Lulu', price: 779, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 849, delivery: '2 days', rating: 4.5 }, { store: 'KM Trading', price: 875, delivery: '3 days', rating: 4.3 }], desc: 'Active Noise Cancellation, Adaptive Audio, 30h total listening time.' },
+      { id: 2, name: 'MacBook Air M2 8GB 256GB', emoji: '💻', cat: 'Electronics', badge: '-12%', badgeType: '', prices: [{ store: 'KM Trading', price: 3799, delivery: '2 days', rating: 4.7 }, { store: 'Sharaf DG', price: 4050, delivery: 'Same Day', rating: 4.6 }, { store: 'Lulu', price: 4299, delivery: '3 days', rating: 4.4 }, { store: 'Carrefour', price: 4399, delivery: '4 days', rating: 4.3 }], desc: 'M2 chip, 8-core CPU, 18h battery, fanless design.' },
+      { id: 3, name: 'Samsung 55″ 4K QLED Smart TV', emoji: '📺', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Nesto', price: 1899, delivery: '3 days', rating: 4.5 }, { store: 'Lulu', price: 2099, delivery: '2 days', rating: 4.6 }, { store: 'Carrefour', price: 2299, delivery: '2 days', rating: 4.3 }, { store: 'Sharaf DG', price: 2399, delivery: 'Same Day', rating: 4.7 }], desc: 'Quantum Dot, 4K upscaling, Tizen Smart TV with voice control.' },
+      { id: 4, name: 'Logitech MX Keys S Keyboard', emoji: '⌨️', cat: 'Electronics', badge: '-22%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 379, delivery: 'Same Day', rating: 4.8 }, { store: 'KM Trading', price: 409, delivery: '2 days', rating: 4.6 }, { store: 'Carrefour', price: 449, delivery: '2 days', rating: 4.4 }], desc: 'Backlit keys, multi-device switching for Mac/Windows/Linux.' },
+      { id: 5, name: 'Dell 27″ IPS FHD Monitor', emoji: '🖥️', cat: 'Electronics', badge: '-19%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 649, delivery: 'Same Day', rating: 4.7 }, { store: 'KM Trading', price: 699, delivery: '2 days', rating: 4.5 }, { store: 'Lulu', price: 749, delivery: '3 days', rating: 4.4 }], desc: '27-inch FHD IPS 75Hz, USB hub, height-adjustable stand.' },
+      { id: 8, name: 'PlayStation 5 Console Bundle', emoji: '🎮', cat: 'Gaming', badge: '-25%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1649, delivery: 'Same Day', rating: 4.9 }, { store: 'Lulu', price: 1799, delivery: '2 days', rating: 4.7 }, { store: 'Carrefour', price: 1849, delivery: '3 days', rating: 4.5 }, { store: 'Nesto', price: 1899, delivery: '4 days', rating: 4.4 }], desc: 'PS5 with DualSense controller. Ultra-fast SSD, ray tracing, 4K gaming.' },
+      { id: 9, name: 'HP DeskJet 2335 Printer', emoji: '🖨️', cat: 'Electronics', badge: '-40%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 199, delivery: 'Same Day', rating: 4.5 }, { store: 'KM Trading', price: 219, delivery: '2 days', rating: 4.4 }, { store: 'Lulu', price: 235, delivery: '3 days', rating: 4.3 }], desc: 'Print, scan, copy. USB connectivity. 7.5 ppm black.' },
+      { id: 10, name: 'Samsung Galaxy Watch 6 44mm', emoji: '⌚', cat: 'Electronics', badge: '-30%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 699, delivery: 'Same Day', rating: 4.7 }, { store: 'Lulu', price: 799, delivery: '2 days', rating: 4.6 }, { store: 'Carrefour', price: 849, delivery: '3 days', rating: 4.4 }, { store: 'KM Trading', price: 879, delivery: '3 days', rating: 4.3 }], desc: 'Wear OS, advanced health monitoring, 40h battery, 5ATM.' },
+      { id: 16, name: 'Samsung Galaxy S24 Ultra 256GB', emoji: '📱', cat: 'Electronics', badge: 'NEW', badgeType: 'hot', prices: [{ store: 'Sharaf DG', price: 4299, delivery: 'Same Day', rating: 4.8 }, { store: 'Lulu', price: 4499, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 4599, delivery: '2 days', rating: 4.5 }, { store: 'KM Trading', price: 4699, delivery: '3 days', rating: 4.3 }], desc: '6.8-inch Dynamic AMOLED 2X, 200MP camera, S Pen, Snapdragon 8 Gen 3.' },
+      { id: 17, name: 'iPad Air M2 11-inch 128GB', emoji: '📲', cat: 'Electronics', badge: '-10%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 2199, delivery: 'Same Day', rating: 4.8 }, { store: 'Lulu', price: 2349, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 2499, delivery: '2 days', rating: 4.5 }], desc: 'M2 chip, 11-inch Liquid Retina, Apple Pencil Pro compatible.' },
+      { id: 18, name: 'Sony WH-1000XM5 Headphones', emoji: '🎵', cat: 'Electronics', badge: '-20%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1099, delivery: 'Same Day', rating: 4.9 }, { store: 'Lulu', price: 1199, delivery: 'Tomorrow', rating: 4.7 }, { store: 'KM Trading', price: 1249, delivery: '2 days', rating: 4.5 }], desc: 'Industry-leading noise cancellation, 30h battery, multipoint connection.' },
+      { id: 19, name: 'Xiaomi Redmi Note 13 128GB', emoji: '📱', cat: 'Electronics', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Nesto', price: 699, delivery: '2 days', rating: 4.5 }, { store: 'Lulu', price: 749, delivery: 'Tomorrow', rating: 4.4 }, { store: 'Carrefour', price: 779, delivery: '2 days', rating: 4.3 }, { store: 'KM Trading', price: 799, delivery: '3 days', rating: 4.2 }], desc: '6.67-inch AMOLED, 108MP camera, 5000mAh, 33W fast charge.' },
+      { id: 20, name: 'TCL 65″ 4K UHD Smart TV', emoji: '📺', cat: 'Electronics', badge: '-28%', badgeType: '', prices: [{ store: 'Nesto', price: 1499, delivery: '3 days', rating: 4.4 }, { store: 'Lulu', price: 1699, delivery: '2 days', rating: 4.5 }, { store: 'Sharaf DG', price: 1799, delivery: 'Same Day', rating: 4.6 }], desc: 'Dolby Vision, HDR10+, Google TV, built-in Chromecast.' },
+      { id: 21, name: 'Anker 65W GaN Charger USB-C', emoji: '🔌', cat: 'Electronics', badge: '', badgeType: '', prices: [{ store: 'Sharaf DG', price: 129, delivery: 'Same Day', rating: 4.7 }, { store: 'KM Trading', price: 145, delivery: '2 days', rating: 4.5 }, { store: 'Carrefour', price: 159, delivery: '2 days', rating: 4.4 }], desc: 'Compact 65W, 2 USB-C + 1 USB-A, charges laptop + phone simultaneously.' },
+      { id: 22, name: 'JBL Flip 6 Bluetooth Speaker', emoji: '🔊', cat: 'Electronics', badge: '-15%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 349, delivery: 'Same Day', rating: 4.7 }, { store: 'Lulu', price: 379, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 399, delivery: '2 days', rating: 4.4 }, { store: 'KM Trading', price: 419, delivery: '3 days', rating: 4.3 }], desc: 'IP67 waterproof, 12h playtime, PartyBoost multi-speaker link.' },
+      { id: 23, name: 'Apple Watch Series 9 45mm', emoji: '⌚', cat: 'Electronics', badge: 'NEW', badgeType: 'hot', prices: [{ store: 'Sharaf DG', price: 1599, delivery: 'Same Day', rating: 4.8 }, { store: 'Lulu', price: 1699, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 1799, delivery: '2 days', rating: 4.5 }], desc: 'S9 chip, Double Tap gesture, blood oxygen, ECG, Always-On display.' },
+      { id: 24, name: 'Canon EOS R50 Mirrorless Camera', emoji: '📷', cat: 'Electronics', badge: '-14%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 2299, delivery: 'Same Day', rating: 4.8 }, { store: 'KM Trading', price: 2499, delivery: '2 days', rating: 4.6 }, { store: 'Lulu', price: 2599, delivery: '3 days', rating: 4.5 }], desc: '24.2MP APS-C, 4K video, eye tracking AF, compact vlogging body.' },
+      { id: 25, name: 'Western Digital 2TB External HDD', emoji: '💾', cat: 'Electronics', badge: '', badgeType: '', prices: [{ store: 'Sharaf DG', price: 249, delivery: 'Same Day', rating: 4.6 }, { store: 'KM Trading', price: 269, delivery: '2 days', rating: 4.5 }, { store: 'Lulu', price: 289, delivery: '3 days', rating: 4.4 }, { store: 'Carrefour', price: 299, delivery: '2 days', rating: 4.3 }], desc: 'USB 3.0, plug-and-play, compatible with PC and Mac. 3-year warranty.' },
+      { id: 26, name: 'Nintendo Switch OLED', emoji: '🕹️', cat: 'Gaming', badge: '-10%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1449, delivery: 'Same Day', rating: 4.8 }, { store: 'Lulu', price: 1549, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 1599, delivery: '2 days', rating: 4.5 }], desc: '7-inch OLED, enhanced audio, 64GB storage, wide adjustable stand.' },
+      { id: 27, name: 'Xbox Series X 1TB Console', emoji: '🎮', cat: 'Gaming', badge: '', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1899, delivery: 'Same Day', rating: 4.8 }, { store: 'Lulu', price: 1999, delivery: 'Tomorrow', rating: 4.7 }, { store: 'KM Trading', price: 2099, delivery: '3 days', rating: 4.5 }], desc: '12 teraflops, 4K/120fps, Quick Resume, 1TB NVMe SSD.' },
+      { id: 28, name: 'GoPro Hero 12 Black', emoji: '📹', cat: 'Electronics', badge: '-18%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1699, delivery: 'Same Day', rating: 4.7 }, { store: 'Lulu', price: 1849, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 1949, delivery: '2 days', rating: 4.4 }], desc: '5.3K60 video, HyperSmooth 6.0, waterproof to 10m, Max Lens Mod 2.0.' },
+      { id: 29, name: 'Huawei MatePad Pro 12.6"', emoji: '📲', cat: 'Electronics', badge: '-22%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1999, delivery: 'Same Day', rating: 4.6 }, { store: 'Lulu', price: 2149, delivery: 'Tomorrow', rating: 4.5 }, { store: 'Nesto', price: 2299, delivery: '3 days', rating: 4.4 }], desc: '12.6-inch OLED, Kirin 9000E, M-Pencil, multi-screen collaboration.' },
+      { id: 30, name: 'Bose QuietComfort 45 Headphones', emoji: '🎧', cat: 'Electronics', badge: '-12%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1149, delivery: 'Same Day', rating: 4.8 }, { store: 'KM Trading', price: 1249, delivery: '2 days', rating: 4.6 }, { store: 'Lulu', price: 1349, delivery: '3 days', rating: 4.5 }], desc: 'World-class noise cancellation, 24h battery, lightweight foldable design.' },
+
+      /* ── GROCERIES ── */
+      { id: 6, name: 'Nescafé Classic 200g Jar', emoji: '☕', cat: 'Groceries', badge: 'HOT', badgeType: 'hot', prices: [{ store: 'KM Trading', price: 24, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 27, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 28, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 29, delivery: '2 days', rating: 4.3 }], desc: 'Rich aroma instant coffee. 200g jar. Best hot or iced.' },
+      { id: 12, name: 'India Gate Basmati Rice 5kg', emoji: '🌾', cat: 'Groceries', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'Nesto', price: 28, delivery: 'Today', rating: 4.7 }, { store: 'KM Trading', price: 30, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 33, delivery: 'Today', rating: 4.5 }, { store: 'Union Coop', price: 35, delivery: 'Today', rating: 4.4 }], desc: 'Premium long-grain aged basmati. Fluffy, aromatic, non-sticky.' },
+      { id: 31, name: 'Almarai Full Cream Milk 2L', emoji: '🥛', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 9, delivery: 'Today', rating: 4.7 }, { store: 'Carrefour', price: 10, delivery: 'Today', rating: 4.6 }, { store: 'Nesto', price: 10, delivery: 'Today', rating: 4.5 }, { store: 'Union Coop', price: 11, delivery: 'Today', rating: 4.4 }], desc: 'Fresh full cream milk from Almarai. Pasteurised & homogenised. 2L.' },
+      { id: 32, name: 'Lurpak Butter Unsalted 400g', emoji: '🧈', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 22, delivery: 'Today', rating: 4.7 }, { store: "Spinney's", price: 24, delivery: 'Today', rating: 4.8 }, { store: 'Lulu', price: 25, delivery: 'Today', rating: 4.6 }, { store: 'Union Coop', price: 26, delivery: 'Today', rating: 4.5 }], desc: 'Danish unsalted butter. Perfect for baking and cooking.' },
+      { id: 33, name: 'Tropicana Orange Juice 1L', emoji: '🍊', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 12, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 13, delivery: 'Today', rating: 4.5 }, { store: 'Carrefour', price: 14, delivery: 'Today', rating: 4.4 }], desc: '100% pure squeezed orange juice. No added sugar or preservatives.' },
+      { id: 34, name: 'Puck Cream Cheese 500g', emoji: '🧀', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'KM Trading', price: 18, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 20, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 21, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 22, delivery: 'Today', rating: 4.3 }], desc: 'Smooth spreadable cream cheese. For sandwiches, dips & baking.' },
+      { id: 35, name: 'Sunflower Oil Hayat 5L', emoji: '🫙', cat: 'Groceries', badge: 'BEST PRICE', badgeType: 'best', prices: [{ store: 'KM Trading', price: 32, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 34, delivery: 'Today', rating: 4.4 }, { store: 'Lulu', price: 36, delivery: 'Today', rating: 4.3 }, { store: 'Al Maya', price: 38, delivery: 'Today', rating: 4.2 }], desc: '100% pure sunflower oil. Ideal for frying, cooking & baking.' },
+      { id: 36, name: 'Nestle KitKat Chocolate 48-Pack', emoji: '🍫', cat: 'Groceries', badge: '-20%', badgeType: '', prices: [{ store: 'Carrefour', price: 65, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 69, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 72, delivery: 'Today', rating: 4.4 }, { store: 'KM Trading', price: 75, delivery: 'Today', rating: 4.3 }], desc: 'Classic KitKat wafer bars. 48 x 17.7g individually wrapped.' },
+      { id: 37, name: 'Milo Chocolate Drink 400g', emoji: '🥛', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 19, delivery: 'Today', rating: 4.6 }, { store: 'KM Trading', price: 21, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 23, delivery: 'Today', rating: 4.4 }], desc: 'Malted chocolate energy drink powder. Rich in vitamins & minerals.' },
+      { id: 38, name: 'Lipton Yellow Label Tea 100 Bags', emoji: '🍵', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 14, delivery: 'Today', rating: 4.6 }, { store: 'KM Trading', price: 16, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 17, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 18, delivery: 'Today', rating: 4.3 }], desc: 'Classic black tea bags. Bright, smooth flavour with natural ingredients.' },
+      { id: 39, name: 'Sadia Frozen Chicken 2kg', emoji: '🍗', cat: 'Groceries', badge: 'HOT', badgeType: 'hot', prices: [{ store: 'Nesto', price: 28, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 30, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 32, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 33, delivery: 'Today', rating: 4.3 }], desc: 'Halal certified whole frozen chicken. Naturally raised, no hormones.' },
+      { id: 40, name: 'Egyptian White Eggs 30-Pack', emoji: '🥚', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 22, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 23, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 24, delivery: 'Today', rating: 4.4 }], desc: 'Fresh white eggs, 30-pack. Farm fresh, grade A.' },
+      { id: 41, name: 'Maggi Noodles 12-Pack', emoji: '🍜', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 16, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 17, delivery: 'Today', rating: 4.4 }, { store: 'Lulu', price: 18, delivery: 'Today', rating: 4.4 }], desc: '2-minute instant noodles. 12 x 77g. Masala & chicken flavours.' },
+      { id: 42, name: 'Lays Chips Variety Pack 15-Pack', emoji: '🍟', cat: 'Groceries', badge: '-15%', badgeType: '', prices: [{ store: 'Carrefour', price: 35, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 37, delivery: 'Today', rating: 4.4 }, { store: 'Lulu', price: 39, delivery: 'Today', rating: 4.3 }], desc: 'Assorted flavours: Classic, BBQ, Sour Cream. 15 x 40g bags.' },
+      { id: 43, name: 'Tuna Can Del Monte 185g x6', emoji: '🐟', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'KM Trading', price: 38, delivery: 'Today', rating: 4.6 }, { store: 'Nesto', price: 40, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 42, delivery: 'Today', rating: 4.4 }], desc: 'Tuna chunks in springwater. 6-pack. Halal certified. High protein.' },
+      { id: 44, name: 'Heinz Ketchup 570g', emoji: '🥫', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 15, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 16, delivery: 'Today', rating: 4.6 }, { store: 'Nesto', price: 17, delivery: 'Today', rating: 4.5 }], desc: 'The original Heinz tomato ketchup. 570g squeeze bottle.' },
+      { id: 45, name: 'Arla Organic Cheddar 200g', emoji: '🧀', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: "Spinney's", price: 22, delivery: 'Today', rating: 4.8 }, { store: 'Waitrose', price: 24, delivery: 'Today', rating: 4.9 }, { store: 'Carrefour', price: 26, delivery: 'Today', rating: 4.5 }], desc: 'Organic cheddar from grass-fed cows. Mild & creamy. 200g.' },
+      { id: 46, name: 'Dates Medjool Premium 1kg', emoji: '🌴', cat: 'Groceries', badge: 'LOCAL', badgeType: 'best', prices: [{ store: 'Lulu', price: 75, delivery: 'Today', rating: 4.8 }, { store: 'Nesto', price: 82, delivery: 'Today', rating: 4.7 }, { store: 'Carrefour', price: 89, delivery: 'Today', rating: 4.6 }, { store: 'Union Coop', price: 92, delivery: 'Today', rating: 4.7 }], desc: 'Premium UAE Medjool dates. Soft, sweet, large. Gift-ready packaging.' },
+      { id: 47, name: 'Almarai Labneh 500g', emoji: '🥣', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 14, delivery: 'Today', rating: 4.7 }, { store: 'Nesto', price: 15, delivery: 'Today', rating: 4.6 }, { store: 'KM Trading', price: 16, delivery: 'Today', rating: 4.5 }], desc: 'Strained yogurt cheese. Creamy, low fat. Perfect for dips.' },
+      { id: 48, name: 'Evian Natural Spring Water 12x1.5L', emoji: '💧', cat: 'Groceries', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 38, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 40, delivery: 'Today', rating: 4.5 }, { store: "Spinney's", price: 42, delivery: 'Today', rating: 4.7 }], desc: 'French natural mineral water. 12 x 1.5L bottles. Rich in minerals.' },
+
+      /* ── HEALTH & BEAUTY ── */
+      { id: 7, name: 'Nivea Cocoa Body Lotion 400ml', emoji: '🧴', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 18, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 22, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 25, delivery: 'Today', rating: 4.3 }], desc: 'Deep moisturising cocoa butter lotion. For dry to very dry skin.' },
+      { id: 13, name: 'Dettol Handwash 400ml Original', emoji: '🧼', cat: 'Health & Beauty', badge: '-15%', badgeType: '', prices: [{ store: 'Carrefour', price: 9, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 11, delivery: 'Today', rating: 4.4 }, { store: 'Nesto', price: 12, delivery: 'Today', rating: 4.3 }], desc: 'Kills 99.9% bacteria & viruses. Moisturising aloe vera formula.' },
+      { id: 49, name: 'Pantene Shampoo Anti-Dandruff 400ml', emoji: '🧴', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 22, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 24, delivery: 'Today', rating: 4.5 }, { store: 'Carrefour', price: 26, delivery: 'Today', rating: 4.4 }], desc: 'Anti-dandruff formula. Strengthens hair and prevents flakes.' },
+      { id: 50, name: 'Oral-B Pro 3000 Electric Toothbrush', emoji: '🪥', cat: 'Health & Beauty', badge: '-25%', badgeType: '', prices: [{ store: 'Lulu', price: 179, delivery: 'Today', rating: 4.7 }, { store: 'Carrefour', price: 199, delivery: 'Today', rating: 4.6 }, { store: 'Nesto', price: 209, delivery: 'Today', rating: 4.5 }], desc: '3D cleaning, pressure sensor, 2-minute timer. Removes 100% more plaque.' },
+      { id: 51, name: 'Dove Soap Bar 4-Pack 100g', emoji: '🪭', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'KM Trading', price: 18, delivery: 'Today', rating: 4.6 }, { store: 'Nesto', price: 20, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 22, delivery: 'Today', rating: 4.4 }], desc: 'Moisturising bar with ¼ moisturising cream. For sensitive skin.' },
+      { id: 52, name: 'Colgate Total Toothpaste 3-Pack', emoji: '🦷', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 24, delivery: 'Today', rating: 4.6 }, { store: 'KM Trading', price: 25, delivery: 'Today', rating: 4.5 }, { store: 'Carrefour', price: 27, delivery: 'Today', rating: 4.4 }], desc: 'Complete 12-benefit toothpaste. Fights cavities, whitens, freshens breath.' },
+      { id: 53, name: 'Head & Shoulders Shampoo 540ml', emoji: '🧴', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 29, delivery: 'Today', rating: 4.6 }, { store: 'Nesto', price: 31, delivery: 'Today', rating: 4.5 }, { store: 'Carrefour', price: 33, delivery: 'Today', rating: 4.4 }], desc: 'Classic Clean dandruff shampoo. 540ml. 2-in-1 formula available.' },
+      { id: 54, name: 'L\'Oreal Men Expert Face Wash 150ml', emoji: '🧖', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 32, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 35, delivery: 'Today', rating: 4.4 }, { store: "Spinney's", price: 38, delivery: 'Today', rating: 4.6 }], desc: 'Hydra Energetic face wash. Removes impurities, energises skin.' },
+      { id: 55, name: 'Always Maxi Pads 32-Pack', emoji: '🌸', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 26, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 28, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 30, delivery: 'Today', rating: 4.4 }], desc: 'Ultra thin with FlexFoam. Leakguard up to 100% protection. 32-pack.' },
+      { id: 56, name: 'Pampers Baby Dry Diapers Size 4 x76', emoji: '👶', cat: 'Baby & Kids', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 79, delivery: 'Today', rating: 4.7 }, { store: 'Nesto', price: 82, delivery: 'Today', rating: 4.6 }, { store: 'Carrefour', price: 85, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 89, delivery: 'Today', rating: 4.4 }], desc: 'Up to 12h dryness. Extra absorb layer. Gentle on baby skin.' },
+      { id: 57, name: 'Johnson\'s Baby Shampoo 500ml', emoji: '🍼', cat: 'Baby & Kids', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 19, delivery: 'Today', rating: 4.8 }, { store: 'KM Trading', price: 21, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 23, delivery: 'Today', rating: 4.6 }], desc: 'No-tears formula. Clinically proven mild. For newborns & babies.' },
+      { id: 58, name: 'Huggies Pull-Ups Size 5 x44', emoji: '👶', cat: 'Baby & Kids', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 72, delivery: 'Today', rating: 4.6 }, { store: 'Carrefour', price: 76, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 79, delivery: 'Today', rating: 4.4 }], desc: 'Easy open sides, stretchy fit. 360° leak protection. 44-pack.' },
+
+      /* ── HOME & LIVING ── */
+      { id: 11, name: 'Dyson V15 Detect Cordless Vacuum', emoji: '🧹', cat: 'Home & Living', badge: '-15%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 2199, delivery: 'Same Day', rating: 4.9 }, { store: 'Lulu', price: 2399, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 2549, delivery: '2 days', rating: 4.6 }], desc: 'Laser dust detection, HEPA filtration, 60-min runtime. 7 accessories.' },
+      { id: 59, name: 'Tefal Non-Stick Fry Pan 28cm', emoji: '🍳', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 79, delivery: 'Today', rating: 4.7 }, { store: 'Carrefour', price: 85, delivery: 'Today', rating: 4.6 }, { store: 'Nesto', price: 89, delivery: 'Today', rating: 4.5 }, { store: 'Danube Home', price: 95, delivery: 'Tomorrow', rating: 4.6 }], desc: 'Titanium non-stick coating. Induction compatible. Scratch resistant.' },
+      { id: 60, name: 'Philips Air Fryer HD9200 4.1L', emoji: '🍟', cat: 'Home & Living', badge: '-20%', badgeType: '', prices: [{ store: 'Lulu', price: 399, delivery: 'Today', rating: 4.7 }, { store: 'Carrefour', price: 429, delivery: 'Today', rating: 4.6 }, { store: 'Sharaf DG', price: 449, delivery: 'Same Day', rating: 4.8 }, { store: 'Nesto', price: 469, delivery: 'Tomorrow', rating: 4.5 }], desc: 'Rapid Air technology, 4.1L, 90% less fat. Digital touchscreen.' },
+      { id: 61, name: 'Nespresso Essenza Mini Coffee Machine', emoji: '☕', cat: 'Home & Living', badge: '-18%', badgeType: '', prices: [{ store: 'Carrefour', price: 499, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 549, delivery: 'Today', rating: 4.6 }, { store: 'Sharaf DG', price: 579, delivery: 'Same Day', rating: 4.8 }], desc: 'Compact espresso machine. 19 bar pressure. Uses Nespresso Original capsules.' },
+      { id: 62, name: 'Panasonic 1.8L Rice Cooker SR-W18', emoji: '🍚', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 129, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 139, delivery: 'Today', rating: 4.5 }, { store: 'KM Trading', price: 149, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 155, delivery: 'Today', rating: 4.4 }], desc: '1.8L, non-stick inner pot, keep warm function. Makes 10 cups.' },
+      { id: 63, name: 'Instant Pot Duo 7-in-1 6Qt', emoji: '🫕', cat: 'Home & Living', badge: '-22%', badgeType: '', prices: [{ store: 'Carrefour', price: 449, delivery: 'Today', rating: 4.8 }, { store: 'Lulu', price: 489, delivery: 'Today', rating: 4.7 }, { store: 'Sharaf DG', price: 519, delivery: 'Same Day', rating: 4.8 }], desc: 'Pressure cooker, slow cooker, rice cooker, steamer, sauté & more.' },
+      { id: 64, name: 'Samsung Washer 8kg Front Load WW80', emoji: '🫧', cat: 'Home & Living', badge: '-25%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1799, delivery: '5 days', rating: 4.7 }, { store: 'Lulu', price: 1949, delivery: '4 days', rating: 4.6 }, { store: 'Carrefour', price: 2099, delivery: '5 days', rating: 4.5 }], desc: '8kg capacity, 1400rpm, inverter motor, energy class A++.' },
+      { id: 65, name: 'LG Refrigerator 600L French Door', emoji: '🧊', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Sharaf DG', price: 3999, delivery: '7 days', rating: 4.7 }, { store: 'Lulu', price: 4299, delivery: '5 days', rating: 4.6 }, { store: 'Nesto', price: 4499, delivery: '7 days', rating: 4.4 }], desc: 'InstaView Door-in-Door, Smart Diagnosis, Linear Inverter Compressor.' },
+      { id: 66, name: 'Ikea BILLY Bookcase White 80x202cm', emoji: '📚', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Danube Home', price: 199, delivery: '3 days', rating: 4.5 }, { store: 'Carrefour', price: 229, delivery: '3 days', rating: 4.4 }], desc: 'Classic adjustable shelf bookcase. White, 80x28x202 cm. Assembly required.' },
+      { id: 67, name: 'Karcher Pressure Washer K2 Full', emoji: '🚿', cat: 'Home & Living', badge: '-16%', badgeType: '', prices: [{ store: 'Lulu', price: 399, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 429, delivery: '2 days', rating: 4.5 }, { store: 'Nesto', price: 449, delivery: '3 days', rating: 4.4 }], desc: '110 bar, 360L/h, home kit included. Ideal for cars, patios, bikes.' },
+      { id: 68, name: 'Xiaomi Robot Vacuum X10 Pro', emoji: '🤖', cat: 'Home & Living', badge: '-30%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 1299, delivery: 'Same Day', rating: 4.7 }, { store: 'Lulu', price: 1449, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 1549, delivery: '2 days', rating: 4.5 }], desc: 'LiDAR navigation, 4000Pa suction, mop+vacuum combo, app control.' },
+      { id: 69, name: 'Bosch Mixer MFQ36460 450W', emoji: '🍰', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 179, delivery: 'Today', rating: 4.6 }, { store: 'Carrefour', price: 199, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 209, delivery: 'Today', rating: 4.4 }], desc: '450W, 5 speeds + turbo, dough hook, balloon whisk, beakers.' },
+
+      /* ── FASHION ── */
+      { id: 14, name: 'Nike Air Max 270 Men\'s Shoes', emoji: '👟', cat: 'Fashion', badge: '-30%', badgeType: '', prices: [{ store: 'Centrepoint', price: 399, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 429, delivery: '2 days', rating: 4.6 }, { store: 'Lulu', price: 449, delivery: '3 days', rating: 4.5 }], desc: 'Iconic Air unit heel, breathable mesh upper. All-day comfort.' },
+      { id: 70, name: 'Adidas Originals Trefoil T-Shirt', emoji: '👕', cat: 'Fashion', badge: '-25%', badgeType: '', prices: [{ store: 'Centrepoint', price: 89, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Lulu', price: 99, delivery: '2 days', rating: 4.5 }, { store: 'Carrefour', price: 109, delivery: '3 days', rating: 4.4 }], desc: 'Classic trefoil logo tee. 100% cotton. Available in multiple colours.' },
+      { id: 71, name: 'Levi\'s 501 Original Jeans Men', emoji: '👖', cat: 'Fashion', badge: '-20%', badgeType: '', prices: [{ store: 'Centrepoint', price: 249, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Lulu', price: 269, delivery: '2 days', rating: 4.6 }, { store: 'Carrefour', price: 289, delivery: '3 days', rating: 4.5 }], desc: 'The original straight leg. Button fly, 100% cotton denim.' },
+      { id: 72, name: 'Polo Ralph Lauren Shirt Men\'s', emoji: '🧥', cat: 'Fashion', badge: '-18%', badgeType: '', prices: [{ store: 'Centrepoint', price: 299, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Lulu', price: 329, delivery: '2 days', rating: 4.6 }], desc: 'Classic fit mesh polo. Embroidered pony logo. Cotton pique.' },
+      { id: 73, name: 'Skechers Go Walk 6 Women', emoji: '👠', cat: 'Fashion', badge: '-22%', badgeType: '', prices: [{ store: 'Centrepoint', price: 199, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Lulu', price: 219, delivery: '2 days', rating: 4.6 }, { store: 'Carrefour', price: 239, delivery: '3 days', rating: 4.5 }], desc: 'Ultra-lightweight, machine washable, ULTRA GO cushioning.' },
+      { id: 74, name: 'Zara Oversized Blazer Women\'s', emoji: '🧥', cat: 'Fashion', badge: '', badgeType: '', prices: [{ store: 'Centrepoint', price: 279, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Lulu', price: 299, delivery: '2 days', rating: 4.5 }], desc: 'Oversized fit, notched lapel, single button, lined. Smart casual.' },
+      { id: 75, name: 'Tommy Hilfiger Men\'s Watch', emoji: '⌚', cat: 'Fashion', badge: '-15%', badgeType: '', prices: [{ store: 'Lulu', price: 549, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Centrepoint', price: 599, delivery: '2 days', rating: 4.6 }, { store: 'Carrefour', price: 649, delivery: '3 days', rating: 4.5 }], desc: 'Stainless steel case, leather strap, Japanese quartz movement.' },
+      { id: 76, name: 'Puma Running Shorts Men', emoji: '🩳', cat: 'Fashion', badge: '', badgeType: '', prices: [{ store: 'Centrepoint', price: 79, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Lulu', price: 89, delivery: '2 days', rating: 4.5 }], desc: 'dryCELL technology, 5-inch inseam, zip pocket. Lightweight.' },
+      { id: 77, name: 'Lacoste Polo Shirt Classic Fit', emoji: '👕', cat: 'Fashion', badge: '-10%', badgeType: '', prices: [{ store: 'Centrepoint', price: 329, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Lulu', price: 349, delivery: '2 days', rating: 4.7 }], desc: 'Petit piqué cotton, ribbed collar, signature croc. French elegance.' },
+
+      /* ── SPORTS & OUTDOOR ── */
+      { id: 78, name: 'Decathlon Fitness Yoga Mat 5mm', emoji: '🧘', cat: 'Sports', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 59, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 65, delivery: 'Today', rating: 4.4 }, { store: 'Nesto', price: 69, delivery: 'Today', rating: 4.3 }], desc: 'Non-slip surface, 5mm thick, lightweight with carry strap.' },
+      { id: 79, name: 'Wilson Tennis Racket Pro Staff', emoji: '🎾', cat: 'Sports', badge: '-20%', badgeType: '', prices: [{ store: 'Carrefour', price: 399, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Lulu', price: 429, delivery: '2 days', rating: 4.6 }], desc: '97sq in head, 11.7oz weight. Control and power for advanced players.' },
+      { id: 80, name: 'Adidas Water Bottle 1L', emoji: '🍶', cat: 'Sports', badge: '', badgeType: '', prices: [{ store: 'Centrepoint', price: 49, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 55, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 59, delivery: 'Today', rating: 4.4 }], desc: 'BPA-free, leak-proof lid, 1L capacity. Lightweight and durable.' },
+      { id: 81, name: 'Fitbit Charge 6 Fitness Tracker', emoji: '💪', cat: 'Sports', badge: '-28%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 699, delivery: 'Same Day', rating: 4.7 }, { store: 'Lulu', price: 749, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 799, delivery: '2 days', rating: 4.5 }], desc: 'GPS, 40+ exercise modes, sleep tracking, 7-day battery, ECG.' },
+      { id: 82, name: 'Coleman Camping Tent 4-Person', emoji: '⛺', cat: 'Sports', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 349, delivery: '2 days', rating: 4.6 }, { store: 'Lulu', price: 379, delivery: '3 days', rating: 4.5 }], desc: 'Weathertec system, 4-person capacity, hinged door, setup in 10 min.' },
+      { id: 83, name: 'Speedo Fastskin Goggles', emoji: '🥽', cat: 'Sports', badge: '-15%', badgeType: '', prices: [{ store: 'Carrefour', price: 89, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 99, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 105, delivery: 'Today', rating: 4.4 }], desc: 'Anti-fog, UV protection, hydrodynamic design. For competition & training.' },
+
+      /* ── TOYS & KIDS ── */
+      { id: 15, name: 'LEGO Technic Off-Road Truck 42139', emoji: '🧩', cat: 'Toys', badge: '-20%', badgeType: '', prices: [{ store: 'Lulu', price: 189, delivery: 'Tomorrow', rating: 4.8 }, { store: 'Carrefour', price: 209, delivery: '2 days', rating: 4.7 }, { store: 'Nesto', price: 225, delivery: '3 days', rating: 4.5 }], desc: '764 pieces, working suspension, pull-back motor. Age 9+.' },
+      { id: 84, name: 'Barbie Dreamhouse Playset', emoji: '🪆', cat: 'Toys', badge: '-22%', badgeType: '', prices: [{ store: 'Lulu', price: 549, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 599, delivery: '2 days', rating: 4.6 }, { store: 'Nesto', price: 629, delivery: '3 days', rating: 4.5 }], desc: '3-storey, 8 rooms, 70+ accessories, pool, slide & elevator. Age 3+.' },
+      { id: 85, name: 'Hot Wheels City Garage Track Set', emoji: '🚗', cat: 'Toys', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 149, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 165, delivery: '2 days', rating: 4.6 }, { store: 'Nesto', price: 175, delivery: '3 days', rating: 4.5 }], desc: '3-level garage, loop track, includes 1 die-cast car. Age 4+.' },
+      { id: 86, name: 'Play-Doh Ultimate Kitchen Set', emoji: '🎨', cat: 'Toys', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 179, delivery: 'Tomorrow', rating: 4.7 }, { store: 'Carrefour', price: 195, delivery: '2 days', rating: 4.6 }, { store: 'Nesto', price: 209, delivery: '3 days', rating: 4.5 }], desc: '71-piece set, food molds, roller, blender. 10 colours of compound.' },
+      { id: 87, name: 'Nerf Elite 2.0 Blaster', emoji: '🎯', cat: 'Toys', badge: '-15%', badgeType: '', prices: [{ store: 'Lulu', price: 79, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 89, delivery: '2 days', rating: 4.5 }, { store: 'Nesto', price: 95, delivery: '3 days', rating: 4.4 }], desc: '20-dart capacity, rapid-fire action, includes 20 Elite darts. Age 8+.' },
+
+      /* ── STATIONERY & OFFICE ── */
+      { id: 88, name: 'Pilot G2 Gel Pens 12-Pack Blue', emoji: '🖊️', cat: 'Office', badge: '', badgeType: '', prices: [{ store: 'Day to Day', price: 29, delivery: 'Today', rating: 4.7 }, { store: 'Carrefour', price: 32, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 35, delivery: 'Today', rating: 4.5 }], desc: 'Retractable 0.7mm gel pens. Smooth writing, long lasting ink.' },
+      { id: 89, name: 'A4 Copy Paper Bosphore 80gsm 500 Sheets', emoji: '📄', cat: 'Office', badge: '', badgeType: '', prices: [{ store: 'Day to Day', price: 18, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 20, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 22, delivery: 'Today', rating: 4.4 }], desc: '80gsm white A4 copy paper. 500 sheets, ream-wrapped.' },
+      { id: 90, name: 'Post-it Super Sticky Notes 12-Pack', emoji: '📝', cat: 'Office', badge: '', badgeType: '', prices: [{ store: 'Day to Day', price: 35, delivery: 'Today', rating: 4.6 }, { store: 'Carrefour', price: 39, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 42, delivery: 'Today', rating: 4.4 }], desc: '12 pads, 90 sheets each. Neon colours. Extra-sticky formula.' },
+      { id: 91, name: 'Staples Desk Organizer Set 5pc', emoji: '🗂️', cat: 'Office', badge: '', badgeType: '', prices: [{ store: 'Day to Day', price: 49, delivery: 'Today', rating: 4.6 }, { store: 'Carrefour', price: 55, delivery: 'Today', rating: 4.5 }], desc: '5-piece mesh organizer: letter tray, pen holder, file sorter, more.' },
+      { id: 92, name: 'Artline Whiteboard Markers 12-Pack', emoji: '✏️', cat: 'Office', badge: '', badgeType: '', prices: [{ store: 'Day to Day', price: 22, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 25, delivery: 'Today', rating: 4.4 }, { store: 'Carrefour', price: 28, delivery: 'Today', rating: 4.3 }], desc: 'Assorted colours, chisel tip, low odour, easy erase. 12-pack.' },
+
+      /* ── AUTOMOTIVE ── */
+      { id: 93, name: 'Turtle Wax Car Polish Kit', emoji: '🚗', cat: 'Automotive', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 69, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 75, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 79, delivery: 'Today', rating: 4.4 }], desc: 'Complete scratch repair & polish kit. For all paint colours.' },
+      { id: 94, name: 'Michelin Windshield Wiper 22" Pair', emoji: '🪟', cat: 'Automotive', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 89, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 95, delivery: 'Today', rating: 4.5 }], desc: 'Universal fit, frameless beam design. Aerodynamic, quiet operation.' },
+      { id: 95, name: 'Car Vacuum Cleaner 12V Portable', emoji: '🌀', cat: 'Automotive', badge: '-18%', badgeType: '', prices: [{ store: 'Carrefour', price: 89, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 99, delivery: 'Today', rating: 4.4 }, { store: 'Nesto', price: 105, delivery: 'Today', rating: 4.3 }], desc: '12V DC, 5000Pa suction, 4m cord, HEPA filter. Fits cigarette lighter.' },
+      { id: 96, name: 'Garmin DriveSmart 55 GPS Navigator', emoji: '🗺️', cat: 'Automotive', badge: '-22%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 699, delivery: 'Same Day', rating: 4.7 }, { store: 'Lulu', price: 749, delivery: 'Tomorrow', rating: 4.6 }, { store: 'Carrefour', price: 799, delivery: '2 days', rating: 4.5 }], desc: '5.5" display, UAE & Middle East maps, Bluetooth hands-free calling.' },
+
+      /* ── BOOKS ── */
+      { id: 97, name: 'Atomic Habits by James Clear', emoji: '📖', cat: 'Books', badge: 'BESTSELLER', badgeType: 'best', prices: [{ store: 'Carrefour', price: 55, delivery: 'Today', rating: 4.9 }, { store: 'Lulu', price: 59, delivery: 'Today', rating: 4.8 }, { store: 'Day to Day', price: 62, delivery: 'Today', rating: 4.7 }], desc: 'The #1 most sold book on building good habits and breaking bad ones.' },
+      { id: 98, name: 'The Psychology of Money – Morgan Housel', emoji: '💰', cat: 'Books', badge: 'BESTSELLER', badgeType: 'best', prices: [{ store: 'Carrefour', price: 49, delivery: 'Today', rating: 4.8 }, { store: 'Lulu', price: 52, delivery: 'Today', rating: 4.7 }, { store: 'Day to Day', price: 55, delivery: 'Today', rating: 4.6 }], desc: 'Timeless lessons on wealth, greed and happiness. 19 short stories.' },
+      { id: 99, name: 'Harry Potter Complete Box Set 7 Books', emoji: '🧙', cat: 'Books', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 199, delivery: 'Today', rating: 4.9 }, { store: 'Lulu', price: 219, delivery: 'Today', rating: 4.8 }, { store: 'Day to Day', price: 229, delivery: 'Today', rating: 4.7 }], desc: 'Complete 7-book Harry Potter paperback collection by J.K. Rowling.' },
+      { id: 100, name: 'Quran Al-Kareem Arabic-English', emoji: '📿', cat: 'Books', badge: '', badgeType: '', prices: [{ store: 'Lulu', price: 45, delivery: 'Today', rating: 5.0 }, { store: 'Nesto', price: 49, delivery: 'Today', rating: 4.9 }, { store: 'KM Trading', price: 52, delivery: 'Today', rating: 4.9 }], desc: 'Bilingual Arabic-English translation. Colour-coded tajweed edition.' },
+
+      /* ── PETS ── */
+      { id: 101, name: 'Royal Canin Adult Cat Food 4kg', emoji: '🐱', cat: 'Pets', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 149, delivery: 'Today', rating: 4.8 }, { store: 'Lulu', price: 159, delivery: 'Today', rating: 4.7 }, { store: "Spinney's", price: 169, delivery: 'Today', rating: 4.8 }], desc: 'Complete nutrition for adult cats 1–7 years. Supports urinary health.' },
+      { id: 102, name: 'Pedigree Adult Dog Food 8kg', emoji: '🐶', cat: 'Pets', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 99, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 109, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 115, delivery: 'Today', rating: 4.4 }], desc: 'Complete & balanced dry food for adult dogs. Chicken & vegetables.' },
+      { id: 103, name: 'Pet Water Fountain 2L Automatic', emoji: '🐾', cat: 'Pets', badge: '-20%', badgeType: '', prices: [{ store: 'Carrefour', price: 89, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 99, delivery: 'Today', rating: 4.6 }], desc: '2L capacity, carbon filter, quiet pump. Encourages pets to drink more.' },
+
+      /* ── CLEANING & HOUSEHOLD ── */
+      { id: 104, name: 'Ariel Washing Powder 4kg', emoji: '🫧', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 39, delivery: 'Today', rating: 4.7 }, { store: 'KM Trading', price: 41, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 43, delivery: 'Today', rating: 4.5 }, { store: 'Carrefour', price: 45, delivery: 'Today', rating: 4.4 }], desc: 'Removes tough stains at low temperatures. Suitable for all fabrics.' },
+      { id: 105, name: 'Flash Floor Cleaner Lavender 3L', emoji: '🧹', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 22, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 24, delivery: 'Today', rating: 4.5 }, { store: 'Carrefour', price: 26, delivery: 'Today', rating: 4.4 }], desc: 'Powerful all-purpose floor cleaner. Lavender scent. 3-litre bottle.' },
+      { id: 106, name: 'Glad Garbage Bags 50L x30', emoji: '🗑️', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'KM Trading', price: 19, delivery: 'Today', rating: 4.5 }, { store: 'Nesto', price: 21, delivery: 'Today', rating: 4.4 }, { store: 'Lulu', price: 23, delivery: 'Today', rating: 4.4 }], desc: 'Strong drawstring closure. 50L capacity. 30 bags per box.' },
+      { id: 107, name: 'Scotch-Brite Sponge Scrub 6-Pack', emoji: '🪣', cat: 'Home & Living', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 14, delivery: 'Today', rating: 4.6 }, { store: 'KM Trading', price: 15, delivery: 'Today', rating: 4.5 }, { store: 'Lulu', price: 17, delivery: 'Today', rating: 4.4 }], desc: 'Tough non-scratch scrub sponges. 6-pack. Safe on non-stick surfaces.' },
+
+      /* ── PERSONAL CARE ── */
+      { id: 108, name: 'Gillette Mach3 Razor + 10 Blades', emoji: '🪒', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Nesto', price: 45, delivery: 'Today', rating: 4.7 }, { store: 'Lulu', price: 49, delivery: 'Today', rating: 4.6 }, { store: 'Carrefour', price: 52, delivery: 'Today', rating: 4.5 }], desc: '3-blade technology for a smooth shave. Lubrastrip for comfort.' },
+      { id: 109, name: 'Philips Shaver Series 3000 S3233', emoji: '🪒', cat: 'Health & Beauty', badge: '-28%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 149, delivery: 'Same Day', rating: 4.6 }, { store: 'Lulu', price: 169, delivery: 'Tomorrow', rating: 4.5 }, { store: 'Carrefour', price: 185, delivery: '2 days', rating: 4.4 }], desc: 'CloseCut blades, pop-up trimmer, corded/cordless use. Wet & dry.' },
+      { id: 110, name: 'Maybelline Fit Me Foundation 30ml', emoji: '💄', cat: 'Health & Beauty', badge: '', badgeType: '', prices: [{ store: 'Carrefour', price: 39, delivery: 'Today', rating: 4.6 }, { store: 'Lulu', price: 42, delivery: 'Today', rating: 4.5 }, { store: "Spinney's", price: 45, delivery: 'Today', rating: 4.7 }], desc: '40 shades, natural coverage, oil-free. For normal to oily skin.' },
+      { id: 111, name: 'Braun Hair Dryer Satin Hair 3 HD385', emoji: '💇', cat: 'Health & Beauty', badge: '-20%', badgeType: '', prices: [{ store: 'Sharaf DG', price: 149, delivery: 'Same Day', rating: 4.6 }, { store: 'Lulu', price: 169, delivery: 'Tomorrow', rating: 4.5 }, { store: 'Carrefour', price: 179, delivery: '2 days', rating: 4.4 }], desc: '2000W, ionic care, 3 heat & 2 speed settings, cool shot.' },
     ];
 
     const DEALS = [
       { id: 8, discount: '25%', endH: 3, endM: 47, endS: 22 },
-      { id: 9, discount: '40%', endH: 8, endM: 12, endS: 55 },
+      { id: 60, discount: '20%', endH: 8, endM: 12, endS: 55 },
       { id: 10, discount: '30%', endH: 1, endM: 23, endS: 44 },
-      { id: 11, discount: '35%', endH: 5, endM: 59, endS: 11 },
-      { id: 1, discount: '28%', endH: 11, endM: 4, endS: 33 },
+      { id: 11, discount: '15%', endH: 5, endM: 59, endS: 11 },
+      { id: 1, discount: '18%', endH: 11, endM: 4, endS: 33 },
+      { id: 64, discount: '25%', endH: 6, endM: 38, endS: 15 },
+      { id: 71, discount: '20%', endH: 9, endM: 14, endS: 50 },
+      { id: 97, discount: '10%', endH: 14, endM: 22, endS: 5 },
     ];
 
     const CATEGORIES = [
-      { name: 'Electronics', emoji: '📱', count: '1,240' }, { name: 'Groceries', emoji: '🛒', count: '3,800' },
-      { name: 'Fashion', emoji: '👗', count: '960' }, { name: 'Home & Living', emoji: '🏠', count: '720' },
-      { name: 'Health & Beauty', emoji: '💊', count: '540' }, { name: 'Gaming', emoji: '🎮', count: '320' },
-      { name: 'Pets', emoji: '🐾', count: '180' }, { name: 'Automotive', emoji: '🚗', count: '410' },
-      { name: 'Sports', emoji: '⚽', count: '295' }, { name: 'Books', emoji: '📚', count: '1,100' },
-      { name: 'Toys', emoji: '🧸', count: '430' }, { name: 'Office', emoji: '🖊️', count: '270' },
+      { name: 'Electronics', emoji: '📱', count: '1,240' },
+      { name: 'Groceries', emoji: '🛒', count: '3,800' },
+      { name: 'Fashion', emoji: '👗', count: '960' },
+      { name: 'Home & Living', emoji: '🏠', count: '720' },
+      { name: 'Health & Beauty', emoji: '💊', count: '540' },
+      { name: 'Gaming', emoji: '🎮', count: '320' },
+      { name: 'Toys', emoji: '🧸', count: '430' },
+      { name: 'Sports', emoji: '⚽', count: '295' },
+      { name: 'Books', emoji: '📚', count: '1,100' },
+      { name: 'Baby & Kids', emoji: '🍼', count: '380' },
+      { name: 'Office', emoji: '🖊️', count: '270' },
+      { name: 'Automotive', emoji: '🚗', count: '410' },
+      { name: 'Pets', emoji: '🐾', count: '180' },
     ];
 
     const LOCATIONS = [
@@ -5339,7 +5482,7 @@
     ];
 
     /* ═══════ STATE ═══════ */
-    let cart = [], wishlist = [], recentIds = [6, 7, 11], selectedLocation = 'Ajman, UAE';
+    let cart = [], wishlist = [], recentIds = [0, 39, 60, 97, 14, 46], selectedLocation = 'Ajman, UAE';
     let bannerIdx = 0, bannerTimer;
     let dealTimers = {};
     /* bottom nav context tracking */
@@ -5351,6 +5494,137 @@
       { lbl: 'Account', action: () => openAccount() },
     ];
     let bnActive = 0;
+
+    /* ═══════ ADS DATA – rotates every 8 s ═══════ */
+    const ADS = [
+      /* 0 – du Recharge */
+      {
+        cls: 'sad-1', icon: '📱', tag: 'LIVE OFFER', live: true,
+        title: 'du Recharge<br>from AED 30', discount: '-20%',
+        cta: 'Recharge Now', expires: 'Expires midnight',
+        action: () => openRecharge('du'),
+        link: null
+      },
+      /* 1 – Etisalat Recharge */
+      {
+        cls: 'sad-2', icon: '📲', tag: 'FLASH DEAL', live: true,
+        title: 'Etisalat e&amp;<br>Top-Up AED 50', discount: '-10%',
+        cta: 'Top-Up Now', expires: 'Today only',
+        action: () => openRecharge('etisalat'),
+        link: null
+      },
+      /* 2 – Talabat Food */
+      {
+        cls: 'sad-food', icon: '🛵', tag: 'FOOD DELIVERY', live: true,
+        title: 'Talabat Free<br>Delivery Today', discount: null,
+        cta: 'Order Now', expires: 'Min order AED 25',
+        action: null,
+        link: 'https://www.talabat.com/uae'
+      },
+      /* 3 – Careem Food */
+      {
+        cls: 'sad-3', icon: '🍔', tag: 'FOOD DEAL', live: true,
+        title: 'Careem Food<br>30% Off 1st Order', discount: '-30%',
+        cta: 'Claim Offer', expires: 'New users only',
+        action: null,
+        link: 'https://www.careem.com/en-ae/food/'
+      },
+      /* 4 – Lulu Flash Sale */
+      {
+        cls: 'sad-grocery', icon: '🛒', tag: 'WEEKEND SALE', live: true,
+        title: 'Lulu Groceries<br>Up to 40% Off', discount: '-40%',
+        cta: 'Shop Lulu', expires: 'Valid until Apr 6',
+        action: () => openStorePage('Lulu'),
+        link: null
+      },
+      /* 5 – Nesto Hypermarket */
+      {
+        cls: 'sad-4', icon: '🏪', tag: 'STORE OFFER', live: true,
+        title: 'Nesto Ajman<br>Grand Sale On!', discount: '-35%',
+        cta: 'Explore', expires: 'Valid until Apr 9',
+        action: () => openStorePage('Nesto'),
+        link: null
+      },
+      /* 6 – Booking.com Hotels */
+      {
+        cls: 'sad-travel', icon: '✈️', tag: 'TRAVEL DEAL', live: false,
+        title: 'Hotels from<br>AED 199/night', discount: null,
+        cta: 'Book Now', expires: 'Free cancellation',
+        action: null,
+        link: 'https://www.booking.com'
+      },
+      /* 7 – Sharaf DG Tech */
+      {
+        cls: 'sad-1', icon: '💻', tag: 'TECH FEST', live: true,
+        title: 'Sharaf DG<br>Electronics Sale', discount: '-25%',
+        cta: 'View Deals', expires: 'Valid until Apr 5',
+        action: () => openStorePage('Sharaf DG'),
+        link: null
+      },
+      /* 8 – Noon UAE */
+      {
+        cls: 'sad-2', icon: '🌟', tag: 'NOON DEALS', live: true,
+        title: 'Noon UAE<br>Up to 50% Off', discount: '-50%',
+        cta: 'Shop Noon', expires: 'Limited stock',
+        action: null,
+        link: 'https://www.noon.com/uae-en/'
+      },
+      /* 9 – Centrepoint Fashion */
+      {
+        cls: 'sad-3', icon: '👗', tag: 'FASHION SALE', live: true,
+        title: 'Centrepoint<br>Fashion Week', discount: '-30%',
+        cta: 'Shop Fashion', expires: 'Valid until Apr 10',
+        action: () => openStorePage('Centrepoint'),
+        link: null
+      },
+    ];
+
+    /* Current ad slot indices for the 4 visible cards */
+    let sadSlots = [0, 2, 4, 6];
+    let sadRotateTimer;
+
+    function renderSadCol() {
+      const el = document.getElementById('sadCol');
+      if (!el) return;
+      const arrowSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:10px;height:10px"><path d="m9 18 6-6-6-6"/></svg>`;
+      el.innerHTML = sadSlots.map(idx => {
+        const ad = ADS[idx];
+        return `
+        <div class="sad ${ad.cls}" onclick="sadClick(${idx})" style="position:relative;overflow:hidden;">
+          <div>
+            <div class="sad-live">${ad.tag}</div>
+            <div class="sad-ad-icon" style="font-size:20px;margin:3px 0;">${ad.icon}${ad.discount ? `<span class="sad-discount">${ad.discount}</span>` : ''}</div>
+            <div class="sad-tt" style="font-size:12px;">${ad.title}</div>
+            <div class="sad-expires">${ad.expires}</div>
+          </div>
+          <div class="sad-ct">${ad.cta} ${arrowSvg}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function sadClick(idx) {
+      const ad = ADS[idx];
+      if (ad.link) {
+        window.open(ad.link, '_blank', 'noopener');
+        showToast('🔗 Opening ' + ad.cta + '…');
+      } else if (ad.action) {
+        ad.action();
+      }
+    }
+
+    function startSadRotate() {
+      sadRotateTimer = setInterval(() => {
+        // Advance each slot by 1 cycling through ADS array
+        sadSlots = sadSlots.map(s => (s + 1) % ADS.length);
+        // Make sure no two slots show same ad
+        const seen = new Set();
+        sadSlots = sadSlots.map(s => {
+          while (seen.has(s)) s = (s + 1) % ADS.length;
+          seen.add(s); return s;
+        });
+        renderSadCol();
+      }, 8000);
+    }
 
     /* ═══════ INIT ═══════ */
     window.addEventListener('DOMContentLoaded', () => {
@@ -5364,6 +5638,8 @@
       startBanner();
       startTimers();
       renderSearchSuggestions();
+      renderSadCol();
+      startSadRotate();
       document.getElementById('fakeInput').addEventListener('click', openSearch);
     });
 
@@ -5545,7 +5821,11 @@
   </div>`;
     }
 
-    function renderBestSellers() { document.getElementById('bestSellersRow').innerHTML = PRODUCTS.slice(0, 7).map(makeProductCard).join(''); }
+    function renderBestSellers() {
+      // Show a curated mix: electronics, groceries, fashion, home, health, toys
+      const featured = [0, 39, 60, 14, 46, 97, 8, 35, 11, 78, 56, 99];
+      document.getElementById('bestSellersRow').innerHTML = featured.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean).map(makeProductCard).join('');
+    }
     function renderMegaDeals() { document.getElementById('megaDealsRow').innerHTML = DEALS.map(makeDealCard).join(''); }
     function renderRecent() {
       const row = document.getElementById('recentRow'); if (!row) return;
@@ -5684,30 +5964,53 @@
     }
 
     /* ═══════ STORE OFFICIAL URLS ═══════ */
-    const STORE_URLS = {
-      'Lulu': 'https://www.luluhypermarket.com',
-      'Nesto': 'https://www.nestohypermarket.com',
-      'Carrefour': 'https://www.carrefouruae.com',
-      'KM Trading': 'https://www.kmtrading.ae',
-      'Union Coop': 'https://www.unioncoop.ae',
-      'Géant': 'https://www.geantarabia.com',
-      "Spinney's": 'https://www.spinneys.com',
-      'Sharaf DG': 'https://www.sharafdg.com',
-      'Centrepoint': 'https://www.centrepointme.com',
-      'Danube Home': 'https://www.danubehome.com',
-      'West Zone': 'https://www.westzonegroup.com',
-      'Zoom': 'https://www.zoomuae.com',
-      'Al Maya': 'https://www.almaya.ae',
-      'Choithrams': 'https://www.choithrams.com',
-      'Viva': 'https://www.viva.ae',
-      'Waitrose': 'https://www.waitrose.ae',
-      'Day to Day': 'https://www.daytodayuae.com',
-      'Dreamland': 'https://www.dreamlandajman.com',
-      'Amber': 'https://www.ambersupermarket.com',
-      'Ansar Mall': 'https://www.ansarmall.com',
-      'Safari': 'https://www.safariuae.com',
-      'Madina': 'https://www.madinasupermarket.ae',
+    /* ═══════ STORE SEARCH URL BUILDER ═══════ */
+    /* Each store's search URL pattern — opens a direct product search */
+    const STORE_SEARCH_PATTERNS = {
+      'Lulu': q => `https://www.luluhypermarket.com/en/search?text=${q}`,
+      'Nesto': q => `https://www.nestohypermarket.com/ae/en/search?q=${q}`,
+      'Carrefour': q => `https://www.carrefouruae.com/mafuae/en/search?keyword=${q}`,
+      'KM Trading': q => `https://www.kmtrading.ae/search?type=product&q=${q}`,
+      'Union Coop': q => `https://www.unioncoop.ae/search?q=${q}`,
+      "Géant": q => `https://www.geant.ae/search?q=${q}`,
+      "Spinney's": q => `https://www.spinneys.com/en-ae/search?q=${q}`,
+      'Sharaf DG': q => `https://www.sharafdg.com/search?q=${q}`,
+      'Centrepoint': q => `https://www.centrepointme.com/search?q=${q}`,
+      'Danube Home': q => `https://www.danubehome.com/ae/en/search?q=${q}`,
+      'West Zone': q => `https://www.westzonegroup.com/search?q=${q}`,
+      'Zoom': q => `https://www.zoomuae.com/search?q=${q}`,
+      'Al Maya': q => `https://www.almaya.ae/search?q=${q}`,
+      'Choithrams': q => `https://www.choithrams.com/search?q=${q}`,
+      'Viva': q => `https://www.viva.ae/search?q=${q}`,
+      'Waitrose': q => `https://www.waitrose.ae/en/search?&text=${q}`,
+      'Day to Day': q => `https://www.daytodayuae.com/search?q=${q}`,
+      'Dreamland': q => `https://www.dreamlandajman.com/search?q=${q}`,
+      'Amber': q => `https://www.ambersupermarket.com/search?q=${q}`,
+      'Ansar Mall': q => `https://www.ansarmall.com/search?q=${q}`,
+      'Safari': q => `https://www.safariuae.com/search?q=${q}`,
+      'Madina': q => `https://www.madinasupermarket.ae/search?q=${q}`,
     };
+
+    /* Fallback base URLs */
+    const STORE_URLS = {
+      'Lulu': 'https://www.luluhypermarket.com', 'Nesto': 'https://www.nestohypermarket.com',
+      'Carrefour': 'https://www.carrefouruae.com', 'KM Trading': 'https://www.kmtrading.ae',
+      'Union Coop': 'https://www.unioncoop.ae', 'Géant': 'https://www.geantarabia.com',
+      "Spinney's": 'https://www.spinneys.com', 'Sharaf DG': 'https://www.sharafdg.com',
+      'Centrepoint': 'https://www.centrepointme.com', 'Danube Home': 'https://www.danubehome.com',
+      'West Zone': 'https://www.westzonegroup.com', 'Zoom': 'https://www.zoomuae.com',
+      'Al Maya': 'https://www.almaya.ae', 'Choithrams': 'https://www.choithrams.com',
+      'Viva': 'https://www.viva.ae', 'Waitrose': 'https://www.waitrose.ae',
+      'Day to Day': 'https://www.daytodayuae.com', 'Dreamland': 'https://www.dreamlandajman.com',
+      'Amber': 'https://www.ambersupermarket.com', 'Ansar Mall': 'https://www.ansarmall.com',
+      'Safari': 'https://www.safariuae.com', 'Madina': 'https://www.madinasupermarket.ae',
+    };
+
+    function getStoreSearchURL(storeName, productName) {
+      const q = encodeURIComponent(productName);
+      const fn = STORE_SEARCH_PATTERNS[storeName];
+      return fn ? fn(q) : (STORE_URLS[storeName] ? STORE_URLS[storeName] + '/search?q=' + q : '#');
+    }
 
     /* ═══════ PRODUCT DETAIL ═══════ */
     function openProduct(id) {
@@ -5769,7 +6072,7 @@
         const pct = worst.price > best.price ? Math.round(((worst.price - pr.price) / (worst.price - best.price)) * 100) : 100;
         const barWidth = worst.price === best.price ? 100 : Math.round(((pr.price - best.price) / (worst.price - best.price)) * 100);
         const savingVsWorst = worst.price - pr.price;
-        const storeUrl = STORE_URLS[pr.store] || '#';
+        const storeUrl = getStoreSearchURL(pr.store, p.name);
         const shortStore = STORES.find(s => pr.store.includes(s.key) || s.key.includes(pr.store.split(' ')[0])) || null;
         const logoStyle = shortStore ? shortStore.logoStyle : `background:${storeColor(pr.store)};color:#fff;`;
         const logoText = shortStore ? shortStore.logo : pr.store.slice(0, 3).toUpperCase();
@@ -5805,7 +6108,7 @@
               <button class="shop-now-btn secondary" onclick="addToCartFromDetail(${p.id},'${pr.store}',${pr.price});event.stopPropagation()">
                 🛒 Cart
               </button>
-              <a class="shop-now-btn" href="${storeUrl}" target="_blank" rel="noopener" onclick="showToast('🛍️ Opening ${pr.store.replace(/'/g, "\\'")}…');event.stopPropagation()">
+              <a class="shop-now-btn" href="${storeUrl}" target="_blank" rel="noopener" onclick="showToast('🛍️ Finding this product on ${pr.store.replace(/'/g, "\\'")}…');event.stopPropagation()">
                 Shop Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               </a>
             </div>` : `<span class="psc-tag" style="color:var(--red);background:#fee2e2;">Out of Stock</span>`}
@@ -6016,25 +6319,104 @@
     }
     function doSearch(val) {
       if (!val.trim()) { renderSearchSuggestions(); return; }
-      const res = PRODUCTS.filter(p => p.name.toLowerCase().includes(val.toLowerCase()) || p.cat.toLowerCase().includes(val.toLowerCase()));
+      const q = val.toLowerCase();
+      const res = PRODUCTS.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.cat.toLowerCase().includes(q) ||
+        p.desc.toLowerCase().includes(q) ||
+        p.prices.some(pr => pr.store.toLowerCase().includes(q))
+      ).sort((a, b) => {
+        // Exact name match first
+        const aName = a.name.toLowerCase().includes(q) ? 0 : 1;
+        const bName = b.name.toLowerCase().includes(q) ? 0 : 1;
+        return aName - bName;
+      });
       const body = document.getElementById('searchBody');
-      if (!res.length) { body.innerHTML = `<div class="sr-no"><div style="font-size:48px;margin-bottom:12px">🔍</div><p>No results for "<strong>${val}</strong>"</p></div>`; return; }
-      body.innerHTML = `<div class="ssttl">${res.length} result${res.length !== 1 ? 's' : ''} for "${val}"</div><div class="sr-grid">${res.map(makeProductCard).join('')}</div>`;
+      if (!res.length) {
+        body.innerHTML = `<div class="sr-no"><div style="font-size:48px;margin-bottom:12px">🔍</div><p>No results for "<strong>${val}</strong>"</p><p style="margin-top:8px;font-size:12px;color:var(--gray)">Try: iPhone, Rice, Nike, Shampoo, Toys…</p></div>`;
+        return;
+      }
+      // Group by category
+      const cats = [...new Set(res.map(p => p.cat))];
+      if (cats.length === 1 || res.length <= 6) {
+        body.innerHTML = `<div class="ssttl">${res.length} result${res.length !== 1 ? 's' : ''} for "<strong>${val}</strong>"</div><div class="sr-grid">${res.map(makeProductCard).join('')}</div>`;
+      } else {
+        body.innerHTML = `<div class="ssttl">${res.length} results across ${cats.length} categories</div>` +
+          cats.map(cat => {
+            const catProds = res.filter(p => p.cat === cat);
+            return `<div style="margin-bottom:20px;"><div style="font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">${CATEGORIES.find(c => c.name === cat)?.emoji || '📦'} ${cat} (${catProds.length})</div><div class="sr-grid">${catProds.map(makeProductCard).join('')}</div></div>`;
+          }).join('');
+      }
     }
     function renderSearchSuggestions() {
+      const trending = [
+        { id: 0, sub: 'Electronics · 4 stores' },
+        { id: 39, sub: 'Groceries · 4 stores' },
+        { id: 60, sub: 'Home · 4 stores' },
+        { id: 14, sub: 'Fashion · 3 stores' },
+        { id: 97, sub: 'Books · 3 stores' },
+        { id: 8, sub: 'Gaming · 4 stores' },
+      ];
+      const recent = [
+        { icon: '🕐', n: 'iPhone 15', s: 'Electronics' },
+        { icon: '🕐', n: 'Rice 5kg', s: 'Groceries' },
+        { icon: '🕐', n: 'Air Fryer', s: 'Home & Living' },
+        { icon: '🕐', n: 'Nike shoes', s: 'Fashion' },
+      ];
       document.getElementById('searchBody').innerHTML = `
+    <div class="ssttl">Quick Categories</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+      ${CATEGORIES.map(c => `<div style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--lg);border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--mg);transition:all .2s;" onclick="document.getElementById('sinput').value='${c.name}';doSearch('${c.name}')" onmouseover="this.style.borderColor='var(--yellow)'" onmouseout="this.style.borderColor='var(--mg)'">${c.emoji} ${c.name}</div>`).join('')}
+    </div>
     <div class="ssttl">Recent Searches</div>
-    ${[{ icon: '🕐', n: 'iPhone 15 Pro', s: 'Electronics · 3 stores' }, { icon: '🕐', n: 'Basmati Rice 5kg', s: 'Groceries · 5 stores' }, { icon: '🕐', n: 'Samsung Galaxy S25', s: 'Electronics · 4 stores' }].map(r => `<div class="si" onclick="document.getElementById('sinput').value='${r.n}';doSearch('${r.n}')"><div class="sicn">${r.icon}</div><div class="stxt"><div class="snm">${r.n}</div><div class="ssb">${r.s}</div></div><div class="sarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>`).join('')}
-    <div class="ssttl" style="margin-top:20px">🔥 Trending</div>
-    ${[{ icon: '📱', n: 'du Recharge AED 100', s: 'Telecom · Best at Carrefour' }, { icon: '🧼', n: 'Dettol Handwash 400ml', s: 'Health · Save AED 8 vs avg' }, { icon: '💻', n: 'Laptop Stand', s: 'Accessories · From AED 45' }].map(t => `<div class="si" onclick="document.getElementById('sinput').value='${t.n}';doSearch('${t.n}')"><div class="sicn">${t.icon}</div><div class="stxt"><div class="snm">${t.n}</div><div class="ssb">${t.s}</div></div><div class="sarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>`).join('')}`;
+    ${recent.map(r => `<div class="si" onclick="document.getElementById('sinput').value='${r.n}';doSearch('${r.n}')"><div class="sicn">${r.icon}</div><div class="stxt"><div class="snm">${r.n}</div><div class="ssb">${r.s}</div></div><div class="sarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div></div>`).join('')}
+    <div class="ssttl" style="margin-top:20px">🔥 Trending Now</div>
+    <div class="sr-grid" style="margin-top:8px;">
+      ${trending.map(t => { const p = PRODUCTS.find(x => x.id === t.id); return p ? makeProductCard(p) : ''; }).join('')}
+    </div>`;
     }
 
-    /* ═══════ CHIPS ═══════ */
+    /* ═══════ CHIPS / FILTER ═══════ */
     function pickChip(el, type) {
       document.querySelectorAll('.chip').forEach(c => { c.classList.remove('on'); c.classList.add('off'); });
       el.classList.remove('off'); el.classList.add('on');
-      const labels = { all: 'All products', low: 'Sorted by lowest price', fast: 'Fast delivery', near: 'Nearby stores', top: 'Top rated', new: 'New arrivals' };
-      if (labels[type]) showToast('✅ ' + labels[type]);
+
+      // Determine which product list is visible and apply filter
+      const row = document.getElementById('bestSellersRow');
+      let prods = [...PRODUCTS];
+
+      if (type === 'all') {
+        renderBestSellers();
+        showToast('🛍️ Showing all products');
+        return;
+      }
+      if (type === 'low') {
+        prods = prods.sort((a, b) => a.prices[0].price - b.prices[0].price);
+        showToast('💰 Sorted: lowest price first');
+      } else if (type === 'fast') {
+        prods = prods.filter(p => p.prices.some(pr => pr.delivery === 'Today' || pr.delivery === 'Same Day' || pr.delivery === 'Tomorrow'));
+        prods.sort((a, b) => {
+          const order = { 'Today': 0, 'Same Day': 0, 'Tomorrow': 1 };
+          const aD = Math.min(...a.prices.map(pr => order[pr.delivery] ?? 9));
+          const bD = Math.min(...b.prices.map(pr => order[pr.delivery] ?? 9));
+          return aD - bD;
+        });
+        showToast('🚀 Fast delivery products shown');
+      } else if (type === 'near') {
+        prods = prods.filter(p => p.prices.some(pr => ['Lulu', 'Nesto', 'KM Trading', 'Union Coop', 'Carrefour', 'Al Maya', 'Viva', 'Nesto'].includes(pr.store)));
+        showToast('📍 Nearby store products shown');
+      } else if (type === 'top') {
+        prods = prods.filter(p => p.prices[0].rating >= 4.6).sort((a, b) => b.prices[0].rating - a.prices[0].rating);
+        showToast('⭐ Top-rated products shown');
+      } else if (type === 'new') {
+        // Show recently added (higher ids = newer)
+        prods = [...prods].sort((a, b) => b.id - a.id);
+        showToast('🆕 Newest arrivals first');
+      } else if (type === 'sort') {
+        openFilterModal();
+        return;
+      }
+      if (row) row.innerHTML = prods.slice(0, 12).map(makeProductCard).join('');
     }
 
     /* ═══════ RECENT ═══════ */
@@ -6175,9 +6557,10 @@
 
     /* ═══════ TRENDING NOW ═══════ */
     function renderTrending() {
-      const trending = [...PRODUCTS].sort((a, b) => a.prices[0].price - b.prices[0].price).slice(0, 8);
+      // Curated trending: one from each major category
+      const trendIds = [16, 60, 46, 97, 73, 81, 56, 84, 104, 28];
       const el = document.getElementById('trendingRow');
-      if (el) el.innerHTML = trending.map(makeProductCard).join('');
+      if (el) el.innerHTML = trendIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean).map(makeProductCard).join('');
     }
 
     /* ═══════ COMPARE TRAY ═══════ */
