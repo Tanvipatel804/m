@@ -3142,43 +3142,119 @@
     /* ═══════ COMPARE TRAY ═══════ */
     .compare-tray {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       overflow-x: auto;
       padding-bottom: 6px;
     }
 
     .compare-card {
-      flex: 0 0 clamp(160px, 22vw, 200px);
+      flex: 0 0 clamp(170px, 26vw, 210px);
       background: var(--white);
-      border: 2px solid var(--yellow);
+      border: 2px solid var(--mg);
       border-radius: var(--r);
-      padding: 14px;
+      padding: 0;
       position: relative;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+
+    .compare-card.winner {
+      border-color: var(--green);
+    }
+
+    .compare-card-head {
+      background: var(--lg);
+      padding: 12px 12px 8px;
       text-align: center;
+      border-bottom: 1px solid var(--mg);
+    }
+
+    .compare-card.winner .compare-card-head {
+      background: #f0fdf4;
     }
 
     .compare-card-em {
-      font-size: 40px;
-      margin-bottom: 8px;
-    }
-
-    .compare-card-name {
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-
-    .compare-card-price {
-      font-size: 16px;
-      font-weight: 900;
-      color: var(--green);
+      font-size: 34px;
       margin-bottom: 4px;
     }
 
-    .compare-card-store {
+    .compare-card-name {
       font-size: 11px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--black);
+    }
+
+    .compare-winner-badge {
+      display: inline-block;
+      background: var(--green);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 4px;
+      letter-spacing: .3px;
+    }
+
+    .compare-rows {
+      padding: 8px 0;
+    }
+
+    .compare-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 12px;
+      font-size: 11px;
+      border-bottom: 1px solid var(--lg);
+    }
+
+    .compare-row:last-child {
+      border-bottom: none;
+    }
+
+    .compare-row-lbl {
       color: var(--gray);
+      font-weight: 600;
+    }
+
+    .compare-row-val {
+      font-weight: 800;
+      color: var(--black);
+      text-align: right;
+      max-width: 55%;
+    }
+
+    .compare-row-val.green {
+      color: var(--green);
+    }
+
+    .compare-row-val.red {
+      color: var(--red);
+    }
+
+    .compare-card-actions {
+      padding: 8px 10px 10px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .compare-cart-btn {
+      flex: 1;
+      padding: 7px 0;
+      background: var(--yellow);
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--black);
+      text-align: center;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .compare-cart-btn:hover {
+      background: var(--yd);
     }
 
     .compare-remove {
@@ -3190,17 +3266,18 @@
       border-radius: 50%;
       background: var(--red);
       color: var(--white);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       line-height: 1;
+      z-index: 2;
     }
 
     .compare-add-slot {
-      flex: 0 0 clamp(160px, 22vw, 200px);
+      flex: 0 0 clamp(170px, 26vw, 210px);
       border: 2px dashed var(--mg);
       border-radius: var(--r);
       display: flex;
@@ -3214,7 +3291,7 @@
       font-weight: 600;
       cursor: pointer;
       transition: all .2s;
-      min-height: 130px;
+      min-height: 160px;
     }
 
     .compare-add-slot:hover {
@@ -3224,6 +3301,44 @@
 
     .compare-add-slot span {
       font-size: 28px;
+    }
+
+    /* compare summary bar */
+    .compare-summary {
+      background: linear-gradient(135deg, #111, #2d2d2d);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .compare-summary-em {
+      font-size: 22px;
+    }
+
+    .compare-summary-info {
+      flex: 1;
+    }
+
+    .compare-summary-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .compare-summary-sub {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .6);
+      margin-top: 2px;
+    }
+
+    .compare-summary-save {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--yellow);
+      white-space: nowrap;
     }
 
     /* ═══════ PRICE ALERT WIZARD ═══════ */
@@ -5497,133 +5612,89 @@
 
     /* ═══════ ADS DATA – rotates every 8 s ═══════ */
     const ADS = [
-      /* 0 – du Recharge */
-      {
-        cls: 'sad-1', icon: '📱', tag: 'LIVE OFFER', live: true,
-        title: 'du Recharge<br>from AED 30', discount: '-20%',
-        cta: 'Recharge Now', expires: 'Expires midnight',
-        action: () => openRecharge('du'),
-        link: null
-      },
-      /* 1 – Etisalat Recharge */
-      {
-        cls: 'sad-2', icon: '📲', tag: 'FLASH DEAL', live: true,
-        title: 'Etisalat e&amp;<br>Top-Up AED 50', discount: '-10%',
-        cta: 'Top-Up Now', expires: 'Today only',
-        action: () => openRecharge('etisalat'),
-        link: null
-      },
-      /* 2 – Talabat Food */
-      {
-        cls: 'sad-food', icon: '🛵', tag: 'FOOD DELIVERY', live: true,
-        title: 'Talabat Free<br>Delivery Today', discount: null,
-        cta: 'Order Now', expires: 'Min order AED 25',
-        action: null,
-        link: 'https://www.talabat.com/uae'
-      },
-      /* 3 – Careem Food */
-      {
-        cls: 'sad-3', icon: '🍔', tag: 'FOOD DEAL', live: true,
-        title: 'Careem Food<br>30% Off 1st Order', discount: '-30%',
-        cta: 'Claim Offer', expires: 'New users only',
-        action: null,
-        link: 'https://www.careem.com/en-ae/food/'
-      },
-      /* 4 – Lulu Flash Sale */
-      {
-        cls: 'sad-grocery', icon: '🛒', tag: 'WEEKEND SALE', live: true,
-        title: 'Lulu Groceries<br>Up to 40% Off', discount: '-40%',
-        cta: 'Shop Lulu', expires: 'Valid until Apr 6',
-        action: () => openStorePage('Lulu'),
-        link: null
-      },
-      /* 5 – Nesto Hypermarket */
-      {
-        cls: 'sad-4', icon: '🏪', tag: 'STORE OFFER', live: true,
-        title: 'Nesto Ajman<br>Grand Sale On!', discount: '-35%',
-        cta: 'Explore', expires: 'Valid until Apr 9',
-        action: () => openStorePage('Nesto'),
-        link: null
-      },
-      /* 6 – Booking.com Hotels */
-      {
-        cls: 'sad-travel', icon: '✈️', tag: 'TRAVEL DEAL', live: false,
-        title: 'Hotels from<br>AED 199/night', discount: null,
-        cta: 'Book Now', expires: 'Free cancellation',
-        action: null,
-        link: 'https://www.booking.com'
-      },
-      /* 7 – Sharaf DG Tech */
-      {
-        cls: 'sad-1', icon: '💻', tag: 'TECH FEST', live: true,
-        title: 'Sharaf DG<br>Electronics Sale', discount: '-25%',
-        cta: 'View Deals', expires: 'Valid until Apr 5',
-        action: () => openStorePage('Sharaf DG'),
-        link: null
-      },
-      /* 8 – Noon UAE */
-      {
-        cls: 'sad-2', icon: '🌟', tag: 'NOON DEALS', live: true,
-        title: 'Noon UAE<br>Up to 50% Off', discount: '-50%',
-        cta: 'Shop Noon', expires: 'Limited stock',
-        action: null,
-        link: 'https://www.noon.com/uae-en/'
-      },
-      /* 9 – Centrepoint Fashion */
-      {
-        cls: 'sad-3', icon: '👗', tag: 'FASHION SALE', live: true,
-        title: 'Centrepoint<br>Fashion Week', discount: '-30%',
-        cta: 'Shop Fashion', expires: 'Valid until Apr 10',
-        action: () => openStorePage('Centrepoint'),
-        link: null
-      },
+      { cls: 'sad-1', icon: '📱', tag: 'LIVE OFFER', live: true, title: 'du Recharge<br>from AED 30', discount: '-20%', cta: 'Recharge Now', expiresIn: 3 * 3600 + 47 * 60, action: () => openRecharge('du'), link: null },
+      { cls: 'sad-2', icon: '📲', tag: 'FLASH DEAL', live: true, title: 'Etisalat e&amp;<br>Top-Up AED 50', discount: '-10%', cta: 'Top-Up Now', expiresIn: 5 * 3600 + 20 * 60, action: () => openRecharge('etisalat'), link: null },
+      { cls: 'sad-food', icon: '🛵', tag: 'FOOD DELIVERY', live: true, title: 'Talabat Free<br>Delivery Today', discount: null, cta: 'Order Now', expiresIn: 8 * 3600 + 10 * 60, action: null, link: 'https://www.talabat.com/uae' },
+      { cls: 'sad-3', icon: '🍔', tag: 'FOOD DEAL', live: true, title: 'Careem Food<br>30% Off 1st Order', discount: '-30%', cta: 'Claim Offer', expiresIn: 2 * 3600 + 33 * 60, action: null, link: 'https://www.careem.com/en-ae/food/' },
+      { cls: 'sad-grocery', icon: '🛒', tag: 'WEEKEND SALE', live: true, title: 'Lulu Groceries<br>Up to 40% Off', discount: '-40%', cta: 'Shop Lulu', expiresIn: 11 * 3600 + 15 * 60, action: () => openStorePage('Lulu'), link: null },
+      { cls: 'sad-4', icon: '🏪', tag: 'STORE OFFER', live: true, title: 'Nesto Ajman<br>Grand Sale On!', discount: '-35%', cta: 'Explore', expiresIn: 18 * 3600 + 5 * 60, action: () => openStorePage('Nesto'), link: null },
+      { cls: 'sad-travel', icon: '✈️', tag: 'TRAVEL DEAL', live: false, title: 'Hotels from<br>AED 199/night', discount: null, cta: 'Book Now', expiresIn: 48 * 3600, action: null, link: 'https://www.booking.com' },
+      { cls: 'sad-1', icon: '💻', tag: 'TECH FEST', live: true, title: 'Sharaf DG<br>Electronics Sale', discount: '-25%', cta: 'View Deals', expiresIn: 6 * 3600 + 44 * 60, action: () => openStorePage('Sharaf DG'), link: null },
+      { cls: 'sad-2', icon: '🌟', tag: 'NOON DEALS', live: true, title: 'Noon UAE<br>Up to 50% Off', discount: '-50%', cta: 'Shop Noon', expiresIn: 1 * 3600 + 55 * 60, action: null, link: 'https://www.noon.com/uae-en/' },
+      { cls: 'sad-3', icon: '👗', tag: 'FASHION SALE', live: true, title: 'Centrepoint<br>Fashion Week', discount: '-30%', cta: 'Shop Fashion', expiresIn: 30 * 3600 + 20 * 60, action: () => openStorePage('Centrepoint'), link: null },
     ];
 
-    /* Current ad slot indices for the 4 visible cards */
+    // Per-slot live countdown (seconds remaining)
+    let sadCountdowns = {};
+
     let sadSlots = [0, 2, 4, 6];
-    let sadRotateTimer;
+    let sadRotateTimer, sadCountdownTimer;
+
+    function fmtCountdown(secs) {
+      if (secs <= 0) return 'Ended';
+      const h = Math.floor(secs / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      const s = secs % 60;
+      if (h > 0) return `${h}h ${String(m).padStart(2, '0')}m left`;
+      if (m > 0) return `${m}m ${String(s).padStart(2, '0')}s left`;
+      return `${s}s left`;
+    }
 
     function renderSadCol() {
       const el = document.getElementById('sadCol');
       if (!el) return;
       const arrowSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:10px;height:10px"><path d="m9 18 6-6-6-6"/></svg>`;
+      // Init countdowns for slots if not set
+      sadSlots.forEach(idx => {
+        if (sadCountdowns[idx] === undefined) sadCountdowns[idx] = ADS[idx].expiresIn;
+      });
       el.innerHTML = sadSlots.map(idx => {
         const ad = ADS[idx];
+        const remaining = sadCountdowns[idx] ?? ad.expiresIn;
+        const urgentClass = remaining < 3600 ? 'color:#ef4444;' : remaining < 10800 ? 'color:#f97316;' : '';
         return `
         <div class="sad ${ad.cls}" onclick="sadClick(${idx})" style="position:relative;overflow:hidden;">
           <div>
             <div class="sad-live">${ad.tag}</div>
             <div class="sad-ad-icon" style="font-size:20px;margin:3px 0;">${ad.icon}${ad.discount ? `<span class="sad-discount">${ad.discount}</span>` : ''}</div>
             <div class="sad-tt" style="font-size:12px;">${ad.title}</div>
-            <div class="sad-expires">${ad.expires}</div>
+            <div class="sad-expires" id="sadTimer_${idx}" style="${urgentClass}">${fmtCountdown(remaining)}</div>
           </div>
           <div class="sad-ct">${ad.cta} ${arrowSvg}</div>
         </div>`;
       }).join('');
     }
 
+    function tickSadCountdowns() {
+      sadSlots.forEach(idx => {
+        if (sadCountdowns[idx] === undefined) sadCountdowns[idx] = ADS[idx].expiresIn;
+        if (sadCountdowns[idx] > 0) sadCountdowns[idx]--;
+        const el = document.getElementById(`sadTimer_${idx}`);
+        if (el) {
+          const remaining = sadCountdowns[idx];
+          el.textContent = fmtCountdown(remaining);
+          el.style.color = remaining < 3600 ? '#ef4444' : remaining < 10800 ? '#f97316' : '';
+        }
+      });
+    }
+
     function sadClick(idx) {
       const ad = ADS[idx];
-      if (ad.link) {
-        window.open(ad.link, '_blank', 'noopener');
-        showToast('🔗 Opening ' + ad.cta + '…');
-      } else if (ad.action) {
-        ad.action();
-      }
+      if (ad.link) { window.open(ad.link, '_blank', 'noopener'); showToast('🔗 Opening ' + ad.cta + '…'); }
+      else if (ad.action) { ad.action(); }
     }
 
     function startSadRotate() {
       sadRotateTimer = setInterval(() => {
-        // Advance each slot by 1 cycling through ADS array
         sadSlots = sadSlots.map(s => (s + 1) % ADS.length);
-        // Make sure no two slots show same ad
         const seen = new Set();
-        sadSlots = sadSlots.map(s => {
-          while (seen.has(s)) s = (s + 1) % ADS.length;
-          seen.add(s); return s;
-        });
+        sadSlots = sadSlots.map(s => { while (seen.has(s)) s = (s + 1) % ADS.length; seen.add(s); return s; });
+        // init new slot countdowns
+        sadSlots.forEach(idx => { if (sadCountdowns[idx] === undefined) sadCountdowns[idx] = ADS[idx].expiresIn; });
         renderSadCol();
       }, 8000);
+      // live countdown tick every second
+      sadCountdownTimer = setInterval(tickSadCountdowns, 1000);
     }
 
     /* ═══════ INIT ═══════ */
@@ -5796,7 +5867,7 @@
       ${saving > 0 ? `<div style="font-size:10px;font-weight:700;color:var(--green);background:#dcfce7;border-radius:6px;padding:3px 7px;margin-bottom:7px;display:inline-block;">💰 Save up to AED ${saving}</div>` : ''}
       <div style="display:flex;gap:5px;">
         <button class="cbtn" style="flex:1;" onclick="addToCart(event,${p.id})">${inCart ? '✓ In Cart' : 'Add to Cart'}</button>
-        <button class="cbtn" style="width:34px;flex-shrink:0;background:var(--lg);color:var(--black);" title="Compare Prices" onclick="event.stopPropagation();openProduct(${p.id})">⚖️</button>
+        <button class="cbtn" style="width:34px;flex-shrink:0;background:var(--lg);color:var(--black);" title="Compare Prices" onclick="event.stopPropagation();addToCompare(${p.id})">⚖️</button>
       </div>
     </div>
   </div>`;
@@ -6282,16 +6353,94 @@
     /* ═══════ FILTER ═══════ */
     function openFilterModal() {
       document.getElementById('filterBody').innerHTML = `
-    <div class="filter-group"><div class="filter-group-title">Store</div><div class="filter-chips">${STORES.map(s => `<div class="fchip" onclick="this.classList.toggle('on')">${s.name.split(' ')[0]}</div>`).join('')}</div></div>
-    <div class="filter-group"><div class="filter-group-title">Price Range (AED)</div><div class="price-range"><input class="price-input" placeholder="Min" type="number" value="0"><span style="color:var(--gray)">—</span><input class="price-input" placeholder="Max" type="number" value="5000"></div></div>
-    <div class="filter-group"><div class="filter-group-title">Delivery</div><div class="filter-chips"><div class="fchip on" onclick="this.classList.toggle('on')">Any</div><div class="fchip" onclick="this.classList.toggle('on')">Today</div><div class="fchip" onclick="this.classList.toggle('on')">Tomorrow</div><div class="fchip" onclick="this.classList.toggle('on')">Within 3 days</div></div></div>
-    <div class="filter-group"><div class="filter-group-title">Rating</div><div class="filter-chips"><div class="fchip on" onclick="this.classList.toggle('on')">⭐ All</div><div class="fchip" onclick="this.classList.toggle('on')">⭐⭐⭐⭐+ (4+)</div><div class="fchip" onclick="this.classList.toggle('on')">⭐⭐⭐⭐⭐ (5)</div></div></div>
-    <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>`;
+    <div class="filter-group">
+      <div class="filter-group-title">Category</div>
+      <div class="filter-chips">
+        <div class="fchip on" onclick="toggleFchip(this)" data-filter="cat" data-val="">All</div>
+        ${CATEGORIES.map(c => `<div class="fchip" onclick="toggleFchip(this)" data-filter="cat" data-val="${c.name}">${c.emoji} ${c.name}</div>`).join('')}
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-title">Store</div>
+      <div class="filter-chips">
+        <div class="fchip on" onclick="toggleFchip(this)" data-filter="store" data-val="">All Stores</div>
+        ${STORES.slice(0, 12).map(s => `<div class="fchip" onclick="toggleFchip(this)" data-filter="store" data-val="${s.key}">${s.name.split(' ')[0]}</div>`).join('')}
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-title">Price Range (AED)</div>
+      <div class="price-range">
+        <input class="price-input" id="fMinPrice" placeholder="Min" type="number" min="0" value="">
+        <span style="color:var(--gray)">—</span>
+        <input class="price-input" id="fMaxPrice" placeholder="Max" type="number" min="0" value="">
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-title">Delivery</div>
+      <div class="filter-chips">
+        <div class="fchip on" onclick="toggleFchip(this)" data-filter="delivery" data-val="">Any</div>
+        <div class="fchip" onclick="toggleFchip(this)" data-filter="delivery" data-val="Today">Today</div>
+        <div class="fchip" onclick="toggleFchip(this)" data-filter="delivery" data-val="Same Day">Same Day</div>
+        <div class="fchip" onclick="toggleFchip(this)" data-filter="delivery" data-val="Tomorrow">Tomorrow</div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-title">Minimum Rating</div>
+      <div class="filter-chips">
+        <div class="fchip on" onclick="toggleFchip(this)" data-filter="rating" data-val="0">⭐ All</div>
+        <div class="fchip" onclick="toggleFchip(this)" data-filter="rating" data-val="4">⭐⭐⭐⭐+ (4.0+)</div>
+        <div class="fchip" onclick="toggleFchip(this)" data-filter="rating" data-val="4.5">⭐⭐⭐⭐½ (4.5+)</div>
+        <div class="fchip" onclick="toggleFchip(this)" data-filter="rating" data-val="4.8">⭐⭐⭐⭐⭐ (4.8+)</div>
+      </div>
+    </div>
+    <button class="apply-filter-btn" onclick="applyFilters()">✅ Apply Filters</button>`;
       showModal('filterModal', 'filterBackdrop');
     }
+
+    function toggleFchip(el) {
+      // For category/store/delivery/rating — radio behaviour per group
+      const group = el.dataset.filter;
+      el.closest('.filter-chips').querySelectorAll('.fchip').forEach(c => c.classList.remove('on'));
+      el.classList.add('on');
+    }
+
     function applyFilters() {
-      const on = document.querySelectorAll('#filterBody .fchip.on');
-      closeModal('filterModal', 'filterBackdrop'); showToast(`✅ Filters applied – ${on.length} active`);
+      // Read active filter values
+      const getVal = (filter) => {
+        const el = document.querySelector(`[data-filter="${filter}"].on`);
+        return el ? el.dataset.val : '';
+      };
+      const cat = getVal('cat');
+      const store = getVal('store');
+      const delivery = getVal('delivery');
+      const rating = parseFloat(getVal('rating')) || 0;
+      const minP = parseFloat(document.getElementById('fMinPrice')?.value) || 0;
+      const maxP = parseFloat(document.getElementById('fMaxPrice')?.value) || Infinity;
+
+      let results = [...PRODUCTS];
+
+      if (cat) results = results.filter(p => p.cat === cat);
+      if (store) results = results.filter(p => p.prices.some(pr => pr.store === store || pr.store.includes(store)));
+      if (delivery) results = results.filter(p => p.prices.some(pr => pr.delivery === delivery));
+      if (rating) results = results.filter(p => p.prices[0].rating >= rating);
+      if (minP > 0) results = results.filter(p => p.prices[0].price >= minP);
+      if (maxP < Infinity) results = results.filter(p => p.prices[0].price <= maxP);
+
+      closeModal('filterModal', 'filterBackdrop');
+
+      const row = document.getElementById('bestSellersRow');
+      if (!results.length) {
+        if (row) row.innerHTML = `<div style="padding:30px;text-align:center;color:var(--gray);font-size:14px;font-weight:600;">😕 No products match your filters.<br><span style="font-size:12px;">Try wider criteria.</span></div>`;
+        showToast(`⚙️ No results — try wider filters`);
+        return;
+      }
+      if (row) row.innerHTML = results.slice(0, 16).map(makeProductCard).join('');
+
+      // Update section title to show filter result
+      const ttl = document.querySelector('.sec-ttl .em');
+      if (ttl) ttl.closest('.sec-ttl').innerHTML = `<span class="em">🔍</span>Filtered Results (${results.length})`;
+
+      showToast(`✅ ${results.length} product${results.length !== 1 ? 's' : ''} found`);
     }
 
     /* ═══════ CAMERA ═══════ */
@@ -6299,10 +6448,42 @@
 
     /* ═══════ RECHARGE ═══════ */
     function openRecharge(brand) {
-      document.getElementById('rechargeTitle').textContent = `📱 ${brand} Recharge`;
-      const opts = brand === 'du' ? [30, 50, 100, 200] : [25, 50, 75, 150];
-      document.getElementById('rechargeBody').innerHTML = `<p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Best prices compared across all retailers</p>
-    ${opts.map(v => `<div class="price-compare-row" onclick="showToast('✅ ${brand} AED ${v} added to cart!')"><div><div class="pcr-store">${brand} Recharge AED ${v}</div><div class="pcr-del">⚡ Instant delivery</div></div><div class="pcr-price cheapest">AED ${v}</div></div>`).join('')}`;
+      const brandNames = { du: 'du', etisalat: 'Etisalat e&' };
+      const displayName = brandNames[brand] || brand;
+      document.getElementById('rechargeTitle').textContent = `📱 ${displayName} Recharge`;
+
+      const plans = brand === 'du'
+        ? [
+          { val: 30, stores: [{ name: 'Carrefour', price: 30 }, { name: 'Lulu', price: 30 }, { name: 'Nesto', price: 30 }, { name: 'KM Trading', price: 28 }] },
+          { val: 50, stores: [{ name: 'Carrefour', price: 50 }, { name: 'Lulu', price: 50 }, { name: 'KM Trading', price: 48 }, { name: 'Nesto', price: 50 }] },
+          { val: 100, stores: [{ name: 'Carrefour', price: 100 }, { name: 'Lulu', price: 98 }, { name: 'KM Trading', price: 97 }, { name: 'Nesto', price: 100 }] },
+          { val: 200, stores: [{ name: 'Carrefour', price: 200 }, { name: 'Lulu', price: 198 }, { name: 'KM Trading', price: 195 }, { name: 'Nesto', price: 200 }] },
+        ]
+        : [
+          { val: 25, stores: [{ name: 'Carrefour', price: 25 }, { name: 'Lulu', price: 25 }, { name: 'Nesto', price: 24 }, { name: 'KM Trading', price: 25 }] },
+          { val: 50, stores: [{ name: 'Carrefour', price: 50 }, { name: 'Lulu', price: 49 }, { name: 'KM Trading', price: 48 }, { name: 'Nesto', price: 50 }] },
+          { val: 75, stores: [{ name: 'Carrefour', price: 75 }, { name: 'Lulu', price: 74 }, { name: 'KM Trading', price: 73 }, { name: 'Nesto', price: 75 }] },
+          { val: 150, stores: [{ name: 'Carrefour', price: 150 }, { name: 'Lulu', price: 148 }, { name: 'KM Trading', price: 145 }, { name: 'Nesto', price: 150 }] },
+        ];
+
+      document.getElementById('rechargeBody').innerHTML = `
+        <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Best recharge prices compared across stores. Tap to add to cart.</p>
+        ${plans.map(plan => {
+        const sorted = [...plan.stores].sort((a, b) => a.price - b.price);
+        const best = sorted[0];
+        return `
+          <div style="background:var(--lg);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+            <div style="font-size:13px;font-weight:800;margin-bottom:8px;">AED ${plan.val} Recharge</div>
+            ${sorted.map((s, i) => `
+            <div class="price-compare-row ${i === 0 ? 'best-store' : ''}" style="margin-bottom:6px;cursor:pointer;" onclick="showToast('✅ ${displayName} AED ${s.price} from ${s.name} added to cart!')">
+              <div>
+                <div class="pcr-store">${s.name}${i === 0 ? ' 🏆' : ''}</div>
+                <div class="pcr-del">⚡ Instant · ${i === 0 ? '<span style="color:var(--green);font-weight:700;">Cheapest</span>' : 'Available'}</div>
+              </div>
+              <div class="pcr-price ${i === 0 ? 'cheapest' : ''}">AED ${s.price}</div>
+            </div>`).join('')}
+          </div>`;
+      }).join('')}`;
       showModal('rechargeModal', 'rechargeBackdrop');
     }
 
@@ -6566,8 +6747,8 @@
     /* ═══════ COMPARE TRAY ═══════ */
     let compareList = [];
     function addToCompare(id) {
-      if (compareList.includes(id)) { showToast('Already in compare!'); return; }
-      if (compareList.length >= 3) { showToast('⚖️ Max 3 products to compare'); return; }
+      if (compareList.includes(id)) { showToast('Already in compare tray!'); return; }
+      if (compareList.length >= 3) { showToast('⚖️ Max 3 products — remove one first'); return; }
       compareList.push(id);
       renderCompareTray();
       showToast('⚖️ Added to compare!');
@@ -6592,23 +6773,101 @@
       }
       sec.style.display = '';
       if (div) div.style.display = '';
-      const slots = compareList.map(id => {
+
+      // Build per-product data
+      const items = compareList.map(id => {
         const p = PRODUCTS.find(x => x.id === id);
-        return `<div class="compare-card">
-          <div class="compare-remove" onclick="removeFromCompare(${id})">✕</div>
-          <div class="compare-card-em">${p.emoji}</div>
-          <div class="compare-card-name">${p.name}</div>
-          <div class="compare-card-price">AED ${p.prices[0].price.toLocaleString()}</div>
-          <div class="compare-card-store">Best: ${p.prices[0].store}</div>
+        const sorted = [...p.prices].sort((a, b) => a.price - b.price);
+        const best = sorted[0];
+        const worst = sorted[sorted.length - 1];
+        return { p, sorted, best, worst, saving: worst.price - best.price };
+      });
+
+      // Overall cheapest item (by best price)
+      const minBest = Math.min(...items.map(i => i.best.price));
+
+      // Summary bar: total saving if all cheapest
+      const maxSaving = Math.max(...items.map(i => i.saving));
+      const summaryHTML = compareList.length >= 2 ? `
+        <div class="compare-summary">
+          <div class="compare-summary-em">💰</div>
+          <div class="compare-summary-info">
+            <div class="compare-summary-title">Compare ${compareList.length} Products</div>
+            <div class="compare-summary-sub">Always buy from the green ✓ Best Deal store</div>
+          </div>
+          <div class="compare-summary-save">Save up to AED ${maxSaving}</div>
+        </div>` : '';
+
+      const cards = items.map(({ p, sorted, best, worst, saving }) => {
+        const isWinner = best.price === minBest;
+        // Store price rows — show top 3
+        const storeRows = sorted.slice(0, 3).map((pr, i) => `
+          <div class="compare-row">
+            <div class="compare-row-lbl" style="max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${pr.store}</div>
+            <div class="compare-row-val ${i === 0 ? 'green' : i === sorted.length - 1 && i > 0 ? 'red' : ''}">
+              AED ${pr.price.toLocaleString()}${i === 0 ? ' ✓' : ''}
+            </div>
+          </div>`).join('');
+
+        const deliveryFastest = sorted.map(pr => pr.delivery).sort((a, b) => {
+          const o = { 'Today': 0, 'Same Day': 0, 'Tomorrow': 1 };
+          return (o[a] ?? 9) - (o[b] ?? 9);
+        })[0];
+
+        return `
+        <div class="compare-card ${isWinner ? 'winner' : ''}">
+          <div class="compare-remove" onclick="removeFromCompare(${p.id})">✕</div>
+          <div class="compare-card-head">
+            <div class="compare-card-em">${p.emoji}</div>
+            <div class="compare-card-name">${p.name}</div>
+            ${isWinner ? '<div class="compare-winner-badge">🏆 Best Value</div>' : ''}
+          </div>
+          <div class="compare-rows">
+            <div class="compare-row">
+              <div class="compare-row-lbl">Best Price</div>
+              <div class="compare-row-val green">AED ${best.price.toLocaleString()}</div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-row-lbl">Best Store</div>
+              <div class="compare-row-val">${best.store}</div>
+            </div>
+            ${saving > 0 ? `<div class="compare-row">
+              <div class="compare-row-lbl">Max Save</div>
+              <div class="compare-row-val green">AED ${saving}</div>
+            </div>` : ''}
+            <div class="compare-row">
+              <div class="compare-row-lbl">Fastest</div>
+              <div class="compare-row-val">${deliveryFastest}</div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-row-lbl">Stores</div>
+              <div class="compare-row-val">${sorted.length} tracked</div>
+            </div>
+            ${storeRows}
+          </div>
+          <div class="compare-card-actions">
+            <div class="compare-cart-btn" onclick="addToCartFromDetail(${p.id},'${best.store}',${best.price})">🛒 Best Price</div>
+          </div>
         </div>`;
       });
+
       if (compareList.length < 3) {
-        slots.push(`<div class="compare-add-slot" onclick="showToast('👆 Tap a product card to add it to compare')">
-          <span>➕</span>Add Product
+        cards.push(`<div class="compare-add-slot" onclick="showToast('👆 Tap ⚖️ on any product card to add to compare')">
+          <span>➕</span>Add Product<br><span style="font-size:11px;color:var(--gray);margin-top:4px;">Tap ⚖️ on card</span>
         </div>`);
       }
-      tray.innerHTML = slots.join('');
-      // Show compare button in product cards
+
+      tray.innerHTML = summaryHTML + `<div class="compare-tray">${cards.join('')}</div>`;
+
+      // Clear button
+      const secHd = sec.querySelector('.sec-hd');
+      if (secHd && !secHd.querySelector('.compare-clear')) {
+        const btn = document.createElement('div');
+        btn.className = 'see-all compare-clear';
+        btn.innerHTML = '🗑️ Clear';
+        btn.onclick = clearCompare;
+        secHd.appendChild(btn);
+      }
     }
 
     /* ═══════ PRICE ALERT ═══════ */
