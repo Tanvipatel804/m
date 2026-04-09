@@ -153,7 +153,8 @@
         /* Main Content */
         .content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
+            /* grid-template-columns: 1fr 1fr; */
             gap: 24px;
             animation: fadeIn 0.8s ease-out 0.2s both;
         }
@@ -720,50 +721,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Sticker Design -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon">🎨</div>
-                    <h2>Sticker Design</h2>
-                </div>
-                <div class="form-group" style="margin-top: 16px;">
-                    <label>Sticker Dimensions</label>
-                    <div class="form-row">
-                        <input type="text" class="form-input" placeholder="Width (cm)">
-                        <input type="text" class="form-input" placeholder="Height (cm)">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Design Type</label>
-                    <select class="form-input" id="designType">
-                        <option>Vehicle Body Sticker</option>
-                        <option>Vehicle rear Body</option>
-                        <option>Vehicle side Body</option>
-                        <option>Vehicle Front Body</option>
-                        <option>Rear Window Decal</option>
-                        <option>Side Door Graphics</option>
-                        <option>Full Vehicle Wrap</option>
-                        <option>Roof Top Banner</option>
-                    </select>
-                </div>
-                <div class="design-preview">
-                    <div class="preview-item">
-                        <!-- <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=400&fit=crop" alt="Car Design"> -->
-                        <img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg" alt="Car Design">
-                        <div class="preview-label">vehicle view picture</div>
-                    </div>
-                    <div class="preview-item">
-                        <!-- <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=400&fit=crop" alt="Sticker Design"> -->
-                        <img src="C:\Users\DADAGA\Pictures\Saved Pictures\advertisephoto.jpg" alt="Sticker Design">
-                        <div class="preview-label">Sticker Design</div>
-                    </div>
-                </div>
-                <button class="upload-btn">
-                    📤 Upload Design Files
-                </button>
-            </div>
-
             <!-- Vehicle Requirements -->
             <div class="card">
                 <div class="card-header">
@@ -810,6 +767,48 @@
                         <option>5+ years</option>
                     </select>
                 </div>
+            </div>
+            <!-- Sticker Design -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎨</div>
+                    <h2>Sticker Design</h2>
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Sticker Dimensions</label>
+                    <div class="form-row">
+                        <input type="text" class="form-input" placeholder="Width (cm)">
+                        <input type="text" class="form-input" placeholder="Height (cm)">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Design Type</label>
+                    <select class="form-input" id="designType">
+                        <option>Vehicle Body Sticker</option>
+                        <option>Vehicle rear Body</option>
+                        <option>Vehicle side Body</option>
+                        <option>Vehicle Front Body</option>
+                        <option>Rear Window Decal</option>
+                        <option>Side Door Graphics</option>
+                        <option>Full Vehicle Wrap</option>
+                        <option>Roof Top Banner</option>
+                    </select>
+                </div>
+                <div class="design-preview">
+                    <div class="preview-item">
+                        <!-- <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=400&fit=crop" alt="Car Design"> -->
+                        <img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg" alt="Car Design">
+                        <div class="preview-label">vehicle view picture</div>
+                    </div>
+                    <div class="preview-item">
+                        <!-- <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=400&fit=crop" alt="Sticker Design"> -->
+                        <img src="C:\Users\DADAGA\Pictures\Saved Pictures\advertisephoto.jpg" alt="Sticker Design">
+                        <div class="preview-label">Sticker Design</div>
+                    </div>
+                </div>
+                <button class="upload-btn">
+                    📤 Upload Design Files
+                </button>
             </div>
 
             <!-- Payment & Pricing -->
