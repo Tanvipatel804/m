@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fontawesome.com/icons" rel="stylsheet">
     <title>Navigation Bar</title>
     <style>
         .navigate {
@@ -172,10 +173,10 @@
         <div class="container">
             <div class="items" id="item1">Trip<img src="C:\Users\DADAGA\Pictures\Saved Pictures\1option.jpg"></div>
             <div class="items" id="item2">Reserve<img src="C:\Users\DADAGA\Pictures\Saved Pictures\2option.jpg">
-                <!-- <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry customer\6newfinal.html"></a> -->
+                 <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry customer\6newfinal.html"></a> 
             </div>
             <div class="items" id="item3">allotment<img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg">
-                <!-- <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry customer\7allotment-quote.html"></a> -->
+                 <a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\Lorry customer\7allotment-quote.html"></a> 
             </div>
             <div class="items" id="item4">Occational<img src="C:\Users\DADAGA\Pictures\Saved Pictures\4option.jpg">
             </div>
@@ -211,16 +212,638 @@
             </div>
             <div class="xyz">
                 <img src="C:\Users\DADAGA\Pictures\Saved Pictures\service.jpg" alt="">
-                <h3>Services</h3>
+                <h3>Payment</h3>
             </div>
             <div class="xyz"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\activity.jpg" alt="">
-                <h3>Activity</h3>
+                <h3>My Trips</h3>
             </div>
             <div class="xyz"><img src="C:\Users\DADAGA\Pictures\Saved Pictures\account.png" alt="">
                 <h3>Account</h3>
             </div>
         </div>
     </header>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgb(8, 8, 8);
+        }
+
+        .navigate {
+            background-color: rgb(8, 8, 8);
+            border: 2px solid rgb(13, 13, 13);
+            border-radius: 5px;
+            height: 100%;
+            display: block;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            border: 2px solid rgb(70, 69, 69);
+            border-radius: 30px;
+            height: 60px;
+            color: white;
+            text-align: center;
+            font-size: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .navbar>img.menu-icon {
+            height: 55px;
+            width: 45px;
+            margin: 1px 18px;
+            padding: 0px;
+            flex-shrink: 0;
+        }
+
+        .navbar .brand {
+            flex: 1;
+            text-align: center;
+            font-size: 50px;
+            color: white;
+            pointer-events: none;
+        }
+
+        .navbar .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .nav-icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-icon-btn svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 9px;
+            height: 9px;
+            background: #ff4444;
+            border-radius: 50%;
+            border: 1.5px solid rgb(8, 8, 8);
+        }
+
+        .nav-icon-btn .tooltip {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.13);
+            color: white;
+            font-size: 10px;
+            border-radius: 6px;
+            padding: 2px 7px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .nav-icon-btn:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* AD */
+        .ad {
+            border: 2px solid rgb(70, 69, 69);
+            border-radius: 30px;
+            height: 100px;
+            margin-top: 10px;
+        }
+
+        .ad img {
+            height: 90px;
+            width: 100px;
+            float: right;
+            margin: 5px 35px;
+            padding: 0px;
+        }
+
+        #advertise1,
+        #advertise2 {
+            width: 200px;
+        }
+
+        /* SUGGESTION LABEL */
+        .sugglabel {
+            border: 2px solid rgba(51, 50, 50, 0.008);
+            border-radius: 30px;
+            height: 50px;
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .first {
+            text-align: left;
+            margin: 10px;
+            padding: 5px;
+            color: white;
+        }
+
+        .second {
+            text-align: right;
+            margin: -37px 15px;
+            padding: 5px;
+            color: white;
+        }
+
+        /* ITEMS CONTAINER */
+        .container {
+            height: 150px;
+            width: auto;
+            border: 2px solid rgb(54, 53, 53);
+            margin-top: 15px;
+            padding: 10px;
+            color: black;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: medium;
+        }
+
+        .items {
+            height: 100px;
+            width: 270px;
+            float: left;
+            border: 2px solid rgb(70, 69, 69);
+            background-color: white;
+            border-radius: 95px;
+            margin-right: 15px;
+            padding: 20px;
+            flex-flow: row wrap;
+        }
+
+        .items img {
+            height: 65px;
+            width: 55%;
+            float: right;
+        }
+
+        /* RECENT CARD */
+        .recent-card {
+            border: 2px solid rgb(70, 69, 69);
+            border-radius: 18px;
+            height: auto;
+            margin-top: 10px;
+            background-color: rgb(18, 18, 18);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .rc-row {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            background-color: rgb(28, 28, 28);
+            border: 1.5px solid rgb(60, 60, 60);
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 70px;
+        }
+
+        .rc-icon-block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(38, 38, 38);
+            min-width: 70px;
+            width: 70px;
+            border-right: 1.5px solid rgb(60, 60, 60);
+            padding: 10px 6px;
+        }
+
+        .rc-icon-block svg {
+            width: 42px;
+            height: 42px;
+            stroke: #e0e0e0;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .rc-pending-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            padding: 10px 14px;
+            gap: 4px;
+        }
+
+        .rc-trip-name {
+            color: white;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .rc-trip-route {
+            color: #aaaaaa;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .rc-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+
+        .rc-status-badge {
+            display: inline-block;
+            background-color: #ff8c00;
+            color: white;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 20px;
+            padding: 2px 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .rc-status-badge.confirmed {
+            background-color: #1a7a3a;
+        }
+
+        .rc-date {
+            color: #888;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 11px;
+        }
+
+        /* BOTTOM NAV */
+        .viewfrom {
+            height: 100px;
+            display: flex;
+            flex-direction: row;
+            margin: 10px auto 0 auto;
+            border: 2px solid rgb(70, 69, 69);
+            width: 100%;
+            position: sticky;
+            bottom: 0;
+            background-color: rgb(8, 8, 8);
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .viewfrom img {
+            margin: auto;
+            display: block;
+            width: 35px;
+            height: 35px;
+        }
+
+        .xyz {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        .xyz img {
+            margin-bottom: 4px;
+        }
+
+        h3 {
+            color: white;
+            text-align: center;
+            margin: 0px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 13px;
+        }
+
+        /* DROPDOWN PANELS */
+        .notif-panel,
+        .help-panel {
+            display: none;
+            position: absolute;
+            top: 65px;
+            right: 10px;
+            background: rgb(22, 22, 22);
+            border: 1.5px solid rgb(70, 69, 69);
+            border-radius: 14px;
+            padding: 12px 16px;
+            min-width: 220px;
+            z-index: 100;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            color: white;
+            font-size: 13px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .notif-panel.open,
+        .help-panel.open {
+            display: block;
+        }
+
+        .notif-panel .notif-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgb(45, 45, 45);
+        }
+
+        .notif-panel .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-panel .notif-item span {
+            color: #aaa;
+            font-size: 11px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .help-panel p {
+            margin: 0 0 8px 0;
+        }
+
+        .help-panel a {
+            color: #ff8c00;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navigate">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <img class="menu-icon" src="C:\Users\DADAGA\Pictures\Saved Pictures\menuicon.png" alt="Menu">
+            <span class="brand">Lorry</span>
+            <div class="nav-right">
+                <!-- Notification Bell -->
+                <button class="nav-icon-btn" id="notifBtn" onclick="togglePanel('notifPanel')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    <span class="notif-badge" id="notifBadge"></span>
+                    <span class="tooltip">Notifications</span>
+                </button>
+                <!-- Help -->
+                <button class="nav-icon-btn" id="helpBtn" onclick="togglePanel('helpPanel')">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5" />
+                    </svg>
+                    <span class="tooltip">Help</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Notification Dropdown -->
+        <div class="notif-panel" id="notifPanel">
+            <div class="notif-item">Your trip to Mumbai is <b>Confirmed</b>.<span>2 hours ago</span></div>
+            <div class="notif-item">New offer: 10% off on next booking.<span>Yesterday</span></div>
+            <div class="notif-item">Driver assigned for your reservation.<span>2 days ago</span></div>
+        </div>
+
+        <!-- Help Dropdown -->
+        <div class="help-panel" id="helpPanel">
+            <p><b>Need Help?</b></p>
+            <p>&#128222; Call: <a href="tel:+911800000000">1800-000-000</a></p>
+            <p>&#9993; Email: <a href="mailto:support@lorry.com">support@lorry.com</a></p>
+            <p>&#128218; <a href="#">FAQs &amp; Support</a></p>
+        </div>
+
+        <!-- AD Customer -->
+        <nav class="ad">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\pick-upad.jpg" alt="">
+            <ul class="sameul">
+                <li class="sameli">
+                    <input type="text" name="ad" id="advertise1"
+                        placeholder="+  place your advertisement here[for Customer].">
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Suggestions -->
+        <nav class="sugglabel">
+            <div class="first">Suggestions</div>
+            <div class="second">See All</div>
+        </nav>
+
+        <div class="container">
+            <div class="items" id="item1">Trip<img src="C:\Users\DADAGA\Pictures\Saved Pictures\1option.jpg"></div>
+            <div class="items" id="item2">Reserve<img src="C:\Users\DADAGA\Pictures\Saved Pictures\2option.jpg"></div>
+            <div class="items" id="item3">allotment<img src="C:\Users\DADAGA\Pictures\Saved Pictures\3option.jpg"></div>
+            <div class="items" id="item4">Occational<img src="C:\Users\DADAGA\Pictures\Saved Pictures\4option.jpg">
+            </div>
+        </div>
+
+        <!-- AD Transporter -->
+        <nav class="ad">
+            <img src="C:\Users\DADAGA\Pictures\Saved Pictures\pick-upad.jpg" alt="">
+            <ul class="sameul">
+                <li class="sameli">
+                    <input type="text" name="ad" id="advertise2"
+                        placeholder="+  place your advertisement here[for Transporter].">
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Features -->
+        <nav class="sugglabel">
+            <div class="first">features</div>
+            <div class="second">See All</div>
+        </nav>
+
+        <div class="container">
+            <div class="items" id="feature1">Live Tracking<img
+                    src="C:\Users\DADAGA\Pictures\Saved Pictures\live tracking.jpg"></div>
+            <div class="items" id="feature2"><img
+                    src="C:\Users\DADAGA\Pictures\Saved Pictures\freightinsurance.jpg">Insurance</div>
+            <div class="items" id="feature3"><img
+                    src="C:\Users\DADAGA\Pictures\Saved Pictures\breakdown service.jpg">Recovery</div>
+        </div>
+
+        <!-- RECENT LABEL -->
+        <nav class="sugglabel">
+            <div class="first">Recent Trips</div>
+            <div class="second">See All</div>
+        </nav>
+
+        <!-- RECENT CARDS -->
+        <div class="recent-card">
+
+            <!-- Row 1 -->
+            <div class="rc-row">
+                <div class="rc-icon-block">
+                    <svg viewBox="0 0 48 48">
+                        <rect x="4" y="16" width="28" height="18" rx="3" />
+                        <path d="M32 22 L44 22 L44 34 L32 34 Z" stroke-linejoin="round" />
+                        <path d="M32 22 L38 16 L44 16 L44 22" stroke-linejoin="round" />
+                        <circle cx="12" cy="34" r="4" />
+                        <circle cx="12" cy="34" r="1.5" />
+                        <circle cx="36" cy="34" r="4" />
+                        <circle cx="36" cy="34" r="1.5" />
+                        <rect x="33" y="23" width="9" height="6" rx="1" stroke="#aaa" style="stroke-width:1.2" />
+                        <line x1="10" y1="22" x2="10" y2="30" stroke="#888" style="stroke-width:1.2" />
+                        <line x1="18" y1="22" x2="18" y2="30" stroke="#888" style="stroke-width:1.2" />
+                        <line x1="26" y1="22" x2="26" y2="30" stroke="#888" style="stroke-width:1.2" />
+                    </svg>
+                </div>
+                <div class="rc-pending-block">
+                    <p class="rc-trip-name">Mumbai &rarr; Delhi</p>
+                    <p class="rc-trip-route">Full Load &middot; 40ft Container</p>
+                    <div class="rc-status-row">
+                        <span class="rc-status-badge">Pending</span>
+                        <span class="rc-date">12 May 2025</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="rc-row">
+                <div class="rc-icon-block">
+                    <svg viewBox="0 0 48 48">
+                        <rect x="4" y="16" width="28" height="18" rx="3" />
+                        <path d="M32 22 L44 22 L44 34 L32 34 Z" stroke-linejoin="round" />
+                        <path d="M32 22 L38 16 L44 16 L44 22" stroke-linejoin="round" />
+                        <circle cx="12" cy="34" r="4" />
+                        <circle cx="12" cy="34" r="1.5" />
+                        <circle cx="36" cy="34" r="4" />
+                        <circle cx="36" cy="34" r="1.5" />
+                        <rect x="33" y="23" width="9" height="6" rx="1" stroke="#aaa" style="stroke-width:1.2" />
+                        <line x1="10" y1="22" x2="10" y2="30" stroke="#888" style="stroke-width:1.2" />
+                        <line x1="18" y1="22" x2="18" y2="30" stroke="#888" style="stroke-width:1.2" />
+                        <line x1="26" y1="22" x2="26" y2="30" stroke="#888" style="stroke-width:1.2" />
+                    </svg>
+                </div>
+                <div class="rc-pending-block">
+                    <p class="rc-trip-name">Pune &rarr; Hyderabad</p>
+                    <p class="rc-trip-route">Half Load &middot; 20ft Container</p>
+                    <div class="rc-status-row">
+                        <span class="rc-status-badge confirmed">Confirmed</span>
+                        <span class="rc-date">09 May 2025</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="rc-row">
+                <div class="rc-icon-block">
+                    <svg viewBox="0 0 48 48">
+                        <rect x="4" y="16" width="28" height="18" rx="3" />
+                        <path d="M32 22 L44 22 L44 34 L32 34 Z" stroke-linejoin="round" />
+                        <path d="M32 22 L38 16 L44 16 L44 22" stroke-linejoin="round" />
+                        <circle cx="12" cy="34" r="4" />
+                        <circle cx="12" cy="34" r="1.5" />
+                        <circle cx="36" cy="34" r="4" />
+                        <circle cx="36" cy="34" r="1.5" />
+                        <rect x="33" y="23" width="9" height="6" rx="1" stroke="#aaa" style="stroke-width:1.2" />
+                        <line x1="10" y1="22" x2="10" y2="30" stroke="#888" style="stroke-width:1.2" />
+                        <line x1="18" y1="22" x2="18" y2="30" stroke="#888" style="stroke-width:1.2" />
+                        <line x1="26" y1="22" x2="26" y2="30" stroke="#888" style="stroke-width:1.2" />
+                    </svg>
+                </div>
+                <div class="rc-pending-block">
+                    <p class="rc-trip-name">Chennai &rarr; Bangalore</p>
+                    <p class="rc-trip-route">Express &middot; Open Truck</p>
+                    <div class="rc-status-row">
+                        <span class="rc-status-badge">Pending</span>
+                        <span class="rc-date">07 May 2025</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="viewfrom">
+            <div class="xyz">
+                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\home.png" alt="">
+                <h3>Home</h3>
+            </div>
+            <div class="xyz">
+                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\service.jpg" alt="">
+                <h3>Payment</h3>
+            </div>
+            <div class="xyz">
+                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\activity.jpg" alt="">
+                <h3>My Trips</h3>
+            </div>
+            <div class="xyz">
+                <img src="C:\Users\DADAGA\Pictures\Saved Pictures\account.png" alt="">
+                <h3>Account</h3>
+            </div>
+        </div>
+
+    </header>
+
+    <script>
+        function togglePanel(panelId) {
+            ['notifPanel', 'helpPanel'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === panelId) {
+                    el.classList.toggle('open');
+                } else {
+                    el.classList.remove('open');
+                }
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.nav-icon-btn') && !e.target.closest('.notif-panel') && !e.target.closest('.help-panel')) {
+                document.getElementById('notifPanel').classList.remove('open');
+                document.getElementById('helpPanel').classList.remove('open');
+            }
+        });
+
+        document.getElementById('notifBtn').addEventListener('click', function () {
+            document.getElementById('notifBadge').style.display = 'none';
+        });
+    </script>
 </body>
 
 </html>
