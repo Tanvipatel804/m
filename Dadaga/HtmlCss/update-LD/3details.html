@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porter Partner – Profile</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --pd: #3A0CA3;
+      --pm: #5B21B6;
+      --pl: #7C3AED;
+      --pp: #EDE9FE;
+      --pu: #F5F3FF;
+      --or: #F97316;
+      --ob: #FFF7ED;
+      --od: #EA580C;
+      --wh: #FFFFFF;
+      --ow: #F8F7FF;
+      --td: #1E0A4C;
+      --tm: #6B7280;
+      --tl: #9CA3AF;
+      --bd: #E5E0FF;
+      --green: #10B981;
+      --red: #EF4444;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ow);
+      color: var(--td);
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: linear-gradient(155deg, var(--pd) 0%, var(--pm) 55%, var(--pl) 100%);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sb-hd {
+      padding: 1.75rem 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, .15);
+      border: 1px solid rgba(255, 255, 255, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo svg {
+      width: 17px;
+      height: 17px;
+      fill: white;
+    }
+
+    .brand-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .brand-name em {
+      color: var(--or);
+      font-style: normal;
+    }
+
+    .brand-tag {
+      background: rgba(249, 115, 22, .25);
+      color: #FED7AA;
+      font-size: .58rem;
+      font-weight: 600;
+      padding: .1rem .45rem;
+      border-radius: 20px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-left: .3rem;
+    }
+
+    .sb-av-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .sb-av {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin-bottom: .9rem;
+    }
+
+    .sb-init {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--or), #FB923C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: white;
+      border: 3px solid rgba(255, 255, 255, .25);
+    }
+
+    .sb-dot {
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid var(--pm);
+    }
+
+    .sb-name-el {
+      font-family: 'Sora', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: .25rem;
+    }
+
+    .sb-veh {
+      font-size: .78rem;
+      color: rgba(255, 255, 255, .6);
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      justify-content: center;
+    }
+
+    .sb-veh::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--or);
+    }
+
+    .sb-nav {
+      padding: 1.25rem .75rem;
+      flex: 1;
+    }
+
+    .nav-lbl {
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .35);
+      padding: 0 .75rem;
+      margin: .9rem 0 .4rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      padding: .65rem .85rem;
+      border-radius: 11px;
+      font-size: .85rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .65);
+      cursor: pointer;
+      transition: all .18s;
+      margin-bottom: .15rem;
+      text-decoration: none;
+      border: 1px solid transparent;
+    }
+
+    .nav-item svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, .1);
+      color: white;
+    }
+
+    .nav-item.active {
+      background: rgba(249, 115, 22, .18);
+      color: white;
+      border-color: rgba(249, 115, 22, .28);
+    }
+
+    .nav-item.active svg {
+      stroke: var(--or);
+    }
+
+    .sb-ft {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      text-align: center;
+    }
+
+    .sb-ver {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .3);
+    }
+
+    /* ── MAIN ── */
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 2rem;
+      background: var(--wh);
+      border-bottom: 1px solid var(--bd);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+    }
+
+    .ic {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1.5px solid var(--bd);
+      background: var(--wh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .ic:hover {
+      background: var(--pp);
+      border-color: var(--pl);
+    }
+
+    .ic svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--pm);
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tb-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .content {
+      padding: 1.75rem 2rem;
+      flex: 1;
+    }
+
+    /* ── HERO ── */
+    .hero-card {
+      background: var(--wh);
+      border-radius: 18px;
+      border: 1.5px solid var(--bd);
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--pd), var(--pl) 50%, var(--or));
+    }
+
+    .hero-av {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .hero-init {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--or), #FB923C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      border: 3px solid white;
+      box-shadow: 0 0 0 3px var(--or);
+      cursor: pointer;
+      transition: transform .18s;
+    }
+
+    .hero-init:hover {
+      transform: scale(1.06);
+    }
+
+    .hero-sd {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid white;
+    }
+
+    .hero-info {
+      flex: 1;
+    }
+
+    .hero-name-el {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--td);
+      margin-bottom: .4rem;
+    }
+
+    .hero-pills {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .pill-p {
+      background: var(--pp);
+      color: var(--pm);
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .2rem .6rem;
+      border-radius: 20px;
+    }
+
+    .pill-o {
+      background: var(--ob);
+      color: var(--od);
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .2rem .6rem;
+      border-radius: 20px;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .dot-s {
+      color: var(--tl);
+      font-size: .7rem;
+    }
+
+    .edit-profile-btn {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      background: var(--pp);
+      border: 1.5px solid var(--pl);
+      color: var(--pl);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .45rem .9rem;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .edit-profile-btn:hover {
+      background: var(--pl);
+      color: white;
+    }
+
+    .edit-profile-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── SECTION ── */
+    .sec {
+      background: var(--wh);
+      border-radius: 16px;
+      border: 1.5px solid var(--bd);
+      margin-bottom: 1.1rem;
+      overflow: hidden;
+    }
+
+    .sec-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .95rem 1.4rem;
+      background: var(--pu);
+      border-bottom: 1px solid var(--bd);
+    }
+
+    .sec-title {
+      font-family: 'Sora', sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--td);
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+    }
+
+    .sec-title svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--pl);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edit-btn {
+      font-size: .73rem;
+      font-weight: 700;
+      color: var(--or);
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1.5px solid var(--or);
+      background: var(--ob);
+      padding: .3rem .8rem;
+      border-radius: 7px;
+      transition: all .18s;
+    }
+
+    .edit-btn:hover {
+      background: var(--or);
+      color: white;
+    }
+
+    .info-row {
+      padding: .9rem 1.4rem;
+      border-bottom: 1px solid var(--bd);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .lbl {
+      font-size: .72rem;
+      color: var(--tl);
+      font-weight: 500;
+      letter-spacing: .25px;
+      margin-bottom: .2rem;
+    }
+
+    .val {
+      font-size: .93rem;
+      color: var(--td);
+      font-weight: 500;
+    }
+
+    .val.empty {
+      color: var(--tl);
+      font-style: italic;
+    }
+
+    .bank-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .85rem 1.4rem;
+      border-bottom: 1px solid var(--bd);
+    }
+
+    .bank-row:last-child {
+      border-bottom: none;
+    }
+
+    .bk {
+      font-size: .85rem;
+      color: var(--tm);
+      min-width: 120px;
+    }
+
+    .bsep {
+      color: var(--tl);
+    }
+
+    .bval {
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--td);
+      font-family: 'Sora', sans-serif;
+      letter-spacing: .4px;
+    }
+
+    .vehicles-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.4rem;
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .vehicles-row:hover {
+      background: var(--pu);
+    }
+
+    .vl {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+
+    .v-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--pp);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .v-icon svg {
+      width: 19px;
+      height: 19px;
+      fill: var(--pl);
+    }
+
+    .v-name {
+      font-family: 'Sora', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .chev svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--tl);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .lang-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .9rem 1.4rem;
+      border-bottom: 1px solid var(--bd);
+    }
+
+    .lang-row:last-child {
+      border-bottom: none;
+    }
+
+    .lang-lbl {
+      font-size: .72rem;
+      color: var(--tl);
+      font-weight: 500;
+      margin-bottom: .2rem;
+    }
+
+    .lang-val {
+      font-size: .93rem;
+      font-weight: 600;
+      color: var(--td);
+    }
+
+    .chg-btn {
+      border: 1.5px solid var(--pl);
+      background: var(--pu);
+      color: var(--pl);
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .4rem 1rem;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .chg-btn:hover {
+      background: var(--pl);
+      color: white;
+    }
+
+    .ver-card {
+      background: var(--wh);
+      border-radius: 16px;
+      border: 1.5px solid var(--bd);
+      padding: 1.1rem;
+      text-align: center;
+      margin-bottom: 1.1rem;
+    }
+
+    .ver-text {
+      font-size: .82rem;
+      color: var(--tl);
+    }
+
+    .ver-text strong {
+      color: var(--pl);
+      font-weight: 600;
+    }
+
+    /* ── MODALS ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 10, 76, .45);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--wh);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(58, 12, 163, .25);
+      transform: translateY(20px) scale(.97);
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 1.6rem;
+      border-bottom: 1px solid var(--bd);
+      position: relative;
+    }
+
+    .modal-hd::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--pd), var(--pl), var(--or));
+      border-radius: 22px 22px 0 0;
+    }
+
+    .modal-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--td);
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+    }
+
+    .modal-title svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--pl);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1.5px solid var(--bd);
+      background: var(--pu);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .close-btn:hover {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .close-btn:hover svg {
+      stroke: white;
+    }
+
+    .close-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--tm);
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .modal-body {
+      padding: 1.6rem;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--tm);
+      margin-bottom: .45rem;
+      letter-spacing: .2px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: .75rem 1rem;
+      border: 1.5px solid var(--bd);
+      border-radius: 11px;
+      font-size: .93rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--td);
+      background: var(--wh);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--pl);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, .12);
+    }
+
+    .form-input::placeholder {
+      color: #C4B5FD;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: .9rem;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Sora', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--pd), var(--pl) 60%, var(--or));
+      color: white;
+      box-shadow: 0 4px 16px rgba(91, 33, 182, .3);
+      transition: transform .18s, box-shadow .18s;
+      margin-top: .4rem;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(91, 33, 182, .4);
+    }
+
+    .cancel-link {
+      display: block;
+      text-align: center;
+      margin-top: .8rem;
+      font-size: .84rem;
+      color: var(--tl);
+      cursor: pointer;
+      transition: color .18s;
+    }
+
+    .cancel-link:hover {
+      color: var(--or);
+    }
+
+    /* Language picker */
+    .lang-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+      margin-bottom: 1rem;
+    }
+
+    .lang-opt {
+      padding: .75rem 1rem;
+      border: 2px solid var(--bd);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all .18s;
+      text-align: center;
+    }
+
+    .lang-opt:hover {
+      border-color: var(--pl);
+      background: var(--pu);
+    }
+
+    .lang-opt.selected {
+      border-color: var(--or);
+      background: var(--ob);
+    }
+
+    .lang-opt .lo-name {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--td);
+    }
+
+    .lang-opt .lo-native {
+      font-size: .78rem;
+      color: var(--tm);
+      margin-top: .15rem;
+    }
+
+    .lang-opt.selected .lo-name {
+      color: var(--od);
+    }
+
+    /* Vehicles panel */
+    .vehicle-list {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .vehicle-card {
+      border: 1.5px solid var(--bd);
+      border-radius: 13px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: border-color .18s, background .18s;
+    }
+
+    .vehicle-card:hover {
+      border-color: var(--pl);
+      background: var(--pu);
+    }
+
+    .vc-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: var(--pp);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .vc-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--pl);
+    }
+
+    .vc-info {
+      flex: 1;
+    }
+
+    .vc-type {
+      font-family: 'Sora', sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .vc-plate {
+      font-size: .78rem;
+      color: var(--tm);
+      margin-top: .15rem;
+    }
+
+    .vc-badge {
+      font-size: .68rem;
+      font-weight: 600;
+      padding: .15rem .5rem;
+      border-radius: 20px;
+    }
+
+    .vc-badge.active {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .vc-badge.inactive {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .vc-actions {
+      display: flex;
+      gap: .5rem;
+    }
+
+    .vc-act-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1.5px solid var(--bd);
+      background: var(--wh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .vc-act-btn:hover.edit-v {
+      border-color: var(--pl);
+      background: var(--pp);
+    }
+
+    .vc-act-btn:hover.del-v {
+      border-color: var(--red);
+      background: #FEE2E2;
+    }
+
+    .vc-act-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--tm);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .add-vehicle-btn {
+      width: 100%;
+      padding: .75rem;
+      border: 2px dashed var(--bd);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--pl);
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+
+    .add-vehicle-btn:hover {
+      border-color: var(--pl);
+      background: var(--pu);
+    }
+
+    .add-vehicle-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--pl);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    /* Status toggle */
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .9rem 1.4rem;
+      border-bottom: 1px solid var(--bd);
+    }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: #E5E7EB;
+      position: relative;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .toggle.on {
+      background: var(--green);
+    }
+
+    .toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+      transition: left .2s;
+    }
+
+    .toggle.on .toggle-knob {
+      left: 23px;
+    }
+
+    .toggle-label {
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--td);
+    }
+
+    .status-badge {
+      font-size: .75rem;
+      font-weight: 600;
+      padding: .2rem .6rem;
+      border-radius: 20px;
+    }
+
+    .status-badge.online {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .status-badge.offline {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--pd);
+      color: white;
+      padding: .8rem 1.25rem;
+      border-radius: 11px;
+      font-size: .85rem;
+      box-shadow: 0 8px 28px rgba(58, 12, 163, .3);
+      transform: translateY(80px);
+      transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+      z-index: 999;
+      max-width: 300px;
+      border-left: 4px solid var(--or);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      border-left-color: var(--green);
+    }
+
+    .toast.error {
+      border-left-color: var(--red);
+    }
+
+    /* Photo upload ring */
+    .photo-ring {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.2rem;
+      cursor: pointer;
+    }
+
+    .photo-ring .hero-init-sm {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--or), #FB923C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: white;
+      border: 3px solid white;
+      box-shadow: 0 0 0 3px var(--or);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .photo-ring:hover .photo-overlay {
+      opacity: 1;
+    }
+
+    .photo-overlay svg {
+      width: 22px;
+      height: 22px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .photo-hint {
+      text-align: center;
+      font-size: .78rem;
+      color: var(--tl);
+      margin-bottom: 1.2rem;
+    }
+
+    /* Responsive */
+    @media(max-width:880px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .content {
+        padding: 1.1rem;
+      }
+
+      .topbar {
+        padding: .9rem 1.1rem;
+      }
+
+      .hero-card {
+        padding: 1.1rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .lang-options {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sb-hd">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+          </div>
+          <span class="brand-name">L<em>Ö</em>RRY<span class="brand-tag">Partner</span></span>
+        </div>
+        <div class="sb-av-wrap">
+          <div class="sb-av">
+            <div class="sb-init" id="sbInit">A</div>
+            <span class="sb-dot" id="sbDot"></span>
+          </div>
+          <div class="sb-name-el" id="sbName">Amol Patil</div>
+          <div class="sb-veh" id="sbVeh">2 Wheeler · MH-3X XXXX</div>
+        </div>
+      </div>
+      <nav class="sb-nav">
+        <div class="nav-lbl">Menu</div>
+        <a class="nav-item" href="#" onclick="showToast('📊 Dashboard coming soon','')">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+          </svg>Dashboard
+        </a>
+        <a class="nav-item active" href="#">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>Profile
+        </a>
+        <a class="nav-item" href="#" onclick="showToast('💰 Earnings coming soon','')">
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>Earnings
+        </a>
+        <a class="nav-item" href="#" onclick="openModal('vehiclesModal')">
+          <svg viewBox="0 0 24 24">
+            <rect x="1" y="3" width="15" height="13" rx="1" />
+            <path d="M16 8h5l2 3v5h-7V8z" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>My Vehicles
+        </a>
+        <a class="nav-item" href="#" onclick="showToast('⚙️ Settings coming soon','')">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.07 4.93a10 10 0 1 0 0 14.14" />
+          </svg>Settings
+        </a>
+      </nav>
+      <div class="sb-ft">
+        <div class="sb-ver">App Version 5.131.1</div>
+      </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="ic" onclick="showToast('↩ Going back…','')">
+            <svg viewBox="0 0 24 24">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <span class="tb-title">Profile</span>
+        </div>
+        <button class="ic" id="moreBtn" onclick="toggleMoreMenu()">
+          <svg viewBox="0 0 24 24" stroke="var(--pm)" fill="none">
+            <circle cx="12" cy="5" r="1.2" fill="var(--pm)" />
+            <circle cx="12" cy="12" r="1.2" fill="var(--pm)" />
+            <circle cx="12" cy="19" r="1.2" fill="var(--pm)" />
+          </svg>
+        </button>
+        <div id="moreMenu"
+          style="display:none;position:absolute;top:60px;right:1.5rem;background:white;border:1.5px solid var(--bd);border-radius:12px;box-shadow:0 8px 24px rgba(58,12,163,.15);z-index:20;min-width:160px;overflow:hidden;">
+          <div onclick="closeMoreMenu();openModal('editProfileModal')"
+            style="padding:.7rem 1.1rem;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;transition:background .15s;"
+            onmouseover="this.style.background='var(--pu)'" onmouseout="this.style.background=''">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--pl)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Edit Profile
+          </div>
+          <div onclick="closeMoreMenu();openModal('vehiclesModal')"
+            style="padding:.7rem 1.1rem;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;transition:background .15s;"
+            onmouseover="this.style.background='var(--pu)'" onmouseout="this.style.background=''">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--pl)">
+              <path
+                d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
+            </svg>
+            My Vehicles
+          </div>
+          <div onclick="closeMoreMenu();showToast('🔒 Logging out…','')"
+            style="padding:.7rem 1.1rem;font-size:.85rem;cursor:pointer;color:#EF4444;display:flex;align-items:center;gap:.6rem;transition:background .15s;"
+            onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background=''">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Logout
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- HERO -->
+        <div class="hero-card">
+          <div class="hero-av">
+            <div class="hero-init" id="heroInit" onclick="openModal('editProfileModal')" title="Edit Profile">A</div>
+            <span class="hero-sd" id="heroDot"></span>
+          </div>
+          <div class="hero-info">
+            <div class="hero-name-el" id="heroName">Amol Patil</div>
+            <div class="hero-pills">
+              <span class="pill-p" id="heroVehicleType">2 Wheeler</span>
+              <span class="dot-s">·</span>
+              <span class="pill-o" id="heroPlate">MH-3X XXXX</span>
+            </div>
+          </div>
+          <button class="edit-profile-btn" onclick="openModal('editProfileModal')">
+            <svg viewBox="0 0 24 24">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Edit Profile
+          </button>
+        </div>
+
+        <!-- ONLINE STATUS TOGGLE -->
+        <div class="sec">
+          <div class="sec-hd">
+            <div class="sec-title">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Online Status
+            </div>
+            <span class="status-badge offline" id="statusBadge">Offline</span>
+          </div>
+          <div class="status-row">
+            <div class="toggle-wrap">
+              <div class="toggle" id="statusToggle" onclick="toggleOnlineStatus()">
+                <div class="toggle-knob"></div>
+              </div>
+              <span class="toggle-label" id="statusLabel">Go Online</span>
+            </div>
+            <span style="font-size:.78rem;color:var(--tl);">Toggle to go online</span>
+          </div>
+        </div>
+
+        <!-- PERSONAL INFO -->
+        <div class="sec">
+          <div class="sec-hd">
+            <div class="sec-title">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              Personal Information
+            </div>
+            <button class="edit-btn" onclick="openModal('editProfileModal')">EDIT</button>
+          </div>
+          <div class="info-row">
+            <div class="lbl">Home Address</div>
+            <div class="val empty" id="displayAddress">-- Not provided --</div>
+          </div>
+          <div class="info-row">
+            <div class="lbl">Mobile Number</div>
+            <div class="val" id="displayPhone">738● ●● ●●</div>
+          </div>
+        </div>
+
+        <!-- BANK DETAILS -->
+        <div class="sec">
+          <div class="sec-hd">
+            <div class="sec-title">
+              <svg viewBox="0 0 24 24">
+                <rect x="1" y="4" width="22" height="16" rx="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+              Current Bank Details
+            </div>
+            <button class="edit-btn" onclick="openModal('bankModal')">EDIT DETAILS</button>
+          </div>
+          <div class="bank-row">
+            <span class="bk">Account number</span>
+            <span class="bsep">:</span>
+            <span class="bval" id="displayAccNo">96●● ●● ●● ●●</span>
+          </div>
+          <div class="bank-row">
+            <span class="bk">IFSC Code</span>
+            <span class="bsep">:</span>
+            <span class="bval" id="displayIfsc">BKID●●●●</span>
+          </div>
+        </div>
+
+        <!-- MY VEHICLES -->
+        <div class="sec">
+          <div class="vehicles-row" onclick="openModal('vehiclesModal')">
+            <div class="vl">
+              <div class="v-icon">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
+                </svg>
+              </div>
+              <span class="v-name">My Vehicles</span>
+            </div>
+            <div class="chev"><svg viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6" />
+              </svg></div>
+          </div>
+        </div>
+
+        <!-- LANGUAGE -->
+        <div class="sec">
+          <div class="sec-hd">
+            <div class="sec-title">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              Language Preferences
+            </div>
+          </div>
+          <div class="lang-row">
+            <div>
+              <div class="lang-lbl">Preferred App Language</div>
+              <div class="lang-val" id="appLangDisplay">English</div>
+            </div>
+            <button class="chg-btn" onclick="openLangModal('app')">Change</button>
+          </div>
+          <div class="lang-row">
+            <div>
+              <div class="lang-lbl">Change Training Language</div>
+              <div class="lang-val" id="trainLangDisplay">हिंदी</div>
+            </div>
+            <button class="chg-btn" onclick="openLangModal('training')">Change</button>
+          </div>
+        </div>
+
+        <!-- VERSION -->
+        <div class="ver-card">
+          <span class="ver-text">App Version <strong>5.131.1</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     MODAL: EDIT PROFILE
+════════════════════════════════════════════════ -->
+  <div class="overlay" id="editProfileModal" onclick="overlayClose(event,'editProfileModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Edit Profile
+        </div>
+        <button class="close-btn" onclick="closeModal('editProfileModal')">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="photo-ring" onclick="showToast('📷 Photo upload coming soon','')">
+          <div class="hero-init-sm" id="editAvatarInit">A</div>
+          <div class="photo-overlay">
+            <svg viewBox="0 0 24 24">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+              <circle cx="12" cy="13" r="4" />
+            </svg>
+          </div>
+        </div>
+        <p class="photo-hint">Tap avatar to change photo</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" id="editFirstName" type="text" placeholder="First name" value="Amol" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" id="editLastName" type="text" placeholder="Last name" value="Patil" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mobile Number</label>
+          <input class="form-input" id="editPhone" type="tel" placeholder="+91 XXXXX XXXXX" value="7389876543" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Home Address</label>
+          <input class="form-input" id="editAddress" type="text" placeholder="Enter your home address" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Vehicle Type</label>
+            <select class="form-input" id="editVehicleType">
+              <option value="2 Wheeler" selected>2 Wheeler</option>
+              <option value="3 Wheeler">3 Wheeler</option>
+              <option value="4 Wheeler">4 Wheeler</option>
+              <option value="Mini Truck">Mini Truck</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Vehicle Plate</label>
+            <input class="form-input" id="editPlate" type="text" placeholder="MH-XX XXXX" value="MH-3X XXXX" />
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+        <span class="cancel-link" onclick="closeModal('editProfileModal')">Cancel</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     MODAL: BANK DETAILS
+════════════════════════════════════════════════ -->
+  <div class="overlay" id="bankModal" onclick="overlayClose(event,'bankModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24">
+            <rect x="1" y="4" width="22" height="16" rx="2" />
+            <line x1="1" y1="10" x2="23" y2="10" />
+          </svg>
+          Edit Bank Details
+        </div>
+        <button class="close-btn" onclick="closeModal('bankModal')">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div
+          style="background:var(--ob);border:1px solid #FED7AA;border-radius:10px;padding:.75rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:var(--od);display:flex;align-items:flex-start;gap:.5rem;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--od)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Ensure your bank details are correct. Payouts will be credited to this account.
+        </div>
+        <div class="form-group">
+          <label class="form-label">Account Holder Name</label>
+          <input class="form-input" id="bankName" type="text" placeholder="Full name as per bank" value="Amol Patil" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input class="form-input" id="bankAccNo" type="text" placeholder="Enter account number"
+            value="965012345678" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Account Number</label>
+          <input class="form-input" id="bankAccNoConfirm" type="text" placeholder="Re-enter account number" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">IFSC Code</label>
+          <input class="form-input" id="bankIfsc" type="text" placeholder="e.g. BKID0001234" value="BKID0001234"
+            style="text-transform:uppercase" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bank Name</label>
+          <input class="form-input" id="bankBankName" type="text" placeholder="Bank name" value="Bank of India" />
+        </div>
+        <button class="save-btn" onclick="saveBank()">Save Bank Details</button>
+        <span class="cancel-link" onclick="closeModal('bankModal')">Cancel</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     MODAL: MY VEHICLES
+════════════════════════════════════════════════ -->
+  <div class="overlay" id="vehiclesModal" onclick="overlayClose(event,'vehiclesModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--pl)" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13" rx="1" />
+            <path d="M16 8h5l2 3v5h-7V8z" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>
+          My Vehicles
+        </div>
+        <button class="close-btn" onclick="closeModal('vehiclesModal')">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="vehicle-list" id="vehicleList"></div>
+        <button class="add-vehicle-btn" onclick="openAddVehicle()">
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Add New Vehicle
+        </button>
+        <!-- Add vehicle form (hidden initially) -->
+        <div id="addVehicleForm"
+          style="display:none;margin-top:1.2rem;border-top:1px solid var(--bd);padding-top:1.2rem;">
+          <p style="font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;color:var(--td);margin-bottom:1rem;">
+            Add Vehicle</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Vehicle Type</label>
+              <select class="form-input" id="newVType">
+                <option>2 Wheeler</option>
+                <option>3 Wheeler</option>
+                <option>4 Wheeler</option>
+                <option>Mini Truck</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Plate Number</label>
+              <input class="form-input" id="newVPlate" type="text" placeholder="MH-XX XXXX" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Model</label>
+            <input class="form-input" id="newVModel" type="text" placeholder="e.g. Honda Activa" />
+          </div>
+          <div style="display:flex;gap:.75rem;">
+            <button class="save-btn" style="flex:1;margin-top:0;" onclick="addVehicle()">Add Vehicle</button>
+            <button onclick="document.getElementById('addVehicleForm').style.display='none'"
+              style="flex:.4;padding:.9rem;border:1.5px solid var(--bd);border-radius:12px;background:var(--wh);color:var(--tm);font-size:.9rem;cursor:pointer;">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     MODAL: LANGUAGE PICKER
+════════════════════════════════════════════════ -->
+  <div class="overlay" id="langModal" onclick="overlayClose(event,'langModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          <span id="langModalTitle">Select Language</span>
+        </div>
+        <button class="close-btn" onclick="closeModal('langModal')">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="lang-options" id="langOptions"></div>
+        <button class="save-btn" onclick="saveLanguage()">Apply Language</button>
+        <span class="cancel-link" onclick="closeModal('langModal')">Cancel</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"
+      stroke-linejoin="round" id="toastIcon">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+    <span id="toastMsg"></span>
+  </div>
+
+  <script>
+    // ── DATA STATE ──
+    const state = {
+      name: 'Amol Patil',
+      phone: '7389876543',
+      address: '',
+      vehicleType: '2 Wheeler',
+      plate: 'MH-3X XXXX',
+      bankAccNo: '965012345678',
+      bankIfsc: 'BKID0001234',
+      bankName: 'Amol Patil',
+      bankBankName: 'Bank of India',
+      appLang: 'English',
+      trainLang: 'हिंदी',
+      online: false,
+      vehicles: [
+        { id: 1, type: '2 Wheeler', plate: 'MH-3X XXXX', model: 'Honda Activa', active: true }
+      ]
+    };
+
+    const APP_LANGS = [
+      { code: 'en', name: 'English', native: 'English' },
+      { code: 'hi', name: 'Hindi', native: 'हिंदी' },
+      { code: 'mr', name: 'Marathi', native: 'मराठी' },
+      { code: 'ta', name: 'Tamil', native: 'தமிழ்' },
+      { code: 'te', name: 'Telugu', native: 'తెలుగు' },
+      { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ' },
+      { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી' },
+      { code: 'bn', name: 'Bengali', native: 'বাংলা' },
+    ];
+
+    let currentLangMode = 'app';
+    let selectedLang = '';
+
+    // ── RENDER ──
+    function renderAll() {
+      const firstName = state.name.split(' ')[0] || 'A';
+      const initLetter = firstName[0].toUpperCase();
+
+      // Hero
+      document.getElementById('heroInit').textContent = initLetter;
+      document.getElementById('heroName').textContent = state.name;
+      document.getElementById('heroVehicleType').textContent = state.vehicleType;
+      document.getElementById('heroPlate').textContent = state.plate;
+      // Sidebar
+      document.getElementById('sbInit').textContent = initLetter;
+      document.getElementById('sbName').textContent = state.name;
+      document.getElementById('sbVeh').textContent = state.vehicleType + ' · ' + state.plate;
+      // Edit avatar init
+      document.getElementById('editAvatarInit').textContent = initLetter;
+      // Personal
+      const addrEl = document.getElementById('displayAddress');
+      addrEl.textContent = state.address || '-- Not provided --';
+      addrEl.className = 'val' + (state.address ? '' : ' empty');
+      document.getElementById('displayPhone').textContent = maskPhone(state.phone);
+      // Bank
+      document.getElementById('displayAccNo').textContent = maskAccNo(state.bankAccNo);
+      document.getElementById('displayIfsc').textContent = maskIfsc(state.bankIfsc);
+      // Language
+      document.getElementById('appLangDisplay').textContent = state.appLang;
+      document.getElementById('trainLangDisplay').textContent = state.trainLang;
+      // Status
+      const tog = document.getElementById('statusToggle');
+      const badge = document.getElementById('statusBadge');
+      const label = document.getElementById('statusLabel');
+      const dot = document.getElementById('heroDot');
+      const sbDot = document.getElementById('sbDot');
+      if (state.online) {
+        tog.classList.add('on');
+        badge.className = 'status-badge online'; badge.textContent = 'Online';
+        label.textContent = 'You are Online';
+        dot.style.background = 'var(--green)';
+        sbDot.style.background = 'var(--green)';
+      } else {
+        tog.classList.remove('on');
+        badge.className = 'status-badge offline'; badge.textContent = 'Offline';
+        label.textContent = 'Go Online';
+        dot.style.background = 'var(--red)';
+        sbDot.style.background = 'var(--red)';
+      }
+    }
+
+    function maskPhone(p) { return p ? p.slice(0, 3) + '● ●● ●●' : '--'; }
+    function maskAccNo(a) { return a ? a.slice(0, 3) + '●'.repeat(4) + ' ●●' : '--'; }
+    function maskIfsc(i) { return i ? i.slice(0, 4) + '●●●●' : '--'; }
+
+    // ── MODALS ──
+    function openModal(id) {
+      if (id === 'editProfileModal') {
+        document.getElementById('editFirstName').value = state.name.split(' ')[0] || '';
+        document.getElementById('editLastName').value = state.name.split(' ').slice(1).join(' ') || '';
+        document.getElementById('editPhone').value = state.phone;
+        document.getElementById('editAddress').value = state.address;
+        document.getElementById('editVehicleType').value = state.vehicleType;
+        document.getElementById('editPlate').value = state.plate;
+      }
+      if (id === 'bankModal') {
+        document.getElementById('bankName').value = state.bankName;
+        document.getElementById('bankAccNo').value = state.bankAccNo;
+        document.getElementById('bankAccNoConfirm').value = '';
+        document.getElementById('bankIfsc').value = state.bankIfsc;
+        document.getElementById('bankBankName').value = state.bankBankName;
+      }
+      if (id === 'vehiclesModal') renderVehicles();
+      document.getElementById(id).classList.add('open');
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    function overlayClose(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+    // ── PROFILE SAVE ──
+    function saveProfile() {
+      const fn = document.getElementById('editFirstName').value.trim();
+      const ln = document.getElementById('editLastName').value.trim();
+      const phone = document.getElementById('editPhone').value.trim();
+      const addr = document.getElementById('editAddress').value.trim();
+      const vt = document.getElementById('editVehicleType').value;
+      const plate = document.getElementById('editPlate').value.trim().toUpperCase();
+      if (!fn) { showToast('⚠️ First name is required', 'error'); return; }
+      if (phone && !/^\d{10}$/.test(phone.replace(/\D/g, ''))) { showToast('⚠️ Enter a valid 10-digit number', 'error'); return; }
+      state.name = (fn + ' ' + ln).trim();
+      state.phone = phone || state.phone;
+      state.address = addr;
+      state.vehicleType = vt;
+      state.plate = plate || state.plate;
+      renderAll();
+      closeModal('editProfileModal');
+      showToast('✅ Profile updated successfully', 'success');
+    }
+
+    // ── BANK SAVE ──
+    function saveBank() {
+      const name = document.getElementById('bankName').value.trim();
+      const accNo = document.getElementById('bankAccNo').value.trim();
+      const confirm = document.getElementById('bankAccNoConfirm').value.trim();
+      const ifsc = document.getElementById('bankIfsc').value.trim().toUpperCase();
+      const bankName = document.getElementById('bankBankName').value.trim();
+      if (!name || !accNo || !ifsc) { showToast('⚠️ All fields are required', 'error'); return; }
+      if (confirm && accNo !== confirm) { showToast('⚠️ Account numbers do not match', 'error'); return; }
+      if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) { showToast('⚠️ Invalid IFSC format (e.g. BKID0001234)', 'error'); return; }
+      state.bankName = name; state.bankAccNo = accNo; state.bankIfsc = ifsc; state.bankBankName = bankName;
+      renderAll();
+      closeModal('bankModal');
+      showToast('✅ Bank details saved successfully', 'success');
+    }
+
+    // ── ONLINE STATUS ──
+    function toggleOnlineStatus() {
+      state.online = !state.online;
+      renderAll();
+      showToast(state.online ? '🟢 You are now Online' : '🔴 You are now Offline', state.online ? 'success' : '');
+    }
+
+    // ── VEHICLES ──
+    function renderVehicles() {
+      const list = document.getElementById('vehicleList');
+      list.innerHTML = '';
+      if (!state.vehicles.length) {
+        list.innerHTML = '<p style="text-align:center;color:var(--tl);font-size:.88rem;padding:1rem 0;">No vehicles added yet.</p>';
+        return;
+      }
+      state.vehicles.forEach(v => {
+        const card = document.createElement('div');
+        card.className = 'vehicle-card';
+        card.innerHTML = `
+      <div class="vc-icon"><svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg></div>
+      <div class="vc-info">
+        <div class="vc-type">${v.type} · ${v.plate}</div>
+        <div class="vc-plate">${v.model}</div>
+      </div>
+      <span class="vc-badge ${v.active ? 'active' : 'inactive'}">${v.active ? 'Active' : 'Inactive'}</span>
+      <div class="vc-actions">
+        <button class="vc-act-btn edit-v" onclick="toggleVehicleStatus(${v.id})" title="${v.active ? 'Deactivate' : 'Activate'}">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </button>
+        <button class="vc-act-btn del-v" onclick="deleteVehicle(${v.id})" title="Remove">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>`;
+        list.appendChild(card);
+      });
+    }
+
+    function openAddVehicle() {
+      document.getElementById('addVehicleForm').style.display = 'block';
+      document.getElementById('newVPlate').focus();
+    }
+
+    function addVehicle() {
+      const type = document.getElementById('newVType').value;
+      const plate = document.getElementById('newVPlate').value.trim().toUpperCase();
+      const model = document.getElementById('newVModel').value.trim();
+      if (!plate || !model) { showToast('⚠️ Enter plate number and model', 'error'); return; }
+      state.vehicles.push({ id: Date.now(), type, plate, model, active: true });
+      document.getElementById('addVehicleForm').style.display = 'none';
+      document.getElementById('newVPlate').value = '';
+      document.getElementById('newVModel').value = '';
+      renderVehicles();
+      showToast('🚗 Vehicle added successfully', 'success');
+    }
+
+    function toggleVehicleStatus(id) {
+      const v = state.vehicles.find(x => x.id === id);
+      if (v) { v.active = !v.active; renderVehicles(); showToast(v.active ? '✅ Vehicle activated' : '⏸ Vehicle deactivated', v.active ? 'success' : ''); }
+    }
+
+    function deleteVehicle(id) {
+      if (!confirm('Remove this vehicle?')) return;
+      state.vehicles = state.vehicles.filter(x => x.id !== id);
+      renderVehicles();
+      showToast('🗑 Vehicle removed', '');
+    }
+
+    // ── LANGUAGE ──
+    function openLangModal(mode) {
+      currentLangMode = mode;
+      selectedLang = mode === 'app' ? state.appLang : state.trainLang;
+      document.getElementById('langModalTitle').textContent = mode === 'app' ? 'App Language' : 'Training Language';
+      const container = document.getElementById('langOptions');
+      container.innerHTML = '';
+      APP_LANGS.forEach(l => {
+        const isSelected = (l.name === selectedLang || l.native === selectedLang);
+        const div = document.createElement('div');
+        div.className = 'lang-opt' + (isSelected ? ' selected' : '');
+        div.innerHTML = `<div class="lo-name">${l.name}</div><div class="lo-native">${l.native}</div>`;
+        div.onclick = () => { container.querySelectorAll('.lang-opt').forEach(x => x.classList.remove('selected')); div.classList.add('selected'); selectedLang = l.name; };
+        container.appendChild(div);
+      });
+      openModal('langModal');
+    }
+
+    function saveLanguage() {
+      if (!selectedLang) { showToast('⚠️ Please select a language', 'error'); return; }
+      if (currentLangMode === 'app') state.appLang = selectedLang;
+      else state.trainLang = selectedLang;
+      renderAll();
+      closeModal('langModal');
+      showToast('🌐 Language updated to ' + selectedLang, 'success');
+    }
+
+    // ── MORE MENU ──
+    function toggleMoreMenu() {
+      const m = document.getElementById('moreMenu');
+      m.style.display = m.style.display === 'none' ? 'block' : 'none';
+    }
+    function closeMoreMenu() { document.getElementById('moreMenu').style.display = 'none'; }
+    document.addEventListener('click', e => { if (!e.target.closest('#moreBtn') && !e.target.closest('#moreMenu')) closeMoreMenu(); });
+
+    // ── TOAST ──
+    let toastTimer;
+    function showToast(msg, type = '') {
+      clearTimeout(toastTimer);
+      const t = document.getElementById('toast');
+      const icon = document.getElementById('toastIcon');
+      document.getElementById('toastMsg').textContent = msg;
+      t.className = 'toast' + (type ? ' ' + type : '');
+      if (type === 'error') icon.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+      else icon.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+      t.classList.add('show');
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ── KEYBOARD CLOSE ──
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(m => m.classList.remove('open')); });
+
+    // ── INIT ──
+    renderAll();
+  </script>
+</body>
+
+</html>
