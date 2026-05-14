@@ -1,0 +1,2546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porter Partner – Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --pd: #3A0CA3;
+      --pm: #5B21B6;
+      --pl: #7C3AED;
+      --pp: #EDE9FE;
+      --pu: #F5F3FF;
+      --or: #F97316;
+      --ob: #FFF7ED;
+      --od: #EA580C;
+      --oy: #FBBF24;
+      --wh: #FFFFFF;
+      --ow: #F8F7FF;
+      --td: #1E0A4C;
+      --tm: #6B7280;
+      --tl: #9CA3AF;
+      --bd: #E5E0FF;
+      --green: #059669;
+      --green-l: #D1FAE5;
+      --red: #EF4444;
+      --red-l: #FEE2E2;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ow);
+      color: var(--td);
+    }
+
+    /* ══ LAYOUT ══ */
+    .page {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      background: linear-gradient(155deg, var(--pd) 0%, var(--pm) 50%, var(--pl) 100%);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 50;
+    }
+
+    .sb-top {
+      padding: 1.5rem 1.25rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .sb-brand {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sb-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .15);
+      border: 1px solid rgba(255, 255, 255, .2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sb-logo svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+
+    .sb-brand-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -.2px;
+    }
+
+    .sb-brand-text em {
+      color: var(--or);
+      font-style: normal;
+    }
+
+    .sb-badge {
+      background: rgba(249, 115, 22, .25);
+      color: #FED7AA;
+      font-size: .58rem;
+      font-weight: 700;
+      padding: .1rem .45rem;
+      border-radius: 20px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      margin-left: .3rem;
+    }
+
+    .years-badge {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .15);
+      border-radius: 30px;
+      padding: .35rem .75rem;
+      width: fit-content;
+      margin-bottom: 1.25rem;
+    }
+
+    .years-badge .yr-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--or);
+      line-height: 1;
+    }
+
+    .years-badge .yr-text {
+      font-size: .65rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .7);
+      line-height: 1.3;
+    }
+
+    .sb-user {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+
+    .sb-av {
+      position: relative;
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+    }
+
+    .sb-init {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--or), #FB923C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, .3);
+    }
+
+    .sb-status-dot {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 2px solid var(--pm);
+    }
+
+    .sb-user-info {
+      flex: 1;
+    }
+
+    .sb-uname {
+      font-family: 'Sora', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: .15rem;
+    }
+
+    .sb-uveh {
+      font-size: .73rem;
+      color: rgba(255, 255, 255, .6);
+    }
+
+    .view-profile-btn {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--or);
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid rgba(249, 115, 22, .4);
+      background: rgba(249, 115, 22, .1);
+      padding: .2rem .55rem;
+      border-radius: 6px;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+
+    .view-profile-btn:hover {
+      background: var(--or);
+      color: white;
+    }
+
+    .sb-nav {
+      padding: 1rem .75rem;
+      flex: 1;
+    }
+
+    .nav-gl {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .3);
+      padding: 0 .75rem;
+      margin: .75rem 0 .35rem;
+    }
+
+    .ni {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      padding: .6rem .85rem;
+      border-radius: 11px;
+      font-size: .84rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .65);
+      cursor: pointer;
+      transition: all .18s;
+      margin-bottom: .12rem;
+      text-decoration: none;
+      border: 1px solid transparent;
+      position: relative;
+    }
+
+    .ni svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .ni:hover {
+      background: rgba(255, 255, 255, .1);
+      color: white;
+    }
+
+    .ni.active {
+      background: rgba(249, 115, 22, .18);
+      color: white;
+      border-color: rgba(249, 115, 22, .3);
+    }
+
+    .ni.active svg {
+      stroke: var(--or);
+    }
+
+    .ni .badge-count {
+      position: absolute;
+      right: .85rem;
+      background: var(--red);
+      color: white;
+      font-size: .62rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sb-ft {
+      padding: .9rem 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      text-align: center;
+    }
+
+    .sb-ver {
+      font-size: .68rem;
+      color: rgba(255, 255, 255, .25);
+    }
+
+    /* ══ MAIN ══ */
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      background: linear-gradient(135deg, var(--pd), var(--pm));
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .tb-left {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+
+    .hamburger {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .hamburger:hover {
+      background: rgba(255, 255, 255, .2);
+    }
+
+    .hamburger svg {
+      width: 18px;
+      height: 18px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .tb-brand {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .tb-brand em {
+      color: var(--or);
+      font-style: normal;
+    }
+
+    .tb-brand span {
+      font-size: .65rem;
+      font-weight: 500;
+      opacity: .7;
+      margin-left: .2rem;
+    }
+
+    .tb-right {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .tb-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .12);
+      border: 1.5px solid rgba(255, 255, 255, .2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .18s;
+      position: relative;
+    }
+
+    .tb-icon:hover {
+      background: rgba(255, 255, 255, .22);
+    }
+
+    .tb-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .notif-count {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: var(--red);
+      color: white;
+      font-size: .6rem;
+      font-weight: 700;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--pm);
+    }
+
+    /* CONTENT */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* USER STRIP */
+    .user-strip {
+      background: white;
+      border-bottom: 3px solid var(--or);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .us-left {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+    }
+
+    .us-av {
+      position: relative;
+      width: 48px;
+      height: 48px;
+    }
+
+    .us-init {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--or), #FB923C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px var(--or);
+    }
+
+    .us-dot {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    .us-name {
+      font-family: 'Sora', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .us-veh {
+      font-size: .78rem;
+      color: var(--tm);
+      margin-top: .15rem;
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+    }
+
+    .us-veh span {
+      font-weight: 600;
+    }
+
+    .vp-btn {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--pl);
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1.5px solid var(--pl);
+      background: var(--pp);
+      padding: .35rem .85rem;
+      border-radius: 8px;
+      transition: all .18s;
+    }
+
+    .vp-btn:hover {
+      background: var(--pl);
+      color: white;
+    }
+
+    /* SCROLL CONTENT */
+    .scroll-area {
+      padding: 1.5rem 2rem 6rem;
+    }
+
+    /* REWARD PROGRAM ROW */
+    .reward-row {
+      background: white;
+      border-radius: 14px;
+      border: 1.5px solid var(--bd);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.4rem;
+      margin-bottom: 1.1rem;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .reward-row::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--or), var(--od));
+    }
+
+    .reward-row:hover {
+      border-color: var(--or);
+      box-shadow: 0 4px 16px rgba(249, 115, 22, .15);
+    }
+
+    .rr-left {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .rr-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--or), #FB923C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rr-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+
+    .rr-title {
+      font-family: 'Sora', sans-serif;
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .rr-sub {
+      font-size: .75rem;
+      color: var(--tm);
+      margin-top: .1rem;
+    }
+
+    .rr-chev svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--or);
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* NOTICEBOARD */
+    .notice-sec {
+      background: white;
+      border-radius: 16px;
+      border: 1.5px solid var(--bd);
+      margin-bottom: 1.1rem;
+      overflow: hidden;
+    }
+
+    .notice-hd {
+      padding: 1rem 1.4rem .75rem;
+      border-bottom: 1px solid var(--bd);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .notice-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .notice-count {
+      background: var(--pp);
+      color: var(--pl);
+      font-size: .72rem;
+      font-weight: 700;
+      padding: .15rem .55rem;
+      border-radius: 20px;
+    }
+
+    /* Carousel */
+    .carousel-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      padding: 1rem 1.4rem;
+    }
+
+    .notice-card {
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Slide 1 – GST */
+    .nc-gst {
+      background: linear-gradient(135deg, #1A237E 0%, #283593 40%, #1976D2 100%);
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nc-gst-text {
+      flex: 1;
+    }
+
+    .nc-gst-text h3 {
+      color: white;
+      font-size: .95rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: .4rem;
+    }
+
+    .nc-gst-text .highlight {
+      color: #FFD600;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .nc-gst-text .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: white;
+      border-radius: 20px;
+      padding: .3rem .75rem;
+      font-size: .72rem;
+      font-weight: 600;
+      color: #1976D2;
+      cursor: pointer;
+      margin-top: .65rem;
+    }
+
+    .nc-gst-text .watch-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: #E53935;
+    }
+
+    .nc-gst-badge {
+      background: rgba(255, 255, 255, .15);
+      border-radius: 12px;
+      padding: .75rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .nc-gst-badge .gst-label {
+      background: #FFD600;
+      color: #1A237E;
+      font-family: 'Sora', sans-serif;
+      font-size: .75rem;
+      font-weight: 800;
+      padding: .2rem .5rem;
+      border-radius: 6px;
+      margin-bottom: .4rem;
+      display: inline-block;
+    }
+
+    .nc-gst-badge .fare-update {
+      background: rgba(255, 255, 255, .9);
+      color: #E53935;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: .3rem .55rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      margin-top: .3rem;
+    }
+
+    /* Slide 2 – Reward */
+    .nc-reward {
+      background: linear-gradient(135deg, var(--pd), var(--pl));
+      padding: 1.25rem 1.4rem;
+      border-radius: 14px;
+    }
+
+    .nc-reward h3 {
+      color: white;
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .4rem;
+    }
+
+    .nc-reward p {
+      color: rgba(255, 255, 255, .8);
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    .nc-reward .earn-badge {
+      display: inline-block;
+      background: var(--or);
+      color: white;
+      font-size: .75rem;
+      font-weight: 700;
+      padding: .3rem .75rem;
+      border-radius: 20px;
+      margin-top: .65rem;
+    }
+
+    /* Slide 3 – Performance */
+    .nc-perf {
+      background: linear-gradient(135deg, #065F46, #059669);
+      padding: 1.25rem 1.4rem;
+      border-radius: 14px;
+    }
+
+    .nc-perf h3 {
+      color: white;
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .4rem;
+    }
+
+    .nc-perf .perf-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: .5rem;
+      margin-top: .65rem;
+    }
+
+    .perf-item {
+      background: rgba(255, 255, 255, .12);
+      border-radius: 10px;
+      padding: .5rem .6rem;
+      text-align: center;
+    }
+
+    .perf-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .perf-key {
+      font-size: .65rem;
+      color: rgba(255, 255, 255, .7);
+      margin-top: .1rem;
+    }
+
+    /* Dots */
+    .carousel-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      padding: .75rem 1.4rem 1rem;
+    }
+
+    .cdot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--bd);
+      cursor: pointer;
+      transition: all .25s;
+    }
+
+    .cdot.active {
+      background: var(--or);
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    /* INCENTIVE BANNER */
+    .incentive-banner {
+      background: white;
+      border-radius: 14px;
+      border: 1.5px solid var(--bd);
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .ib-text h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--td);
+      line-height: 1.4;
+    }
+
+    .ib-text h3 em {
+      color: var(--or);
+      font-style: normal;
+    }
+
+    .read-more-btn {
+      background: var(--pp);
+      border: 1.5px solid var(--pl);
+      color: var(--pl);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .5rem 1.1rem;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+
+    .read-more-btn:hover {
+      background: var(--pl);
+      color: white;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .85rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 14px;
+      border: 1.5px solid var(--bd);
+      padding: 1rem 1.1rem;
+      text-align: center;
+      transition: all .2s;
+      cursor: default;
+    }
+
+    .stat-card:hover {
+      border-color: var(--pl);
+      box-shadow: 0 4px 14px rgba(124, 58, 237, .1);
+      transform: translateY(-2px);
+    }
+
+    .stat-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--pd);
+      margin-bottom: .2rem;
+    }
+
+    .stat-lbl {
+      font-size: .72rem;
+      color: var(--tm);
+      font-weight: 500;
+    }
+
+    .stat-card.or .stat-val {
+      color: var(--od);
+    }
+
+    .stat-card.gr .stat-val {
+      color: var(--green);
+    }
+
+    /* PERFORMANCE ROW */
+    .perf-row-sec {
+      background: white;
+      border-radius: 14px;
+      border: 1.5px solid var(--bd);
+      margin-bottom: 1.1rem;
+      overflow: hidden;
+    }
+
+    .perf-row-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .9rem 1.4rem;
+      border-bottom: 1px solid var(--bd);
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .perf-row-hd:hover {
+      background: var(--pu);
+    }
+
+    .perf-row-title {
+      font-family: 'Sora', sans-serif;
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .perf-row-hd .chev svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--tm);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform .25s;
+    }
+
+    .perf-row-hd.open .chev svg {
+      transform: rotate(90deg);
+    }
+
+    .perf-expand {
+      display: none;
+      padding: 1.1rem 1.4rem;
+    }
+
+    .perf-expand.open {
+      display: block;
+    }
+
+    .perf-bars {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+
+    .pbar-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .pbar-label {
+      font-size: .8rem;
+      color: var(--tm);
+      min-width: 90px;
+    }
+
+    .pbar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--bd);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .pbar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .pbar-value {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--td);
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* QUICK ACTIONS */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .qa-item {
+      background: white;
+      border-radius: 14px;
+      border: 1.5px solid var(--bd);
+      padding: .9rem .75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+    }
+
+    .qa-item:hover {
+      border-color: var(--pl);
+      background: var(--pu);
+      transform: translateY(-2px);
+    }
+
+    .qa-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qa-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .qa-label {
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--td);
+    }
+
+    /* GO ONLINE BUTTON */
+    .go-online-bar {
+      position: fixed;
+      bottom: 0;
+      left: 260px;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(248, 247, 255, .9);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--bd);
+      z-index: 30;
+    }
+
+    .go-online-btn {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      padding: .1rem .1rem .1rem .9rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 50px;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: .8px;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .go-online-btn.offline {
+      background: linear-gradient(135deg, var(--green), #10B981);
+    }
+
+    .go-online-btn.online {
+      background: linear-gradient(135deg, var(--red), #DC2626);
+    }
+
+    .go-online-btn .btn-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .go-online-btn .btn-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .go-online-btn .btn-text {
+      flex: 1;
+      text-align: center;
+      color: white;
+      padding-right: 46px;
+    }
+
+    /* MODALS */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 10, 76, .5);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 22px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 28px 70px rgba(58, 12, 163, .28);
+      transform: translateY(24px) scale(.97);
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .overlay.open .modal {
+      transform: none;
+    }
+
+    .modal-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.35rem 1.6rem;
+      border-bottom: 1px solid var(--bd);
+      position: relative;
+    }
+
+    .modal-hd::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--pd), var(--pl), var(--or));
+      border-radius: 22px 22px 0 0;
+    }
+
+    .mh-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--td);
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+    }
+
+    .mh-title svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--pl);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .close-x {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1.5px solid var(--bd);
+      background: var(--pu);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .close-x:hover {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .close-x:hover svg {
+      stroke: white;
+    }
+
+    .close-x svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--tm);
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+    }
+
+    .modal-body {
+      padding: 1.5rem 1.6rem;
+    }
+
+    .modal-body h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--td);
+      margin-bottom: .85rem;
+    }
+
+    /* Notifications list */
+    .notif-list {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+    }
+
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .85rem;
+      padding: .85rem 1rem;
+      border-radius: 12px;
+      border: 1.5px solid var(--bd);
+      background: white;
+      transition: background .18s;
+      cursor: pointer;
+    }
+
+    .notif-item:hover {
+      background: var(--pu);
+    }
+
+    .notif-item.unread {
+      border-color: var(--pp);
+      background: var(--pu);
+    }
+
+    .ni-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ni-icon svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .ni-content {
+      flex: 1;
+    }
+
+    .ni-title {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--td);
+      margin-bottom: .15rem;
+    }
+
+    .ni-body {
+      font-size: .78rem;
+      color: var(--tm);
+      line-height: 1.4;
+    }
+
+    .ni-time {
+      font-size: .7rem;
+      color: var(--tl);
+      margin-top: .3rem;
+    }
+
+    .ni-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--or);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .mark-read-btn {
+      width: 100%;
+      margin-top: 1rem;
+      padding: .75rem;
+      border: 1.5px solid var(--pl);
+      background: var(--pu);
+      color: var(--pl);
+      border-radius: 11px;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .mark-read-btn:hover {
+      background: var(--pl);
+      color: white;
+    }
+
+    /* Rewards modal */
+    .reward-tiers {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .rt-card {
+      border-radius: 13px;
+      padding: .9rem 1.1rem;
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .rt-card.bronze {
+      background: #FEF3C7;
+      border-color: #D97706;
+    }
+
+    .rt-card.silver {
+      background: #F1F5F9;
+      border-color: #94A3B8;
+    }
+
+    .rt-card.gold {
+      background: #FFF9C4;
+      border-color: #F59E0B;
+    }
+
+    .rt-card.platinum {
+      background: var(--pp);
+      border-color: var(--pl);
+    }
+
+    .rt-card.active-tier {
+      transform: scale(1.02);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+    }
+
+    .rt-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .rt-info .rt-name {
+      font-family: 'Sora', sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .rt-info .rt-desc {
+      font-size: .75rem;
+      color: var(--tm);
+      margin-top: .1rem;
+    }
+
+    .rt-points {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--pd);
+      margin-left: auto;
+    }
+
+    .progress-bar-wrap {
+      background: var(--bd);
+      border-radius: 6px;
+      height: 10px;
+      margin: 1rem 0 .35rem;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--pl), var(--or));
+      border-radius: 6px;
+      transition: width 1.2s ease;
+    }
+
+    .progress-label {
+      font-size: .75rem;
+      color: var(--tm);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Incentive modal */
+    .incentive-cards {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+    }
+
+    .ic-card {
+      border-radius: 13px;
+      border: 1.5px solid var(--bd);
+      overflow: hidden;
+    }
+
+    .ic-hd {
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      cursor: pointer;
+      background: var(--pu);
+    }
+
+    .ic-hd svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--pl);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ic-hd-title {
+      font-family: 'Sora', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--td);
+      flex: 1;
+    }
+
+    .ic-hd-chev svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--tm);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform .2s;
+    }
+
+    .ic-hd-chev.open svg {
+      transform: rotate(180deg);
+    }
+
+    .ic-body {
+      display: none;
+      padding: .85rem 1rem;
+      border-top: 1px solid var(--bd);
+      font-size: .82rem;
+      color: var(--tm);
+      line-height: 1.6;
+    }
+
+    .ic-body.open {
+      display: block;
+    }
+
+    .ic-body .amount {
+      color: var(--or);
+      font-weight: 700;
+      font-size: .92rem;
+    }
+
+    /* Performance modal */
+    .perf-full {
+      display: flex;
+      flex-direction: column;
+      gap: .85rem;
+    }
+
+    .pf-item {
+      background: var(--pu);
+      border-radius: 13px;
+      padding: 1rem 1.1rem;
+    }
+
+    .pf-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .6rem;
+    }
+
+    .pf-name {
+      font-family: 'Sora', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .pf-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--pd);
+    }
+
+    .pf-bar {
+      height: 8px;
+      background: var(--bd);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .pf-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--pl), var(--or));
+    }
+
+    .pf-hint {
+      font-size: .72rem;
+      color: var(--tl);
+      margin-top: .35rem;
+    }
+
+    /* Support modal */
+    .support-options {
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+    }
+
+    .sopt {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .9rem 1rem;
+      border-radius: 12px;
+      border: 1.5px solid var(--bd);
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .sopt:hover {
+      border-color: var(--pl);
+      background: var(--pu);
+    }
+
+    .sopt-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sopt-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .sopt-title {
+      font-family: 'Sora', sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--td);
+    }
+
+    .sopt-sub {
+      font-size: .75rem;
+      color: var(--tm);
+      margin-top: .1rem;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 6rem;
+      right: 1.5rem;
+      background: var(--pd);
+      color: white;
+      padding: .8rem 1.1rem;
+      border-radius: 11px;
+      font-size: .83rem;
+      box-shadow: 0 8px 24px rgba(58, 12, 163, .3);
+      transform: translateY(80px);
+      transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+      z-index: 999;
+      max-width: 280px;
+      border-left: 4px solid var(--or);
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      border-left-color: var(--green);
+    }
+
+    .toast.error {
+      border-left-color: var(--red);
+    }
+
+    .toast svg {
+      width: 15px;
+      height: 15px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* Responsive */
+    @media(max-width:1050px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media(max-width:880px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .go-online-bar {
+        left: 0;
+      }
+
+      .scroll-area {
+        padding: 1.1rem 1.1rem 6rem;
+      }
+
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .topbar {
+        padding: 0 1.1rem;
+      }
+
+      .user-strip {
+        padding: .9rem 1.1rem;
+      }
+    }
+
+    @media(max-width:480px) {
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar">
+      <div class="sb-top">
+        <div class="sb-brand">
+          <div class="sb-logo"><svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg></div>
+          <span class="sb-brand-text">L<em>Ö</em>RRY<span class="sb-badge">Partner</span></span>
+        </div>
+        <div class="years-badge">
+          <span class="yr-num">10</span>
+          <span class="yr-text">YEARS OF<br />LORRY°</span>
+        </div>
+        <div class="sb-user">
+          <div class="sb-av">
+            <div class="sb-init" id="sbInit2">A</div>
+            <span class="sb-status-dot" id="sbDot2" style="background:var(--red)"></span>
+          </div>
+          <div class="sb-user-info">
+            <div class="sb-uname" id="sbName2">Amol Patil</div>
+            <div class="sb-uveh" id="sbVeh2">2 Wheeler · MH-3X XXXX</div>
+          </div>
+          <button class="view-profile-btn" onclick="window.open('porter-profile.html','_blank')">Profile</button>
+        </div>
+      </div>
+      <nav class="sb-nav">
+        <div class="nav-gl">Main</div>
+        <a class="ni active" href="#"><svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+          </svg>Dashboard</a>
+        <a class="ni" href="#" onclick="openModal('notifModal')"><svg viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>Notifications<span class="badge-count" id="sbNotifCount">3</span></a>
+        <a class="ni" href="#" onclick="openModal('rewardModal')"><svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="6" />
+            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+          </svg>Rewards</a>
+        <div class="nav-gl">More</div>
+        <a class="ni" href="#" onclick="openModal('performanceModal')"><svg viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>Performance</a>
+        <a class="ni" href="#" onclick="openModal('incentiveModal')"><svg viewBox="0 0 24 24">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>Incentives</a>
+        <a class="ni" href="#" onclick="openModal('supportModal')"><svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>Support</a>
+        <a class="ni" href="Lorry-profile.html"><svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>My Profile</a>
+      </nav>
+      <div class="sb-ft">
+        <div class="sb-ver">App Version 5.131.1</div>
+      </div>
+    </aside>
+
+    <!-- ══ MAIN ══ -->
+    <div class="main">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="tb-left">
+          <button class="hamburger" onclick="showToast('Sidebar toggle','')">
+            <svg viewBox="0 0 24 24">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <div class="tb-brand">
+            <b style="font-size:1.5rem;font-weight:800;color:var(--or);">10</b>
+            <span
+              style="font-size:.55rem;font-weight:600;color:rgba(255,255,255,.7);line-height:1.2;margin-left:.3rem;">YEARS
+              OF<br>LORRY°</span>
+          </div>
+        </div>
+        <div class="tb-right">
+          <button class="tb-icon" onclick="openModal('notifModal')">
+            <svg viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+            <span class="notif-count" id="notifBadge">3</span>
+          </button>
+          <button class="tb-icon" onclick="openModal('supportModal')">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- SCROLL CONTENT -->
+      <div class="content">
+
+        <!-- USER STRIP -->
+        <div class="user-strip">
+          <div class="us-left">
+            <div class="us-av">
+              <div class="us-init" id="usInit">A</div>
+              <span class="us-dot" id="usDot" style="background:var(--red)"></span>
+            </div>
+            <div>
+              <div class="us-name" id="usName">Amol Patil</div>
+              <div class="us-veh">2 Wheeler · <span id="usPlate">MH-3X XXXX</span></div>
+            </div>
+          </div>
+          <button class="vp-btn" onclick="window.open('Lorry-profile.html','_blank')">VIEW PROFILE</button>
+        </div>
+
+        <div class="scroll-area">
+
+          <!-- STATS -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-val" id="statTrips">142</div>
+              <div class="stat-lbl">Total Trips</div>
+            </div>
+            <div class="stat-card or">
+              <div class="stat-val" id="statEarnings">₹18,450</div>
+              <div class="stat-lbl">This Month</div>
+            </div>
+            <div class="stat-card gr">
+              <div class="stat-val" id="statRating">4.8★</div>
+              <div class="stat-lbl">Rating</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="statOnline">6.2h</div>
+              <div class="stat-lbl">Online Today</div>
+            </div>
+          </div>
+
+          <!-- QUICK ACTIONS -->
+          <div class="quick-actions">
+            <div class="qa-item" onclick="openModal('rewardModal')">
+              <div class="qa-icon" style="background:#FFF7ED"><svg viewBox="0 0 24 24" fill="var(--or)">
+                  <circle cx="12" cy="8" r="6" />
+                  <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                </svg></div>
+              <span class="qa-label">Rewards</span>
+            </div>
+            <div class="qa-item" onclick="openModal('performanceModal')">
+              <div class="qa-icon" style="background:var(--pp)"><svg viewBox="0 0 24 24" stroke="var(--pl)" fill="none"
+                  stroke-width="2" stroke-linecap="round">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg></div>
+              <span class="qa-label">Performance</span>
+            </div>
+            <div class="qa-item" onclick="openModal('incentiveModal')">
+              <div class="qa-icon" style="background:#ECFDF5"><svg viewBox="0 0 24 24" stroke="var(--green)" fill="none"
+                  stroke-width="2" stroke-linecap="round">
+                  <line x1="12" y1="1" x2="12" y2="23" />
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg></div>
+              <span class="qa-label">Incentives</span>
+            </div>
+            <div class="qa-item" onclick="openModal('supportModal')">
+              <div class="qa-icon" style="background:#EFF6FF"><svg viewBox="0 0 24 24" stroke="#3B82F6" fill="none"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg></div>
+              <span class="qa-label">Support</span>
+            </div>
+          </div>
+
+          <!-- REWARD PROGRAM ROW -->
+          <div class="reward-row" onclick="openModal('rewardModal')">
+            <div class="rr-left">
+              <div class="rr-icon"><svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="6" />
+                  <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                </svg></div>
+              <div>
+                <div class="rr-title">LORRY Reward Program</div>
+                <div class="rr-sub">You have <strong style="color:var(--or)">850 pts</strong> · Silver Tier</div>
+              </div>
+            </div>
+            <div class="rr-chev"><svg viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6" />
+              </svg></div>
+          </div>
+
+          <!-- NOTICEBOARD -->
+          <div class="notice-sec">
+            <div class="notice-hd">
+              <div class="notice-title">Noticeboard</div>
+              <span class="notice-count" id="noticeCount">3 notices</span>
+            </div>
+            <div class="carousel-wrap">
+              <div class="carousel-track" id="carouselTrack">
+                <!-- Slide 1: GST -->
+                <div class="carousel-slide">
+                  <div class="notice-card">
+                    <div class="nc-gst">
+                      <div class="nc-gst-text">
+                        <h3>Fares will now<br>include <b>18% GST</b></h3>
+                        <div class="highlight">Don't worry, your<br>earnings stay the same</div>
+                        <div class="watch-btn" onclick="showToast('▶ Opening video…','')">
+                          <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <polygon points="10 8 16 12 10 16 10 8" />
+                          </svg>
+                          Watch the video to know more
+                        </div>
+                      </div>
+                      <div class="nc-gst-badge">
+                        <div class="gst-label">GST</div>
+                        <div class="fare-update">⚠️ Fare Update</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Slide 2: Reward -->
+                <div class="carousel-slide">
+                  <div class="notice-card">
+                    <div class="nc-reward">
+                      <h3>🏆 10 Years of Lorry!</h3>
+                      <p>Celebrate with us — earn <b style="color:var(--oy)">2x reward points</b> on every trip this
+                        month. Unlock exclusive milestone badges.</p>
+                      <span class="earn-badge">Earn 2X Points Now →</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Slide 3: Performance -->
+                <div class="carousel-slide">
+                  <div class="notice-card">
+                    <div class="nc-perf">
+                      <h3>📊 Your Weekly Snapshot</h3>
+                      <div class="perf-grid">
+                        <div class="perf-item">
+                          <div class="perf-val">28</div>
+                          <div class="perf-key">Trips</div>
+                        </div>
+                        <div class="perf-item">
+                          <div class="perf-val">4.9★</div>
+                          <div class="perf-key">Rating</div>
+                        </div>
+                        <div class="perf-item">
+                          <div class="perf-val">₹4.2k</div>
+                          <div class="perf-key">Earned</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-dots" id="carouselDots"></div>
+          </div>
+
+          <!-- INCENTIVE BANNER -->
+          <div class="incentive-banner">
+            <div class="ib-text">
+              <h3>Check the details of your<br><em>incentives</em> here!</h3>
+            </div>
+            <button class="read-more-btn" onclick="openModal('incentiveModal')">Read more</button>
+          </div>
+
+          <!-- PERFORMANCE SECTION -->
+          <div class="perf-row-sec">
+            <div class="perf-row-hd" id="perfRowHd" onclick="togglePerfExpand()">
+              <div class="perf-row-title">Your Performance</div>
+              <div class="chev"><svg viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg></div>
+            </div>
+            <div class="perf-expand" id="perfExpand">
+              <div class="perf-bars">
+                <div class="pbar-row">
+                  <span class="pbar-label">Acceptance</span>
+                  <div class="pbar-track">
+                    <div class="pbar-fill" id="pbar1"
+                      style="width:0;background:linear-gradient(90deg,var(--pl),var(--or))"></div>
+                  </div>
+                  <span class="pbar-value">82%</span>
+                </div>
+                <div class="pbar-row">
+                  <span class="pbar-label">Completion</span>
+                  <div class="pbar-track">
+                    <div class="pbar-fill" id="pbar2"
+                      style="width:0;background:linear-gradient(90deg,var(--green),#34D399)"></div>
+                  </div>
+                  <span class="pbar-value">95%</span>
+                </div>
+                <div class="pbar-row">
+                  <span class="pbar-label">On-Time</span>
+                  <div class="pbar-track">
+                    <div class="pbar-fill" id="pbar3"
+                      style="width:0;background:linear-gradient(90deg,var(--or),#FB923C)"></div>
+                  </div>
+                  <span class="pbar-value">78%</span>
+                </div>
+                <div class="pbar-row">
+                  <span class="pbar-label">Rating</span>
+                  <div class="pbar-track">
+                    <div class="pbar-fill" id="pbar4" style="width:0;background:linear-gradient(90deg,#F59E0B,#FCD34D)">
+                    </div>
+                  </div>
+                  <span class="pbar-value">96%</span>
+                </div>
+              </div>
+              <button class="mark-read-btn" style="margin-top:1rem;" onclick="openModal('performanceModal')">View Full
+                Report →</button>
+            </div>
+          </div>
+
+        </div><!-- /scroll-area -->
+      </div><!-- /content -->
+
+      <!-- GO ONLINE BAR -->
+      <div class="go-online-bar">
+        <button class="go-online-btn offline" id="goOnlineBtn" onclick="toggleOnline()">
+          <span class="btn-text" id="goOnlineText">GO ONLINE</span>
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24">
+              <polyline points="13 17 18 12 13 7" />
+              <polyline points="6 17 11 12 6 7" />
+            </svg>
+          </span>
+        </button>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /page -->
+
+  <!-- ══════════════════════════════
+     NOTIFICATIONS MODAL
+══════════════════════════════ -->
+  <div class="overlay" id="notifModal" onclick="overlayClose(event,'notifModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="mh-title"><svg viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>Notifications</div>
+        <button class="close-x" onclick="closeModal('notifModal')"><svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg></button>
+      </div>
+      <div class="modal-body">
+        <div class="notif-list" id="notifList"></div>
+        <button class="mark-read-btn" onclick="markAllRead()">Mark All as Read</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+     REWARD MODAL
+══════════════════════════════ -->
+  <div class="overlay" id="rewardModal" onclick="overlayClose(event,'rewardModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="mh-title"><svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="6" />
+            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+          </svg>Porter Reward Program</div>
+        <button class="close-x" onclick="closeModal('rewardModal')"><svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg></button>
+      </div>
+      <div class="modal-body">
+        <h3>Your Current Points</h3>
+        <div
+          style="background:linear-gradient(135deg,var(--pd),var(--pl));border-radius:14px;padding:1.25rem;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:.3rem;">Total Points</div>
+            <div style="font-family:'Sora',sans-serif;font-size:2rem;font-weight:800;color:white;" id="rewardPoints">850
+            </div>
+            <div style="font-size:.75rem;color:var(--or);font-weight:600;margin-top:.2rem;">🥈 Silver Tier</div>
+          </div>
+          <div style="font-size:3rem;">🏆</div>
+        </div>
+        <div style="margin-bottom:.5rem;font-size:.78rem;color:var(--tm);">Progress to Gold (1000 pts)</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="rewardProgress" style="width:0"></div>
+        </div>
+        <div class="progress-label"><span>850 pts</span><span>1000 pts</span></div>
+        <h3 style="margin-top:1.2rem;">Reward Tiers</h3>
+        <div class="reward-tiers">
+          <div class="rt-card bronze">
+            <div class="rt-icon">🥉</div>
+            <div class="rt-info">
+              <div class="rt-name">Bronze</div>
+              <div class="rt-desc">0 – 499 points</div>
+            </div>
+            <div class="rt-points">0pts</div>
+          </div>
+          <div class="rt-card silver active-tier">
+            <div class="rt-icon">🥈</div>
+            <div class="rt-info">
+              <div class="rt-name">Silver ← You</div>
+              <div class="rt-desc">500 – 999 points · 5% bonus</div>
+            </div>
+            <div class="rt-points">500pts</div>
+          </div>
+          <div class="rt-card gold">
+            <div class="rt-icon">🥇</div>
+            <div class="rt-info">
+              <div class="rt-name">Gold</div>
+              <div class="rt-desc">1000 – 2499 points · 10% bonus</div>
+            </div>
+            <div class="rt-points">1000pts</div>
+          </div>
+          <div class="rt-card platinum">
+            <div class="rt-icon">💎</div>
+            <div class="rt-info">
+              <div class="rt-name">Platinum</div>
+              <div class="rt-desc">2500+ points · 20% bonus</div>
+            </div>
+            <div class="rt-points">2500pts</div>
+          </div>
+        </div>
+        <button class="mark-read-btn" onclick="addPoints()">+ Claim 50 Bonus Points</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+     INCENTIVE MODAL
+══════════════════════════════ -->
+  <div class="overlay" id="incentiveModal" onclick="overlayClose(event,'incentiveModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="mh-title"><svg viewBox="0 0 24 24">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>Incentive Details</div>
+        <button class="close-x" onclick="closeModal('incentiveModal')"><svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg></button>
+      </div>
+      <div class="modal-body">
+        <div
+          style="background:var(--ob);border:1px solid #FED7AA;border-radius:10px;padding:.75rem 1rem;margin-bottom:1.1rem;font-size:.82rem;color:var(--od);">
+          💡 Incentives are calculated weekly. Complete more trips to unlock higher tiers.
+        </div>
+        <div class="incentive-cards" id="incentiveCards"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+     PERFORMANCE MODAL
+══════════════════════════════ -->
+  <div class="overlay" id="performanceModal" onclick="overlayClose(event,'performanceModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="mh-title"><svg viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>Your Performance</div>
+        <button class="close-x" onclick="closeModal('performanceModal')"><svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg></button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.1rem;">
+          <div style="background:var(--pp);border-radius:13px;padding:1rem;text-align:center;">
+            <div style="font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:var(--pd);">142</div>
+            <div style="font-size:.72rem;color:var(--tm);">Total Trips</div>
+          </div>
+          <div style="background:var(--ob);border-radius:13px;padding:1rem;text-align:center;">
+            <div style="font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:var(--od);">₹18,450</div>
+            <div style="font-size:.72rem;color:var(--tm);">This Month</div>
+          </div>
+          <div style="background:#ECFDF5;border-radius:13px;padding:1rem;text-align:center;">
+            <div style="font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:var(--green);">4.8★</div>
+            <div style="font-size:.72rem;color:var(--tm);">Avg Rating</div>
+          </div>
+          <div style="background:var(--pu);border-radius:13px;padding:1rem;text-align:center;">
+            <div style="font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:var(--pd);">6.2h</div>
+            <div style="font-size:.72rem;color:var(--tm);">Online Today</div>
+          </div>
+        </div>
+        <h3>Detailed Metrics</h3>
+        <div class="perf-full" id="perfFull"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+     SUPPORT MODAL
+══════════════════════════════ -->
+  <div class="overlay" id="supportModal" onclick="overlayClose(event,'supportModal')">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="mh-title"><svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>Support Center</div>
+        <button class="close-x" onclick="closeModal('supportModal')"><svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg></button>
+      </div>
+      <div class="modal-body">
+        <div
+          style="background:var(--pp);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.1rem;display:flex;align-items:center;gap:.75rem;">
+          <span style="font-size:1.5rem;">🎧</span>
+          <div>
+            <div style="font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;color:var(--td);">Support
+              Available</div>
+            <div style="font-size:.75rem;color:var(--tm);">Mon–Sat, 8 AM – 10 PM</div>
+          </div>
+        </div>
+        <h3>How can we help?</h3>
+        <div class="support-options">
+          <div class="sopt" onclick="showToast('📞 Connecting to support…','success')">
+            <div class="sopt-icon" style="background:#ECFDF5"><svg viewBox="0 0 24 24" stroke="var(--green)" fill="none"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.6 1.3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg></div>
+            <div>
+              <div class="sopt-title">Call Support</div>
+              <div class="sopt-sub">Speak with an agent</div>
+            </div>
+          </div>
+          <div class="sopt" onclick="showToast('💬 Opening chat…','')">
+            <div class="sopt-icon" style="background:#EFF6FF"><svg viewBox="0 0 24 24" stroke="#3B82F6" fill="none"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg></div>
+            <div>
+              <div class="sopt-title">Live Chat</div>
+              <div class="sopt-sub">Chat with support</div>
+            </div>
+          </div>
+          <div class="sopt" onclick="showToast('📧 Opening email form…','')">
+            <div class="sopt-icon" style="background:var(--ob)"><svg viewBox="0 0 24 24" stroke="var(--or)" fill="none"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg></div>
+            <div>
+              <div class="sopt-title">Email Us</div>
+              <div class="sopt-sub">support@lorry.in</div>
+            </div>
+          </div>
+          <div class="sopt" onclick="showToast('❓ Opening FAQ…','')">
+            <div class="sopt-icon" style="background:var(--pp)"><svg viewBox="0 0 24 24" stroke="var(--pl)" fill="none"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg></div>
+            <div>
+              <div class="sopt-title">FAQ</div>
+              <div class="sopt-sub">Browse common questions</div>
+            </div>
+          </div>
+          <div class="sopt" onclick="showToast('🚨 Filing emergency report…','error')">
+            <div class="sopt-icon" style="background:#FEE2E2"><svg viewBox="0 0 24 24" stroke="var(--red)" fill="none"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg></div>
+            <div>
+              <div class="sopt-title">Emergency Report</div>
+              <div class="sopt-sub">Report an incident</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 24 24" id="toastIcon">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+    <span id="toastMsg"></span>
+  </div>
+
+  <script>
+    // ══ STATE ══
+    const state = {
+      online: false,
+      notifCount: 3,
+      rewardPoints: 850,
+      notifications: [
+        { id: 1, unread: true, icon: '🔔', color: '#EDE9FE', title: 'New Fare Update', body: 'Fares now include 18% GST. Your earnings remain unchanged.', time: '2 hrs ago' },
+        { id: 2, unread: true, icon: '🏆', color: '#FFF7ED', title: 'Reward Points Added', body: 'You earned 50 points from 5 completed trips today!', time: '4 hrs ago' },
+        { id: 3, unread: true, icon: '⭐', color: '#ECFDF5', title: 'Rating Update', body: 'A customer rated you 5 stars on your last delivery.', time: 'Yesterday' },
+        { id: 4, unread: false, icon: '💰', color: '#F5F3FF', title: 'Weekly Payout Processed', body: '₹4,250 has been credited to your bank account.', time: '2 days ago' },
+        { id: 5, unread: false, icon: '📢', color: '#FEF3C7', title: '10 Years of Porter', body: 'Earn 2x points on every trip this month. Celebrate with us!', time: '3 days ago' },
+      ],
+      incentives: [
+        { title: 'Trip Count Bonus', icon: '🚗', body: 'Complete <span class="amount">20 trips</span> this week and earn <span class="amount">₹500</span> bonus. You have completed <b>14/20</b> trips so far.' },
+        { title: 'Weekend Surge Bonus', icon: '⚡', body: 'Earn <span class="amount">1.5x fare</span> on all weekend trips (Sat–Sun). Auto-applied to your earnings.' },
+        { title: 'Customer Rating Bonus', icon: '⭐', body: 'Maintain above 4.5★ rating to earn <span class="amount">₹200/week</span> bonus. Your current rating: <span class="amount">4.8★</span>' },
+        { title: 'Referral Program', icon: '👥', body: 'Refer a partner and earn <span class="amount">₹300</span> when they complete their first 10 trips. Share your code: <b>AMOL2024</b>' },
+        { title: 'Peak Hour Bonus', icon: '🕐', body: 'Work during 8–11 AM and 5–9 PM peak hours to earn <span class="amount">₹50/hour</span> extra on top of your regular fare.' },
+      ],
+      perfMetrics: [
+        { name: 'Acceptance Rate', value: 82, target: 90, hint: 'Accept more trips to improve' },
+        { name: 'Completion Rate', value: 95, target: 98, hint: 'Excellent! Almost at target' },
+        { name: 'On-Time Rate', value: 78, target: 85, hint: 'Try to reduce delays' },
+        { name: 'Customer Rating', value: 96, target: 95, hint: 'Above target — great job!' },
+        { name: 'Online Hours', value: 70, target: 80, hint: 'Spend more time online' },
+      ]
+    };
+
+    // ══ RENDER FUNCTIONS ══
+    function renderNotifications() {
+      const list = document.getElementById('notifList');
+      list.innerHTML = '';
+      state.notifications.forEach(n => {
+        const el = document.createElement('div');
+        el.className = 'notif-item' + (n.unread ? ' unread' : '');
+        el.innerHTML = `
+      <div class="ni-icon" style="background:${n.color};font-size:1.1rem;">${n.icon}</div>
+      <div class="ni-content">
+        <div class="ni-title">${n.title}</div>
+        <div class="ni-body">${n.body}</div>
+        <div class="ni-time">${n.time}</div>
+      </div>
+      ${n.unread ? '<div class="ni-dot"></div>' : ''}
+    `;
+        el.onclick = () => { n.unread = false; updateNotifCount(); renderNotifications(); };
+        list.appendChild(el);
+      });
+    }
+
+    function markAllRead() {
+      state.notifications.forEach(n => n.unread = false);
+      updateNotifCount();
+      renderNotifications();
+      showToast('✅ All notifications marked as read', 'success');
+    }
+
+    function updateNotifCount() {
+      const count = state.notifications.filter(n => n.unread).length;
+      state.notifCount = count;
+      document.getElementById('notifBadge').textContent = count;
+      document.getElementById('notifBadge').style.display = count > 0 ? 'flex' : 'none';
+      document.getElementById('sbNotifCount').textContent = count;
+      document.getElementById('sbNotifCount').style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    function renderRewardProgress() {
+      setTimeout(() => {
+        const pct = Math.min((state.rewardPoints / 1000) * 100, 100);
+        const el = document.getElementById('rewardProgress');
+        if (el) el.style.width = pct + '%';
+        const pts = document.getElementById('rewardPoints');
+        if (pts) pts.textContent = state.rewardPoints;
+      }, 100);
+    }
+
+    function addPoints() {
+      state.rewardPoints += 50;
+      renderRewardProgress();
+      showToast('🎉 50 bonus points added! Total: ' + state.rewardPoints + ' pts', 'success');
+    }
+
+    function renderIncentives() {
+      const container = document.getElementById('incentiveCards');
+      container.innerHTML = '';
+      state.incentives.forEach((inc, i) => {
+        const card = document.createElement('div');
+        card.className = 'ic-card';
+        card.innerHTML = `
+      <div class="ic-hd" onclick="toggleIncentive(${i})">
+        <span style="font-size:1rem;">${inc.icon}</span>
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:var(--pl);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span class="ic-hd-title">${inc.title}</span>
+        <div class="ic-hd-chev" id="ichev${i}"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="ic-body" id="icbody${i}">${inc.body}</div>
+    `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleIncentive(i) {
+      const body = document.getElementById('icbody' + i);
+      const chev = document.getElementById('ichev' + i);
+      body.classList.toggle('open');
+      chev.classList.toggle('open');
+    }
+
+    function renderPerfFull() {
+      const container = document.getElementById('perfFull');
+      container.innerHTML = '';
+      state.perfMetrics.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'pf-item';
+        const pct = m.value;
+        const color = pct >= m.target ? 'var(--green)' : pct >= m.target - 10 ? 'var(--or)' : 'var(--red)';
+        div.innerHTML = `
+      <div class="pf-top">
+        <span class="pf-name">${m.name}</span>
+        <span class="pf-val" style="color:${color}">${m.value}%</span>
+      </div>
+      <div class="pf-bar"><div class="pf-bar-fill" style="width:${m.value}%;background:${color}"></div></div>
+      <div class="pf-hint">Target: ${m.target}% · ${m.hint}</div>
+    `;
+        container.appendChild(div);
+      });
+    }
+
+    // ══ CAROUSEL ══
+    let currentSlide = 0;
+    const totalSlides = 3;
+    function initCarousel() {
+      const dots = document.getElementById('carouselDots');
+      dots.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const d = document.createElement('div');
+        d.className = 'cdot' + (i === 0 ? ' active' : '');
+        d.onclick = () => goToSlide(i);
+        dots.appendChild(d);
+      }
+      setInterval(() => goToSlide((currentSlide + 1) % totalSlides), 4000);
+    }
+    function goToSlide(n) {
+      currentSlide = n;
+      document.getElementById('carouselTrack').style.transform = `translateX(-${n * 100}%)`;
+      document.querySelectorAll('.cdot').forEach((d, i) => d.classList.toggle('active', i === n));
+    }
+
+    // ══ PERFORMANCE EXPAND ══
+    function togglePerfExpand() {
+      const hd = document.getElementById('perfRowHd');
+      const exp = document.getElementById('perfExpand');
+      hd.classList.toggle('open');
+      exp.classList.toggle('open');
+      if (exp.classList.contains('open')) {
+        setTimeout(() => {
+          document.getElementById('pbar1').style.width = '82%';
+          document.getElementById('pbar2').style.width = '95%';
+          document.getElementById('pbar3').style.width = '78%';
+          document.getElementById('pbar4').style.width = '96%';
+        }, 50);
+      }
+    }
+
+    // ══ GO ONLINE TOGGLE ══
+    function toggleOnline() {
+      state.online = !state.online;
+      const btn = document.getElementById('goOnlineBtn');
+      const txt = document.getElementById('goOnlineText');
+      const dot = document.getElementById('usDot');
+      const dot2 = document.getElementById('sbDot2');
+      const heroDot = document.querySelector('.us-dot');
+      if (state.online) {
+        btn.className = 'go-online-btn online';
+        btn.querySelector('.btn-icon svg').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+        txt.textContent = 'GO OFFLINE';
+        dot.style.background = 'var(--green)';
+        dot2.style.background = 'var(--green)';
+        showToast('🟢 You are now Online — ready for trips!', 'success');
+      } else {
+        btn.className = 'go-online-btn offline';
+        btn.querySelector('.btn-icon svg').innerHTML = '<polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/>';
+        txt.textContent = 'GO ONLINE';
+        dot.style.background = 'var(--red)';
+        dot2.style.background = 'var(--red)';
+        showToast('🔴 You are now Offline', '');
+      }
+    }
+
+    // ══ MODALS ══
+    function openModal(id) {
+      if (id === 'notifModal') renderNotifications();
+      if (id === 'rewardModal') renderRewardProgress();
+      if (id === 'incentiveModal') renderIncentives();
+      if (id === 'performanceModal') renderPerfFull();
+      document.getElementById(id).classList.add('open');
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    function overlayClose(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(m => m.classList.remove('open')); });
+
+    // ══ TOAST ══
+    let toastTimer;
+    function showToast(msg, type = '') {
+      clearTimeout(toastTimer);
+      const t = document.getElementById('toast');
+      const icon = document.getElementById('toastIcon');
+      document.getElementById('toastMsg').textContent = msg;
+      t.className = 'toast' + (type ? ' ' + type : '');
+      icon.innerHTML = type === 'error' ? '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' : '<polyline points="20 6 9 17 4 12"/>';
+      t.classList.add('show');
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    // ══ INIT ══
+    initCarousel();
+    updateNotifCount();
+  </script>
+</body>
+
+</html>
