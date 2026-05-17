@@ -59,6 +59,31 @@
       animation: meshDrift 12s ease-in-out infinite alternate;
     }
 
+    .sb-brand-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: rgb(251, 64, 64);
+      letter-spacing: -.2px;
+    }
+
+    .sb-brand-text em {
+      color: var(--or);
+      font-style: normal;
+    }
+
+    .sb-badge {
+      background: rgba(249, 115, 22, .25);
+      color: #6f3e05;
+      font-size: .58rem;
+      font-weight: 700;
+      padding: .1rem .45rem;
+      border-radius: 20px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      margin-left: .3rem;
+    }
+
     @keyframes meshDrift {
       0% {
         transform: scale(1) translate(0, 0);
@@ -493,8 +518,14 @@
 
     <!-- Title -->
     <h1 class="headline" id="dialog-title">
-      Allow <span>LorryGo Pilot</span><br>to access your location?
+      Allow <span class="sb-brand-text">L<em>Ö</em>RRY<em style="color: purple;">GÖ</em><span
+          class="sb-badge">Pilot</span></span><br>to access
+      your
+      location?
     </h1>
+
+
+
     <p class="sub">Choose how precisely we see you</p>
 
     <!-- Map Options -->
@@ -561,7 +592,8 @@
 
     <!-- Buttons -->
     <div class="btn-group">
-      <button class="btn btn-primary" id="btn-while" aria-label="Allow location while using the app"><a href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\update-LD\2langsele.html"></a>
+      <button class="btn btn-primary" id="btn-while" aria-label="Allow location while using the app"><a
+          href="C:\Users\DADAGA\Desktop\Dadaga\HtmlCss\update-LD\2langsele.html"></a>
         While using the app
       </button>
       <button class="btn btn-secondary" id="btn-once" aria-label="Allow location only this time">
