@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porter Partner – Location Access</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #FF6B2C;
+      --orange-light: #FF8F5E;
+      --orange-glow: rgba(255, 107, 44, 0.25);
+      --purple: #5B2D8E;
+      --purple-mid: #7B4DB0;
+      --purple-light: #A87DD6;
+      --purple-glow: rgba(91, 45, 142, 0.20);
+      --white: #FFFFFF;
+      --off-white: #F9F5FF;
+      --text-dark: #1E0A40;
+      --text-mid: #5A4870;
+      --card-radius: 28px;
+      --btn-radius: 50px;
+      --transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Animated mesh background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 10%, rgba(255, 107, 44, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 85% 80%, rgba(91, 45, 142, 0.14) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 55% 50%, rgba(168, 125, 214, 0.08) 0%, transparent 65%);
+      z-index: 0;
+      animation: meshDrift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes meshDrift {
+      0% {
+        transform: scale(1) translate(0, 0);
+      }
+
+      100% {
+        transform: scale(1.06) translate(-12px, 8px);
+      }
+    }
+
+    /* ── Floating blobs ── */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.55;
+      z-index: 0;
+      animation: float linear infinite alternate;
+      pointer-events: none;
+    }
+
+    .blob-1 {
+      width: 260px;
+      height: 260px;
+      background: var(--orange-light);
+      top: -80px;
+      left: -60px;
+      animation-duration: 9s;
+    }
+
+    .blob-2 {
+      width: 200px;
+      height: 200px;
+      background: var(--purple-light);
+      bottom: -60px;
+      right: -50px;
+      animation-duration: 11s;
+      animation-delay: -4s;
+    }
+
+    .blob-3 {
+      width: 140px;
+      height: 140px;
+      background: var(--orange);
+      bottom: 20%;
+      left: 5%;
+      animation-duration: 7s;
+      animation-delay: -2s;
+      opacity: .3;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      100% {
+        transform: translateY(30px) rotate(15deg);
+      }
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px) saturate(1.6);
+      -webkit-backdrop-filter: blur(20px) saturate(1.6);
+      border-radius: var(--card-radius);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 8px 40px rgba(91, 45, 142, 0.13),
+        0 2px 8px rgba(255, 107, 44, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      width: 100%;
+      max-width: 420px;
+      padding: 36px 32px 32px;
+      animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ── Icon badge ── */
+    .icon-badge {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--orange) 0%, var(--purple-mid) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px var(--orange-glow), 0 2px 8px var(--purple-glow);
+      animation: badgePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+
+      0%,
+      100% {
+        box-shadow: 0 6px 20px var(--orange-glow), 0 2px 8px var(--purple-glow);
+      }
+
+      50% {
+        box-shadow: 0 8px 32px rgba(255, 107, 44, 0.40), 0 4px 16px rgba(91, 45, 142, 0.30);
+      }
+    }
+
+    .icon-badge svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* ── Headline ── */
+    .headline {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.1rem, 4.5vw, 1.35rem);
+      font-weight: 700;
+      color: var(--text-dark);
+      text-align: center;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .headline span {
+      color: var(--orange);
+    }
+
+    .sub {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      text-align: center;
+      margin-bottom: 28px;
+      font-weight: 300;
+    }
+
+    /* ── Map options ── */
+    .map-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .map-card {
+      border-radius: 18px;
+      border: 2px solid transparent;
+      background: var(--off-white);
+      padding: 16px 12px 14px;
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .map-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .map-card.precise::before {
+      background: linear-gradient(135deg, rgba(255, 107, 44, 0.08), rgba(91, 45, 142, 0.06));
+    }
+
+    .map-card.approx::before {
+      background: linear-gradient(135deg, rgba(91, 45, 142, 0.08), rgba(168, 125, 214, 0.06));
+    }
+
+    .map-card.active {
+      border-color: var(--orange);
+      background: #fff;
+    }
+
+    .map-card.active::before {
+      opacity: 1;
+    }
+
+    .map-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .map-visual {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      border: 2.5px solid rgba(91, 45, 142, 0.15);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+    }
+
+    /* SVG map illustration */
+    .map-visual svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-label {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      letter-spacing: 0.02em;
+    }
+
+    .map-card.active .map-label {
+      color: var(--orange);
+    }
+
+    /* ── Check badge on active ── */
+    .check-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0);
+      transition: var(--transition);
+    }
+
+    .map-card.active .check-badge {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(91, 45, 142, 0.15), transparent);
+      margin-bottom: 22px;
+    }
+
+    /* ── Buttons ── */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px 24px;
+      border-radius: var(--btn-radius);
+      border: none;
+      cursor: pointer;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.18);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after {
+      opacity: 1;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Primary */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange) 0%, #D94FE0 100%);
+      color: var(--white);
+      box-shadow: 0 6px 22px rgba(255, 107, 44, 0.35), 0 2px 8px rgba(91, 45, 142, 0.2);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 10px 30px rgba(255, 107, 44, 0.45), 0 4px 14px rgba(91, 45, 142, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Secondary */
+    .btn-secondary {
+      background: rgba(91, 45, 142, 0.07);
+      color: var(--purple);
+      border: 1.5px solid rgba(91, 45, 142, 0.18);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(91, 45, 142, 0.12);
+      border-color: var(--purple-mid);
+      transform: translateY(-1px);
+    }
+
+    /* Deny */
+    .btn-deny {
+      background: transparent;
+      color: var(--text-mid);
+      border: 1.5px solid rgba(90, 72, 112, 0.15);
+    }
+
+    .btn-deny:hover {
+      background: rgba(90, 72, 112, 0.05);
+      color: var(--text-dark);
+    }
+
+    /* ── Ripple ── */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(0);
+      animation: rippleAnim 0.55s linear;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ── Footer note ── */
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+
+    .footer-note a {
+      color: var(--purple-mid);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: linear-gradient(135deg, var(--purple) 0%, var(--orange) 100%);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 28px rgba(91, 45, 142, 0.35);
+      z-index: 999;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s;
+      opacity: 0;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 400px) {
+      .card {
+        padding: 28px 20px 24px;
+      }
+
+      .map-visual {
+        width: 64px;
+        height: 64px;
+      }
+    }
+
+    @media (min-width: 640px) {
+      body {
+        background-attachment: fixed;
+      }
+
+      .card {
+        padding: 44px 44px 40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+
+    <!-- Icon -->
+    <div class="icon-badge" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#fff" />
+        <circle cx="12" cy="9" r="2.5" fill="rgba(255,107,44,0.85)" />
+      </svg>
+    </div>
+
+    <!-- Title -->
+    <h1 class="headline" id="dialog-title">
+      Allow <span>LorryGo Pilot</span><br>to access your location?
+    </h1>
+    <p class="sub">Choose how precisely we see you</p>
+
+    <!-- Map Options -->
+    <div class="map-options" role="radiogroup" aria-label="Location precision">
+
+      <div class="map-card precise active" role="radio" aria-checked="true" tabindex="0" data-mode="precise">
+        <div class="check-badge" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M2 5.2L4.2 7.5L8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="map-visual" aria-hidden="true">
+          <!-- Precise map SVG -->
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect width="80" height="80" fill="#EDE9F7" />
+            <!-- Streets -->
+            <line x1="0" y1="28" x2="80" y2="28" stroke="#C5B8E0" stroke-width="3" />
+            <line x1="0" y1="52" x2="80" y2="52" stroke="#C5B8E0" stroke-width="2" />
+            <line x1="22" y1="0" x2="22" y2="80" stroke="#C5B8E0" stroke-width="3" />
+            <line x1="58" y1="0" x2="58" y2="80" stroke="#C5B8E0" stroke-width="2" />
+            <!-- Blocks -->
+            <rect x="2" y="30" width="18" height="20" rx="2" fill="#D8CFEE" opacity=".7" />
+            <rect x="24" y="30" width="32" height="20" rx="2" fill="#D8CFEE" opacity=".7" />
+            <rect x="60" y="30" width="18" height="20" rx="2" fill="#D8CFEE" opacity=".7" />
+            <!-- Pin -->
+            <circle cx="40" cy="36" r="10" fill="rgba(255,107,44,0.15)" />
+            <circle cx="40" cy="36" r="5" fill="rgba(255,107,44,0.25)" />
+            <path d="M40 26c-4.4 0-8 3.6-8 8 0 6 8 16 8 16s8-10 8-16c0-4.4-3.6-8-8-8z" fill="#FF6B2C" />
+            <circle cx="40" cy="34" r="2.5" fill="#fff" />
+          </svg>
+        </div>
+        <div class="map-label">Precise</div>
+      </div>
+
+      <div class="map-card approx" role="radio" aria-checked="false" tabindex="0" data-mode="approx">
+        <div class="check-badge" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M2 5.2L4.2 7.5L8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="map-visual" aria-hidden="true">
+          <!-- Approximate map SVG -->
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect width="80" height="80" fill="#F5EFF9" />
+            <!-- Highway style roads -->
+            <path d="M0 40 Q20 20 40 40 Q60 60 80 40" stroke="#C5B8E0" stroke-width="4" fill="none" />
+            <path d="M0 55 Q30 45 80 55" stroke="#D4CAEC" stroke-width="2" fill="none" />
+            <path d="M20 0 L30 80" stroke="#C5B8E0" stroke-width="2" fill="none" />
+            <!-- Fuzzy radius circle -->
+            <circle cx="40" cy="40" r="22" fill="rgba(91,45,142,0.10)" stroke="rgba(91,45,142,0.25)" stroke-width="1.5"
+              stroke-dasharray="4 3" />
+            <circle cx="40" cy="40" r="6" fill="#7B4DB0" opacity=".7" />
+            <circle cx="40" cy="40" r="2.5" fill="#fff" />
+          </svg>
+        </div>
+        <div class="map-label">Approximate</div>
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Buttons -->
+    <div class="btn-group">
+      <button class="btn btn-primary" id="btn-while" aria-label="Allow location while using the app">
+        While using the app
+      </button>
+      <button class="btn btn-secondary" id="btn-once" aria-label="Allow location only this time">
+        Only this time
+      </button>
+      <button class="btn btn-deny" id="btn-deny" aria-label="Don't allow location access">
+        Don't allow
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <p class="footer-note">
+      Your location is used only to match you with nearby deliveries.<br>
+      <a href="#">Privacy Policy</a> · <a href="#">Learn more</a>
+    </p>
+
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* ── Map card selection ── */
+    const cards = document.querySelectorAll('.map-card');
+    cards.forEach(card => {
+      const activate = () => {
+        cards.forEach(c => { c.classList.remove('active'); c.setAttribute('aria-checked', 'false'); });
+        card.classList.add('active');
+        card.setAttribute('aria-checked', 'true');
+      };
+      card.addEventListener('click', activate);
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+    });
+
+    /* ── Ripple effect ── */
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        const r = document.createElement('span');
+        r.className = 'ripple';
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px`;
+        this.appendChild(r);
+        setTimeout(() => r.remove(), 600);
+      });
+    });
+
+    /* ── Toast helper ── */
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg) {
+      clearTimeout(toastTimer);
+      toast.textContent = msg;
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    /* ── Button actions ── */
+    document.getElementById('btn-while').addEventListener('click', () => {
+      const mode = document.querySelector('.map-card.active').dataset.mode;
+      showToast(`✓ ${mode === 'precise' ? 'Precise' : 'Approximate'} location allowed while using app`);
+    });
+    document.getElementById('btn-once').addEventListener('click', () => {
+      showToast('📍 Location granted for this session only');
+    });
+    document.getElementById('btn-deny').addEventListener('click', () => {
+      showToast('🚫 Location access denied');
+    });
+  </script>
+</body>
+
+</html>
