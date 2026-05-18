@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Porter Partner – Verify OTP</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LorryGo Pilot – Verify OTP</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
-    rel="stylesheet" />
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     *,
     *::before,
@@ -18,368 +18,229 @@
     }
 
     :root {
-      --purple-deep: #3A0CA3;
-      --purple-mid: #5B21B6;
-      --purple-light: #7C3AED;
-      --purple-pale: #EDE9FE;
-      --purple-ultra: #F5F3FF;
       --orange: #F97316;
-      --orange-light: #FED7AA;
-      --orange-dark: #EA580C;
+      --blue: #1A56DB;
+      --blue-dark: #1447B4;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --dark: #111827;
       --white: #FFFFFF;
-      --off-white: #FAF9FF;
-      --text-dark: #1E0A4C;
-      --text-mid: #6B7280;
-      --border: #DDD6FE;
     }
 
     html,
     body {
       min-height: 100%;
+      background: #1c1c2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: 'DM Sans', sans-serif;
-      background: var(--off-white);
-      color: var(--text-dark);
     }
 
-    /* ── PAGE LAYOUT ── */
-    .page {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 100vh;
-    }
-
-    /* ── LEFT PANEL ── */
-    .left-panel {
-      position: relative;
-      background: linear-gradient(150deg, var(--purple-deep) 0%, var(--purple-mid) 55%, var(--purple-light) 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 3rem;
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      min-height: 100dvh;
+      max-height: 844px;
+      background: #fff;
+      border-radius: 40px;
       overflow: hidden;
-    }
-
-    .left-panel::before {
-      content: '';
-      position: absolute;
-      width: 380px;
-      height: 380px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(249, 115, 22, .3) 0%, transparent 70%);
-      top: -60px;
-      right: -60px;
-      animation: glow 5s ease-in-out infinite alternate;
-    }
-
-    .left-panel::after {
-      content: '';
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, .06) 0%, transparent 70%);
-      bottom: -40px;
-      left: -40px;
-    }
-
-    @keyframes glow {
-      from {
-        transform: scale(1);
-        opacity: .7;
-      }
-
-      to {
-        transform: scale(1.12);
-        opacity: 1;
-      }
-    }
-
-    .left-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      color: var(--white);
-    }
-
-    /* OTP shield illustration */
-    .shield-wrap {
-      width: 110px;
-      height: 110px;
-      background: rgba(255, 255, 255, .1);
-      border: 2px solid rgba(255, 255, 255, .2);
-      border-radius: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 2rem;
-      backdrop-filter: blur(10px);
-      animation: float 4s ease-in-out infinite;
-    }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
-    .shield-wrap svg {
-      width: 54px;
-      height: 54px;
-    }
-
-    .left-content h1 {
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-      font-weight: 700;
-      line-height: 1.25;
-      margin-bottom: .8rem;
-    }
-
-    .left-content h1 span {
-      color: var(--orange);
-    }
-
-    .left-content p {
-      font-size: .92rem;
-      font-weight: 300;
-      opacity: .8;
-      line-height: 1.75;
-      max-width: 300px;
-      margin: 0 auto 2.5rem;
-    }
-
-    .security-badges {
       display: flex;
       flex-direction: column;
-      gap: .85rem;
-      text-align: left;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
+      position: relative;
     }
 
-    .badge-item {
-      display: flex;
-      align-items: center;
-      gap: .8rem;
-      background: rgba(255, 255, 255, .08);
-      border: 1px solid rgba(255, 255, 255, .12);
-      border-radius: 12px;
-      padding: .75rem 1rem;
-      backdrop-filter: blur(4px);
+    @media (max-width: 430px) {
+      .phone {
+        border-radius: 0;
+        max-height: 100dvh;
+      }
+
+      html,
+      body {
+        background: #fff;
+      }
     }
 
-    .badge-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: rgba(249, 115, 22, .25);
+    /* Status bar */
+    .status-bar {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
+      padding: 14px 22px 8px;
       flex-shrink: 0;
     }
 
-    .badge-icon svg {
-      width: 18px;
-      height: 18px;
-      fill: var(--orange);
-    }
-
-    .badge-text {
-      font-size: .83rem;
-      opacity: .9;
-      line-height: 1.4;
-    }
-
-    .badge-text strong {
-      display: block;
-      font-size: .88rem;
-      margin-bottom: .1rem;
-    }
-
-    /* ── RIGHT PANEL ── */
-    .right-panel {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 2.5rem;
-      background: var(--white);
-    }
-
-    .card {
-      width: 100%;
-      max-width: 460px;
-    }
-
-    /* Back button */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      color: var(--purple-mid);
-      font-size: .88rem;
-      font-weight: 500;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      background: none;
-      padding: 0;
-      margin-bottom: 2rem;
-      transition: color .2s, gap .2s;
-    }
-
-    .back-btn:hover {
-      color: var(--orange);
-      gap: .3rem;
-    }
-
-    .back-btn svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* Brand */
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      margin-bottom: 2rem;
-    }
-
-    .brand-logo {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, var(--purple-deep), var(--purple-light));
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .brand-logo svg {
-      width: 20px;
-      height: 20px;
-      fill: white;
-    }
-
-    .brand-name {
+    .status-time {
       font-family: 'Sora', sans-serif;
-      font-size: 1.3rem;
+      font-size: 14px;
       font-weight: 700;
-      color: var(--purple-deep);
-      letter-spacing: -.3px;
+      color: var(--dark);
     }
 
-    .brand-name span {
-      color: var(--orange);
-    }
-
-    .brand-badge {
-      margin-left: .4rem;
-      background: var(--purple-pale);
-      color: var(--purple-mid);
-      font-size: .62rem;
-      font-weight: 600;
-      padding: .15rem .5rem;
-      border-radius: 20px;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-    }
-
-    .card h2 {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.5rem;
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
       font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: .35rem;
+      color: var(--dark);
     }
 
-    .card .sub {
-      font-size: .9rem;
-      color: var(--text-mid);
-      margin-bottom: 1.8rem;
-    }
-
-    /* Phone number display */
-    .number-display {
+    /* Top nav */
+    .top-nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--purple-ultra);
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: .85rem 1.1rem;
-      margin-bottom: 1rem;
+      padding: 10px 16px 12px;
+      border-bottom: 1px solid var(--gray-200);
+      flex-shrink: 0;
     }
 
-    .number-left {
+    .back-btn {
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
-      gap: .65rem;
-    }
-
-    .number-flag {
-      font-size: 1.2rem;
-    }
-
-    .number-val {
-      font-family: 'Sora', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      letter-spacing: .5px;
-    }
-
-    .number-change {
-      font-size: .82rem;
-      font-weight: 600;
-      color: var(--orange);
+      justify-content: center;
       cursor: pointer;
-      border: none;
-      background: none;
-      padding: 0;
-      transition: color .2s;
+      border-radius: 8px;
+      color: var(--dark);
+      transition: background 0.15s;
+      font-size: 22px;
+      font-weight: 300;
     }
 
-    .number-change:hover {
-      color: var(--orange-dark);
+    .back-btn:hover {
+      background: var(--gray-100);
     }
 
-    /* OTP sent notice */
-    .otp-notice {
-      font-size: .85rem;
-      color: var(--text-mid);
-      margin-bottom: 1.6rem;
-      line-height: 1.5;
+    .nav-logo {
+      font-family: 'Sora', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--orange);
+      opacity: 0.22;
+      letter-spacing: 2px;
     }
 
-    /* Auto-read spinner */
-    .auto-read {
+    .nav-icons {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-icon {
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
-      gap: .7rem;
-      background: var(--purple-ultra);
-      border: 1.5px dashed var(--border);
-      border-radius: 12px;
-      padding: .75rem 1rem;
-      margin-bottom: 1.8rem;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--gray-500);
+      transition: color 0.15s;
+    }
+
+    .nav-icon:hover {
+      color: var(--dark);
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 44px 28px 24px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Phone number row */
+    .phone-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .masked-number {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dot-group {
+      display: flex;
+      gap: 2px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gray-400);
+    }
+
+    .slash {
+      color: var(--gray-400);
+      font-size: 16px;
+      margin: 0 2px;
+      font-weight: 300;
+    }
+
+    .change-link {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blue);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: color 0.15s;
+    }
+
+    .change-link:hover {
+      color: var(--blue-dark);
+      text-decoration: underline;
+    }
+
+    .otp-sent-text {
+      font-size: 14px;
+      color: var(--gray-500);
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+
+    /* Auto-read spinner row */
+    .auto-read-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 36px;
     }
 
     .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2.5px solid var(--border);
-      border-top-color: var(--purple-light);
+      width: 24px;
+      height: 24px;
+      border: 2.5px solid var(--gray-200);
+      border-top-color: var(--gray-500);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       flex-shrink: 0;
@@ -392,558 +253,426 @@
     }
 
     .auto-read-text {
-      font-size: .85rem;
-      color: var(--purple-mid);
+      font-size: 14px;
+      color: var(--gray-700);
       font-weight: 500;
     }
 
-    /* OTP boxes */
-    .otp-label {
-      display: block;
-      font-size: .8rem;
-      font-weight: 500;
-      color: var(--text-mid);
-      margin-bottom: .75rem;
-      letter-spacing: .2px;
-    }
-
-    .otp-boxes {
-      display: flex;
-      gap: .75rem;
-      margin-bottom: 1.8rem;
-    }
-
-    .otp-box {
-      flex: 1;
-      height: 62px;
-      width: 25px;
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      text-align: center;
-      font-family: 'Sora', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--purple-deep);
-      background: var(--white);
-      outline: none;
-      transition: border-color .2s, box-shadow .2s, background .2s;
-      caret-color: var(--orange);
-    }
-
-    .otp-box:focus {
-      border-color: var(--purple-light);
-      box-shadow: 0 0 0 4px rgba(124, 58, 237, .12);
-      background: var(--purple-ultra);
-    }
-
-    .otp-box.filled {
-      border-color: var(--orange);
-      background: #FFF7ED;
-    }
-
-    .otp-box.error {
-      border-color: #EF4444;
-      background: #FEF2F2;
-      animation: shake .3s ease;
-    }
-
-    @keyframes shake {
-
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-
-      25% {
-        transform: translateX(-5px);
-      }
-
-      75% {
-        transform: translateX(5px);
-      }
-    }
-
-    /* Verify button */
-    .verify-btn {
+    /* OTP input section */
+    .otp-section {
       width: 100%;
-      padding: 1rem;
+      position: relative;
+    }
+
+    .otp-input-wrap {
+      border-left: 3px solid var(--orange);
+      padding-left: 12px;
+    }
+
+    .otp-input-wrap.error {
+      border-left-color: #EF4444;
+    }
+
+    .otp-input {
+      width: 100%;
       border: none;
-      border-radius: 14px;
-      font-family: 'Sora', sans-serif;
-      font-size: 1rem;
+      outline: none;
+      font-size: 22px;
       font-weight: 600;
-      letter-spacing: .5px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-light) 60%, var(--orange) 120%);
-      color: var(--white);
-      transition: transform .18s, box-shadow .18s;
-      box-shadow: 0 4px 20px rgba(91, 33, 182, .35);
-      margin-bottom: 1.2rem;
+      color: var(--dark);
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 8px;
+      caret-color: var(--orange);
+      padding: 2px 0;
     }
 
-    .verify-btn::after {
-      content: '';
+    .otp-input::placeholder {
+      font-size: 14px;
+      color: var(--gray-400);
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+
+    .otp-underline {
+      width: 100%;
+      height: 1.5px;
+      background: var(--gray-200);
+      margin-top: 10px;
+      border-radius: 1px;
+      transition: background 0.2s;
+    }
+
+    .otp-section:focus-within .otp-underline {
+      background: var(--blue);
+    }
+
+    /* Floating edit FAB */
+    .edit-fab {
       position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, .12));
-    }
-
-    .verify-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(91, 33, 182, .45);
-    }
-
-    .verify-btn:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .verify-btn:disabled {
-      background: #E5E7EB;
-      color: #9CA3AF;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    .verify-btn .btn-inner {
-      position: relative;
-      z-index: 1;
+      right: 0;
+      top: -4px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #7C3AED;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: .6rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.38);
+      transition: transform 0.15s, box-shadow 0.15s;
     }
 
-    /* Resend OTP */
+    .edit-fab:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+    }
+
+    /* Verify button */
+    .btn-verify {
+      width: 100%;
+      margin-top: 42px;
+      padding: 17px;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg, #2563EB 0%, #1447B4 100%);
+      cursor: pointer;
+      box-shadow: 0 6px 22px rgba(26, 86, 219, 0.38);
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-verify::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent);
+    }
+
+    .btn-verify:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(26, 86, 219, 0.46);
+    }
+
+    .btn-verify:active {
+      transform: scale(0.97);
+    }
+
+    /* Resend */
     .resend-wrap {
+      margin-top: 24px;
       text-align: center;
     }
 
     .resend-btn {
-      font-family: 'Sora', sans-serif;
-      font-size: .88rem;
-      font-weight: 600;
-      letter-spacing: .4px;
-      color: var(--purple-light);
       background: none;
       border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--blue);
       cursor: pointer;
       text-transform: uppercase;
-      transition: color .2s;
-      padding: .5rem 1rem;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: background 0.15s;
     }
 
     .resend-btn:hover:not(:disabled) {
-      color: var(--orange);
+      background: #EFF6FF;
     }
 
     .resend-btn:disabled {
-      color: var(--text-mid);
-      cursor: not-allowed;
+      color: var(--gray-400);
+      cursor: default;
     }
 
-    .resend-timer {
-      font-size: .82rem;
-      color: var(--text-mid);
-      margin-top: .3rem;
+    .timer-text {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 6px;
     }
 
-    /* Toast */
-    .toast {
-      position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: var(--purple-deep);
-      color: var(--white);
-      padding: .85rem 1.3rem;
-      border-radius: 12px;
-      font-size: .88rem;
-      box-shadow: 0 8px 30px rgba(58, 12, 163, .35);
-      transform: translateX(calc(100% + 2rem));
-      transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
-      z-index: 999;
-      max-width: 300px;
-      border-left: 4px solid var(--orange);
+    .spacer {
+      flex: 1;
     }
 
-    .toast.show {
-      transform: translateX(0);
+    /* Bottom nav */
+    .bottom-nav {
+      flex-shrink: 0;
+      height: 54px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #fff;
     }
 
-    .toast.success {
-      border-left-color: #10B981;
+    .nav-sq {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--gray-700);
+      border-radius: 3px;
+      cursor: pointer;
     }
 
-    .toast.error-toast {
-      border-left-color: #EF4444;
+    .nav-circ {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--gray-700);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .nav-tri {
+      width: 0;
+      height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-right: 18px solid var(--gray-700);
+      cursor: pointer;
     }
 
     /* Success overlay */
     .success-overlay {
       display: none;
-      flex-direction: column;
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      background: rgba(34, 197, 94, 0.96);
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 2rem 0;
+      flex-direction: column;
+      gap: 16px;
+      border-radius: inherit;
     }
 
     .success-overlay.show {
       display: flex;
+      animation: flashIn 0.35s ease;
     }
 
-    .success-circle {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #10B981, #059669);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      animation: popIn .4s cubic-bezier(.34, 1.56, .64, 1);
-    }
-
-    @keyframes popIn {
+    @keyframes flashIn {
       from {
-        transform: scale(0);
         opacity: 0;
+        transform: scale(0.95);
       }
 
       to {
-        transform: scale(1);
         opacity: 1;
+        transform: scale(1);
       }
-    }
-
-    .success-circle svg {
-      width: 44px;
-      height: 44px;
-      stroke: white;
-      fill: none;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .success-overlay h3 {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: .5rem;
     }
 
     .success-overlay p {
-      font-size: .9rem;
-      color: var(--text-mid);
-    }
-
-    .form-section {
-      transition: opacity .3s;
-    }
-
-    .form-section.hidden {
-      display: none;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 860px) {
-      .page {
-        grid-template-columns: 1fr;
-      }
-
-      .left-panel {
-        display: none;
-      }
-
-      .right-panel {
-        padding: 2.5rem 1.5rem;
-        min-height: 100vh;
-      }
+      font-family: 'Sora', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="page">
+  <div class="phone">
 
-    <!-- LEFT DECORATIVE PANEL -->
-    <aside class="left-panel">
-      <div class="left-content">
-        <div class="shield-wrap">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M24 4L8 10V24C8 33.6 15.2 42.5 24 44C32.8 42.5 40 33.6 40 24V10L24 4Z" fill="rgba(249,115,22,0.3)"
-              stroke="#F97316" stroke-width="2" stroke-linejoin="round" />
-            <path d="M17 24L21.5 29L31 19" stroke="white" stroke-width="2.5" stroke-linecap="round"
-              stroke-linejoin="round" />
+    <!-- Success overlay -->
+    <div class="success-overlay" id="successOverlay">
+      <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="9 12 11 14 15 10" />
+      </svg>
+      <p>Verified Successfully!</p>
+    </div>
+
+    <!-- Status bar -->
+    <!-- <div class="status-bar">
+    <span class="status-time">7:45</span>
+    <div class="status-icons">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 6c5.5-4 16.5-4 22 0"/><path d="M5 10c4-2.5 10-2.5 14 0"/><path d="M9 14c2-1.2 4-1.2 6 0"/><circle cx="12" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
+      <span style="font-size:9px;background:#111;color:#fff;padding:1px 4px;border-radius:3px;font-weight:700;">4G</span>
+      <svg width="15" height="11" viewBox="0 0 24 18"><rect x="0" y="6" width="3" height="12" rx="1" fill="currentColor"/><rect x="5" y="4" width="3" height="14" rx="1" fill="currentColor"/><rect x="10" y="2" width="3" height="16" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="18" rx="1" fill="currentColor"/></svg>
+      <span style="border:1.5px solid #111;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;position:relative;">87
+        <span style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);display:block;width:2.5px;height:6px;background:#111;border-radius:0 1px 1px 0;"></span>
+      </span>
+    </div>
+  </div> -->
+
+    <!-- Top nav -->
+    <div class="top-nav">
+      <div class="back-btn" onclick="window.history.back()">&#8249;</div>
+
+      <div class="nav-logo">LORRYGO</div>
+
+      <div class="nav-icons">
+        <!-- screen-cast / eye-play icon -->
+        <div class="nav-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <polygon points="10,10 16,12 10,14" fill="currentColor" stroke="none" />
           </svg>
         </div>
-        <h1>Secure <span>OTP</span><br />Verification</h1>
-        <p>We've sent a one-time password to your registered mobile number. Enter it to verify your identity.</p>
-        <div class="security-badges">
-          <div class="badge-item">
-            <div class="badge-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" />
-              </svg>
-            </div>
-            <div class="badge-text">
-              <strong>256-bit Encrypted</strong>
-              Your OTP is secured end-to-end
-            </div>
-          </div>
-          <div class="badge-item">
-            <div class="badge-icon">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-              </svg>
-            </div>
-            <div class="badge-text">
-              <strong>Auto-Read OTP</strong>
-              Detects & fills OTP automatically
-            </div>
-          </div>
-          <div class="badge-item">
-            <div class="badge-icon">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" />
-              </svg>
-            </div>
-            <div class="badge-text">
-              <strong>Expires in 5 minutes</strong>
-              Request a new OTP if needed
-            </div>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- RIGHT OTP PANEL -->
-    <main class="right-panel">
-      <div class="card">
-
-        <!-- Back -->
-        <button class="back-btn" id="backBtn">
-          <svg viewBox="0 0 24 24">
-            <polyline points="15 18 9 12 15 6" />
+        <!-- eye icon -->
+        <div class="nav-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
           </svg>
-          Back to Login
-        </button>
-
-        <!-- Brand -->
-        <div class="brand">
-          <div class="brand-logo">
-            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-          </div>
-          <span class="brand-name">L<span>Ö</span>RRY</span>
-          <span class="brand-badge">Partner</span>
         </div>
-
-        <h2>Verify your number</h2>
-        <p class="sub">Enter the OTP sent to your mobile</p>
-
-        <!-- Form section -->
-        <div class="form-section" id="formSection">
-
-          <!-- Phone display -->
-          <div class="number-display">
-            <div class="number-left">
-              <span class="number-flag">🇮🇳</span>
-              <span class="number-val" id="displayNumber">+91 98765 43210</span>
-            </div>
-            <button class="number-change" id="changeNumberBtn">Change</button>
-          </div>
-
-          <!-- Notice -->
-          <p class="otp-notice">One Time Password (OTP) is sent to this number</p>
-
-          <!-- Auto-read -->
-          <div class="auto-read" id="autoReadRow">
-            <div class="spinner"></div>
-            <span class="auto-read-text">Waiting to auto read OTP…</span>
-          </div>
-
-          <!-- OTP input boxes -->
-          <label class="otp-label">Enter OTP</label>
-          <div class="otp-boxes" id="otpBoxes">
-            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="0"
-              autocomplete="one-time-code" />
-            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="1" />
-            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="2" />
-            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="3" />
-            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="4" />
-            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="5" />
-          </div>
-
-          <!-- Verify -->
-          <button class="verify-btn" id="verifyBtn" disabled>
-            <span class="btn-inner">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" />
-                <polyline points="9 12 11 14 15 10" />
-              </svg>
-              VERIFY
-            </span>
-          </button>
-
-          <!-- Resend -->
-          <div class="resend-wrap">
-            <button class="resend-btn" id="resendBtn" disabled>RESEND OTP</button>
-            <div class="resend-timer" id="timerDisplay">Resend available in <strong id="timerCount">30</strong>s</div>
-          </div>
-
-        </div><!-- /form-section -->
-
-        <!-- Success state -->
-        <div class="success-overlay" id="successOverlay">
-          <div class="success-circle">
-            <svg viewBox="0 0 24 24">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </div>
-          <h3>Verified Successfully! 🎉</h3>
-          <p>Welcome to Porter Partner.<br />Redirecting to your dashboard…</p>
+        <!-- settings wheel -->
+        <div class="nav-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
         </div>
-
+        <!-- more -->
+        <div class="nav-icon" style="font-size:20px;color:var(--gray-700);letter-spacing:-1px;font-weight:600;">⋮</div>
       </div>
-    </main>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+
+      <!-- Masked number + Change -->
+      <div class="phone-row">
+        <div class="masked-number">
+          <div class="dot-group">
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="dot-group">
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="dot-group">
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="dot-group">
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span class="slash">/</span>
+        </div>
+        <button class="change-link" onclick="window.history.back()">Change</button>
+      </div>
+
+      <p class="otp-sent-text">One Time Password (OTP) is sent to this number</p>
+
+      <!-- Auto-read row -->
+      <div class="auto-read-row" id="autoReadRow">
+        <div class="spinner"></div>
+        <span class="auto-read-text">Waiting to auto read OTP</span>
+      </div>
+
+      <!-- OTP input -->
+      <div class="otp-section">
+        <div class="otp-input-wrap" id="otpWrap">
+          <input class="otp-input" type="tel" id="otpInput" placeholder="Enter OTP" maxlength="6"
+            autocomplete="one-time-code" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')" />
+        </div>
+        <div class="otp-underline"></div>
+
+        <!-- FAB -->
+        <div class="edit-fab" onclick="document.getElementById('otpInput').focus()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Verify -->
+      <button class="btn-verify" onclick="handleVerify()">VERIFY</button>
+
+      <!-- Resend -->
+      <div class="resend-wrap">
+        <button class="resend-btn" id="resendBtn" disabled onclick="handleResend()">RESEND OTP</button>
+        <p class="timer-text" id="timerText">Resend available in <span id="countdown">30</span>s</p>
+      </div>
+
+      <div class="spacer"></div>
+    </div>
+
+    <!-- Bottom nav -->
+    <!-- <div class="bottom-nav">
+    <div class="nav-sq"></div>
+    <div class="nav-circ"></div>
+    <div class="nav-tri"></div>
+  </div> -->
+
   </div>
 
-  <!-- Toast -->
-  <div class="toast" id="toast"></div>
-
   <script>
-    const boxes = Array.from(document.querySelectorAll('.otp-box'));
-    const verifyBtn = document.getElementById('verifyBtn');
+    // ── Countdown ──
+    let secs = 30;
+    const cdEl = document.getElementById('countdown');
+    const timerEl = document.getElementById('timerText');
     const resendBtn = document.getElementById('resendBtn');
-    const timerCount = document.getElementById('timerCount');
-    const timerDisplay = document.getElementById('timerDisplay');
-    const autoReadRow = document.getElementById('autoReadRow');
-    const formSection = document.getElementById('formSection');
-    const successOverlay = document.getElementById('successOverlay');
-    const toast = document.getElementById('toast');
+    const autoRow = document.getElementById('autoReadRow');
 
-    // ── OTP BOX LOGIC ──
-    boxes.forEach((box, i) => {
-      box.addEventListener('input', e => {
-        const val = e.target.value.replace(/\D/g, '');
-        box.value = val.slice(-1);
-        box.classList.toggle('filled', box.value !== '');
-        if (val && i < boxes.length - 1) boxes[i + 1].focus();
-        updateVerifyBtn();
-      });
-
-      box.addEventListener('keydown', e => {
-        if (e.key === 'Backspace') {
-          if (!box.value && i > 0) {
-            boxes[i - 1].value = '';
-            boxes[i - 1].classList.remove('filled');
-            boxes[i - 1].focus();
-          }
-          updateVerifyBtn();
-        }
-        if (e.key === 'ArrowLeft' && i > 0) boxes[i - 1].focus();
-        if (e.key === 'ArrowRight' && i < boxes.length - 1) boxes[i + 1].focus();
-      });
-
-      box.addEventListener('paste', e => {
-        e.preventDefault();
-        const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
-        paste.split('').forEach((ch, j) => {
-          if (boxes[j]) {
-            boxes[j].value = ch;
-            boxes[j].classList.add('filled');
-          }
-        });
-        boxes[Math.min(paste.length, boxes.length - 1)].focus();
-        updateVerifyBtn();
-      });
-    });
-
-    function updateVerifyBtn() {
-      verifyBtn.disabled = boxes.some(b => !b.value);
-    }
-
-    // ── VERIFY ──
-    verifyBtn.addEventListener('click', () => {
-      const otp = boxes.map(b => b.value).join('');
-      // Demo: accept 123456
-      if (otp === '123456') {
-        formSection.classList.add('hidden');
-        successOverlay.classList.add('show');
-        showToast('✅ OTP verified successfully!', 'success');
-      } else {
-        boxes.forEach(b => b.classList.add('error'));
-        setTimeout(() => boxes.forEach(b => b.classList.remove('error')), 600);
-        showToast('❌ Incorrect OTP. Please try again.', 'error-toast');
-      }
-    });
-
-    // ── COUNTDOWN ──
-    let seconds = 30;
-    const interval = setInterval(() => {
-      seconds--;
-      timerCount.textContent = seconds;
-      if (seconds <= 0) {
-        clearInterval(interval);
-        timerDisplay.style.display = 'none';
-        resendBtn.disabled = false;
-        autoReadRow.style.display = 'none';
-      }
-    }, 1000);
-
-    // ── RESEND ──
-    resendBtn.addEventListener('click', () => {
-      boxes.forEach(b => { b.value = ''; b.classList.remove('filled', 'error'); });
-      boxes[0].focus();
-      updateVerifyBtn();
-      resendBtn.disabled = true;
-      seconds = 30;
-      timerCount.textContent = 30;
-      timerDisplay.style.display = '';
-      autoReadRow.style.display = '';
-      showToast('📲 OTP resent to your number!');
-      const r = setInterval(() => {
-        seconds--;
-        timerCount.textContent = seconds;
-        if (seconds <= 0) {
-          clearInterval(r);
-          timerDisplay.style.display = 'none';
+    const startTimer = (duration) => {
+      secs = duration;
+      cdEl.textContent = secs;
+      const t = setInterval(() => {
+        secs--;
+        cdEl.textContent = secs;
+        if (secs <= 0) {
+          clearInterval(t);
           resendBtn.disabled = false;
-          autoReadRow.style.display = 'none';
+          timerEl.style.display = 'none';
+          autoRow.style.display = 'none';
         }
       }, 1000);
-    });
+    };
 
-    // ── BACK ──
-    document.getElementById('backBtn').addEventListener('click', () => {
-      showToast('↩ Returning to login page…');
-    });
+    startTimer(30);
 
-    document.getElementById('changeNumberBtn').addEventListener('click', () => {
-      showToast('↩ Change number — returning to login…');
-    });
+    // ── Verify ──
+    function handleVerify() {
+      const otp = document.getElementById('otpInput').value.trim();
+      const wrap = document.getElementById('otpWrap');
 
-    // ── TOAST ──
-    function showToast(msg, type = '') {
-      toast.textContent = msg;
-      toast.className = 'toast' + (type ? ' ' + type : '');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3200);
+      if (otp.length < 4) {
+        wrap.classList.add('error');
+        document.getElementById('otpInput').focus();
+        setTimeout(() => wrap.classList.remove('error'), 1800);
+        return;
+      }
+
+      const overlay = document.getElementById('successOverlay');
+      overlay.classList.add('show');
+      setTimeout(() => overlay.classList.remove('show'), 2000);
     }
 
-    // Focus first box on load
-    boxes[0].focus();
+    // ── Resend ──
+    function handleResend() {
+      document.getElementById('otpInput').value = '';
+      resendBtn.disabled = true;
+      timerEl.style.display = 'block';
+      autoRow.style.display = 'flex';
+      startTimer(30);
+      // Optionally show a toast here
+    }
   </script>
+
 </body>
 
 </html>
