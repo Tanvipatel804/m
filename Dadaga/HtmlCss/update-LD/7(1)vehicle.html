@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vehicle Details</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --blue: #1A56DB;
+      --blue-dark: #1447B4;
+      --blue-bg: #EBF2FF;
+      --green: #16A34A;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --dark: #111827;
+      --red: #EF4444;
+      --white: #FFFFFF;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: #1c1c2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      min-height: 100dvh;
+      max-height: 844px;
+      background: #F3F4F6;
+      border-radius: 40px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
+      position: relative;
+    }
+
+    @media (max-width: 430px) {
+      .phone {
+        border-radius: 0;
+        max-height: 100dvh;
+      }
+
+      html,
+      body {
+        background: #F3F4F6;
+      }
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px 8px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .status-time {
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    /* ── Top bar ── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      padding: 13px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 12px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--dark);
+      font-size: 26px;
+      font-weight: 300;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+
+    .back-btn:hover {
+      background: var(--gray-100);
+    }
+
+    .top-title {
+      flex: 1;
+      text-align: left;
+      padding-left: 34px;
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .headset-btn {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--dark);
+      border-radius: 50%;
+      transition: background 0.15s;
+    }
+
+    .headset-btn:hover {
+      background: var(--gray-100);
+    }
+
+    /* ── Stepper ── */
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 18px 24px 14px;
+      background: #fff;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step.done .step-circle {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+    }
+
+    .step.active .step-circle {
+      border: 2.5px solid var(--blue);
+      color: var(--blue);
+      background: #fff;
+    }
+
+    .step.inactive .step-circle {
+      border: 2px solid var(--gray-400);
+      color: var(--gray-400);
+      background: #fff;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-500);
+    }
+
+    .step.done .step-label {
+      color: var(--blue);
+    }
+
+    .step.active .step-label {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      margin-top: 17px;
+      background-image: repeating-linear-gradient(to right, #D1D5DB 0, #D1D5DB 5px, transparent 5px, transparent 10px);
+    }
+
+    .step-line.solid {
+      background-image: none;
+      background: var(--blue);
+    }
+
+    /* ── Scrollable body ── */
+    .body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 16px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .body::-webkit-scrollbar {
+      width: 0;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .req {
+      color: var(--red);
+    }
+
+    /* ── Input card (vehicle number) ── */
+    .input-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 15px 16px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-card:focus-within {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.09);
+    }
+
+    .input-card.error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.09);
+    }
+
+    .text-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      background: transparent;
+      text-transform: uppercase;
+    }
+
+    .text-input::placeholder {
+      color: var(--gray-400);
+      text-transform: none;
+      font-weight: 400;
+    }
+
+    /* ── Row card (RC, Vehicle type, Body type) ── */
+    .row-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .row-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.07);
+    }
+
+    .row-card.uploaded {
+      border-color: var(--green);
+    }
+
+    .row-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .row-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .row-sub {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .row-sub.hidden {
+      display: none;
+    }
+
+    /* Row with icon+label value (vehicle type, body type) */
+    .row-value {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .row-icon {
+      font-size: 20px;
+    }
+
+    .row-val-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .edit-icon {
+      color: var(--blue);
+      flex-shrink: 0;
+      padding: 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .edit-icon:hover {
+      background: var(--blue-bg);
+    }
+
+    /* ── Dropdown ── */
+    .dropdown-section {
+      margin-bottom: 14px;
+    }
+
+    .dropdown-wrap {
+      position: relative;
+    }
+
+    .dropdown-btn {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .dropdown-btn:hover {
+      border-color: var(--blue);
+    }
+
+    .dropdown-btn.open {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.09);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .dropdown-btn.error {
+      border-color: var(--red);
+    }
+
+    .dropdown-text {
+      font-size: 15px;
+      color: var(--gray-400);
+      font-weight: 400;
+    }
+
+    .dropdown-text.selected {
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .dropdown-arrow {
+      color: var(--gray-500);
+      transition: transform 0.25s;
+      flex-shrink: 0;
+    }
+
+    .dropdown-arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--blue);
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      z-index: 20;
+      overflow-y: auto;
+      max-height: 0;
+      transition: max-height 0.3s ease;
+      overflow: hidden;
+    }
+
+    .dropdown-list.open {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .dropdown-item {
+      padding: 13px 16px;
+      font-size: 14px;
+      color: var(--dark);
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 1px solid var(--gray-100);
+      transition: background 0.12s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-item:hover {
+      background: var(--blue-bg);
+      color: var(--blue);
+    }
+
+    .dropdown-item.selected {
+      color: var(--blue);
+      font-weight: 700;
+      background: var(--blue-bg);
+    }
+
+    .item-icon {
+      font-size: 18px;
+    }
+
+    /* ── Modal sheet for vehicle type / body type ── */
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0, 0, 0, 0.45);
+      display: none;
+      align-items: flex-end;
+    }
+
+    .sheet-backdrop.show {
+      display: flex;
+    }
+
+    .sheet {
+      width: 100%;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 0 0 32px;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(0.34, 1.3, 0.64, 1);
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .sheet.show {
+      transform: translateY(0);
+    }
+
+    .sheet-header {
+      padding: 18px 20px 12px;
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 1;
+    }
+
+    .sheet-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--gray-700);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .sheet-item {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--gray-100);
+      transition: background 0.12s;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .sheet-item:last-child {
+      border-bottom: none;
+    }
+
+    .sheet-item:hover {
+      background: var(--blue-bg);
+    }
+
+    .sheet-item.selected {
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .sheet-item .s-icon {
+      font-size: 22px;
+    }
+
+    .sheet-item .s-check {
+      margin-left: auto;
+      color: var(--blue);
+      display: none;
+    }
+
+    .sheet-item.selected .s-check {
+      display: block;
+    }
+
+    /* ── Submit bar ── */
+    .bottom-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, #F3F4F6 80%, transparent);
+      padding: 10px 16px 12px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 17px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+      background: var(--gray-200);
+      color: var(--gray-500);
+      box-shadow: none;
+    }
+
+    .btn-submit.active {
+      background: linear-gradient(135deg, #2563EB 0%, #1447B4 100%);
+      color: #fff;
+      box-shadow: 0 6px 22px rgba(26, 86, 219, 0.35);
+    }
+
+    .btn-submit.active:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-submit.active:active {
+      transform: scale(0.97);
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #fff;
+    }
+
+    .nav-sq {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--gray-700);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .nav-circ {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--gray-700);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .nav-tri {
+      width: 0;
+      height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-right: 18px solid var(--gray-700);
+      cursor: pointer;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 30px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 80;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    /* ── Success overlay ── */
+    .success-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 90;
+      background: rgba(22, 163, 74, 0.96);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      border-radius: inherit;
+    }
+
+    .success-overlay.show {
+      display: flex;
+      animation: flashIn 0.35s ease;
+    }
+
+    @keyframes flashIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    .success-overlay p {
+      font-family: 'Sora', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .success-overlay span {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="phone">
+
+    <!-- Success overlay -->
+    <div class="success-overlay" id="successOverlay">
+      <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="9 12 11 14 15 10" />
+      </svg>
+      <p>Vehicle Details Submitted!</p>
+      <span>Proceeding to Driver Details…</span>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Vehicle Type Sheet -->
+    <div class="sheet-backdrop" id="vtBackdrop" onclick="closeSheet('vt')">
+      <div class="sheet" id="vtSheet" onclick="event.stopPropagation()">
+        <div class="sheet-header">
+          Select Vehicle Type
+          <button class="sheet-close" onclick="closeSheet('vt')">✕</button>
+        </div>
+        <div class="sheet-item" onclick="selectVehicleType('2W','🛵')">
+          <span class="s-icon">🛵</span> 2W
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectVehicleType('3W','🛺')">
+          <span class="s-icon">🛺</span> 3W
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectVehicleType('4W','🚛')">
+          <span class="s-icon">🚛</span> 4W
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectVehicleType('HCV','🚚')">
+          <span class="s-icon">🚚</span> HCV
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body Type Sheet -->
+    <div class="sheet-backdrop" id="btBackdrop" onclick="closeSheet('bt')">
+      <div class="sheet" id="btSheet" onclick="event.stopPropagation()">
+        <div class="sheet-header">
+          Select Vehicle Body Type
+          <button class="sheet-close" onclick="closeSheet('bt')">✕</button>
+        </div>
+        <div class="sheet-item" onclick="selectBodyType('Bike','🏍️')">
+          <span class="s-icon">🏍️</span> Bike
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectBodyType('Scooter','🛵')">
+          <span class="s-icon">🛵</span> Scooter
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectBodyType('Auto','🛺')">
+          <span class="s-icon">🛺</span> Auto
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectBodyType('Mini Truck','🚐')">
+          <span class="s-icon">🚐</span> Mini Truck
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectBodyType('Truck','🚛')">
+          <span class="s-icon">🚛</span> Truck
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="sheet-item" onclick="selectBodyType('Pickup','🚜')">
+          <span class="s-icon">🚜</span> Pickup
+          <svg class="s-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <!-- <div class="status-bar">
+      <span class="status-time">4:09</span>
+      <div class="status-icons">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round">
+          <path d="M1 6c5.5-4 16.5-4 22 0" />
+          <path d="M5 10c4-2.5 10-2.5 14 0" />
+          <path d="M9 14c2-1.2 4-1.2 6 0" />
+          <circle cx="12" cy="18" r="1.5" fill="currentColor" stroke="none" />
+        </svg>
+        <span
+          style="font-size:9px;background:#111;color:#fff;padding:1px 3px;border-radius:2px;font-weight:700;">5G+</span>
+        <svg width="15" height="11" viewBox="0 0 24 18">
+          <rect x="0" y="6" width="3" height="12" rx="1" fill="currentColor" />
+          <rect x="5" y="4" width="3" height="14" rx="1" fill="currentColor" />
+          <rect x="10" y="2" width="3" height="16" rx="1" fill="currentColor" />
+          <rect x="15" y="0" width="3" height="18" rx="1" fill="currentColor" />
+        </svg>
+        <span
+          style="border:1.5px solid #111;border-radius:3px;padding:1px 4px;font-size:9px;font-weight:700;position:relative;">85
+          <span
+            style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);display:block;width:2.5px;height:6px;background:#111;border-radius:0 1px 1px 0;"></span>
+        </span>
+      </div>
+    </div> -->
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="back-btn" onclick="window.history.back()">&#8249;</div>
+      <span class="top-title">Vehicle Details</span>
+      <div class="headset-btn" onclick="showToast('Support coming soon')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+          <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <div class="step done">
+        <div class="step-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <span class="step-label">Owner</span>
+      </div>
+      <div class="step-line solid"></div>
+      <div class="step active">
+        <div class="step-circle">2</div>
+        <span class="step-label">Vehicle</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step inactive">
+        <div class="step-circle">3</div>
+        <span class="step-label">Driver</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+
+      <!-- Vehicle Number -->
+      <p class="section-label">Vehicle Number <span class="req">*</span></p>
+      <div class="input-card" id="vnCard">
+        <input class="text-input" type="text" id="vehicleNum" placeholder="Vehicle Number" maxlength="11"
+          oninput="this.value=this.value.replace(/[^A-Z0-9]/gi,'').toUpperCase(); checkForm()" />
+      </div>
+
+      <!-- Vehicle RC -->
+      <div class="row-card" id="rcCard" onclick="triggerRC()">
+        <div class="row-left">
+          <span class="row-title">Vehicle RC</span>
+          <span class="row-sub hidden" id="rcSub">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 16 12 12 8 16" />
+              <line x1="12" y1="12" x2="12" y2="21" />
+              <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+            </svg>
+            Uploaded
+          </span>
+        </div>
+        <div class="edit-icon" onclick="event.stopPropagation(); triggerRC()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+        </div>
+        <input type="file" id="rcInput" accept="image/*,.pdf" style="display:none" onchange="handleRC(this)">
+      </div>
+
+      <!-- City of operation -->
+      <div class="dropdown-section">
+        <p class="section-label">Select the city of operation</p>
+        <div class="dropdown-wrap">
+          <div class="dropdown-btn" id="cityBtn" onclick="toggleDD('city')">
+            <span class="dropdown-text" id="cityText">Select the city of operation</span>
+            <svg class="dropdown-arrow" id="cityArrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="dropdown-list" id="cityList">
+            <div class="dropdown-item" onclick="selectCity('Mumbai')">Mumbai</div>
+            <div class="dropdown-item" onclick="selectCity('Delhi')">Delhi</div>
+            <div class="dropdown-item selected" onclick="selectCity('Pune')">Pune</div>
+            <div class="dropdown-item" onclick="selectCity('Bangalore')">Bangalore</div>
+            <div class="dropdown-item" onclick="selectCity('Hyderabad')">Hyderabad</div>
+            <div class="dropdown-item" onclick="selectCity('Chennai')">Chennai</div>
+            <div class="dropdown-item" onclick="selectCity('Kolkata')">Kolkata</div>
+            <div class="dropdown-item" onclick="selectCity('Ahmedabad')">Ahmedabad</div>
+            <div class="dropdown-item" onclick="selectCity('Jaipur')">Jaipur</div>
+            <div class="dropdown-item" onclick="selectCity('Surat')">Surat</div>
+            <div class="dropdown-item" onclick="selectCity('Lucknow')">Lucknow</div>
+            <div class="dropdown-item" onclick="selectCity('Chandigarh')">Chandigarh</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicle Type -->
+      <div style="margin-bottom:14px;">
+        <p class="section-label">Select Vehicle Type</p>
+        <div class="row-card" id="vtCard" onclick="openSheet('vt')">
+          <div class="row-value" id="vtValue">
+            <span class="row-icon">🛵</span>
+            <span class="row-val-text" id="vtText">2W</span>
+          </div>
+          <div class="edit-icon" onclick="event.stopPropagation(); openSheet('vt')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body Type -->
+      <div style="margin-bottom:14px;">
+        <p class="section-label">Select the vehicle body type</p>
+        <div class="row-card" id="btCard" onclick="openSheet('bt')">
+          <div class="row-value" id="btValue">
+            <span class="row-icon">🏍️</span>
+            <span class="row-val-text" id="btText">Bike</span>
+          </div>
+          <div class="edit-icon" onclick="event.stopPropagation(); openSheet('bt')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fuel Type -->
+      <div class="dropdown-section">
+        <p class="section-label">Select the vehicle fuel type</p>
+        <div class="dropdown-wrap">
+          <div class="dropdown-btn" id="fuelBtn" onclick="toggleDD('fuel')">
+            <span class="dropdown-text" id="fuelText">Select the vehicle fuel type</span>
+            <svg class="dropdown-arrow" id="fuelArrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="dropdown-list" id="fuelList">
+            <div class="dropdown-item" onclick="selectFuel('⛽ Petrol','Petrol')">⛽ Petrol</div>
+            <div class="dropdown-item" onclick="selectFuel('🛢️ Diesel','Diesel')">🛢️ Diesel</div>
+            <div class="dropdown-item" onclick="selectFuel('🔋 Electric','Electric')">🔋 Electric</div>
+            <div class="dropdown-item" onclick="selectFuel('🌿 CNG','CNG')">🌿 CNG</div>
+            <div class="dropdown-item" onclick="selectFuel('🔵 LPG','LPG')">🔵 LPG</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Submit bar -->
+    <div class="bottom-bar">
+      <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">Submit</button>
+    </div>
+
+    <!-- Bottom nav -->
+    <!-- <div class="bottom-nav">
+      <div class="nav-sq"></div>
+      <div class="nav-circ"></div>
+      <div class="nav-tri"></div>
+    </div> -->
+
+  </div>
+
+  <script>
+    // State
+    const state = {
+      vehicleNum: '',
+      rcUploaded: false,
+      city: 'Pune',       // pre-selected as per screenshot
+      vehicleType: '2W',  // pre-selected
+      bodyType: 'Bike',   // pre-selected
+      fuelType: ''
+    };
+
+    // Pre-select city Pune (as in screenshot)
+    (function init() {
+      document.getElementById('cityText').textContent = 'Pune';
+      document.getElementById('cityText').classList.add('selected');
+      checkForm();
+    })();
+
+    // ── Vehicle number ──
+    document.getElementById('vehicleNum').addEventListener('input', function () {
+      state.vehicleNum = this.value;
+      checkForm();
+    });
+
+    // ── RC Upload ──
+    function triggerRC() { document.getElementById('rcInput').click(); }
+    function handleRC(input) {
+      if (!input.files || !input.files[0]) return;
+      state.rcUploaded = true;
+      document.getElementById('rcCard').classList.add('uploaded');
+      document.getElementById('rcSub').classList.remove('hidden');
+      const name = input.files[0].name;
+      showToast((name.length > 22 ? name.slice(0, 22) + '…' : name) + ' uploaded');
+      checkForm();
+    }
+
+    // ── City dropdown ──
+    let openDD = null;
+    function toggleDD(key) {
+      const btnId = key + 'Btn';
+      const listId = key + 'List';
+      const arrId = key + 'Arrow';
+      const isOpen = document.getElementById(listId).classList.contains('open');
+
+      // Close all
+      ['city', 'fuel'].forEach(k => {
+        document.getElementById(k + 'List').classList.remove('open');
+        document.getElementById(k + 'Btn').classList.remove('open');
+        document.getElementById(k + 'Arrow').classList.remove('open');
+      });
+
+      if (!isOpen) {
+        document.getElementById(listId).classList.add('open');
+        document.getElementById(btnId).classList.add('open');
+        document.getElementById(arrId).classList.add('open');
+        openDD = key;
+      } else {
+        openDD = null;
+      }
+    }
+
+    function selectCity(city) {
+      state.city = city;
+      const txt = document.getElementById('cityText');
+      txt.textContent = city; txt.classList.add('selected');
+      document.querySelectorAll('#cityList .dropdown-item').forEach(i => {
+        i.classList.toggle('selected', i.textContent.trim() === city);
+      });
+      toggleDD('city');
+      checkForm();
+    }
+
+    function selectFuel(label, val) {
+      state.fuelType = val;
+      const txt = document.getElementById('fuelText');
+      txt.textContent = label; txt.classList.add('selected');
+      document.querySelectorAll('#fuelList .dropdown-item').forEach(i => {
+        i.classList.toggle('selected', i.textContent.trim() === label);
+      });
+      toggleDD('fuel');
+      checkForm();
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (openDD) {
+        const wrap = document.querySelector(`#${openDD}Btn`).closest('.dropdown-wrap');
+        if (!wrap.contains(e.target)) toggleDD(openDD);
+      }
+    });
+
+    // ── Vehicle Type Sheet ──
+    function openSheet(type) {
+      const bd = document.getElementById(type + 'Backdrop');
+      const sh = document.getElementById(type + 'Sheet');
+      bd.style.display = 'flex';
+      requestAnimationFrame(() => { sh.classList.add('show'); });
+    }
+    function closeSheet(type) {
+      const sh = document.getElementById(type + 'Sheet');
+      const bd = document.getElementById(type + 'Backdrop');
+      sh.classList.remove('show');
+      setTimeout(() => { bd.style.display = 'none'; }, 380);
+    }
+
+    function selectVehicleType(label, icon) {
+      state.vehicleType = label;
+      document.getElementById('vtText').textContent = label;
+      document.querySelector('#vtValue .row-icon').textContent = icon;
+      document.querySelectorAll('#vtSheet .sheet-item').forEach(i => {
+        i.classList.toggle('selected', i.textContent.trim().startsWith(label));
+      });
+      closeSheet('vt');
+      checkForm();
+    }
+
+    function selectBodyType(label, icon) {
+      state.bodyType = label;
+      document.getElementById('btText').textContent = label;
+      document.querySelector('#btValue .row-icon').textContent = icon;
+      document.querySelectorAll('#btSheet .sheet-item').forEach(i => {
+        i.classList.toggle('selected', i.textContent.trim().startsWith(label));
+      });
+      closeSheet('bt');
+      checkForm();
+    }
+
+    // Mark defaults as selected in sheets
+    document.querySelectorAll('#vtSheet .sheet-item').forEach(i => {
+      if (i.textContent.trim().startsWith('2W')) i.classList.add('selected');
+    });
+    document.querySelectorAll('#btSheet .sheet-item').forEach(i => {
+      if (i.textContent.trim().startsWith('Bike')) i.classList.add('selected');
+    });
+
+    // ── Form check ──
+    function checkForm() {
+      const vn = document.getElementById('vehicleNum').value.trim();
+      const valid = vn.length >= 5 && state.rcUploaded && state.city && state.vehicleType && state.bodyType && state.fuelType;
+      document.getElementById('submitBtn').classList.toggle('active', valid);
+    }
+
+    function handleSubmit() {
+      const vn = document.getElementById('vehicleNum').value.trim();
+      let valid = true;
+      if (vn.length < 5) {
+        const c = document.getElementById('vnCard');
+        c.classList.add('error');
+        setTimeout(() => c.classList.remove('error'), 2000);
+        valid = false;
+      }
+      if (!state.rcUploaded) {
+        const rc = document.getElementById('rcCard');
+        rc.style.borderColor = '#EF4444'; rc.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.09)';
+        setTimeout(() => { rc.style.borderColor = ''; rc.style.boxShadow = ''; }, 2000);
+        valid = false;
+      }
+      if (!state.fuelType) {
+        const fb = document.getElementById('fuelBtn');
+        fb.classList.add('error');
+        setTimeout(() => fb.classList.remove('error'), 2000);
+        valid = false;
+      }
+      if (!valid) { showToast('Please fill all required fields'); return; }
+      document.getElementById('successOverlay').classList.add('show');
+      setTimeout(() => document.getElementById('successOverlay').classList.remove('show'), 2200);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+  </script>
+
+</body>
+
+</html>
