@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Porter Partner – Home</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black: #111111;
+      --white: #FFFFFF;
+      --green: #1B6B3A;
+      --green-mid: #208A48;
+      --green-light: #E8F5EE;
+      --blue: #1A56DB;
+      --yellow: #F5C518;
+      --red: #E53E3E;
+      --gray-100: #F5F5F5;
+      --gray-200: #E8E8E8;
+      --gray-300: #D0D0D0;
+      --gray-500: #888;
+      --gray-700: #444;
+      --cream: #FDF8EF;
+      --orange: #F97316;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--gray-100);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--black);
+    }
+
+    /* ═══ TOP NAV ═══ */
+    .top-nav {
+      background: #1a1a1a;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 60px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .hamburger:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2.5px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .logo-badge {
+      font-family: 'Sora', sans-serif;
+      color: #fff;
+      display: flex;
+      align-items: flex-end;
+      gap: 1px;
+    }
+
+    .big-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 0.88;
+    }
+
+    .logo-text-col {
+      display: flex;
+      flex-direction: column;
+      margin-left: 2px;
+    }
+
+    .years-of {
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .porter-name {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-dot {
+      color: var(--orange);
+      font-size: 24px;
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #1a1a1a;
+      font-family: 'Sora', sans-serif;
+    }
+
+    /* ═══ PROFILE STRIP ═══ */
+    .profile-strip {
+      background: #fff;
+      padding: 14px 16px 0;
+      border-bottom: 3px solid var(--red);
+    }
+
+    .profile-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f0c080, #e8a060);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--gray-200);
+      overflow: hidden;
+    }
+
+    .online-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid #fff;
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--black);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .blur-text {
+      display: inline-block;
+      filter: blur(5px);
+      user-select: none;
+      color: var(--gray-700);
+    }
+
+    .profile-sub {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .blur-sm {
+      filter: blur(4px);
+      user-select: none;
+    }
+
+    .view-profile-btn {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border: none;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .view-profile-btn:hover {
+      background: var(--green-light);
+    }
+
+    /* ═══ REWARD ROW ═══ */
+    .reward-row {
+      background: #fff;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-bottom: 1px solid var(--gray-200);
+      transition: background 0.15s;
+      margin-top: 8px;
+    }
+
+    .reward-row:hover {
+      background: #f9f9f9;
+    }
+
+    .reward-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    /* ═══ NOTICEBOARD ═══ */
+    .noticeboard {
+      background: var(--cream);
+      padding: 16px 16px 18px;
+      margin-top: 8px;
+    }
+
+    .noticeboard-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 14px;
+    }
+
+    /* Carousel */
+    .carousel-outer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .slide {
+      min-width: 100%;
+      flex-shrink: 0;
+    }
+
+    /* GST Slide */
+    .slide-gst {
+      background: linear-gradient(130deg, #1B3FA6 0%, #1A56DB 55%, #2563EB 100%);
+      padding: 18px 14px;
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-gst::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.06) 0%, transparent 60%);
+    }
+
+    .gst-left {
+      flex: 1;
+      z-index: 2;
+    }
+
+    .gst-top {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.5;
+      margin-bottom: 7px;
+    }
+
+    .gst-top strong {
+      display: block;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .gst-highlight {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--yellow);
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff;
+      border-radius: 30px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--black);
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: transform 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+    }
+
+    .watch-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .play-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .gst-right {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      z-index: 2;
+      padding-left: 10px;
+    }
+
+    .person-illus {
+      font-size: 46px;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+    }
+
+    .fare-badge {
+      background: #1a3580;
+      border-radius: 12px;
+      padding: 8px 12px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .fare-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 3px;
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+      padding-left: 2px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gray-300);
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+
+    .dot.active {
+      background: var(--gray-700);
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    /* ═══ INCENTIVES ═══ */
+    .incentives-row {
+      background: #fff;
+      padding: 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      border-bottom: 1px solid var(--gray-200);
+      gap: 12px;
+    }
+
+    .incentives-text {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--black);
+      line-height: 1.45;
+    }
+
+    .read-more-btn {
+      background: #e8eef8;
+      color: var(--black);
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s, transform 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .read-more-btn:hover {
+      background: #d4e0f5;
+      transform: translateY(-1px);
+    }
+
+    /* ═══ PERFORMANCE ═══ */
+    .performance-row {
+      background: #fff;
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      margin-top: 8px;
+      border-bottom: 1px solid var(--gray-200);
+      transition: background 0.15s;
+    }
+
+    .performance-row:hover {
+      background: #f9f9f9;
+    }
+
+    .performance-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    .spacer-block {
+      background: #fff;
+      height: 90px;
+      margin-top: 0;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    /* ═══ GO ONLINE BTN ═══ */
+    .go-online-bar {
+      position: fixed;
+      bottom: 52px;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, #fff 80%, transparent);
+      padding: 10px 16px 12px;
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+    }
+
+    .go-online-btn {
+      width: 100%;
+      max-width: 600px;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #1B6B3A 0%, #208A48 100%);
+      border: none;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(27, 107, 58, 0.42);
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .go-online-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(27, 107, 58, 0.52);
+    }
+
+    .go-online-btn:active {
+      transform: scale(0.98);
+    }
+
+    .go-online-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50px;
+      animation: goRing 2.5s ease-out infinite;
+    }
+
+    @keyframes goRing {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.28);
+      }
+
+      70% {
+        box-shadow: 0 0 0 14px rgba(255, 255, 255, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      }
+    }
+
+    .go-btn-arrow {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-left: 2px;
+    }
+
+    .go-btn-text {
+      flex: 1;
+      text-align: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-right: 48px;
+    }
+
+    /* ═══ BOTTOM NAV ═══ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #fff;
+      z-index: 20;
+    }
+
+    .nav-sq {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--gray-700);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .nav-circ {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--gray-700);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .nav-tri {
+      width: 0;
+      height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-right: 18px solid var(--gray-700);
+      cursor: pointer;
+    }
+
+    /* ═══ DRAWER ═══ */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .drawer-backdrop.show {
+      display: block;
+      opacity: 1;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      bottom: 0;
+      width: 280px;
+      background: #fff;
+      z-index: 61;
+      transition: left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 6px 0 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .drawer.open {
+      left: 0;
+    }
+
+    .drawer-header {
+      background: #1a1a1a;
+      padding: 24px 20px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .d-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f0c080, #e8a060);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .d-name {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .d-sub {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .drawer-menu {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    .d-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--black);
+      font-weight: 500;
+      transition: background 0.12s;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .d-item:hover {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .d-item:hover svg {
+      stroke: var(--green);
+    }
+
+    .d-item svg {
+      stroke: var(--gray-500);
+      flex-shrink: 0;
+    }
+
+    .drawer-foot {
+      padding: 16px 20px;
+      border-top: 1px solid var(--gray-200);
+      font-size: 12px;
+      color: var(--gray-500);
+      text-align: center;
+    }
+
+    /* ═══ TOAST ═══ */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--black);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 30px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 99;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (min-width:600px) {
+      .top-nav {
+        padding: 0 24px;
+      }
+
+      .profile-strip,
+      .reward-row,
+      .noticeboard,
+      .incentives-row,
+      .performance-row {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .go-online-bar {
+        padding: 10px 24px 14px;
+      }
+    }
+
+    @media (min-width:900px) {
+      body {
+        background: #d8d8d8;
+      }
+
+      .top-nav {
+        padding: 0 calc((100% - 700px)/2 + 16px);
+      }
+
+      .profile-strip,
+      .reward-row,
+      .noticeboard,
+      .incentives-row,
+      .performance-row,
+      .spacer-block {
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+      }
+
+      .go-online-bar,
+      .bottom-nav {
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+        width: 700px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Drawer backdrop -->
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+  <!-- Drawer -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="d-avatar">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"
+          stroke-linecap="round">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+        </svg>
+      </div>
+      <div>
+        <div class="d-name">Amol</div>
+        <div class="d-sub">2 Wheeler</div>
+      </div>
+    </div>
+    <div class="drawer-menu">
+      <div class="d-item" onclick="showToast('My Trips');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="1" y="3" width="15" height="13" rx="2" />
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+          <circle cx="5.5" cy="18.5" r="2.5" />
+          <circle cx="18.5" cy="18.5" r="2.5" />
+        </svg>
+        My Trips
+      </div>
+      <div class="d-item" onclick="showToast('Earnings');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+        Earnings
+      </div>
+      <div class="d-item" onclick="showToast('Wallet');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <path d="M16 13a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
+        </svg>
+        Wallet
+      </div>
+      <div class="d-item" onclick="showToast('Refer & Earn');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        Refer & Earn
+      </div>
+      <div class="d-item" onclick="showToast('Help & Support');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+        Help & Support
+      </div>
+      <div class="d-item" onclick="showToast('Settings');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+        Settings
+      </div>
+    </div>
+    <div class="drawer-foot">Porter Partner v3.2.1</div>
+  </div>
+
+  <!-- Top nav -->
+  <div class="top-nav">
+    <div class="hamburger" onclick="openDrawer()">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="logo-wrap">
+      <div class="logo-badge">
+        <span class="big-num">1</span>
+        <div class="logo-text-col" style="margin-left:2px;">
+          <span class="years-of">YEARS OF</span>
+          <span class="porter-name">PORTER<span class="logo-dot">°</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-icons">
+      <div class="nav-icon-btn" onclick="showToast('1 new notification')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <div class="badge">1</div>
+      </div>
+      <div class="nav-icon-btn" onclick="showToast('Support')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+          <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile strip -->
+  <div class="profile-strip">
+    <div class="profile-inner">
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7B4F2E" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4" fill="#c8834a" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#c8834a" />
+          </svg>
+        </div>
+        <div class="online-dot" id="onlineDot"></div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">Amol <span class="blur-text">shah Sh■■■■■ ■■■■■■</span></div>
+        <div class="profile-sub">2 Wheeler &bull; MH-<span class="blur-sm"> MH 02 1234 ■■ ■■ ■■■■</span></div>
+      </div>
+      <button class="view-profile-btn" onclick="showToast('Opening Profile…')">VIEW PROFILE</button>
+    </div>
+  </div>
+
+  <!-- Reward Program -->
+  <div class="reward-row" onclick="showToast('Porter Reward Program')">
+    <span class="reward-label">Porter Reward Program</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </div>
+
+  <!-- Noticeboard -->
+  <div class="noticeboard">
+    <div class="noticeboard-title">Noticeboard</div>
+    <div class="carousel-outer">
+      <div class="carousel-track" id="track">
+
+        <!-- Slide 1 -->
+        <div class="slide slide-gst">
+          <div class="gst-left">
+            <div class="gst-top">Fares will now<br><strong>include 18% GST</strong></div>
+            <div class="gst-highlight">Don't worry, your<br>earnings stay the same</div>
+            <button class="watch-btn" onclick="showToast('Opening video…')">
+              <div class="play-icon">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="white">
+                  <polygon points="2,1 9,5 2,9" />
+                </svg>
+              </div>
+              Watch the video to know more
+            </button>
+          </div>
+          <div class="gst-right">
+            <div class="person-illus">🧑‍💼</div>
+            <div class="fare-badge">
+              <div style="font-size:16px;">⚠️</div>
+              <div class="fare-text">Fare Update</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide"
+          style="background:linear-gradient(135deg,#1B6B3A,#208A48);padding:20px;min-height:160px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:10px;">
+          <div style="font-size:13px;color:rgba(255,255,255,0.85);font-weight:500;">New Routes Available</div>
+          <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.3;">Earn more with<br>premium deliveries
+          </div>
+          <button class="watch-btn" onclick="showToast('Learn more')">
+            <div class="play-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="white">
+                <polygon points="2,1 9,5 2,9" />
+              </svg></div>
+            Learn more
+          </button>
+        </div>
+
+      </div>
+      <div class="carousel-dots" id="dots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Incentives -->
+  <div class="incentives-row">
+    <div class="incentives-text">Check the details of your incentives here!</div>
+    <button class="read-more-btn" onclick="showToast('Opening incentives…')">Read more</button>
+  </div>
+
+  <!-- Performance -->
+  <div class="performance-row" onclick="showToast('Your Performance')">
+    <span class="performance-label">Your Performance</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </div>
+
+  <div class="spacer-block"></div>
+
+  <!-- GO ONLINE -->
+  <div class="go-online-bar">
+    <button class="go-online-btn" id="goBtn" onclick="toggleOnline()">
+      <div class="go-btn-arrow" id="goArrow">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="13 17 18 12 13 7" />
+          <polyline points="6 17 11 12 6 7" />
+        </svg>
+      </div>
+      <span class="go-btn-text" id="goBtnText">GO ONLINE</span>
+    </button>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <div class="nav-sq"></div>
+    <div class="nav-circ"></div>
+    <div class="nav-tri"></div>
+  </div>
+
+  <script>
+    /* Drawer */
+    function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('show'); document.body.style.overflow = 'hidden'; }
+    function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerBackdrop').classList.remove('show'); document.body.style.overflow = ''; }
+
+    /* Carousel */
+    let cur = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    function goSlide(n) {
+      cur = n;
+      document.getElementById('track').style.transform = `translateX(-${n * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === n));
+    }
+    setInterval(() => goSlide((cur + 1) % slides.length), 4500);
+
+    /* GO ONLINE toggle */
+    let online = false;
+    function toggleOnline() {
+      online = !online;
+      const btn = document.getElementById('goBtn');
+      const txt = document.getElementById('goBtnText');
+      const arr = document.getElementById('goArrow');
+      const dot = document.getElementById('onlineDot');
+      if (online) {
+        btn.style.background = 'linear-gradient(135deg,#991b1b,#dc2626)';
+        btn.style.boxShadow = '0 6px 24px rgba(220,38,38,0.44)';
+        txt.textContent = 'GO OFFLINE';
+        arr.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+        dot.style.background = '#22c55e';
+        showToast('You are now ONLINE 🟢');
+      } else {
+        btn.style.background = 'linear-gradient(135deg,#1B6B3A,#208A48)';
+        btn.style.boxShadow = '0 6px 24px rgba(27,107,58,0.42)';
+        txt.textContent = 'GO ONLINE';
+        arr.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>`;
+        dot.style.background = 'var(--red)';
+        showToast('You are now OFFLINE 🔴');
+      }
+    }
+
+    /* Toast */
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+  </script>
+
+</body>
+
+</html>
