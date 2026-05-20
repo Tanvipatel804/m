@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Profile – Porter Partner</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --blue: #1A56DB;
+      --blue-dark: #1447B4;
+      --blue-bg: #EBF2FF;
+      --red: #E53E3E;
+      --green: #16A34A;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --dark: #111827;
+      --white: #FFFFFF
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--gray-100);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--dark)
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      min-height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      gap: 12px
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.15s;
+      flex-shrink: 0;
+      color: #fff
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.15)
+    }
+
+    .top-title {
+      flex: 1;
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .more-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      transition: background 0.15s;
+      position: relative
+    }
+
+    .more-btn:hover {
+      background: rgba(255, 255, 255, 0.15)
+    }
+
+    .more-menu {
+      position: absolute;
+      top: 44px;
+      right: 0;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      min-width: 165px;
+      z-index: 50;
+      overflow: hidden;
+      display: none
+    }
+
+    .more-menu.show {
+      display: block
+    }
+
+    .more-item {
+      padding: 13px 18px;
+      font-size: 14px;
+      color: var(--dark);
+      cursor: pointer;
+      transition: background 0.12s;
+      font-weight: 500
+    }
+
+    .more-item:hover {
+      background: var(--gray-100)
+    }
+
+    .more-item.danger {
+      color: var(--red)
+    }
+
+    /* PROFILE STRIP */
+    .profile-strip {
+      background: #fff;
+      padding: 16px;
+      border-bottom: 3px solid var(--red)
+    }
+
+    .profile-inner {
+      display: flex;
+      align-items: center;
+      gap: 14px
+    }
+
+    .avatar-wrap {
+      position: relative;
+      flex-shrink: 0
+    }
+
+    .avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f0c080, #e8a060);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--gray-200);
+      overflow: hidden
+    }
+
+    .online-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid #fff
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .profile-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark)
+    }
+
+    .profile-sub {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 3px
+    }
+
+    .content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding-bottom: 80px
+    }
+
+    .section-gap {
+      height: 10px;
+      background: var(--gray-100)
+    }
+
+    /* FIELDS */
+    .field-group {
+      background: #fff;
+      padding: 0 16px
+    }
+
+    .field-row {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+      cursor: pointer;
+      transition: background 0.12s
+    }
+
+    .field-row:last-child {
+      border-bottom: none
+    }
+
+    .field-row:hover {
+      background: #fafafa
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--gray-400);
+      font-weight: 500;
+      margin-bottom: 4px
+    }
+
+    .field-value {
+      font-size: 15px;
+      color: var(--dark);
+      font-weight: 500
+    }
+
+    .field-value.empty {
+      color: var(--gray-400)
+    }
+
+    /* BANK */
+    .bank-header {
+      background: #fff;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .bank-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark)
+    }
+
+    .edit-details-btn {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.3px
+    }
+
+    .edit-details-btn:hover {
+      background: var(--blue-bg)
+    }
+
+    .bank-body {
+      background: #fff;
+      padding: 0 16px 4px
+    }
+
+    .bank-field {
+      display: flex;
+      align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .bank-field:last-child {
+      border-bottom: none
+    }
+
+    .bank-key {
+      font-size: 14px;
+      color: var(--dark);
+      min-width: 140px;
+      font-weight: 500;
+      flex-shrink: 0
+    }
+
+    .bank-colon {
+      color: var(--gray-400);
+      margin: 0 10px;
+      font-size: 14px
+    }
+
+    .bank-val {
+      font-size: 14px;
+      color: var(--dark);
+      font-weight: 500;
+      flex: 1
+    }
+
+    /* NAV ROW */
+    .nav-row {
+      background: #fff;
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid var(--gray-200)
+    }
+
+    .nav-row:hover {
+      background: #f9f9f9
+    }
+
+    .nav-row-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark)
+    }
+
+    /* LANG ROWS */
+    .lang-section {
+      background: #fff;
+      padding: 0 16px
+    }
+
+    .lang-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-100);
+      gap: 12px
+    }
+
+    .lang-row:last-child {
+      border-bottom: none
+    }
+
+    .lang-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px
+    }
+
+    .lang-label {
+      font-size: 12px;
+      color: var(--gray-400);
+      font-weight: 500
+    }
+
+    .lang-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark)
+    }
+
+    .change-btn {
+      border: 1.5px solid var(--blue);
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--blue);
+      cursor: pointer;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0
+    }
+
+    .change-btn:hover {
+      background: var(--blue);
+      color: #fff
+    }
+
+    .app-version {
+      background: var(--gray-100);
+      padding: 30px 16px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--gray-400);
+      font-weight: 500
+    }
+
+    /* BOTTOM NAV */
+    /* .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #fff;
+      z-index: 30
+    }
+
+    .nav-sq {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--gray-700);
+      border-radius: 3px;
+      cursor: pointer
+    }
+
+    .nav-circ {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--gray-700);
+      border-radius: 50%;
+      cursor: pointer
+    }
+
+    .nav-tri {
+      width: 0;
+      height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-right: 18px solid var(--gray-700);
+      cursor: pointer
+    } */
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: flex-end
+    }
+
+    .modal-backdrop.show {
+      display: flex
+    }
+
+    .modal-sheet {
+      width: 100%;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(0.34, 1.2, 0.64, 1);
+      max-height: 88vh;
+      overflow-y: auto
+    }
+
+    .modal-sheet.open {
+      transform: translateY(0)
+    }
+
+    .modal-header {
+      padding: 20px 20px 14px;
+      font-family: 'Sora', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--dark);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 1
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
+      color: var(--gray-700);
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .modal-body {
+      padding: 16px 20px
+    }
+
+    /* VEHICLE CARD */
+    .vehicle-card {
+      background: var(--gray-100);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--gray-200)
+    }
+
+    .vehicle-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px
+    }
+
+    .vehicle-type {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .vehicle-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--blue-bg);
+      color: var(--blue)
+    }
+
+    .vehicle-plate {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: 2px;
+      font-family: 'Sora', sans-serif
+    }
+
+    .vehicle-detail {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 4px
+    }
+
+    /* LANG OPTION */
+    .lang-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--gray-100);
+      cursor: pointer;
+      transition: background 0.12s;
+      border-radius: 0
+    }
+
+    .lang-option:last-child {
+      border-bottom: none
+    }
+
+    .lang-option:hover {
+      background: var(--blue-bg);
+      border-radius: 8px;
+      padding-left: 8px;
+      padding-right: 8px;
+      margin: 0 -8px
+    }
+
+    .lang-option-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark)
+    }
+
+    .lang-option-native {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 2px
+    }
+
+    .lang-check {
+      color: var(--blue);
+      display: none
+    }
+
+    .lang-option.selected .lang-check {
+      display: block
+    }
+
+    .lang-option.selected .lang-option-name {
+      color: var(--blue)
+    }
+
+    /* FORM */
+    .bank-edit-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .form-label {
+      font-size: 12px;
+      color: var(--gray-500);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px
+    }
+
+    .form-input {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-size: 15px;
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s
+    }
+
+    .form-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.09)
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.15s, transform 0.15s;
+      box-shadow: 0 4px 14px rgba(26, 86, 219, 0.3)
+    }
+
+    .save-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px)
+    }
+
+    .save-btn:active {
+      transform: scale(0.98)
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 30px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 99
+    }
+
+    .toast.show {
+      opacity: 1
+    }
+
+    /* SUCCESS */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(22, 163, 74, 0.95);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .success-overlay.show {
+      display: flex;
+      animation: popIn 0.35s ease
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    .success-overlay p {
+      font-family: 'Sora', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      padding: 0 24px
+    }
+
+    @media(min-width:600px) {
+      .top-bar {
+        padding: 0 24px
+      }
+
+      .profile-strip,
+      .field-group,
+      .bank-header,
+      .bank-body,
+      .nav-row,
+      .lang-section,
+      .app-version {
+        padding-left: 24px;
+        padding-right: 24px
+      }
+    }
+
+    @media(min-width:900px) {
+      body {
+        background: #d8d8d8
+      }
+
+      .top-bar {
+        max-width: 700px;
+        margin: 0 auto
+      }
+
+      .content {
+        max-width: 700px
+      }
+
+      .bottom-nav {
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+        width: 700px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="toast" id="toast"></div>
+  <div class="success-overlay" id="successOverlay">
+    <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="9 12 11 14 15 10" />
+    </svg>
+    <p id="successMsg">Saved successfully!</p>
+  </div>
+
+  <!-- VEHICLE MODAL -->
+  <div class="modal-backdrop" id="vehicleModal" onclick="closeModal('vehicleModal')">
+    <div class="modal-sheet" id="vehicleSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">My Vehicles <button class="modal-close" onclick="closeModal('vehicleModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="vehicle-card">
+          <div class="vehicle-card-top">
+            <div class="vehicle-type">🛵 2 Wheeler</div><span class="vehicle-badge">Active</span>
+          </div>
+          <div class="vehicle-plate">MH 12 AB 3456</div>
+          <div class="vehicle-detail">Bike · Petrol · Pune</div>
+        </div>
+        <div style="margin-top:8px;">
+          <button onclick="showToast('Add vehicle feature coming soon')"
+            style="border:1.5px dashed var(--blue);border-radius:12px;padding:14px;width:100%;font-size:14px;font-weight:600;color:var(--blue);background:none;cursor:pointer;font-family:'DM Sans',sans-serif;">+
+            Add Another Vehicle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP LANGUAGE MODAL -->
+  <div class="modal-backdrop" id="appLangModal" onclick="closeModal('appLangModal')">
+    <div class="modal-sheet" id="appLangSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Preferred App Language <button class="modal-close"
+          onclick="closeModal('appLangModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="lang-option selected" id="appLang-English" onclick="selectAppLang('English','English')">
+          <div>
+            <div class="lang-option-name">English</div>
+            <div class="lang-option-native">English</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="appLang-Hindi" onclick="selectAppLang('Hindi','हिंदी')">
+          <div>
+            <div class="lang-option-name">Hindi</div>
+            <div class="lang-option-native">हिंदी</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="appLang-Marathi" onclick="selectAppLang('Marathi','मराठी')">
+          <div>
+            <div class="lang-option-name">Marathi</div>
+            <div class="lang-option-native">मराठी</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="appLang-Tamil" onclick="selectAppLang('Tamil','தமிழ்')">
+          <div>
+            <div class="lang-option-name">Tamil</div>
+            <div class="lang-option-native">தமிழ்</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="appLang-Telugu" onclick="selectAppLang('Telugu','తెలుగు')">
+          <div>
+            <div class="lang-option-name">Telugu</div>
+            <div class="lang-option-native">తెలుగు</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="appLang-Kannada" onclick="selectAppLang('Kannada','ಕನ್ನಡ')">
+          <div>
+            <div class="lang-option-name">Kannada</div>
+            <div class="lang-option-native">ಕನ್ನಡ</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="appLang-Malayalam" onclick="selectAppLang('Malayalam','മലയാളം')">
+          <div>
+            <div class="lang-option-name">Malayalam</div>
+            <div class="lang-option-native">മലയാളം</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAINING LANG MODAL -->
+  <div class="modal-backdrop" id="trainLangModal" onclick="closeModal('trainLangModal')">
+    <div class="modal-sheet" id="trainLangSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Change Training Language <button class="modal-close"
+          onclick="closeModal('trainLangModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="lang-option" id="trainLang-English" onclick="selectTrainLang('English','English')">
+          <div>
+            <div class="lang-option-name">English</div>
+            <div class="lang-option-native">English</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option selected" id="trainLang-Hindi" onclick="selectTrainLang('Hindi','हिंदी')">
+          <div>
+            <div class="lang-option-name">Hindi</div>
+            <div class="lang-option-native">हिंदी</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="trainLang-Marathi" onclick="selectTrainLang('Marathi','मराठी')">
+          <div>
+            <div class="lang-option-name">Marathi</div>
+            <div class="lang-option-native">मराठी</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="trainLang-Tamil" onclick="selectTrainLang('Tamil','தமிழ்')">
+          <div>
+            <div class="lang-option-name">Tamil</div>
+            <div class="lang-option-native">தமிழ்</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="trainLang-Telugu" onclick="selectTrainLang('Telugu','తెలుగు')">
+          <div>
+            <div class="lang-option-name">Telugu</div>
+            <div class="lang-option-native">తెలుగు</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="trainLang-Kannada" onclick="selectTrainLang('Kannada','ಕನ್ನಡ')">
+          <div>
+            <div class="lang-option-name">Kannada</div>
+            <div class="lang-option-native">ಕನ್ನಡ</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="lang-option" id="trainLang-Malayalam" onclick="selectTrainLang('Malayalam','മലയാളം')">
+          <div>
+            <div class="lang-option-name">Malayalam</div>
+            <div class="lang-option-native">മലയാളം</div>
+          </div><svg class="lang-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANK MODAL -->
+  <div class="modal-backdrop" id="bankModal" onclick="closeModal('bankModal')">
+    <div class="modal-sheet" id="bankSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Edit Bank Details <button class="modal-close"
+          onclick="closeModal('bankModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="bank-edit-form">
+          <div class="form-field"><label class="form-label">Account Holder Name</label><input class="form-input"
+              type="text" id="bankName" value="Amol Sharma" placeholder="Enter name" /></div>
+          <div class="form-field"><label class="form-label">Account Number</label><input class="form-input" type="text"
+              id="bankAccount" value="96500012345678" placeholder="Enter account number" maxlength="18" /></div>
+          <div class="form-field"><label class="form-label">Confirm Account Number</label><input class="form-input"
+              type="text" id="bankAccountConfirm" placeholder="Re-enter account number" maxlength="18" /></div>
+          <div class="form-field"><label class="form-label">IFSC Code</label><input class="form-input" type="text"
+              id="bankIfsc" value="BKID0008227" placeholder="e.g. SBIN0001234" style="text-transform:uppercase"
+              oninput="this.value=this.value.toUpperCase()" /></div>
+          <div class="form-field"><label class="form-label">Bank Name</label><input class="form-input" type="text"
+              id="bankBankName" value="Bank of India" placeholder="Enter bank name" /></div>
+          <button class="save-btn" onclick="saveBankDetails()">Save Bank Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDRESS MODAL -->
+  <div class="modal-backdrop" id="addressModal" onclick="closeModal('addressModal')">
+    <div class="modal-sheet" id="addressSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Edit Home Address <button class="modal-close"
+          onclick="closeModal('addressModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="bank-edit-form">
+          <div class="form-field"><label class="form-label">Street / Flat No.</label><input class="form-input"
+              type="text" id="addrStreet" placeholder="e.g. Flat 302, Sunrise Apt" /></div>
+          <div class="form-field"><label class="form-label">Area / Locality</label><input class="form-input" type="text"
+              id="addrArea" placeholder="e.g. Hadapsar" /></div>
+          <div class="form-field"><label class="form-label">City</label><input class="form-input" type="text"
+              id="addrCity" value="Pune" placeholder="City" /></div>
+          <div class="form-field"><label class="form-label">PIN Code</label><input class="form-input" type="tel"
+              id="addrPin" placeholder="6-digit PIN" maxlength="6" oninput="this.value=this.value.replace(/\D/g,'')" />
+          </div>
+          <button class="save-btn" onclick="saveAddress()">Save Address</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE -->
+  <div class="top-bar">
+    <div class="back-btn" onclick="window.history.back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg></div>
+    <span class="top-title">Profile</span>
+    <div class="more-btn" onclick="toggleMoreMenu(event)">⋮
+      <div class="more-menu" id="moreMenu">
+        <div class="more-item"
+          onclick="navigator.clipboard.writeText('porter.in/partner/amolsharma').then(()=>showToast('Profile link copied!'))">
+          Share Profile</div>
+        <div class="more-item" onclick="openModal('bankModal')">Edit Bank Details</div>
+        <div class="more-item" onclick="openModal('vehicleModal')">My Vehicles</div>
+        <div class="more-item danger" onclick="handleLogout()">Logout</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="profile-strip">
+      <div class="profile-inner">
+        <div class="avatar-wrap">
+          <div class="avatar"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#7B4F2E"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4" fill="#c8834a" />
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#c8834a" />
+            </svg></div>
+          <div class="online-dot"></div>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Amol Sharma</div>
+          <div class="profile-sub">2 Wheeler &middot; MH-12 AB 3456</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <div class="field-group">
+      <div class="field-row" onclick="openModal('addressModal')">
+        <div class="field-label">Home Address</div>
+        <div class="field-value empty" id="homeAddressDisplay">-- (tap to add)</div>
+      </div>
+      <div class="field-row" style="cursor:default;">
+        <div class="field-label">Mobile number</div>
+        <div class="field-value">+91 73800 12345</div>
+      </div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <div class="bank-header">
+      <span class="bank-title">Current Bank Details</span>
+      <button class="edit-details-btn" onclick="openModal('bankModal')">EDIT DETAILS</button>
+    </div>
+    <div class="bank-body">
+      <div class="bank-field"><span class="bank-key">Account number</span><span class="bank-colon">:</span><span
+          class="bank-val" id="bankAccountDisplay">9650 XXXX XXXX 78</span></div>
+      <div class="bank-field"><span class="bank-key">IFSC Code</span><span class="bank-colon">:</span><span
+          class="bank-val" id="bankIfscDisplay">BKID0008227</span></div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <div class="nav-row" onclick="openModal('vehicleModal')">
+      <span class="nav-row-label">My Vehicles</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5"
+        stroke-linecap="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <div class="lang-section">
+      <div class="lang-row">
+        <div class="lang-info"><span class="lang-label">Preferred app language</span><span class="lang-value"
+            id="appLangDisplay">English</span></div>
+        <button class="change-btn" onclick="openModal('appLangModal')">Change</button>
+      </div>
+      <div class="lang-row">
+        <div class="lang-info"><span class="lang-label">Change Training Language</span><span class="lang-value"
+            id="trainLangDisplay">हिंदी</span></div>
+        <button class="change-btn" onclick="openModal('trainLangModal')">Change</button>
+      </div>
+    </div>
+
+    <div class="section-gap"></div>
+    <div class="app-version">App Version 5.131.1</div>
+  </div>
+
+  <!-- <div class="bottom-nav">
+    <div class="nav-sq"></div>
+    <div class="nav-circ"></div>
+    <div class="nav-tri" onclick="window.history.back()"></div>
+  </div> -->
+
+  <script>
+    function openModal(id) { const bd = document.getElementById(id); const sh = bd.querySelector('.modal-sheet'); bd.classList.add('show'); requestAnimationFrame(() => sh.classList.add('open')); document.body.style.overflow = 'hidden'; closeMoreMenu() }
+    function closeModal(id) { const bd = document.getElementById(id); const sh = bd.querySelector('.modal-sheet'); sh.classList.remove('open'); setTimeout(() => { bd.classList.remove('show'); document.body.style.overflow = '' }, 380) }
+    function toggleMoreMenu(e) { e.stopPropagation(); document.getElementById('moreMenu').classList.toggle('show') }
+    function closeMoreMenu() { document.getElementById('moreMenu').classList.remove('show') }
+    document.addEventListener('click', closeMoreMenu);
+
+    let curAppLang = 'English';
+    function selectAppLang(key, display) {
+      document.querySelectorAll('[id^="appLang-"]').forEach(el => el.classList.remove('selected'));
+      document.getElementById('appLang-' + key).classList.add('selected');
+      curAppLang = key; document.getElementById('appLangDisplay').textContent = display;
+      setTimeout(() => { closeModal('appLangModal'); showToast('App language: ' + key) }, 300);
+    }
+
+    let curTrainLang = 'Hindi';
+    function selectTrainLang(key, display) {
+      document.querySelectorAll('[id^="trainLang-"]').forEach(el => el.classList.remove('selected'));
+      document.getElementById('trainLang-' + key).classList.add('selected');
+      curTrainLang = key; document.getElementById('trainLangDisplay').textContent = display;
+      setTimeout(() => { closeModal('trainLangModal'); showToast('Training language: ' + key) }, 300);
+    }
+
+    function saveBankDetails() {
+      const acc = document.getElementById('bankAccount').value.trim();
+      const accC = document.getElementById('bankAccountConfirm').value.trim();
+      const ifsc = document.getElementById('bankIfsc').value.trim();
+      const name = document.getElementById('bankName').value.trim();
+      if (!name) { showToast('Enter account holder name'); return }
+      if (acc.length < 9) { showToast('Enter valid account number'); return }
+      if (accC && acc !== accC) { showToast('Account numbers do not match'); return }
+      if (ifsc.length < 11) { showToast('Enter valid IFSC code (11 chars)'); return }
+      const masked = acc.slice(0, 4) + ' XXXX XXXX ' + acc.slice(-2);
+      document.getElementById('bankAccountDisplay').textContent = masked;
+      document.getElementById('bankIfscDisplay').textContent = ifsc;
+      closeModal('bankModal'); showSuccess('Bank details updated!');
+    }
+
+    function saveAddress() {
+      const s = document.getElementById('addrStreet').value.trim();
+      const a = document.getElementById('addrArea').value.trim();
+      const c = document.getElementById('addrCity').value.trim();
+      const p = document.getElementById('addrPin').value.trim();
+      if (!c) { showToast('Please enter city'); return }
+      const full = [s, a, c, p].filter(Boolean).join(', ');
+      const disp = document.getElementById('homeAddressDisplay');
+      disp.textContent = full || '--';
+      disp.classList.toggle('empty', !full);
+      closeModal('addressModal'); showSuccess('Address saved!');
+    }
+
+    function handleLogout() { closeMoreMenu(); setTimeout(() => { if (confirm('Are you sure you want to logout?')) showToast('Logged out successfully') }, 350) }
+
+    function showSuccess(msg) {
+      document.getElementById('successMsg').textContent = msg;
+      const ov = document.getElementById('successOverlay');
+      ov.classList.add('show'); setTimeout(() => ov.classList.remove('show'), 1800);
+    }
+
+    let toastTimer;
+    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400) }
+  </script>
+</body>
+
+</html>

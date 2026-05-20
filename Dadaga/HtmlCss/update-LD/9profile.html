@@ -43,7 +43,7 @@
       color: var(--black);
     }
 
-    /* ═══ TOP NAV ═══ */
+    /* TOP NAV */
     .top-nav {
       background: #1a1a1a;
       padding: 0 16px;
@@ -51,7 +51,6 @@
       align-items: center;
       justify-content: space-between;
       min-height: 60px;
-      flex-shrink: 0;
       position: sticky;
       top: 0;
       z-index: 50;
@@ -168,7 +167,7 @@
       font-family: 'Sora', sans-serif;
     }
 
-    /* ═══ PROFILE STRIP ═══ */
+    /* PROFILE STRIP */
     .profile-strip {
       background: #fff;
       padding: 14px 16px 0;
@@ -208,6 +207,7 @@
       border-radius: 50%;
       background: var(--red);
       border: 2px solid #fff;
+      transition: background 0.3s;
     }
 
     .profile-info {
@@ -224,25 +224,10 @@
       text-overflow: ellipsis;
     }
 
-    .blur-text {
-      display: inline-block;
-      filter: blur(5px);
-      user-select: none;
-      color: var(--gray-700);
-    }
-
     .profile-sub {
       font-size: 13px;
       color: var(--gray-500);
       margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .blur-sm {
-      filter: blur(4px);
-      user-select: none;
     }
 
     .view-profile-btn {
@@ -266,7 +251,7 @@
       background: var(--green-light);
     }
 
-    /* ═══ REWARD ROW ═══ */
+    /* REWARD ROW */
     .reward-row {
       background: #fff;
       padding: 16px;
@@ -289,7 +274,7 @@
       color: var(--black);
     }
 
-    /* ═══ NOTICEBOARD ═══ */
+    /* NOTICEBOARD */
     .noticeboard {
       background: var(--cream);
       padding: 16px 16px 18px;
@@ -304,7 +289,6 @@
       margin-bottom: 14px;
     }
 
-    /* Carousel */
     .carousel-outer {
       position: relative;
       overflow: hidden;
@@ -322,7 +306,6 @@
       flex-shrink: 0;
     }
 
-    /* GST Slide */
     .slide-gst {
       background: linear-gradient(130deg, #1B3FA6 0%, #1A56DB 55%, #2563EB 100%);
       padding: 18px 14px;
@@ -331,13 +314,6 @@
       align-items: center;
       position: relative;
       overflow: hidden;
-    }
-
-    .slide-gst::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.06) 0%, transparent 60%);
     }
 
     .gst-left {
@@ -453,7 +429,7 @@
       border-radius: 4px;
     }
 
-    /* ═══ INCENTIVES ═══ */
+    /* INCENTIVES */
     .incentives-row {
       background: #fff;
       padding: 20px 16px;
@@ -492,7 +468,7 @@
       transform: translateY(-1px);
     }
 
-    /* ═══ PERFORMANCE ═══ */
+    /* PERFORMANCE */
     .performance-row {
       background: #fff;
       padding: 18px 16px;
@@ -518,11 +494,10 @@
     .spacer-block {
       background: #fff;
       height: 90px;
-      margin-top: 0;
       border-top: 1px solid var(--gray-200);
     }
 
-    /* ═══ GO ONLINE BTN ═══ */
+    /* GO ONLINE */
     .go-online-bar {
       position: fixed;
       bottom: 52px;
@@ -539,12 +514,11 @@
       width: 100%;
       max-width: 600px;
       padding: 15px 20px;
-      background: linear-gradient(135deg, #1B6B3A 0%, #208A48 100%);
+      background: linear-gradient(135deg, #1B6B3A, #208A48);
       border: none;
       border-radius: 50px;
       display: flex;
       align-items: center;
-      gap: 0;
       cursor: pointer;
       box-shadow: 0 6px 24px rgba(27, 107, 58, 0.42);
       transition: transform 0.15s, box-shadow 0.15s;
@@ -571,15 +545,15 @@
 
     @keyframes goRing {
       0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.28);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.28)
       }
 
       70% {
-        box-shadow: 0 0 0 14px rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 14px rgba(255, 255, 255, 0)
       }
 
       100% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0)
       }
     }
 
@@ -608,7 +582,7 @@
       margin-right: 48px;
     }
 
-    /* ═══ BOTTOM NAV ═══ */
+    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -648,7 +622,7 @@
       cursor: pointer;
     }
 
-    /* ═══ DRAWER ═══ */
+    /* DRAWER */
     .drawer-backdrop {
       position: fixed;
       inset: 0;
@@ -667,9 +641,9 @@
     .drawer {
       position: fixed;
       top: 0;
-      left: -280px;
+      left: -300px;
       bottom: 0;
-      width: 280px;
+      width: 300px;
       background: #fff;
       z-index: 61;
       transition: left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
@@ -691,25 +665,50 @@
     }
 
     .d-avatar {
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: linear-gradient(135deg, #f0c080, #e8a060);
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .d-name {
       color: #fff;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
     }
 
     .d-sub {
       color: rgba(255, 255, 255, 0.65);
       font-size: 12px;
-      margin-top: 2px;
+      margin-top: 3px;
+    }
+
+    .d-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .d-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    .d-status-dot.online {
+      background: #22c55e;
+    }
+
+    .d-status-text {
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .drawer-menu {
@@ -722,7 +721,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 14px 20px;
+      padding: 15px 20px;
       cursor: pointer;
       font-size: 15px;
       color: var(--black);
@@ -737,12 +736,20 @@
     }
 
     .d-item:hover svg {
-      stroke: var(--green);
+      stroke: var(--green) !important;
     }
 
-    .d-item svg {
-      stroke: var(--gray-500);
-      flex-shrink: 0;
+    .d-item-right {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 30px;
+    }
+
+    .d-item-badge {
+      background: var(--red);
+      color: #fff;
     }
 
     .drawer-foot {
@@ -753,7 +760,422 @@
       text-align: center;
     }
 
-    /* ═══ TOAST ═══ */
+    /* MODAL OVERLAY */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: flex-end;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 0 0 32px;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(0.34, 1.2, 0.64, 1);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-sheet.open {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 20px 20px 14px;
+      font-family: 'Sora', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--black);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 1;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      font-size: 18px;
+      color: var(--gray-700);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+    }
+
+    /* TRIP CARDS */
+    .trip-card {
+      background: var(--gray-100);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--gray-200);
+    }
+
+    .trip-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .trip-id {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+    .trip-amt {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .trip-date {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    .trip-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .status-done {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-cancel {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* EARNINGS CHART */
+    .earn-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .earn-card {
+      background: var(--gray-100);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      border: 1px solid var(--gray-200);
+    }
+
+    .earn-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green);
+      font-family: 'Sora', sans-serif;
+    }
+
+    .earn-label {
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    /* WALLET */
+    .wallet-balance {
+      background: linear-gradient(135deg, #1B6B3A, #208A48);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .wallet-bal-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 6px;
+    }
+
+    .wallet-bal-amount {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .wallet-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .wallet-btn {
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: transform 0.15s;
+    }
+
+    .wallet-btn:active {
+      transform: scale(0.96);
+    }
+
+    .wallet-add {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .wallet-withdraw {
+      background: var(--gray-100);
+      color: var(--black);
+      border: 1px solid var(--gray-200);
+    }
+
+    /* PERFORMANCE */
+    .perf-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .perf-card {
+      background: var(--gray-100);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-200);
+    }
+
+    .perf-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--blue);
+      font-family: 'Sora', sans-serif;
+    }
+
+    .perf-label {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    .perf-bar-wrap {
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .perf-bar {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--blue);
+    }
+
+    /* REFER */
+    .refer-code-box {
+      background: var(--gray-100);
+      border: 2px dashed var(--gray-300);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .refer-code {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: var(--blue);
+      font-family: 'Sora', sans-serif;
+    }
+
+    .refer-sub {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 6px;
+    }
+
+    .share-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.15s;
+    }
+
+    .share-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* SETTINGS */
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .setting-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    .toggle-switch {
+      width: 46px;
+      height: 26px;
+      background: var(--gray-300);
+      border-radius: 30px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch.on {
+      background: var(--green-mid);
+    }
+
+    .toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      transition: left 0.2s;
+    }
+
+    .toggle-switch.on .toggle-knob {
+      left: 23px;
+    }
+
+    /* PROFILE MODAL */
+    .profile-field {
+      margin-bottom: 16px;
+    }
+
+    .profile-field-label {
+      font-size: 12px;
+      color: var(--gray-500);
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .profile-field-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--black);
+      background: var(--gray-100);
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-200);
+    }
+
+    /* REWARD */
+    .reward-tier {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: var(--gray-100);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 1px solid var(--gray-200);
+    }
+
+    .reward-icon {
+      font-size: 28px;
+    }
+
+    .reward-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .reward-desc {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+
+    .reward-pts {
+      margin-left: auto;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--orange);
+      white-space: nowrap;
+    }
+
+    /* INCENTIVE */
+    .incentive-card {
+      background: linear-gradient(135deg, var(--blue), #1447B4);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .incentive-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .incentive-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.5;
+    }
+
+    .incentive-amt {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--yellow);
+      margin-top: 10px;
+      font-family: 'Sora', sans-serif;
+    }
+
+    /* TOAST */
     .toast {
       position: fixed;
       bottom: 80px;
@@ -776,7 +1198,7 @@
       opacity: 1;
     }
 
-    /* ═══ RESPONSIVE ═══ */
+    /* RESPONSIVE */
     @media (min-width:600px) {
       .top-nav {
         padding: 0 24px;
@@ -833,107 +1255,529 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- Drawer backdrop -->
+  <!-- DRAWER BACKDROP -->
   <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
 
-  <!-- Drawer -->
+  <!-- DRAWER -->
   <div class="drawer" id="drawer">
     <div class="drawer-header">
       <div class="d-avatar">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"
           stroke-linecap="round">
-          <circle cx="12" cy="8" r="4" />
-          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          <circle cx="12" cy="8" r="4" fill="#c8834a" />
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#c8834a" />
         </svg>
       </div>
       <div>
-        <div class="d-name">Amol</div>
-        <div class="d-sub">2 Wheeler</div>
+        <div class="d-name">Amol Sharma</div>
+        <div class="d-sub">2 Wheeler · MH 12 AB 3456</div>
+        <div class="d-status">
+          <div class="d-status-dot" id="drawerDot"></div>
+          <span class="d-status-text" id="drawerStatus">Offline</span>
+        </div>
       </div>
     </div>
     <div class="drawer-menu">
-      <div class="d-item" onclick="showToast('My Trips');closeDrawer()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
+      <div class="d-item" onclick="openModal('tripsModal');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <rect x="1" y="3" width="15" height="13" rx="2" />
           <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
           <circle cx="5.5" cy="18.5" r="2.5" />
           <circle cx="18.5" cy="18.5" r="2.5" />
         </svg>
         My Trips
+        <span class="d-item-right d-item-badge">4</span>
       </div>
-      <div class="d-item" onclick="showToast('Earnings');closeDrawer()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
+      <div class="d-item" onclick="openModal('earningsModal');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="1" x2="12" y2="23" />
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
         </svg>
         Earnings
       </div>
-      <div class="d-item" onclick="showToast('Wallet');closeDrawer()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
+      <div class="d-item" onclick="openModal('walletModal');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="5" width="20" height="14" rx="2" />
           <path d="M16 13a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
         </svg>
         Wallet
       </div>
-      <div class="d-item" onclick="showToast('Refer & Earn');closeDrawer()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
+      <div class="d-item" onclick="openModal('referModal');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
-        Refer & Earn
+        Refer &amp; Earn
       </div>
-      <div class="d-item" onclick="showToast('Help & Support');closeDrawer()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
+      <div class="d-item" onclick="openModal('helpModal');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10" />
           <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
           <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
-        Help & Support
+        Help &amp; Support
       </div>
-      <div class="d-item" onclick="showToast('Settings');closeDrawer()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
+      <div class="d-item" onclick="openModal('settingsModal');closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3" />
           <path
             d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
         </svg>
         Settings
       </div>
+      <div class="d-item" style="color:#e53e3e;" onclick="handleLogout()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e53e3e" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        Logout
+      </div>
     </div>
-    <div class="drawer-foot">Porter Partner v3.2.1</div>
+    <div class="drawer-foot">LorryGo Partner v3.2.1</div>
   </div>
 
-  <!-- Top nav -->
-  <div class="top-nav">
-    <div class="hamburger" onclick="openDrawer()">
-      <span></span><span></span><span></span>
+  <!-- ═══ MODALS ═══ -->
+
+  <!-- MY TRIPS -->
+  <div class="modal-backdrop" id="tripsModal" onclick="closeModal('tripsModal')">
+    <div class="modal-sheet" id="tripsSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">My Trips <button class="modal-close" onclick="closeModal('tripsModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="trip-card">
+          <div class="trip-row"><span class="trip-id">#TRP-2041</span><span class="trip-amt">₹320</span></div>
+          <div class="trip-date">Today, 9:15 AM · Mumbai → Andheri</div>
+          <div style="margin-top:8px;"><span class="trip-status status-done">Completed</span></div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-row"><span class="trip-id">#TRP-2040</span><span class="trip-amt">₹185</span></div>
+          <div class="trip-date">Yesterday, 4:30 PM · Pune → Hinjewadi</div>
+          <div style="margin-top:8px;"><span class="trip-status status-done">Completed</span></div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-row"><span class="trip-id">#TRP-2039</span><span class="trip-amt">₹0</span></div>
+          <div class="trip-date">Yesterday, 1:10 PM · Pune · Cancelled</div>
+          <div style="margin-top:8px;"><span class="trip-status status-cancel">Cancelled</span></div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-row"><span class="trip-id">#TRP-2038</span><span class="trip-amt">₹430</span></div>
+          <div class="trip-date">Dec 18, 11:00 AM · Mumbai → Thane</div>
+          <div style="margin-top:8px;"><span class="trip-status status-done">Completed</span></div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- EARNINGS -->
+  <div class="modal-backdrop" id="earningsModal" onclick="closeModal('earningsModal')">
+    <div class="modal-sheet" id="earningsSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Earnings <button class="modal-close" onclick="closeModal('earningsModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="earn-summary">
+          <div class="earn-card">
+            <div class="earn-val">₹935</div>
+            <div class="earn-label">Today</div>
+          </div>
+          <div class="earn-card">
+            <div class="earn-val">₹4,820</div>
+            <div class="earn-label">This Week</div>
+          </div>
+          <div class="earn-card">
+            <div class="earn-val">₹18,600</div>
+            <div class="earn-label">This Month</div>
+          </div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:12px;padding:16px;border:1px solid var(--gray-200);">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Daily Breakdown</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;"><span
+                style="color:var(--gray-500);">Mon</span>
+              <div
+                style="flex:1;margin:0 12px;background:var(--gray-200);border-radius:4px;height:8px;display:flex;align-items:center;">
+                <div style="height:8px;width:70%;background:var(--green-mid);border-radius:4px;"></div>
+              </div><span style="font-weight:600;">₹820</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;"><span
+                style="color:var(--gray-500);">Tue</span>
+              <div
+                style="flex:1;margin:0 12px;background:var(--gray-200);border-radius:4px;height:8px;display:flex;align-items:center;">
+                <div style="height:8px;width:55%;background:var(--green-mid);border-radius:4px;"></div>
+              </div><span style="font-weight:600;">₹640</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;"><span
+                style="color:var(--gray-500);">Wed</span>
+              <div
+                style="flex:1;margin:0 12px;background:var(--gray-200);border-radius:4px;height:8px;display:flex;align-items:center;">
+                <div style="height:8px;width:90%;background:var(--green-mid);border-radius:4px;"></div>
+              </div><span style="font-weight:600;">₹1,050</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;"><span
+                style="color:var(--gray-500);">Thu</span>
+              <div
+                style="flex:1;margin:0 12px;background:var(--gray-200);border-radius:4px;height:8px;display:flex;align-items:center;">
+                <div style="height:8px;width:40%;background:var(--green-mid);border-radius:4px;"></div>
+              </div><span style="font-weight:600;">₹475</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;"><span
+                style="color:var(--gray-500);">Today</span>
+              <div
+                style="flex:1;margin:0 12px;background:var(--gray-200);border-radius:4px;height:8px;display:flex;align-items:center;">
+                <div style="height:8px;width:80%;background:var(--blue);border-radius:4px;"></div>
+              </div><span style="font-weight:600;">₹935</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WALLET -->
+  <div class="modal-backdrop" id="walletModal" onclick="closeModal('walletModal')">
+    <div class="modal-sheet" id="walletSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Wallet <button class="modal-close" onclick="closeModal('walletModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="wallet-balance">
+          <div class="wallet-bal-label">Available Balance</div>
+          <div class="wallet-bal-amount">₹2,340</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px;">Last credited: ₹185 · Yesterday</div>
+        </div>
+        <div class="wallet-actions">
+          <button class="wallet-btn wallet-add" onclick="showToast('Add Money feature coming soon')">+ Add
+            Money</button>
+          <button class="wallet-btn wallet-withdraw" onclick="showToast('Withdrawal initiated!')">Withdraw</button>
+        </div>
+        <div style="margin-top:20px;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Recent Transactions</div>
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div
+              style="display:flex;justify-content:space-between;padding:12px;background:var(--gray-100);border-radius:10px;">
+              <span style="font-size:13px;color:var(--gray-700);">Trip #TRP-2041</span><span
+                style="font-size:13px;font-weight:700;color:var(--green);">+₹320</span>
+            </div>
+            <div
+              style="display:flex;justify-content:space-between;padding:12px;background:var(--gray-100);border-radius:10px;">
+              <span style="font-size:13px;color:var(--gray-700);">Trip #TRP-2040</span><span
+                style="font-size:13px;font-weight:700;color:var(--green);">+₹185</span>
+            </div>
+            <div
+              style="display:flex;justify-content:space-between;padding:12px;background:var(--gray-100);border-radius:10px;">
+              <span style="font-size:13px;color:var(--gray-700);">Withdrawal</span><span
+                style="font-size:13px;font-weight:700;color:var(--red);">−₹1,000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFER & EARN -->
+  <div class="modal-backdrop" id="referModal" onclick="closeModal('referModal')">
+    <div class="modal-sheet" id="referSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Refer &amp; Earn <button class="modal-close"
+          onclick="closeModal('referModal')">✕</button></div>
+      <div class="modal-body">
+        <div style="text-align:center;margin-bottom:16px;font-size:14px;color:var(--gray-500);line-height:1.6;">Share
+          your referral code with friends. Earn <strong style="color:var(--green);">₹200</strong> for every partner who
+          completes 10 trips!</div>
+        <div class="refer-code-box">
+          <div class="refer-code">AMOL2024</div>
+          <div class="refer-sub">Tap to copy your code</div>
+        </div>
+        <button class="share-btn" onclick="copyReferral()">📋 Copy &amp; Share Code</button>
+        <div
+          style="margin-top:20px;background:var(--gray-100);border-radius:12px;padding:16px;border:1px solid var(--gray-200);">
+          <div style="font-size:14px;font-weight:700;margin-bottom:10px;">Your Referrals</div>
+          <div style="font-size:13px;color:var(--gray-500);">3 referrals · ₹600 earned so far</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP & SUPPORT -->
+  <div class="modal-backdrop" id="helpModal" onclick="closeModal('helpModal')">
+    <div class="modal-sheet" id="helpSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Help &amp; Support <button class="modal-close"
+          onclick="closeModal('helpModal')">✕</button></div>
+      <div class="modal-body">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <div class="d-item" style="border-radius:10px;" onclick="showToast('Calling support: 1800-XXX-XXXX')">📞 Call
+            Support</div>
+          <div class="d-item" style="border-radius:10px;" onclick="showToast('Opening chat...')">💬 Live Chat</div>
+          <div class="d-item" style="border-radius:10px;" onclick="showToast('Opening FAQs...')">❓ FAQs</div>
+          <div class="d-item" style="border-radius:10px;" onclick="showToast('Report submitted!')">🚨 Report an Issue
+          </div>
+          <div class="d-item" style="border-radius:10px;" onclick="showToast('Opening training videos...')">🎓 Training
+            Videos</div>
+        </div>
+        <div style="margin-top:20px;background:#fff7ed;border-radius:12px;padding:16px;border:1px solid #fed7aa;">
+          <div style="font-size:13px;font-weight:700;color:#c2410c;margin-bottom:4px;">Emergency</div>
+          <div style="font-size:13px;color:#9a3412;">For urgent help call our 24/7 helpline:</div>
+          <div style="font-size:18px;font-weight:800;color:#c2410c;margin-top:6px;">1800-000-PORTER</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="modal-backdrop" id="settingsModal" onclick="closeModal('settingsModal')">
+    <div class="modal-sheet" id="settingsSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Settings <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-item"><span class="setting-label">Push Notifications</span>
+          <div class="toggle-switch on" onclick="toggleSetting(this)">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="setting-item"><span class="setting-label">Sound Alerts</span>
+          <div class="toggle-switch on" onclick="toggleSetting(this)">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="setting-item"><span class="setting-label">Location Tracking</span>
+          <div class="toggle-switch on" onclick="toggleSetting(this)">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="setting-item"><span class="setting-label">Dark Mode</span>
+          <div class="toggle-switch" onclick="toggleSetting(this)">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="setting-item"><span class="setting-label">Auto-Accept Orders</span>
+          <div class="toggle-switch" onclick="toggleSetting(this)">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="setting-item" style="border-bottom:none;"><span class="setting-label">Language:
+            English</span><button
+            style="border:none;background:var(--blue-bg,#EBF2FF);color:var(--blue);padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;"
+            onclick="showToast('Language settings')">Change</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE MODAL -->
+  <div class="modal-backdrop" id="profileModal" onclick="closeModal('profileModal')">
+    <div class="modal-sheet" id="profileSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">My Profile <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div
+            style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#f0c080,#e8a060);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#7B4F2E" stroke-width="1.5"
+              stroke-linecap="round">
+              <circle cx="12" cy="8" r="4" fill="#c8834a" />
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#c8834a" />
+            </svg>
+          </div>
+          <div style="font-size:18px;font-weight:700;">Amol Sharma</div>
+          <div style="font-size:13px;color:var(--gray-500);margin-top:2px;">Partner since Jan 2023</div>
+        </div>
+        <div class="profile-field">
+          <div class="profile-field-label">Phone</div>
+          <div class="profile-field-val">+91 98765 43210</div>
+        </div>
+        <div class="profile-field">
+          <div class="profile-field-label">Vehicle Type</div>
+          <div class="profile-field-val">2 Wheeler</div>
+        </div>
+        <div class="profile-field">
+          <div class="profile-field-label">Number Plate</div>
+          <div class="profile-field-val">MH 12 AB 3456</div>
+        </div>
+        <div class="profile-field">
+          <div class="profile-field-label">Rating</div>
+          <div class="profile-field-val">⭐ 4.8 / 5.0 · 312 trips</div>
+        </div>
+        <div class="profile-field">
+          <div class="profile-field-label">City</div>
+          <div class="profile-field-val">Pune, Maharashtra</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REWARD PROGRAM MODAL -->
+  <div class="modal-backdrop" id="rewardModal" onclick="closeModal('rewardModal')">
+    <div class="modal-sheet" id="rewardSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">LorryGo Reward Program <button class="modal-close"
+          onclick="closeModal('rewardModal')">✕</button></div>
+      <div class="modal-body">
+        <div style="font-size:14px;color:var(--gray-500);margin-bottom:16px;line-height:1.6;">Complete more trips and
+          earn reward points. Redeem them for cash bonuses and exclusive benefits!</div>
+        <div class="reward-tier">
+          <div class="reward-icon">🥉</div>
+          <div>
+            <div class="reward-name">Bronze</div>
+            <div class="reward-desc">0–499 pts · 1× multiplier</div>
+          </div>
+          <div class="reward-pts">Current</div>
+        </div>
+        <div class="reward-tier">
+          <div class="reward-icon">🥈</div>
+          <div>
+            <div class="reward-name">Silver</div>
+            <div class="reward-desc">500–999 pts · 1.5× multiplier</div>
+          </div>
+          <div class="reward-pts">200 pts away</div>
+        </div>
+        <div class="reward-tier">
+          <div class="reward-icon">🥇</div>
+          <div>
+            <div class="reward-name">Gold</div>
+            <div class="reward-desc">1000+ pts · 2× multiplier + bonuses</div>
+          </div>
+          <div class="reward-pts">700 pts away</div>
+        </div>
+        <div
+          style="background:var(--gray-100);border-radius:12px;padding:16px;margin-top:8px;border:1px solid var(--gray-200);text-align:center;">
+          <div style="font-size:13px;color:var(--gray-500);">Your Points</div>
+          <div style="font-size:32px;font-weight:800;color:var(--orange);font-family:'Sora',sans-serif;">300 pts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCENTIVES MODAL -->
+  <div class="modal-backdrop" id="incentivesModal" onclick="closeModal('incentivesModal')">
+    <div class="modal-sheet" id="incentivesSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Incentives <button class="modal-close"
+          onclick="closeModal('incentivesModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="incentive-card">
+          <div class="incentive-title">🚀 Daily Surge Bonus</div>
+          <div class="incentive-desc">Complete 8+ trips today between 8AM–10PM to unlock the surge bonus.</div>
+          <div class="incentive-amt">+₹200</div>
+        </div>
+        <div class="incentive-card" style="background:linear-gradient(135deg,#1B6B3A,#208A48);">
+          <div class="incentive-title">🏆 Weekly Champion</div>
+          <div class="incentive-desc">Top 10 drivers by trips this week win a special bonus.</div>
+          <div class="incentive-amt">+₹500</div>
+        </div>
+        <div class="incentive-card" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">
+          <div class="incentive-title">⭐ Rating Bonus</div>
+          <div class="incentive-desc">Maintain 4.8+ rating for 30 days to earn the loyalty reward.</div>
+          <div class="incentive-amt">+₹300/mo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERFORMANCE MODAL -->
+  <div class="modal-backdrop" id="performanceModal" onclick="closeModal('performanceModal')">
+    <div class="modal-sheet" id="performanceSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Your Performance <button class="modal-close"
+          onclick="closeModal('performanceModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="perf-grid">
+          <div class="perf-card">
+            <div class="perf-val">312</div>
+            <div class="perf-label">Total Trips</div>
+            <div class="perf-bar-wrap">
+              <div class="perf-bar" style="width:78%"></div>
+            </div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-val">4.8 ⭐</div>
+            <div class="perf-label">Avg Rating</div>
+            <div class="perf-bar-wrap">
+              <div class="perf-bar" style="width:96%;background:#f59e0b;"></div>
+            </div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-val">97%</div>
+            <div class="perf-label">Acceptance</div>
+            <div class="perf-bar-wrap">
+              <div class="perf-bar" style="width:97%;background:var(--green-mid);"></div>
+            </div>
+          </div>
+          <div class="perf-card">
+            <div class="perf-val">2%</div>
+            <div class="perf-label">Cancellation</div>
+            <div class="perf-bar-wrap">
+              <div class="perf-bar" style="width:2%;background:var(--red);"></div>
+            </div>
+          </div>
+        </div>
+        <div
+          style="margin-top:16px;background:var(--gray-100);border-radius:12px;padding:16px;border:1px solid var(--gray-200);">
+          <div style="font-size:14px;font-weight:700;margin-bottom:8px;">This Month</div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span
+              style="color:var(--gray-500);">Trips Completed</span><span style="font-weight:600;">68</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span
+              style="color:var(--gray-500);">Avg Daily Earnings</span><span style="font-weight:600;">₹620</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span
+              style="color:var(--gray-500);">Online Hours</span><span style="font-weight:600;">142 hrs</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS MODAL -->
+  <div class="modal-backdrop" id="notifModal" onclick="closeModal('notifModal')">
+    <div class="modal-sheet" id="notifSheet" onclick="event.stopPropagation()">
+      <div class="modal-header">Notifications <span id="notifBadgeHead"
+          style="font-size:12px;background:var(--red);color:#fff;padding:2px 8px;border-radius:20px;font-weight:600;">1
+          new</span><button class="modal-close" onclick="closeModal('notifModal')">✕</button></div>
+      <div class="modal-body">
+        <div
+          style="background:#eff6ff;border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--blue);">
+          <div style="font-size:14px;font-weight:700;color:var(--blue);">🔔 New Incentive Available</div>
+          <div style="font-size:13px;color:var(--gray-700);margin-top:4px;">Complete 5 trips today and earn ₹150 bonus!
+          </div>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:6px;">Just now</div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:14px;font-weight:700;">✅ Trip Completed</div>
+          <div style="font-size:13px;color:var(--gray-700);margin-top:4px;">Trip #TRP-2041 completed. ₹320 credited.
+          </div>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:6px;">2 hours ago</div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:12px;padding:14px;">
+          <div style="font-size:14px;font-weight:700;">⭐ New Rating</div>
+          <div style="font-size:13px;color:var(--gray-700);margin-top:4px;">Customer gave you 5 stars! Keep it up.</div>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:6px;">4 hours ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ PAGE ════ -->
+
+  <!-- TOP NAV -->
+  <div class="top-nav">
+    <div class="hamburger" onclick="openDrawer()"><span></span><span></span><span></span></div>
     <div class="logo-wrap">
       <div class="logo-badge">
         <span class="big-num">1</span>
         <div class="logo-text-col" style="margin-left:2px;">
           <span class="years-of">YEARS OF</span>
-          <span class="porter-name">PORTER<span class="logo-dot">°</span></span>
+          <span class="porter-name">LorryGo<span class="logo-dot">°</span></span>
         </div>
       </div>
     </div>
     <div class="nav-icons">
-      <div class="nav-icon-btn" onclick="showToast('1 new notification')">
+      <div class="nav-icon-btn" onclick="openModal('notifModal')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
           <path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
-        <div class="badge">1</div>
+        <div class="badge" id="notifBadge">1</div>
       </div>
-      <div class="nav-icon-btn" onclick="showToast('Support')">
+      <div class="nav-icon-btn" onclick="openModal('helpModal')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
@@ -944,52 +1788,46 @@
     </div>
   </div>
 
-  <!-- Profile strip -->
+  <!-- PROFILE STRIP -->
   <div class="profile-strip">
     <div class="profile-inner">
       <div class="avatar-wrap">
-        <div class="avatar">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7B4F2E" stroke-width="1.5"
-            stroke-linecap="round" stroke-linejoin="round">
+        <div class="avatar"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7B4F2E"
+            stroke-width="1.5" stroke-linecap="round">
             <circle cx="12" cy="8" r="4" fill="#c8834a" />
             <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#c8834a" />
-          </svg>
-        </div>
+          </svg></div>
         <div class="online-dot" id="onlineDot"></div>
       </div>
       <div class="profile-info">
-        <div class="profile-name">Amol <span class="blur-text">shah Sh■■■■■ ■■■■■■</span></div>
-        <div class="profile-sub">2 Wheeler &bull; MH-<span class="blur-sm"> MH 02 1234 ■■ ■■ ■■■■</span></div>
+        <div class="profile-name">Amol Sharma</div>
+        <div class="profile-sub">2 Wheeler · MH 12 AB 3456</div>
       </div>
-      <button class="view-profile-btn" onclick="showToast('Opening Profile…')">VIEW PROFILE</button>
+      <button class="view-profile-btn" onclick="openModal('profileModal')">VIEW PROFILE</button>
     </div>
   </div>
 
-  <!-- Reward Program -->
-  <div class="reward-row" onclick="showToast('Porter Reward Program')">
-    <span class="reward-label">Porter Reward Program</span>
+  <!-- REWARD ROW -->
+  <div class="reward-row" onclick="openModal('rewardModal')">
+    <span class="reward-label">LorryGo Reward Program</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round">
       <polyline points="9 18 15 12 9 6" />
     </svg>
   </div>
 
-  <!-- Noticeboard -->
+  <!-- NOTICEBOARD -->
   <div class="noticeboard">
     <div class="noticeboard-title">Noticeboard</div>
     <div class="carousel-outer">
       <div class="carousel-track" id="track">
-
-        <!-- Slide 1 -->
         <div class="slide slide-gst">
           <div class="gst-left">
             <div class="gst-top">Fares will now<br><strong>include 18% GST</strong></div>
             <div class="gst-highlight">Don't worry, your<br>earnings stay the same</div>
             <button class="watch-btn" onclick="showToast('Opening video…')">
-              <div class="play-icon">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="white">
+              <div class="play-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="white">
                   <polygon points="2,1 9,5 2,9" />
-                </svg>
-              </div>
+                </svg></div>
               Watch the video to know more
             </button>
           </div>
@@ -1001,8 +1839,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Slide 2 -->
         <div class="slide"
           style="background:linear-gradient(135deg,#1B6B3A,#208A48);padding:20px;min-height:160px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:10px;">
           <div style="font-size:13px;color:rgba(255,255,255,0.85);font-weight:500;">New Routes Available</div>
@@ -1011,11 +1847,9 @@
           <button class="watch-btn" onclick="showToast('Learn more')">
             <div class="play-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="white">
                 <polygon points="2,1 9,5 2,9" />
-              </svg></div>
-            Learn more
+              </svg></div>Learn more
           </button>
         </div>
-
       </div>
       <div class="carousel-dots" id="dots">
         <div class="dot active" onclick="goSlide(0)"></div>
@@ -1024,14 +1858,14 @@
     </div>
   </div>
 
-  <!-- Incentives -->
+  <!-- INCENTIVES -->
   <div class="incentives-row">
     <div class="incentives-text">Check the details of your incentives here!</div>
-    <button class="read-more-btn" onclick="showToast('Opening incentives…')">Read more</button>
+    <button class="read-more-btn" onclick="openModal('incentivesModal')">Read more</button>
   </div>
 
-  <!-- Performance -->
-  <div class="performance-row" onclick="showToast('Your Performance')">
+  <!-- PERFORMANCE -->
+  <div class="performance-row" onclick="openModal('performanceModal')">
     <span class="performance-label">Your Performance</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round">
       <polyline points="9 18 15 12 9 6" />
@@ -1054,30 +1888,49 @@
     </button>
   </div>
 
-  <!-- Bottom nav -->
+  <!-- BOTTOM NAV -->
   <div class="bottom-nav">
-    <div class="nav-sq"></div>
-    <div class="nav-circ"></div>
-    <div class="nav-tri"></div>
+    <div class="nav-sq" onclick="openModal('tripsModal')"></div>
+    <div class="nav-circ" onclick="openModal('earningsModal')"></div>
+    <div class="nav-tri" onclick="window.history.back()"></div>
   </div>
 
   <script>
-    /* Drawer */
+    /* ── DRAWER ── */
     function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('show'); document.body.style.overflow = 'hidden'; }
     function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerBackdrop').classList.remove('show'); document.body.style.overflow = ''; }
 
-    /* Carousel */
+    /* ── MODALS ── */
+    function openModal(id) {
+      const bd = document.getElementById(id);
+      const sh = bd.querySelector('.modal-sheet');
+      bd.classList.add('show');
+      requestAnimationFrame(() => sh.classList.add('open'));
+      document.body.style.overflow = 'hidden';
+      // hide notif badge on open
+      if (id === 'notifModal') {
+        document.getElementById('notifBadge').style.display = 'none';
+        document.getElementById('notifBadgeHead').textContent = '';
+      }
+    }
+    function closeModal(id) {
+      const bd = document.getElementById(id);
+      const sh = bd.querySelector('.modal-sheet');
+      sh.classList.remove('open');
+      setTimeout(() => { bd.classList.remove('show'); document.body.style.overflow = ''; }, 380);
+    }
+
+    /* ── CAROUSEL ── */
     let cur = 0;
-    const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     function goSlide(n) {
       cur = n;
       document.getElementById('track').style.transform = `translateX(-${n * 100}%)`;
       dots.forEach((d, i) => d.classList.toggle('active', i === n));
     }
-    setInterval(() => goSlide((cur + 1) % slides.length), 4500);
+    setInterval(() => goSlide((cur + 1) % 2), 4500);
 
-    /* GO ONLINE toggle */
+    /* ── GO ONLINE ── */
     let online = false;
     function toggleOnline() {
       online = !online;
@@ -1085,12 +1938,15 @@
       const txt = document.getElementById('goBtnText');
       const arr = document.getElementById('goArrow');
       const dot = document.getElementById('onlineDot');
+      const ddot = document.getElementById('drawerDot');
+      const dstat = document.getElementById('drawerStatus');
       if (online) {
         btn.style.background = 'linear-gradient(135deg,#991b1b,#dc2626)';
         btn.style.boxShadow = '0 6px 24px rgba(220,38,38,0.44)';
         txt.textContent = 'GO OFFLINE';
         arr.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
         dot.style.background = '#22c55e';
+        ddot.classList.add('online'); dstat.textContent = 'Online';
         showToast('You are now ONLINE 🟢');
       } else {
         btn.style.background = 'linear-gradient(135deg,#1B6B3A,#208A48)';
@@ -1098,11 +1954,26 @@
         txt.textContent = 'GO ONLINE';
         arr.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>`;
         dot.style.background = 'var(--red)';
+        ddot.classList.remove('online'); dstat.textContent = 'Offline';
         showToast('You are now OFFLINE 🔴');
       }
     }
 
-    /* Toast */
+    /* ── SETTINGS TOGGLE ── */
+    function toggleSetting(el) { el.classList.toggle('on'); }
+
+    /* ── REFER ── */
+    function copyReferral() {
+      navigator.clipboard.writeText('AMOL2024').then(() => showToast('Code copied: AMOL2024 ✓')).catch(() => showToast('Code: AMOL2024'));
+    }
+
+    /* ── LOGOUT ── */
+    function handleLogout() {
+      closeDrawer();
+      setTimeout(() => { if (confirm('Are you sure you want to logout?')) showToast('Logged out successfully'); }, 350);
+    }
+
+    /* ── TOAST ── */
     let toastTimer;
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -1111,7 +1982,6 @@
       toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
     }
   </script>
-
 </body>
 
 </html>
