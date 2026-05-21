@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Trip</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --map-bg: #e8e0d8;
+      --road-main: #c8bfb4;
+      --road-secondary: #d4ccc4;
+      --road-major: #b8afa4;
+      --green: #2ecc71;
+      --green-dark: #27ae60;
+      --green-glow: rgba(46, 204, 113, 0.35);
+      --blue: #4A90D9;
+      --blue-light: rgba(74, 144, 217, 0.18);
+      --red-pin: #e74c3c;
+      --text: #1a1a1a;
+      --sub: #777;
+      --white: #ffffff;
+      --border: #e8e8e8;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.14);
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #d0cac3;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      background: var(--map-bg);
+    }
+
+    /* ═══════════════════ MAP AREA ═══════════════════ */
+    .map-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      min-height: 560px;
+      background: var(--map-bg);
+    }
+
+    /* Map canvas */
+    #mapCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Top menu button ── */
+    .top-menu-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 20;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      transition: background .15s, transform .15s;
+    }
+
+    .top-menu-btn:hover {
+      background: #f5f5f5;
+      transform: scale(1.05);
+    }
+
+    .top-menu-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── Uber pill ── */
+    .uber-pill {
+      position: absolute;
+      right: -6px;
+      top: 46%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 56px;
+      background: #111;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .35);
+      cursor: pointer;
+      z-index: 20;
+      transition: transform .2s;
+    }
+
+    .uber-pill:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .uber-pill svg {
+      width: 13px;
+      height: 13px;
+      margin-top: 2px;
+    }
+
+    /* ── Location button ── */
+    .locate-btn {
+      position: absolute;
+      right: 16px;
+      bottom: 12px;
+      z-index: 20;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      transition: background .15s, transform .15s;
+    }
+
+    .locate-btn:hover {
+      background: #f0f7ff;
+      transform: scale(1.05);
+    }
+
+    .locate-btn:active {
+      transform: scale(.95);
+    }
+
+    .locate-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── Pulsing accuracy circle ── */
+    .accuracy-ring {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: var(--blue-light);
+      border: 1.5px solid rgba(74, 144, 217, 0.25);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse-ring 2.5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes pulse-ring {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.12);
+        opacity: 0.7;
+      }
+    }
+
+    /* Blue dot */
+    .user-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(74, 144, 217, .5);
+      top: 50%;
+      left: 52%;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+    }
+
+    /* Red pin */
+    .pin-wrap {
+      position: absolute;
+      top: 36%;
+      left: 44%;
+      transform: translate(-50%, -100%);
+      z-index: 10;
+      animation: float 2.8s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translate(-50%, -100%);
+      }
+
+      50% {
+        transform: translate(-50%, -108%);
+      }
+    }
+
+    .pin-shadow {
+      width: 18px;
+      height: 6px;
+      background: rgba(0, 0, 0, .18);
+      border-radius: 50%;
+      margin: 0 auto;
+      margin-top: -2px;
+      animation: shadow-pulse 2.8s ease-in-out infinite;
+    }
+
+    @keyframes shadow-pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: .18;
+      }
+
+      50% {
+        transform: scale(.8);
+        opacity: .1;
+      }
+    }
+
+    /* Google logo */
+    .google-logo {
+      position: absolute;
+      bottom: 66px;
+      left: 14px;
+      z-index: 15;
+      background: rgba(255, 255, 255, 0.88);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: .7rem;
+      font-weight: 700;
+      color: #4285f4;
+      letter-spacing: -.2px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+      user-select: none;
+    }
+
+    .google-logo span {
+      color: #ea4335;
+    }
+
+    .google-logo span:nth-child(2) {
+      color: #fbbc04;
+    }
+
+    .google-logo span:nth-child(3) {
+      color: #34a853;
+    }
+
+    .google-logo span:nth-child(4) {
+      color: #4285f4;
+    }
+
+    .google-logo span:nth-child(5) {
+      color: #ea4335;
+    }
+
+    .google-logo span:nth-child(6) {
+      color: #34a853;
+    }
+
+    /* ═══════════════════ BOTTOM PANEL ═══════════════════ */
+    .bottom-panel {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 18px 18px 0;
+      position: relative;
+      z-index: 30;
+      animation: slideUp .4s cubic-bezier(.22, .68, 0, 1.1) both;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .pickup-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+
+    .pickup-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .pickup-label {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--sub);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+
+    .pickup-address {
+      font-size: .92rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+      cursor: pointer;
+      transition: color .15s;
+    }
+
+    .pickup-address:hover {
+      color: var(--blue);
+    }
+
+    .nav-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: var(--blue);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 12px rgba(74, 144, 217, .35);
+      transition: background .15s, transform .15s, box-shadow .15s;
+    }
+
+    .nav-btn:hover {
+      background: #3a7fc9;
+      transform: scale(1.08);
+      box-shadow: 0 5px 18px rgba(74, 144, 217, .45);
+    }
+
+    .nav-btn:active {
+      transform: scale(.94);
+    }
+
+    .nav-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ── Start Trip Button ── */
+    .start-btn-wrap {
+      padding: 14px 0 18px;
+    }
+
+    .start-btn {
+      width: 100%;
+      height: 58px;
+      border-radius: 12px;
+      border: none;
+      background: var(--green);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px var(--green-glow);
+    }
+
+    .start-btn:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(39, 174, 96, .45);
+    }
+
+    .start-btn:active {
+      transform: scale(.98);
+    }
+
+    /* Shimmer */
+    .start-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .25), transparent);
+      animation: shimmer 2.5s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+
+      50%,
+      100% {
+        left: 160%;
+      }
+    }
+
+    .start-btn .arrows {
+      font-size: 1rem;
+      letter-spacing: 2px;
+      opacity: .85;
+    }
+
+    /* ═══════════════════ MODALS ═══════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .48);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: var(--white);
+      border-radius: 22px 22px 0 0;
+      padding-bottom: 28px;
+      animation: slideUp .3s cubic-bezier(.22, .68, 0, 1.15) both;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      margin: 12px auto 0;
+    }
+
+    .modal-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: #f5f5f5;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sub);
+      font-size: 1rem;
+      transition: background .15s;
+    }
+
+    .modal-close:hover {
+      background: #ffe4e1;
+      color: #e74c3c;
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: background .15s;
+      border: none;
+      text-align: left;
+      width: 100%;
+      color: var(--text);
+      background: none;
+      margin-bottom: 4px;
+    }
+
+    .menu-item:hover {
+      background: #f5f5f5;
+    }
+
+    .menu-item svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--sub);
+    }
+
+    .menu-item.danger {
+      color: #e74c3c;
+    }
+
+    .menu-item.danger svg {
+      color: #e74c3c;
+    }
+
+    /* Address edit */
+    .addr-input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: .9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      margin-bottom: 14px;
+    }
+
+    .addr-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(74, 144, 217, .12);
+    }
+
+    .save-btn {
+      width: 100%;
+      height: 46px;
+      border-radius: 10px;
+      border: none;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .save-btn:hover {
+      background: #3a7fc9;
+    }
+
+    /* ── Confirm Start Modal ── */
+    .confirm-content {
+      text-align: center;
+      padding: 10px 0 6px;
+    }
+
+    .confirm-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(46, 204, 113, .12);
+      border: 2px solid rgba(46, 204, 113, .3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .confirm-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--green-dark);
+    }
+
+    .confirm-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .confirm-sub {
+      font-size: .84rem;
+      color: var(--sub);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .addr-summary {
+      background: #f8f8f8;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text);
+      text-align: left;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .addr-summary-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      height: 46px;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-green:hover {
+      background: var(--green-dark);
+    }
+
+    /* ── Trip Started Screen ── */
+    .trip-started {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 22px 20px 28px;
+      text-align: center;
+    }
+
+    .trip-started.show {
+      display: flex;
+      animation: fadeUp .35s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .trip-badge {
+      background: var(--green);
+      color: #fff;
+      border-radius: 99px;
+      padding: 6px 18px;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .trip-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .trip-sub {
+      font-size: .83rem;
+      color: var(--sub);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .trip-eta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      margin-bottom: 20px;
+    }
+
+    .end-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 12px;
+      border: none;
+      background: #e74c3c;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: .95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .end-btn:hover {
+      background: #c0392b;
+      transform: translateY(-1px);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 99px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+      pointer-events: none;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 520px) {
+
+      .app,
+      .modal-sheet {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- Map Area -->
+    <div class="map-area">
+      <canvas id="mapCanvas"></canvas>
+
+      <!-- Accuracy circle + user dot (center of map) -->
+      <div class="accuracy-ring"></div>
+      <div class="user-dot"></div>
+
+      <!-- Red pin at pickup -->
+      <div class="pin-wrap" id="pinWrap" onclick="showToast('Pickup: 11, Shastri Nagar, Pimpri Colony')">
+        <svg width="34" height="44" viewBox="0 0 34 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 0C7.611 0 0 7.611 0 17c0 12.75 17 27 17 27S34 29.75 34 17C34 7.611 26.389 0 17 0z"
+            fill="#e74c3c" />
+          <circle cx="17" cy="17" r="7" fill="white" opacity="0.9" />
+          <circle cx="17" cy="17" r="4" fill="#e74c3c" />
+        </svg>
+        <div class="pin-shadow"></div>
+      </div>
+
+      <!-- Top menu -->
+      <button class="top-menu-btn" onclick="openModal('menuModal')" title="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </button>
+
+      <!-- Uber pill -->
+      <!-- <div class="uber-pill" onclick="showToast('Opening Uber navigation...')">
+      <span>Uber</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </div> -->
+
+      <!-- Location button -->
+      <button class="locate-btn" onclick="centerLocation()" title="My Location">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 1v4M12 19v4M1 12h4M19 12h4" />
+          <circle cx="12" cy="12" r="8" stroke-dasharray="3 2" opacity=".4" />
+        </svg>
+      </button>
+
+      <!-- Google branding -->
+      <div class="google-logo">
+        <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+      </div>
+    </div>
+
+    <!-- Bottom Panel -->
+    <div class="bottom-panel">
+      <div class="pickup-row">
+        <div class="pickup-left">
+          <div class="pickup-label">Pickup</div>
+          <div class="pickup-address" id="pickupAddress" onclick="openModal('editModal')">
+            11, Shastri Nagar, Pimpri Colony, Pune,<br>Pimpri-Chinchwad, Maharashtra 411017, India
+          </div>
+        </div>
+        <button class="nav-btn" onclick="openNavigation()" title="Navigate">
+          <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="start-btn-wrap" id="startBtnWrap">
+        <button class="start-btn" onclick="openModal('confirmModal')">
+          Start Trip
+          <span class="arrows">&gt;&gt;&gt;</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Menu Modal ── -->
+  <div class="modal-overlay" id="menuModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Trip Options</h2>
+        <button class="modal-close" onclick="closeModal('menuModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <button class="menu-item" onclick="openModal('editModal'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          Edit Pickup Address
+        </button>
+        <button class="menu-item" onclick="centerLocation(); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 1v4M12 19v4M1 12h4M19 12h4" />
+          </svg>
+          Center My Location
+        </button>
+        <button class="menu-item" onclick="showToast('Calling customer...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.88 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.79 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z" />
+          </svg>
+          Call Customer
+        </button>
+        <button class="menu-item" onclick="showToast('Opening support...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path
+              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+          LorryGo Support
+        </button>
+        <button class="menu-item danger" onclick="showToast('Trip cancelled'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+          Cancel Trip
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Edit Address Modal ── -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Edit Pickup Address</h2>
+        <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:.82rem;color:var(--sub);margin-bottom:12px;">Update the pickup address if needed.</p>
+        <input class="addr-input" id="addrInput" type="text"
+          value="11, Shastri Nagar, Pimpri Colony, Pune, Pimpri-Chinchwad, Maharashtra 411017, India">
+        <button class="save-btn" onclick="saveAddress()">Save Address</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Confirm Start Modal ── -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Confirm Start Trip</h2>
+        <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-content">
+          <div class="confirm-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <div class="confirm-title">Ready to Start?</div>
+          <div class="confirm-sub">Make sure the customer is in your vehicle before starting the trip.</div>
+        </div>
+        <div class="addr-summary">
+          <div class="addr-summary-dot"></div>
+          <div id="confirmAddr">11, Shastri Nagar, Pimpri Colony, Pune, Pimpri-Chinchwad, Maharashtra 411017, India
+          </div>
+        </div>
+        <div class="confirm-actions">
+          <button class="btn btn-outline" onclick="closeModal('confirmModal')">Not Yet</button>
+          <button class="btn btn-green" onclick="startTrip()">Start Trip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── Draw map on canvas ──
+    const canvas = document.getElementById('mapCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawMap() {
+      const W = canvas.offsetWidth;
+      const H = canvas.offsetHeight;
+      canvas.width = W;
+      canvas.height = H;
+
+      // Base fill
+      ctx.fillStyle = '#e8e0d8';
+      ctx.fillRect(0, 0, W, H);
+
+      // Light block areas (buildings/parks)
+      const blocks = [
+        [0, 0, W * 0.35, H * 0.4, '#ddd8d0'],
+        [W * 0.38, 0, W * 0.62, H * 0.3, '#e2dbd2'],
+        [W * 0.65, 0, W, H * 0.5, '#ddd5cc'],
+        [0, H * 0.55, W * 0.3, H, '#e0d9d0'],
+        [W * 0.35, H * 0.65, W * 0.7, H, '#dcd4cb'],
+        [W * 0.72, H * 0.55, W, H, '#e3dbd3'],
+      ];
+      blocks.forEach(([x, y, x2, y2, c]) => {
+        ctx.fillStyle = c;
+        ctx.fillRect(x, y, x2 - x, y2 - y);
+      });
+
+      // Major diagonal road (like Deluxe Rd)
+      ctx.save();
+      ctx.strokeStyle = '#b8b0a6';
+      ctx.lineWidth = 28;
+      ctx.beginPath();
+      ctx.moveTo(W * 0.05, 0);
+      ctx.lineTo(W * 0.38, H);
+      ctx.stroke();
+      ctx.strokeStyle = '#c8c0b6';
+      ctx.lineWidth = 24;
+      ctx.stroke();
+      // Road marking
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([14, 10]);
+      ctx.beginPath();
+      ctx.moveTo(W * 0.115, 0);
+      ctx.lineTo(W * 0.445, H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // Vertical road
+      ctx.save();
+      ctx.strokeStyle = '#c0b8ae';
+      ctx.lineWidth = 18;
+      ctx.beginPath();
+      ctx.moveTo(W * 0.58, 0);
+      ctx.lineTo(W * 0.56, H);
+      ctx.stroke();
+      ctx.strokeStyle = '#ccc4ba';
+      ctx.lineWidth = 14;
+      ctx.stroke();
+      ctx.restore();
+
+      // Horizontal road
+      ctx.save();
+      ctx.strokeStyle = '#c4bcb2';
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.moveTo(0, H * 0.48);
+      ctx.lineTo(W, H * 0.5);
+      ctx.stroke();
+      ctx.strokeStyle = '#d0c8be';
+      ctx.lineWidth = 12;
+      ctx.stroke();
+      ctx.restore();
+
+      // Small cross roads
+      const smallRoads = [
+        [0, H * 0.22, W * 0.55, H * 0.24],
+        [0, H * 0.72, W * 0.52, H * 0.70],
+        [W * 0.62, H * 0.0, W * 0.65, H * 0.48],
+        [W * 0.75, H * 0.5, W * 0.78, H],
+      ];
+      smallRoads.forEach(([x1, y1, x2, y2]) => {
+        ctx.save();
+        ctx.strokeStyle = '#ccc4ba';
+        ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Place labels (subtle)
+      const places = [
+        { x: W * 0.5, y: H * 0.14, text: 'KAVITA', sub: 'SHIVLAL PARMA' },
+        { x: W * 0.28, y: H * 0.42, text: 'Mom Kids World', sub: null },
+        { x: W * 0.72, y: H * 0.38, text: 'Denim Hub', sub: null },
+        { x: W * 0.74, y: H * 0.72, text: 'Akshay M.', sub: null },
+      ];
+      places.forEach(p => {
+        ctx.save();
+        ctx.font = 'bold 10px Outfit, sans-serif';
+        ctx.fillStyle = '#3a3028';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.text, p.x, p.y);
+        if (p.sub) {
+          ctx.font = '9px Outfit, sans-serif';
+          ctx.fillStyle = '#7a6e66';
+          ctx.fillText(p.sub, p.x, p.y + 13);
+        }
+        ctx.restore();
+      });
+
+      // Map icon markers
+      const markers = [
+        { x: W * 0.35, y: H * 0.32, color: '#f4a035', icon: '🍽' },
+        { x: W * 0.25, y: H * 0.43, color: '#5a6a7a', icon: '🚌' },
+        { x: W * 0.62, y: H * 0.12, color: '#5588dd', icon: '🔒' },
+        { x: W * 0.74, y: H * 0.45, color: '#5588dd', icon: '🔒' },
+        { x: W * 0.74, y: H * 0.72, color: '#5588dd', icon: '🔒' },
+      ];
+      markers.forEach(m => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, 11, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.shadowColor = 'rgba(0,0,0,0.18)';
+        ctx.shadowBlur = 4;
+        ctx.fill();
+        ctx.restore();
+        ctx.save();
+        ctx.font = '12px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(m.icon, m.x, m.y);
+        ctx.restore();
+      });
+    }
+
+    window.addEventListener('resize', drawMap);
+    drawMap();
+
+    // ── State ──
+    let tripStarted = false;
+    let currentAddress = '11, Shastri Nagar, Pimpri Colony, Pune, Pimpri-Chinchwad, Maharashtra 411017, India';
+
+    // ── Navigation ──
+    function openNavigation() {
+      const encoded = encodeURIComponent(currentAddress);
+      showToast('Opening navigation...');
+      setTimeout(() => {
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${encoded}`, '_blank');
+      }, 600);
+    }
+
+    // ── Center Location ──
+    function centerLocation() {
+      const dot = document.querySelector('.user-dot');
+      const ring = document.querySelector('.accuracy-ring');
+      dot.style.transition = 'all .4s ease';
+      ring.style.transition = 'all .4s ease';
+      dot.style.top = '50%';
+      dot.style.left = '50%';
+      showToast('📍 Centered on your location');
+    }
+
+    // ── Save Address ──
+    function saveAddress() {
+      const val = document.getElementById('addrInput').value.trim();
+      if (!val) { showToast('Please enter an address'); return; }
+      currentAddress = val;
+      // Update display
+      const addrEl = document.getElementById('pickupAddress');
+      addrEl.innerHTML = val;
+      document.getElementById('confirmAddr').textContent = val;
+      closeModal('editModal');
+      showToast('✓ Address updated');
+    }
+
+    // ── Start Trip ──
+    function startTrip() {
+      closeModal('confirmModal');
+      tripStarted = true;
+
+      // Replace bottom panel content
+      const startWrap = document.getElementById('startBtnWrap');
+      const pickupRow = document.querySelector('.pickup-row');
+
+      pickupRow.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:4px;width:100%">
+        <div style="font-size:.75rem;font-weight:700;color:#27ae60;text-transform:uppercase;letter-spacing:.6px;">🟢 Trip In Progress</div>
+        <div style="font-size:.88rem;font-weight:500;color:#555;line-height:1.4">${currentAddress}</div>
+      </div>`;
+
+      startWrap.innerHTML = `
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" onclick="showToast('Calling customer...')" style="height:50px;font-size:.88rem">📞 Call</button>
+        <button style="flex:2;height:50px;border-radius:12px;border:none;background:#e74c3c;color:#fff;font-family:Outfit,sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .18s" onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='#e74c3c'" onclick="endTrip()">End Trip</button>
+      </div>`;
+
+      // Animate green line on map
+      const pin = document.getElementById('pinWrap');
+      if (pin) { pin.style.filter = 'hue-rotate(120deg)'; }
+
+      showToast('🚗 Trip Started! Have a safe ride.');
+    }
+
+    // ── End Trip ──
+    function endTrip() {
+      showToast('✅ Trip ended. Redirecting...');
+      setTimeout(() => {
+        document.querySelector('.bottom-panel').innerHTML = `
+        <div style="padding:20px;text-align:center">
+          <div style="font-size:2rem;margin-bottom:10px">✅</div>
+          <div style="font-size:1rem;font-weight:800;margin-bottom:4px">Trip Completed!</div>
+          <div style="font-size:.84rem;color:#888;margin-bottom:18px">Great job! Rate your customer to complete.</div>
+          <button style="width:100%;height:48px;border-radius:12px;border:none;background:#2ecc71;color:#fff;font-family:Outfit,sans-serif;font-size:.95rem;font-weight:800;cursor:pointer" onclick="showToast('Opening rating screen...')">Rate Customer</button>
+        </div>`;
+      }, 1200);
+    }
+
+    // ── Modal helpers ──
+    function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+      });
+    });
+
+    // ── Toast ──
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+  </script>
+</body>
+
+</html>

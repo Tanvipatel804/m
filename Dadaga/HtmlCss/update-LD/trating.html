@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Completed</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --map-bg: #3a3d42;
+      --map-road: #4a4e55;
+      --map-road-light: #555a63;
+      --overlay: rgba(38, 41, 46, 0.82);
+      --sheet-bg: #ffffff;
+      --text: #1a1a1a;
+      --sub: #888;
+      --border: #ebebeb;
+      --gold: #f5a623;
+      --gold-fill: #f5a623;
+      --gold-empty: #d4d4d4;
+      --green: #27ae60;
+      --green-bg: #eafaf1;
+      --blue: #1a56db;
+      --red: #e8320a;
+      --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.18);
+      --radius: 14px;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #2c2f34;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 18px 14px;
+      background: linear-gradient(to bottom, rgba(38, 41, 46, 0.92) 0%, rgba(38, 41, 46, 0) 100%);
+    }
+
+    .top-bar h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.2px;
+    }
+
+    .menu-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+      backdrop-filter: blur(4px);
+    }
+
+    .menu-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .menu-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .map-area {
+      flex: 1;
+      background: var(--map-bg);
+      position: relative;
+      min-height: 460px;
+      overflow: hidden;
+    }
+
+    .map-area::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(var(--map-road) 1px, transparent 1px), linear-gradient(90deg, var(--map-road) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .45;
+    }
+
+    .map-road {
+      position: absolute;
+      background: var(--map-road-light);
+      border-radius: 3px;
+    }
+
+    .road-h1 {
+      width: 100%;
+      height: 14px;
+      top: 38%;
+      left: 0;
+      transform: rotate(-3deg);
+      opacity: .7;
+    }
+
+    .road-h2 {
+      width: 100%;
+      height: 9px;
+      top: 62%;
+      left: 0;
+      transform: rotate(2deg);
+      opacity: .5;
+    }
+
+    .road-v1 {
+      width: 10px;
+      height: 100%;
+      left: 30%;
+      top: 0;
+      transform: rotate(2deg);
+      opacity: .5;
+    }
+
+    .road-v2 {
+      width: 14px;
+      height: 100%;
+      left: 65%;
+      top: 0;
+      transform: rotate(-1deg);
+      opacity: .45;
+    }
+
+    .route-line-map {
+      position: absolute;
+      top: 35%;
+      left: 25%;
+      width: 45%;
+      height: 3px;
+      background: linear-gradient(90deg, #27ae60, #1a56db);
+      border-radius: 99px;
+      transform: rotate(-3deg);
+      opacity: .85;
+    }
+
+    .route-dot-start {
+      position: absolute;
+      top: calc(35% - 6px);
+      left: 25%;
+      width: 14px;
+      height: 14px;
+      background: #27ae60;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 3px rgba(39, 174, 96, .3);
+    }
+
+    .route-dot-end {
+      position: absolute;
+      top: calc(35% - 6px);
+      left: calc(25% + 45% - 6px);
+      width: 14px;
+      height: 14px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 3px rgba(232, 50, 10, .3);
+    }
+
+    .uber-pill {
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 54px;
+      height: 54px;
+      background: #111;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+      cursor: pointer;
+      transition: transform .2s;
+      z-index: 15;
+    }
+
+    .uber-pill:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .uber-pill svg {
+      width: 13px;
+      height: 13px;
+      margin-top: 2px;
+    }
+
+    .fare-pill {
+      position: absolute;
+      top: 68px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.13);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 12px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+      min-width: 260px;
+      animation: fadeDown .4s ease both;
+      z-index: 10;
+    }
+
+    .fare-pill-label {
+      font-size: .88rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .fare-pill-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .cash-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--overlay);
+      backdrop-filter: blur(8px);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 10;
+      border-top: 1px solid rgba(255, 255, 255, .08);
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .cash-bar:hover {
+      background: rgba(38, 41, 46, 0.92);
+    }
+
+    .cash-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(39, 174, 96, .2);
+      border: 1.5px solid rgba(39, 174, 96, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ade80;
+    }
+
+    .cash-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .cash-bar-text {
+      font-size: .95rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .9);
+    }
+
+    .cash-bar-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #4ade80;
+      margin-left: auto;
+    }
+
+    .rating-sheet {
+      background: var(--sheet-bg);
+      border-radius: 24px 24px 0 0;
+      box-shadow: var(--shadow-sheet);
+      padding: 10px 0 32px;
+      z-index: 30;
+      position: relative;
+      animation: slideUp .4s cubic-bezier(.22, .68, 0, 1.1) both;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(80px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(.5);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 99px;
+      margin: 0 auto 20px;
+    }
+
+    .rating-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -.2px;
+    }
+
+    .rating-sub {
+      font-size: .82rem;
+      color: var(--sub);
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .stars-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      transition: transform .18s;
+      line-height: 1;
+    }
+
+    .star-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .star-btn:active {
+      transform: scale(.9);
+    }
+
+    .star-svg {
+      width: 44px;
+      height: 44px;
+      transition: fill .15s, filter .15s;
+      filter: drop-shadow(0 0 0 transparent);
+    }
+
+    .star-svg.empty {
+      fill: var(--gold-empty);
+    }
+
+    .star-svg.filled {
+      fill: var(--gold-fill);
+      filter: drop-shadow(0 2px 6px rgba(245, 166, 35, .45));
+    }
+
+    .rating-label {
+      text-align: center;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--gold);
+      min-height: 22px;
+      margin-bottom: 20px;
+      transition: opacity .2s;
+      letter-spacing: .2px;
+    }
+
+    .tags-section {
+      padding: 0 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .tags-section.visible {
+      display: block;
+      animation: fadeUp .25s ease;
+    }
+
+    .tags-title {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--sub);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .tag {
+      padding: 7px 14px;
+      border-radius: 99px;
+      border: 1.5px solid var(--border);
+      font-size: .82rem;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      transition: all .16s;
+      background: #fff;
+      user-select: none;
+    }
+
+    .tag:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .tag.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #fff;
+    }
+
+    .comment-wrap {
+      padding: 0 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .comment-wrap.visible {
+      display: block;
+      animation: fadeUp .25s ease;
+    }
+
+    .comment-box {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .88rem;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      line-height: 1.5;
+      height: 80px;
+    }
+
+    .comment-box:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(245, 166, 35, .15);
+    }
+
+    .comment-box::placeholder {
+      color: #bbb;
+    }
+
+    .submit-wrap {
+      padding: 0 20px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 14px;
+      border: none;
+      background: var(--text);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: .95rem;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: .2px;
+      transition: all .18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover {
+      background: #333;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
+    }
+
+    .submit-btn:active {
+      transform: scale(.98);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .submit-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .skip-link {
+      text-align: center;
+      margin-top: 14px;
+      padding: 0 20px;
+    }
+
+    .skip-link button {
+      background: none;
+      border: none;
+      color: var(--sub);
+      font-family: 'Nunito', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: color .15s;
+    }
+
+    .skip-link button:hover {
+      color: var(--text);
+    }
+
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px 36px;
+      text-align: center;
+    }
+
+    .success-screen.show {
+      display: flex;
+      animation: fadeUp .35s ease;
+    }
+
+    .success-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--green-bg);
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      animation: popIn .4s cubic-bezier(.22, .68, 0, 1.3) both;
+    }
+
+    .success-circle svg {
+      width: 34px;
+      height: 34px;
+      color: var(--green);
+    }
+
+    .success-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .success-sub {
+      font-size: .85rem;
+      color: var(--sub);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .success-stars {
+      font-size: 1.5rem;
+      letter-spacing: 4px;
+      margin-bottom: 20px;
+    }
+
+    .done-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 14px;
+      border: none;
+      background: var(--green);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: .95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .done-btn:hover {
+      background: #219150;
+      transform: translateY(-1px);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding-bottom: 28px;
+      animation: slideUp .3s cubic-bezier(.22, .68, 0, 1.1) both;
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      margin: 12px auto 0;
+    }
+
+    .modal-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: #f5f5f5;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sub);
+      transition: background .15s;
+    }
+
+    .modal-close:hover {
+      background: #ffe4e1;
+      color: var(--red);
+    }
+
+    .menu-list {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: background .15s;
+      border: none;
+      text-align: left;
+      width: 100%;
+      color: var(--text);
+      background: none;
+    }
+
+    .menu-item:hover {
+      background: #f7f7f7;
+    }
+
+    .menu-item svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--sub);
+    }
+
+    .menu-item.red {
+      color: var(--red);
+    }
+
+    .menu-item.red svg {
+      color: var(--red);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 99px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+      pointer-events: none;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 520px) {
+
+      .app,
+      .modal-sheet {
+        max-width: 100%;
+      }
+
+      .fare-pill {
+        min-width: calc(100vw - 40px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="top-bar">
+      <h1>Trip Completed</h1>
+      <button class="menu-btn" onclick="openModal('menuModal')" title="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="map-area">
+      <div class="map-road road-h1"></div>
+      <div class="map-road road-h2"></div>
+      <div class="map-road road-v1"></div>
+      <div class="map-road road-v2"></div>
+      <div class="route-line-map"></div>
+      <div class="route-dot-start"></div>
+      <div class="route-dot-end"></div>
+
+      <div class="fare-pill">
+        <span class="fare-pill-label">Trip fare</span>
+        <span class="fare-pill-amount">₹135</span>
+      </div>
+
+      <!-- <div class="uber-pill" onclick="showToast('Opening Uber...')">
+      <span>Uber</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </div> -->
+
+      <div class="cash-bar" onclick="showToast('Cash collected: ₹135 ✓')">
+        <div class="cash-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            <line x1="12" y1="12" x2="12" y2="16" />
+            <line x1="10" y1="14" x2="14" y2="14" />
+          </svg>
+        </div>
+        <span class="cash-bar-text">Cash to Collect</span>
+        <span class="cash-bar-amount">₹135</span>
+      </div>
+    </div>
+
+    <div class="rating-sheet">
+      <div class="sheet-handle"></div>
+
+      <div id="ratingForm">
+        <div class="rating-title">Rate the Customer</div>
+        <div class="rating-sub">How was your experience with this passenger?</div>
+
+        <div class="stars-row" id="starsRow">
+          <button class="star-btn" onclick="setRating(1)" aria-label="1 star">
+            <svg class="star-svg empty" viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+          <button class="star-btn" onclick="setRating(2)" aria-label="2 stars">
+            <svg class="star-svg empty" viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+          <button class="star-btn" onclick="setRating(3)" aria-label="3 stars">
+            <svg class="star-svg empty" viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+          <button class="star-btn" onclick="setRating(4)" aria-label="4 stars">
+            <svg class="star-svg empty" viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+          <button class="star-btn" onclick="setRating(5)" aria-label="5 stars">
+            <svg class="star-svg empty" viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="rating-label" id="ratingLabel">&nbsp;</div>
+
+        <div class="tags-section" id="tagsSection">
+          <div class="tags-title">What went well?</div>
+          <div class="tags-wrap" id="tagsWrap"></div>
+        </div>
+
+        <div class="comment-wrap" id="commentWrap">
+          <textarea class="comment-box" id="commentBox" placeholder="Add a comment (optional)..."></textarea>
+        </div>
+
+        <div class="submit-wrap">
+          <button class="submit-btn" id="submitBtn" disabled onclick="submitRating()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            Submit Rating
+          </button>
+        </div>
+        <div class="skip-link"><button onclick="skipRating()">Skip for now</button></div>
+      </div>
+
+      <div class="success-screen" id="successScreen">
+        <div class="success-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="success-title">Rating Submitted!</div>
+        <div class="success-sub" id="successSub">Thanks for your feedback. It helps keep the community great.</div>
+        <div class="success-stars" id="successStars"></div>
+        <button class="done-btn" onclick="showToast('Returning to home...')">Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Modal -->
+  <div class="modal-overlay" id="menuModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Trip Options</h2>
+        <button class="modal-close" onclick="closeModal('menuModal')">✕</button>
+      </div>
+      <div class="menu-list">
+        <button class="menu-item" onclick="showToast('Opening trip summary...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg>
+          View Trip Summary
+        </button>
+        <button class="menu-item" onclick="showToast('Opening earnings...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+          Today's Earnings
+        </button>
+        <button class="menu-item" onclick="showToast('Sharing trip receipt...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+          Share Trip Receipt
+        </button>
+        <button class="menu-item" onclick="showToast('Opening support...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path
+              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+          LorryGo Support
+        </button>
+        <button class="menu-item red" onclick="showToast('Reporting issue...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          Report a Problem
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const LABELS = ['😞 Poor', '😕 Fair', '🙂 Okay', '😊 Good', '🤩 Excellent!'];
+    const TAGS = {
+      1: ['Rude behaviour', 'Unclean luggage', 'Wrong address', 'No response', 'Safety concern'],
+      2: ['Late for pickup', 'Confusing directions', 'Payment issue', 'Not friendly'],
+      3: ['Average experience', 'Could be better', 'Directions unclear'],
+      4: ['Polite passenger', 'Ready on time', 'Clear directions', 'Smooth ride', 'Good tipper'],
+      5: ['Very polite', 'Ready on time', 'Great tip', 'Clear address', 'Smooth experience', 'Would ride again']
+    };
+
+    let currentRating = 0;
+    let selectedTags = new Set();
+
+    function setRating(n) {
+      currentRating = n;
+      document.querySelectorAll('.star-svg').forEach((s, i) => {
+        s.classList.toggle('filled', i < n);
+        s.classList.toggle('empty', i >= n);
+      });
+      document.getElementById('ratingLabel').textContent = LABELS[n - 1];
+      document.getElementById('submitBtn').disabled = false;
+      selectedTags.clear();
+      const tagsSection = document.getElementById('tagsSection');
+      tagsSection.querySelector('.tags-title').textContent = n >= 4 ? 'What went well?' : 'What went wrong?';
+      tagsSection.classList.add('visible');
+      document.getElementById('tagsWrap').innerHTML = TAGS[n].map(t =>
+        `<div class="tag" onclick="toggleTag(this,'${t}')">${t}</div>`
+      ).join('');
+      document.getElementById('commentWrap').classList.add('visible');
+    }
+
+    function toggleTag(el, tag) {
+      el.classList.toggle('active');
+      if (el.classList.contains('active')) selectedTags.add(tag); else selectedTags.delete(tag);
+    }
+
+    function submitRating() {
+      document.getElementById('successStars').textContent = '⭐'.repeat(currentRating) + '☆'.repeat(5 - currentRating);
+      document.getElementById('successSub').textContent = currentRating >= 4
+        ? 'Thanks! Your positive feedback keeps our community great.'
+        : 'We appreciate your honest feedback. It helps us improve.';
+      document.getElementById('ratingForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+    }
+
+    function skipRating() {
+      document.getElementById('successStars').textContent = '';
+      document.getElementById('successSub').textContent = 'Your trip is complete. See you on your next ride!';
+      document.getElementById('ratingForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+      showToast('Rating skipped');
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', e => { if (e.target === el) { el.classList.remove('open'); document.body.style.overflow = ''; } });
+    });
+
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    document.querySelectorAll('.star-btn').forEach((btn, idx) => {
+      btn.addEventListener('mouseenter', () => {
+        if (currentRating > 0) return;
+        document.querySelectorAll('.star-svg').forEach((s, i) => {
+          s.classList.toggle('filled', i <= idx);
+          s.classList.toggle('empty', i > idx);
+        });
+      });
+      btn.addEventListener('mouseleave', () => {
+        if (currentRating > 0) return;
+        document.querySelectorAll('.star-svg').forEach(s => { s.classList.add('empty'); s.classList.remove('filled'); });
+      });
+    });
+  </script>
+</body>
+
+</html>
