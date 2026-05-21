@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Details</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f5f5;
+      --white: #ffffff;
+      --text: #111111;
+      --sub: #777777;
+      --border: #e8e8e8;
+      --green: #1db954;
+      --green-bg: #edf7f1;
+      --red: #e8320a;
+      --blue: #1a56db;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 14px 40px;
+    }
+
+    /* ── Driver Card ── */
+    .driver-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeUp .3s ease both;
+    }
+
+    .driver-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .driver-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4e8ff, #b8d4ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a56db;
+      flex-shrink: 0;
+    }
+
+    .driver-name {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .driver-sub {
+      font-size: .75rem;
+      color: var(--sub);
+      margin-top: 2px;
+    }
+
+    .call-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: #e8f0fe;
+      color: #1a56db;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .18s, transform .15s;
+      flex-shrink: 0;
+    }
+
+    .call-btn:hover {
+      background: #d0e3ff;
+      transform: scale(1.08);
+    }
+
+    .call-btn:active {
+      transform: scale(.94);
+    }
+
+    .call-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ── Cash Collect Card ── */
+    .cash-card {
+      background: var(--green-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeUp .35s ease both;
+      border: 1.5px solid #b8e8cb;
+    }
+
+    .cash-label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: #0a6630;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .cash-sub {
+      font-size: .78rem;
+      color: #2d7a4a;
+      margin-top: 3px;
+    }
+
+    .cash-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #0a6630;
+    }
+
+    /* ── Fare Card ── */
+    .fare-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      animation: fadeUp .4s ease both;
+    }
+
+    .fare-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fare-title {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .fare-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .fare-note {
+      font-size: .77rem;
+      color: var(--sub);
+      margin-top: 5px;
+    }
+
+    .fare-divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 12px 0;
+    }
+
+    .fare-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .fare-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: .83rem;
+      color: var(--sub);
+    }
+
+    .fare-item span:last-child {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ── Route Card ── */
+    .route-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      position: relative;
+      animation: fadeUp .45s ease both;
+    }
+
+    .route-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .route-stop {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 6px 0;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background .15s;
+      padding: 8px 6px;
+      margin: 0 -6px;
+    }
+
+    .route-stop:hover {
+      background: #f7f7f7;
+    }
+
+    .route-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 18px;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .dot-green {
+      width: 14px;
+      height: 14px;
+      background: var(--green);
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      box-shadow: 0 0 0 2px var(--green);
+      flex-shrink: 0;
+    }
+
+    .dot-red {
+      width: 14px;
+      height: 14px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      box-shadow: 0 0 0 2px var(--red);
+      flex-shrink: 0;
+    }
+
+    .route-line {
+      width: 2px;
+      height: 26px;
+      background: repeating-linear-gradient(to bottom, #ccc 0, #ccc 4px, transparent 4px, transparent 8px);
+      margin: 3px 0;
+    }
+
+    .stop-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stop-main {
+      font-size: .87rem;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stop-sub {
+      font-size: .76rem;
+      color: var(--sub);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stop-arrow {
+      color: var(--sub);
+      opacity: .5;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    .stop-arrow svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Uber logo pill */
+    .uber-pill {
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      background: #111;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      transition: transform .2s;
+      z-index: 10;
+    }
+
+    .uber-pill:hover {
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .uber-pill svg {
+      width: 14px;
+      height: 14px;
+      margin-top: 2px;
+    }
+
+    /* ── Support Row ── */
+    .support-row {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      animation: fadeUp .5s ease both;
+      transition: background .15s;
+    }
+
+    .support-row:hover {
+      background: #f0f5ff;
+    }
+
+    .support-row:active {
+      background: #e4edff;
+    }
+
+    .support-label {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    .support-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e8f0fe;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .support-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ── Cancel Row ── */
+    .cancel-row {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      cursor: pointer;
+      animation: fadeUp .55s ease both;
+      transition: background .15s;
+    }
+
+    .cancel-row:hover {
+      background: #fff5f3;
+    }
+
+    .cancel-row:active {
+      background: #ffe8e4;
+    }
+
+    .cancel-label {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--red);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: 99px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+      pointer-events: none;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Modal Overlay ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding-bottom: 30px;
+      animation: slideUp .3s cubic-bezier(.22, .68, 0, 1.15) both;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(60px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      margin: 12px auto 0;
+    }
+
+    .modal-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sub);
+      transition: background .15s;
+    }
+
+    .modal-close:hover {
+      background: #ffe4e1;
+      color: var(--red);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    /* Cancel reasons */
+    .reason-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .reason-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      font-size: .88rem;
+      font-weight: 500;
+    }
+
+    .reason-option:hover {
+      border-color: var(--red);
+      background: #fff5f3;
+    }
+
+    .reason-option.selected {
+      border-color: var(--red);
+      background: #fff0ee;
+    }
+
+    .reason-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .15s;
+    }
+
+    .reason-option.selected .reason-radio {
+      border-color: var(--red);
+      background: var(--red);
+    }
+
+    .reason-option.selected .reason-radio::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+    }
+
+    .cancel-warning {
+      background: #fff8e1;
+      border: 1.5px solid #ffe082;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: .82rem;
+      color: #7c5200;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      height: 46px;
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg);
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-red:hover {
+      background: #c8280a;
+    }
+
+    .btn-red:active {
+      transform: scale(.97);
+    }
+
+    .btn-red:disabled {
+      background: #e8a99a;
+      cursor: not-allowed;
+    }
+
+    /* Support Modal */
+    .support-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .support-opt {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: var(--bg);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: .88rem;
+      font-weight: 500;
+      transition: background .15s;
+      border: none;
+      text-align: left;
+      width: 100%;
+      color: var(--text);
+    }
+
+    .support-opt:hover {
+      background: #e8f0fe;
+      color: var(--blue);
+    }
+
+    .support-opt svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* Call Modal */
+    .call-display {
+      text-align: center;
+      padding: 24px 20px;
+    }
+
+    .call-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4e8ff, #b8d4ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a56db;
+      margin: 0 auto 14px;
+    }
+
+    .call-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .call-role {
+      font-size: .82rem;
+      color: var(--sub);
+      margin-bottom: 20px;
+    }
+
+    .call-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--blue);
+      margin-bottom: 24px;
+    }
+
+    .call-actions {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .call-action-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: transform .15s, opacity .15s;
+    }
+
+    .call-action-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .call-action-btn.green-call {
+      background: #1db954;
+      color: #fff;
+    }
+
+    .call-action-btn.msg-call {
+      background: #e8f0fe;
+      color: var(--blue);
+    }
+
+    .call-action-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Route expand */
+    .route-full {
+      display: none;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-radius: 10px;
+      font-size: .83rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+
+    .route-full.open {
+      display: block;
+      animation: fadeUp .2s ease;
+    }
+
+    @media (max-width: 520px) {
+
+      .app,
+      .modal-sheet {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- Driver Card -->
+    <div class="driver-card">
+      <div class="driver-info">
+        <div class="driver-avatar">PP</div>
+        <div>
+          <div class="driver-name">Puraram Prajapat</div>
+          <div class="driver-sub">⭐ 4.8 · Honda Activa · MH-12-AB-5566</div>
+        </div>
+      </div>
+      <button class="call-btn" onclick="openCallModal()" title="Call Driver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path
+            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.88 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.79 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Cash to Collect Card -->
+    <div class="cash-card">
+      <div>
+        <div class="cash-label">Cash to Collect</div>
+        <div class="cash-sub">Trip Fare</div>
+      </div>
+      <div class="cash-amount">₹135</div>
+    </div>
+
+    <!-- Trip Fare Card -->
+    <div class="fare-card">
+      <div class="fare-row">
+        <span class="fare-title">Trip Fare</span>
+        <span class="fare-amount">₹135.0</span>
+      </div>
+      <div class="fare-note">This fare may change</div>
+      <hr class="fare-divider">
+      <div class="fare-breakdown">
+        <div class="fare-item"><span>Base Fare</span><span>₹80.0</span></div>
+        <div class="fare-item"><span>Distance (3.2 km)</span><span>₹42.0</span></div>
+        <div class="fare-item"><span>Platform Fee</span><span>₹13.0</span></div>
+      </div>
+    </div>
+
+    <!-- Route Card -->
+    <div class="route-card">
+      <div class="route-inner">
+        <!-- Pickup -->
+        <div class="route-stop" onclick="toggleRoute('pickup')">
+          <div class="route-dot-wrap">
+            <div class="dot-green"></div>
+            <div class="route-line"></div>
+          </div>
+          <div class="stop-text">
+            <div class="stop-main">11, Shastri Nagar, Pimpri Colony, Pun...</div>
+            <div class="stop-sub">Pimpri-Chinchwad, Maharashtra</div>
+          </div>
+          <span class="stop-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </span>
+        </div>
+        <div class="route-full" id="pickup">
+          📍 <strong>Full Address:</strong> 11, Shastri Nagar, Near Shivaji Chowk, Pimpri Colony, Pimpri-Chinchwad, Pune
+          – 411018, Maharashtra
+        </div>
+
+        <!-- Drop -->
+        <div class="route-stop" onclick="toggleRoute('drop')">
+          <div class="route-dot-wrap">
+            <div class="dot-red"></div>
+          </div>
+          <div class="stop-text">
+            <div class="stop-main"><strong>mataji mobile,</strong> mataji mobile, Baner –...</div>
+            <div class="stop-sub">Baner Road, Pune, Maharashtra</div>
+          </div>
+          <span class="stop-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </span>
+        </div>
+        <div class="route-full" id="drop">
+          📍 <strong>Full Address:</strong> Mataji Mobile Shop, Shop No. 4, Baner Road, Near Balewadi Stadium, Baner,
+          Pune – 411045, Maharashtra
+        </div>
+      </div>
+
+      <!-- Uber pill -->
+      <!-- <div class="uber-pill" onclick="showToast('Opening Uber app...')">
+        <span style="font-size:.65rem;letter-spacing:.5px">Uber</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </div> -->
+    </div>
+
+    <!-- Porter Support -->
+    <div class="support-row" onclick="openSupportModal()">
+      <span class="support-label">LorryGo support</span>
+      <div class="support-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+          <path
+            d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Cancel Trip -->
+    <div class="cancel-row" onclick="openCancelModal()">
+      <span class="cancel-label">Cancel Trip</span>
+    </div>
+
+  </div>
+
+  <!-- ── Call Modal ── -->
+  <div class="modal-overlay" id="callModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Contact Driver</h2>
+        <button class="modal-close" onclick="closeModal('callModal')">✕</button>
+      </div>
+      <div class="call-display">
+        <div class="call-avatar">PP</div>
+        <div class="call-name">Puraram Prajapat</div>
+        <div class="call-role">Your Driver · En route to pickup</div>
+        <div class="call-number">+91 98765 43210</div>
+        <div class="call-actions">
+          <button class="call-action-btn msg-call" onclick="showToast('Opening messages...'); closeModal('callModal')"
+            title="Message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </button>
+          <button class="call-action-btn green-call"
+            onclick="showToast('Calling Puraram Prajapat...'); closeModal('callModal')" title="Call">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.88 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.79 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Support Modal ── -->
+  <div class="modal-overlay" id="supportModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Porter Support</h2>
+        <button class="modal-close" onclick="closeModal('supportModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="support-options">
+          <button class="support-opt" onclick="showToast('Connecting to live agent...'); closeModal('supportModal')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+              <path
+                d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+            </svg>
+            Chat with Support Agent
+          </button>
+          <button class="support-opt" onclick="showToast('Calling Porter Support...'); closeModal('supportModal')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.88 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.79 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z" />
+            </svg>
+            Call Support: 1800-XXX-0000
+          </button>
+          <button class="support-opt" onclick="showToast('Driver is 5 mins away'); closeModal('supportModal')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            Driver taking too long
+          </button>
+          <button class="support-opt" onclick="showToast('Reporting issue...'); closeModal('supportModal')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Report a safety issue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Cancel Trip Modal ── -->
+  <div class="modal-overlay" id="cancelModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Cancel Trip</h2>
+        <button class="modal-close" onclick="closeModal('cancelModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="cancel-warning">
+          ⚠️ A cancellation fee of <strong>₹30</strong> may apply if you cancel after the driver has started moving
+          towards you.
+        </div>
+        <p
+          style="font-size:.84rem;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;">
+          Select a reason</p>
+        <div class="reason-list" id="reasonList">
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-radio"></div>
+            Driver is too far away
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-radio"></div>
+            Change in plan / No longer needed
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-radio"></div>
+            Wrong pickup location
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-radio"></div>
+            Driver asked to cancel
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-radio"></div>
+            Booked by mistake
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" onclick="closeModal('cancelModal')">Keep Trip</button>
+          <button class="btn btn-red" id="confirmCancelBtn" disabled onclick="confirmCancel()">Cancel Trip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── Modal helpers ──
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+      });
+    });
+
+    // ── Toast ──
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    // ── Call ──
+    function openCallModal() { openModal('callModal'); }
+
+    // ── Support ──
+    function openSupportModal() { openModal('supportModal'); }
+
+    // ── Route toggle ──
+    function toggleRoute(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('open');
+    }
+
+    // ── Cancel ──
+    function openCancelModal() { openModal('cancelModal'); }
+
+    function selectReason(el) {
+      document.querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('confirmCancelBtn').disabled = false;
+    }
+
+    function confirmCancel() {
+      closeModal('cancelModal');
+      // Reset UI to show trip cancelled state
+      document.querySelector('.cancel-row').innerHTML = `<span style="color:var(--sub);font-size:.88rem;">✓ Trip cancelled</span>`;
+      document.querySelector('.cancel-row').style.cursor = 'default';
+      document.querySelector('.cancel-row').onclick = null;
+      document.querySelector('.cash-card').style.opacity = '.4';
+      document.querySelector('.fare-card').style.opacity = '.4';
+      showToast('Trip cancelled successfully');
+    }
+  </script>
+</body>
+
+</html>
