@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Confirmation</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --map-base: #ddd6cc;
+      --map-road: #bfb8ae;
+      --map-road-main: #aca49a;
+      --map-road-label: #6b6560;
+      --map-place: #706a63;
+      --bg: #f4f2ef;
+      --white: #ffffff;
+      --text: #0f0e0d;
+      --sub: #6b7280;
+      --border: #e5e7eb;
+      --red: #b91c1c;
+      --red-dark: #991b1b;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+      --red-btn: #c0392b;
+      --red-btn-hover: #a93226;
+      --blue-nav: #2563eb;
+      --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.07);
+      --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.11);
+      --shadow-dialog: 0 20px 60px rgba(0, 0, 0, 0.22), 0 4px 16px rgba(0, 0, 0, 0.1);
+      --radius: 14px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    /* ═══════════ MAP AREA ═══════════ */
+    .map-area {
+      flex: 1;
+      position: relative;
+      min-height: 420px;
+      background: var(--map-base);
+      overflow: hidden;
+    }
+
+    #mapCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Menu button ── */
+    .top-menu-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 20;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      transition: background .15s, transform .15s;
+    }
+
+    .top-menu-btn:hover {
+      background: #f7f7f7;
+      transform: scale(1.05);
+    }
+
+    .top-menu-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── Uber pill ── */
+    .uber-pill {
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 54px;
+      height: 54px;
+      background: #111;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .35);
+      cursor: pointer;
+      z-index: 20;
+      transition: transform .2s;
+    }
+
+    .uber-pill:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .uber-pill svg {
+      width: 13px;
+      height: 13px;
+      margin-top: 2px;
+    }
+
+    /* ── Location btn ── */
+    .locate-btn {
+      position: absolute;
+      right: 16px;
+      bottom: 14px;
+      z-index: 20;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-nav);
+      transition: background .15s, transform .15s;
+    }
+
+    .locate-btn:hover {
+      background: #eff6ff;
+      transform: scale(1.05);
+    }
+
+    .locate-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── Red Pin ── */
+    .pin-wrap {
+      position: absolute;
+      top: 33%;
+      left: 46%;
+      transform: translate(-50%, -100%);
+      z-index: 12;
+      animation: floatPin 2.8s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    @keyframes floatPin {
+
+      0%,
+      100% {
+        transform: translate(-50%, -100%);
+      }
+
+      50% {
+        transform: translate(-50%, -110%);
+      }
+    }
+
+    .pin-shadow {
+      width: 16px;
+      height: 5px;
+      background: rgba(0, 0, 0, .18);
+      border-radius: 50%;
+      margin: 0 auto;
+      animation: shadowPin 2.8s ease-in-out infinite;
+    }
+
+    @keyframes shadowPin {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: .18;
+      }
+
+      50% {
+        transform: scale(.75);
+        opacity: .09;
+      }
+    }
+
+    /* Google logo */
+    .google-logo {
+      position: absolute;
+      bottom: 66px;
+      left: 14px;
+      z-index: 15;
+      background: rgba(255, 255, 255, .88);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: .7rem;
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+      user-select: none;
+    }
+
+    .google-logo .G {
+      color: #4285f4;
+    }
+
+    .google-logo .o1 {
+      color: #ea4335;
+    }
+
+    .google-logo .o2 {
+      color: #fbbc04;
+    }
+
+    .google-logo .g {
+      color: #34a853;
+    }
+
+    .google-logo .l {
+      color: #4285f4;
+    }
+
+    .google-logo .e {
+      color: #ea4335;
+    }
+
+    /* ═══════════ BOTTOM PANEL ═══════════ */
+    .bottom-panel {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 30;
+      animation: slideUp .4s cubic-bezier(.22, .68, 0, 1.1) both;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Customer info row */
+    .customer-row {
+      padding: 16px 18px 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .customer-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.6rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .customer-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .customer-meta {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--sub);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 3px;
+    }
+
+    .customer-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .customer-sub {
+      font-size: .78rem;
+      font-weight: 500;
+      color: var(--sub);
+      margin-top: 2px;
+    }
+
+    .call-small-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #eff6ff;
+      color: var(--blue-nav);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s, transform .15s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .call-small-btn:hover {
+      background: #dbeafe;
+      transform: scale(1.08);
+    }
+
+    .call-small-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    /* Drop row */
+    .drop-row {
+      padding: 14px 18px 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .drop-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .drop-label {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--sub);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+
+    .drop-address {
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      cursor: pointer;
+      transition: color .15s;
+    }
+
+    .drop-address:hover {
+      color: var(--blue-nav);
+    }
+
+    .nav-arrow-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: var(--blue-nav);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 12px rgba(37, 99, 235, .35);
+      transition: background .15s, transform .15s;
+    }
+
+    .nav-arrow-btn:hover {
+      background: #1d4ed8;
+      transform: scale(1.08);
+    }
+
+    .nav-arrow-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* End trip button */
+    .end-trip-wrap {
+      padding: 12px 18px 18px;
+    }
+
+    .end-trip-btn {
+      width: 100%;
+      height: 56px;
+      border-radius: 12px;
+      border: none;
+      background: var(--red-btn);
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: background .18s, transform .15s, box-shadow .18s;
+      box-shadow: 0 4px 18px rgba(185, 28, 28, .35);
+    }
+
+    .end-trip-btn:hover {
+      background: var(--red-btn-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(185, 28, 28, .45);
+    }
+
+    .end-trip-btn:active {
+      transform: scale(.98);
+    }
+
+    .end-trip-btn .arrows {
+      font-size: .95rem;
+      letter-spacing: 2px;
+      opacity: .8;
+    }
+
+    /* Shimmer */
+    .end-trip-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -80%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .15), transparent);
+      animation: shimmer 2.5s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -80%;
+      }
+
+      60%,
+      100% {
+        left: 140%;
+      }
+    }
+
+    /* ═══════════ END TRIP DIALOG (inline, matching screenshot) ═══════════ */
+    .dialog-backdrop {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+    }
+
+    .dialog-backdrop.open {
+      display: flex;
+    }
+
+    .dialog-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-dialog);
+      padding: 28px 24px 18px;
+      width: 100%;
+      max-width: 360px;
+      animation: dialogPop .25s cubic-bezier(.22, .68, 0, 1.3) both;
+    }
+
+    @keyframes dialogPop {
+      from {
+        transform: scale(.88);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .dialog-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .dialog-btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: .3px;
+      transition: background .15s, transform .12s;
+      text-transform: uppercase;
+    }
+
+    .dialog-btn:active {
+      transform: scale(.96);
+    }
+
+    .dialog-cancel {
+      background: transparent;
+      color: var(--sub);
+    }
+
+    .dialog-cancel:hover {
+      background: #f5f5f5;
+      color: var(--text);
+    }
+
+    .dialog-ok {
+      background: transparent;
+      color: var(--red);
+    }
+
+    .dialog-ok:hover {
+      background: var(--red-bg);
+      color: var(--red-dark);
+    }
+
+    /* ── Uber pill overlaps dialog ── */
+    .uber-pill-dialog {
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 54px;
+      height: 54px;
+      background: #111;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .35);
+      cursor: pointer;
+      z-index: 200;
+      transition: transform .2s;
+    }
+
+    .uber-pill-dialog:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .uber-pill-dialog svg {
+      width: 13px;
+      height: 13px;
+      margin-top: 2px;
+    }
+
+    /* ═══════════ MENU MODAL ═══════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .48);
+      z-index: 400;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: var(--white);
+      border-radius: 22px 22px 0 0;
+      padding-bottom: 28px;
+      animation: slideUpModal .3s cubic-bezier(.22, .68, 0, 1.15) both;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUpModal {
+      from {
+        transform: translateY(60px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      margin: 12px auto 0;
+    }
+
+    .modal-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .modal-close-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: #f5f5f5;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sub);
+      transition: background .15s;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .modal-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: background .15s;
+      border: none;
+      text-align: left;
+      width: 100%;
+      color: var(--text);
+      background: none;
+    }
+
+    .menu-item:hover {
+      background: #f7f7f7;
+    }
+
+    .menu-item svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--sub);
+    }
+
+    .menu-item.danger {
+      color: var(--red);
+    }
+
+    .menu-item.danger svg {
+      color: var(--red);
+    }
+
+    /* ═══════════ TOAST ═══════════ */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 99px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+      pointer-events: none;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Trip ended success screen */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px 32px;
+      text-align: center;
+      background: var(--white);
+    }
+
+    .success-screen.show {
+      display: flex;
+      animation: fadeUp .35s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      animation: popIn .4s cubic-bezier(.22, .68, 0, 1.3) both;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(.5);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .success-circle svg {
+      width: 32px;
+      height: 32px;
+      color: var(--red);
+    }
+
+    .success-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .success-sub {
+      font-size: .84rem;
+      color: var(--sub);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .rate-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 12px;
+      border: none;
+      background: var(--red-btn);
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .15s, transform .15s;
+    }
+
+    .rate-btn:hover {
+      background: var(--red-btn-hover);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 520px) {
+
+      .app,
+      .modal-sheet {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- ═══════ MAP AREA ═══════ -->
+    <div class="map-area">
+      <canvas id="mapCanvas"></canvas>
+
+      <!-- Top Menu -->
+      <button class="top-menu-btn" onclick="openModal('menuModal')" title="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </button>
+
+      <!-- Uber pill (normal) -->
+      <!-- <div class="uber-pill" id="uberPillMain" onclick="showToast('Opening Uber navigation...')">
+        <span>Uber</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </div> -->
+
+      <!-- Locate -->
+      <button class="locate-btn" onclick="showToast('📍 Location centered')" title="My Location">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 1v4M12 19v4M1 12h4M19 12h4" />
+        </svg>
+      </button>
+
+      <!-- Red pin -->
+      <div class="pin-wrap" onclick="showToast('📍 Drop: mataji mobile, Baner')">
+        <svg width="32" height="42" viewBox="0 0 32 42" fill="none">
+          <path d="M16 0C7.164 0 0 7.164 0 16c0 12 16 26 16 26S32 28 32 16C32 7.164 24.836 0 16 0z" fill="#c0392b" />
+          <circle cx="16" cy="16" r="7" fill="white" opacity="0.9" />
+          <circle cx="16" cy="16" r="4" fill="#c0392b" />
+        </svg>
+        <div class="pin-shadow"></div>
+      </div>
+
+      <!-- Google -->
+      <div class="google-logo">
+        <span class="G">G</span><span class="o1">o</span><span class="o2">o</span><span class="g">g</span><span
+          class="l">l</span><span class="e">e</span>
+      </div>
+
+      <!-- ── INLINE END TRIP DIALOG (overlays map, matching screenshot) ── -->
+      <div class="dialog-backdrop" id="endTripDialog">
+        <div class="dialog-box" style="position:relative">
+          <div class="dialog-text">Are you sure you want to end trip?</div>
+          <div class="dialog-actions">
+            <button class="dialog-btn dialog-cancel" onclick="closeDialog()">CANCEL</button>
+            <button class="dialog-btn dialog-ok" onclick="confirmEndTrip()">OK</button>
+          </div>
+          <!-- Uber pill overlapping dialog (as in screenshot) -->
+          <!-- <div class="uber-pill-dialog" onclick="showToast('Opening Uber...')">
+            <span>Uber</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div> -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════ BOTTOM PANEL ═══════ -->
+    <div class="bottom-panel" id="bottomPanel">
+
+      <!-- Customer info -->
+      <div class="customer-row">
+        <div class="customer-icon">📦</div>
+        <div class="customer-details">
+          <div class="customer-meta">Customer's Flat no./Shop name</div>
+          <div class="customer-name">mataji mobile</div>
+          <div class="customer-sub">Drop delivery · Cash payment</div>
+        </div>
+        <button class="call-small-btn" onclick="showToast('Calling customer...')" title="Call Customer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.88 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.79 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Drop address -->
+      <div class="drop-row">
+        <div class="drop-left">
+          <div class="drop-label">Drop at</div>
+          <div class="drop-address"
+            onclick="copyAddress('mataji mobile, Baner - Balewadi Road, Baner, Pune, Maharashtra, India')">
+            mataji mobile, Baner - Balewadi Road,<br>Baner, Pune, Maharashtra, India
+          </div>
+        </div>
+        <button class="nav-arrow-btn" onclick="navigateTo()" title="Navigate">
+          <svg viewBox="0 0 24 24" fill="white">
+            <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- End Trip -->
+      <div class="end-trip-wrap" id="endTripWrap">
+        <button class="end-trip-btn" onclick="openEndTripDialog()">
+          End Trip
+          <span class="arrows">&gt;&gt;&gt;</span>
+        </button>
+      </div>
+
+      <!-- Success screen (hidden by default) -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="success-title">Trip Ended Successfully!</div>
+        <div class="success-sub">Great work! Please collect the cash from the customer and rate your experience.</div>
+        <button class="rate-btn" onclick="showToast('Opening rating screen...')">Rate the Customer ⭐</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════ MENU MODAL ═══════ -->
+  <div class="modal-overlay" id="menuModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Trip Options</h2>
+        <button class="modal-close-btn" onclick="closeModal('menuModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <button class="menu-item" onclick="navigateTo(); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon points="3 11 22 2 13 21 11 13 3 11" />
+          </svg>
+          Navigate to Drop Point
+        </button>
+        <button class="menu-item" onclick="showToast('Calling customer...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.88 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.79 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z" />
+          </svg>
+          Call Customer
+        </button>
+        <button class="menu-item"
+          onclick="copyAddress('mataji mobile, Baner - Balewadi Road, Baner, Pune, Maharashtra, India'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          Copy Drop Address
+        </button>
+        <button class="menu-item" onclick="showToast('Opening Porter support...'); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path
+              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+          LorryGo Support
+        </button>
+        <button class="menu-item danger" onclick="openEndTripDialog(); closeModal('menuModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+          </svg>
+          End Trip
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ═══ Canvas Map ═══
+    const canvas = document.getElementById('mapCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawMap() {
+      const W = canvas.offsetWidth || 520;
+      const H = canvas.offsetHeight || 420;
+      canvas.width = W;
+      canvas.height = H;
+
+      // Base
+      ctx.fillStyle = '#ddd6cc';
+      ctx.fillRect(0, 0, W, H);
+
+      // Block zones
+      const zones = [
+        [0, 0, W * 0.42, H * 0.55, '#d4cdc4'],
+        [W * 0.45, 0, W, H * 0.45, '#cdc8be'],
+        [0, H * 0.58, W * 0.4, H, '#d8d1c8'],
+        [W * 0.44, H * 0.5, W, H, '#d0c9c0'],
+      ];
+      zones.forEach(([x, y, w2, h2, c]) => {
+        ctx.fillStyle = c;
+        ctx.fillRect(x, y, w2 - x, h2 - y);
+      });
+
+      // Main diagonal road (Baner-Balewadi Rd label)
+      ctx.save();
+      ctx.strokeStyle = '#aca49a';
+      ctx.lineWidth = 32;
+      ctx.beginPath();
+      ctx.moveTo(W * 0.25, 0);
+      ctx.lineTo(W * 0.65, H);
+      ctx.stroke();
+      // lighter center
+      ctx.strokeStyle = '#bdb5ab';
+      ctx.lineWidth = 26;
+      ctx.stroke();
+      // center dashes
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([14, 10]);
+      ctx.beginPath();
+      ctx.moveTo(W * 0.27, 0);
+      ctx.lineTo(W * 0.67, H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // Road label rotated
+      ctx.save();
+      ctx.translate(W * 0.33, H * 0.38);
+      ctx.rotate(-Math.PI / 3.5);
+      ctx.font = '700 11px Plus Jakarta Sans, sans-serif';
+      ctx.fillStyle = '#8a8078';
+      ctx.textAlign = 'center';
+      ctx.fillText('Baner-Balewadi Rd', 0, 0);
+      ctx.restore();
+
+      // Horizontal road
+      ctx.save();
+      ctx.strokeStyle = '#b8b0a6';
+      ctx.lineWidth = 20;
+      ctx.beginPath();
+      ctx.moveTo(0, H * 0.52);
+      ctx.lineTo(W, H * 0.54);
+      ctx.stroke();
+      ctx.strokeStyle = '#c8c0b6';
+      ctx.lineWidth = 15;
+      ctx.stroke();
+      ctx.restore();
+
+      // Vertical road right
+      ctx.save();
+      ctx.strokeStyle = '#b4acaa';
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.moveTo(W * 0.72, 0);
+      ctx.lineTo(W * 0.70, H);
+      ctx.stroke();
+      ctx.strokeStyle = '#c4bcb8';
+      ctx.lineWidth = 12;
+      ctx.stroke();
+      ctx.restore();
+
+      // Small roads
+      [[0, H * 0.25, W * 0.42, H * 0.26], [W * 0.48, 0, W * 0.52, H * 0.52], [0, H * 0.78, W * 0.68, H * 0.76]].forEach(([x1, y1, x2, y2]) => {
+        ctx.save();
+        ctx.strokeStyle = '#c0b8b0';
+        ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Arrow on road
+      ctx.save();
+      ctx.fillStyle = '#a8a098';
+      ctx.font = '14px serif';
+      ctx.fillText('↓', W * 0.62, H * 0.47);
+      ctx.restore();
+
+      // Place labels + pins
+      const places = [
+        { x: W * 0.18, y: H * 0.4, label: 'Pause.x.paint', icon: '📍', gray: true },
+        { x: W * 0.52, y: H * 0.44, label: 'Grooves', sub: 'ग्रूव्स', icon: '📍', gray: true },
+        { x: W * 0.8, y: H * 0.22, label: 'Naeem\nSun Co', icon: '📍', gray: true },
+        { x: W * 0.14, y: H * 0.62, label: 'Pant...', sub: 'rarily closed', gray: true },
+      ];
+
+      places.forEach(p => {
+        // Small gray circle
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y - 14, 9, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.shadowColor = 'rgba(0,0,0,.12)';
+        ctx.shadowBlur = 3;
+        ctx.fill();
+        ctx.restore();
+        ctx.save();
+        ctx.font = '10px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('📍', p.x, p.y - 14);
+        ctx.restore();
+        // Label
+        ctx.save();
+        ctx.font = 'bold 9px Plus Jakarta Sans, sans-serif';
+        ctx.fillStyle = '#6b6560';
+        ctx.textAlign = 'center';
+        const lines = p.label.split('\n');
+        lines.forEach((ln, i) => ctx.fillText(ln, p.x, p.y + i * 12));
+        if (p.sub) {
+          ctx.font = '8px Plus Jakarta Sans, sans-serif';
+          ctx.fillStyle = '#9b9590';
+          ctx.fillText(p.sub, p.x, p.y + lines.length * 12);
+        }
+        ctx.restore();
+      });
+
+      // ya Ln road label
+      ctx.save();
+      ctx.font = '9px Plus Jakarta Sans, sans-serif';
+      ctx.fillStyle = '#8a8078';
+      ctx.fillText('ya Ln', 14, H * 0.37);
+      ctx.restore();
+    }
+
+    window.addEventListener('resize', drawMap);
+    drawMap();
+
+    // ═══ Dialog ═══
+    function openEndTripDialog() {
+      document.getElementById('endTripDialog').classList.add('open');
+      // hide uber pill on map so dialog one shows
+      document.getElementById('uberPillMain').style.display = 'none';
+    }
+
+    function closeDialog() {
+      document.getElementById('endTripDialog').classList.remove('open');
+      document.getElementById('uberPillMain').style.display = '';
+    }
+
+    function confirmEndTrip() {
+      closeDialog();
+      // Hide end trip button, show success
+      document.getElementById('endTripWrap').style.display = 'none';
+      document.querySelector('.drop-row').style.display = 'none';
+      document.querySelector('.customer-row').style.opacity = '.45';
+      document.getElementById('successScreen').classList.add('show');
+      showToast('✅ Trip ended successfully!');
+    }
+
+    // ═══ Navigation ═══
+    function navigateTo() {
+      const addr = 'mataji mobile, Baner - Balewadi Road, Baner, Pune, Maharashtra, India';
+      showToast('🗺 Opening navigation...');
+      setTimeout(() => {
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addr)}`, '_blank');
+      }, 600);
+    }
+
+    // ═══ Copy address ═══
+    function copyAddress(addr) {
+      navigator.clipboard.writeText(addr).then(() => {
+        showToast('📋 Address copied!');
+      }).catch(() => {
+        showToast('📋 ' + addr.slice(0, 44) + '...');
+      });
+    }
+
+    // ═══ Modals ═══
+    function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', e => { if (e.target === el) { el.classList.remove('open'); document.body.style.overflow = ''; } });
+    });
+
+    // ═══ Toast ═══
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+  </script>
+</body>
+
+</html>

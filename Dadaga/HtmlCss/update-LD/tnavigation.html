@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Acceptance</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f0f0f4;
+      --white: #ffffff;
+      --text: #111218;
+      --sub: #6b7280;
+      --border: #e5e7eb;
+      --blue: #1c4ed8;
+      --blue-mid: #2563eb;
+      --blue-light: #dbeafe;
+      --green: #16a34a;
+      --green-dot: #22c55e;
+      --red-dot: #ef4444;
+      --orange: #d97706;
+      --orange-bg: #fffbeb;
+      --orange-border: #fde68a;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+      --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.10);
+      --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.14);
+      --shadow-blue: 0 6px 28px rgba(28, 78, 216, 0.38);
+      --radius: 16px;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      padding: 14px 14px 30px;
+      gap: 14px;
+    }
+
+    /* ═══════════ TRIP REQUEST CARD ═══════════ */
+    .trip-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: dropIn .45s cubic-bezier(.22, .68, 0, 1.15) both;
+      border: 1.5px solid rgba(28, 78, 216, 0.10);
+    }
+
+    @keyframes dropIn {
+      from {
+        opacity: 0;
+        transform: translateY(-24px) scale(.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Fare header */
+    .fare-header {
+      padding: 22px 20px 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .fare-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -1px;
+      line-height: 1;
+      animation: popIn .4s cubic-bezier(.22, .68, 0, 1.3) .1s both;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(.8);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Progress bar */
+    .progress-bar-wrap {
+      padding: 14px 20px 0;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: var(--blue-light);
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue-mid), #60a5fa);
+      border-radius: 99px;
+      width: 100%;
+      transform-origin: left;
+      animation: drain var(--timer-duration, 15s) linear forwards;
+    }
+
+    @keyframes drain {
+      from {
+        width: 100%;
+      }
+
+      to {
+        width: 0%;
+      }
+    }
+
+    /* Pickup tag */
+    .pickup-tag {
+      margin: 12px 20px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0fdf4;
+      border: 1.5px solid #bbf7d0;
+      border-radius: 99px;
+      padding: 5px 12px;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .2px;
+    }
+
+    .pickup-tag::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green-dot);
+      flex-shrink: 0;
+    }
+
+    /* Route section */
+    .route-section {
+      padding: 16px 20px 0;
+      display: flex;
+      gap: 0;
+    }
+
+    .route-labels {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 4px;
+      margin-right: 14px;
+      flex-shrink: 0;
+      gap: 0;
+    }
+
+    .route-label-text {
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #9ca3af;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      padding: 4px 0;
+    }
+
+    .route-dots-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 12px;
+      padding-top: 5px;
+    }
+
+    .rdot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .rdot.green {
+      background: var(--green-dot);
+      box-shadow: 0 0 0 2.5px rgba(34, 197, 94, .25);
+    }
+
+    .rdot.red {
+      background: var(--red-dot);
+      box-shadow: 0 0 0 2.5px rgba(239, 68, 68, .25);
+    }
+
+    .route-line-v {
+      width: 2px;
+      flex: 1;
+      background: repeating-linear-gradient(to bottom, #d1d5db 0, #d1d5db 5px, transparent 5px, transparent 10px);
+      margin: 4px 0;
+      min-height: 28px;
+    }
+
+    .route-stops {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .stop-block {
+      padding-bottom: 16px;
+      cursor: pointer;
+    }
+
+    .stop-block:last-child {
+      padding-bottom: 0;
+    }
+
+    .stop-label {
+      font-size: .68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+
+    .stop-address {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      transition: color .15s;
+    }
+
+    .stop-block:hover .stop-address {
+      color: var(--blue-mid);
+    }
+
+    .stop-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0 12px;
+    }
+
+    /* Accept button */
+    .accept-wrap {
+      padding: 16px 20px;
+      position: relative;
+    }
+
+    .accept-btn {
+      width: 100%;
+      height: 58px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #1c4ed8 0%, #2563eb 50%, #3b82f6 100%);
+      color: #fff;
+      font-family: 'Manrope', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: .3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-blue);
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .accept-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(28, 78, 216, .48);
+    }
+
+    .accept-btn:active {
+      transform: scale(.98);
+    }
+
+    /* Swipe thumb */
+    .swipe-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: background .15s;
+      flex-shrink: 0;
+      cursor: grab;
+    }
+
+    .swipe-thumb svg {
+      width: 22px;
+      height: 22px;
+      color: #fff;
+    }
+
+    .accept-label {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: .3px;
+      margin-left: 28px;
+    }
+
+    .timer-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 99px;
+      padding: 3px 9px;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      letter-spacing: .5px;
+    }
+
+    /* Shimmer on btn */
+    .accept-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -80%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .18), transparent);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -80%;
+      }
+
+      60%,
+      100% {
+        left: 140%;
+      }
+    }
+
+    /* Branded note */
+    .branded-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px 14px;
+      border-top: 1px solid var(--orange-border);
+      background: var(--orange-bg);
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .branded-note:hover {
+      background: #fef3c7;
+    }
+
+    .branded-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: .7rem;
+      font-weight: 900;
+    }
+
+    .branded-text {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--orange);
+      line-height: 1.4;
+    }
+
+    /* ═══════════ NOTICEBOARD ═══════════ */
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.3px;
+      animation: fadeUp .4s ease .2s both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notice-card {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1c4ed8 45%, #2563eb 100%);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      animation: fadeUp .4s ease .3s both;
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .notice-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-blue);
+    }
+
+    .notice-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .notice-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .notice-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: .72rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .notice-headline {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .notice-body {
+      font-size: .83rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .8);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .notice-cta {
+      font-size: .8rem;
+      font-weight: 700;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .notice-cta svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .notice-illustration {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      font-size: 2.8rem;
+      opacity: .85;
+    }
+
+    /* ═══════════ LANGUAGE SECTION ═══════════ */
+    .lang-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+      animation: fadeUp .4s ease .4s both;
+      border: 1.5px solid var(--border);
+    }
+
+    .lang-label {
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--sub);
+    }
+
+    .lang-select {
+      appearance: none;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 28px 6px 10px;
+      font-family: 'Manrope', sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 8px center;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .lang-select:focus {
+      border-color: var(--blue-mid);
+    }
+
+    /* ═══════════ GO OFFLINE ═══════════ */
+    .offline-wrap {
+      animation: fadeUp .4s ease .45s both;
+    }
+
+    .offline-btn {
+      width: 100%;
+      height: 58px;
+      border-radius: 14px;
+      border: 2px solid var(--red);
+      background: var(--white);
+      color: var(--red);
+      font-family: 'Manrope', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      transition: background .18s, color .18s, transform .15s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .offline-btn:hover {
+      background: var(--red);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .offline-btn:hover .offline-thumb {
+      background: rgba(255, 255, 255, .2);
+    }
+
+    .offline-btn:active {
+      transform: scale(.98);
+    }
+
+    .offline-thumb {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: var(--red-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: background .18s;
+    }
+
+    .offline-thumb svg {
+      width: 20px;
+      height: 20px;
+      color: var(--red);
+    }
+
+    .offline-btn:hover .offline-thumb svg {
+      color: #fff;
+    }
+
+    .offline-label {
+      margin-left: 32px;
+    }
+
+    /* ═══════════ TOAST ═══════════ */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 99px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+      pointer-events: none;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ═══════════ MODALS ═══════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 300;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: var(--white);
+      border-radius: 22px 22px 0 0;
+      padding-bottom: 28px;
+      animation: slideUp .3s cubic-bezier(.22, .68, 0, 1.15) both;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(60px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      margin: 12px auto 0;
+    }
+
+    .modal-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: #f5f5f5;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sub);
+      transition: background .15s;
+    }
+
+    .modal-close:hover {
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    /* Offline confirm */
+    .offline-confirm-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fee2e2;
+      border: 2px solid #fca5a5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .offline-confirm-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--red);
+    }
+
+    .offline-confirm-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .offline-confirm-sub {
+      font-size: .84rem;
+      color: var(--sub);
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      height: 46px;
+      border-radius: 10px;
+      font-family: 'Manrope', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-red:hover {
+      background: #b91c1c;
+    }
+
+    /* Declined state overlay */
+    .declined-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(220, 38, 38, 0.92);
+      border-radius: var(--radius);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      gap: 8px;
+      z-index: 50;
+      animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .declined-overlay.show {
+      display: flex;
+    }
+
+    .declined-overlay svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    /* Accepted state overlay */
+    .accepted-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(22, 163, 74, 0.93);
+      border-radius: var(--radius);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      gap: 8px;
+      z-index: 50;
+      animation: fadeIn .3s ease;
+    }
+
+    .accepted-overlay.show {
+      display: flex;
+    }
+
+    .accepted-overlay svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    @media (max-width: 520px) {
+
+      .page,
+      .modal-sheet {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- ═══════ TRIP REQUEST CARD ═══════ -->
+    <div class="trip-card" id="tripCard" style="position:relative">
+
+      <!-- Accepted overlay -->
+      <div class="accepted-overlay" id="acceptedOverlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        Trip Accepted! 🚗
+      </div>
+
+      <!-- Declined overlay -->
+      <div class="declined-overlay" id="declinedOverlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+        Trip Expired
+      </div>
+
+      <!-- Fare -->
+      <div class="fare-header">
+        <div class="fare-amount" id="fareDisplay">₹135</div>
+      </div>
+
+      <!-- Timer progress bar -->
+      <div class="progress-bar-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="--timer-duration:15s"></div>
+        </div>
+      </div>
+
+      <!-- Pickup distance tag -->
+      <div style="padding: 0 20px">
+        <div class="pickup-tag" id="distanceTag">Pickup 0.3 km away</div>
+      </div>
+
+      <!-- Route -->
+      <div class="route-section">
+        <!-- Side labels -->
+        <div
+          style="display:flex;flex-direction:column;justify-content:space-between;align-items:center;margin-right:8px;padding-top:4px">
+          <div
+            style="font-size:.58rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#9ca3af;writing-mode:vertical-rl;transform:rotate(180deg);line-height:1">
+            PICKUP</div>
+          <div style="width:1px;flex:1;background:var(--border);margin:6px 0"></div>
+          <div
+            style="font-size:.58rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#9ca3af;writing-mode:vertical-rl;transform:rotate(180deg);line-height:1">
+            DROP</div>
+        </div>
+
+        <!-- Dots -->
+        <div class="route-dots-col">
+          <div class="rdot green"></div>
+          <div class="route-line-v"></div>
+          <div class="rdot red"></div>
+        </div>
+
+        <!-- Addresses -->
+        <div class="route-stops">
+          <div class="stop-block"
+            onclick="copyAddress('11, Shastri Nagar, Pimpri Colony, Pune, Pimpri-Chinchwad, Maharashtra 411017, India')">
+            <div class="stop-label">Pickup point</div>
+            <div class="stop-address">11, Shastri Nagar, Pimpri Colony, Pune, Pimpri-Chinchwad, Maharashtra 411017,
+              India</div>
+          </div>
+          <div class="stop-divider"></div>
+          <div class="stop-block"
+            onclick="copyAddress('mataji mobile, Baner – Balewadi Road, Baner, Pune, Maharashtra, India')">
+            <div class="stop-label">Drop point</div>
+            <div class="stop-address">mataji mobile, Baner – Balewadi Road, Baner, Pune, Maharashtra, India</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accept button -->
+      <div class="accept-wrap">
+        <button class="accept-btn" id="acceptBtn" onclick="acceptTrip()">
+          <div class="swipe-thumb" id="swipeThumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="13 5 20 12 13 19" />
+              <polyline points="6 5 13 12 6 19" />
+            </svg>
+          </div>
+          <span class="accept-label">Accept in <span id="timerText">15s</span></span>
+          <span class="timer-badge" id="timerBadge">0:15</span>
+        </button>
+      </div>
+
+      <!-- Branded note -->
+      <div class="branded-note" onclick="openModal('brandedModal')">
+        <div class="branded-icon">!</div>
+        <div class="branded-text">Branded partners enjoy 10s benefit. Get branded now!</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════ NOTICEBOARD ═══════ -->
+    <div class="section-title">Noticeboard</div>
+
+    <div class="notice-card" onclick="openModal('noticeModal')">
+      <div class="notice-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+        LorryGo
+      </div>
+      <div class="notice-headline">Drop Location Par Time Par Pahuche</div>
+      <div class="notice-body">
+        Late hone se bachne ke liye Google ETA aur route follow karein!<br>
+        <strong style="color:#fff">Safe drive karein aur jaldbazi se bachein 🚫</strong>
+      </div>
+      <div class="notice-cta">
+        Read more
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
+      <div class="notice-illustration">📦</div>
+    </div>
+
+    <!-- ═══════ LANGUAGE ═══════ -->
+    <div class="lang-row">
+      <span class="lang-label">Preferred app language</span>
+      <select class="lang-select" id="langSelect" onchange="onLangChange()">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="mr">मराठी</option>
+        <option value="ta">தமிழ்</option>
+        <option value="te">తెలుగు</option>
+        <option value="kn">ಕನ್ನಡ</option>
+        <option value="gu">ગુજરાતી</option>
+      </select>
+    </div>
+
+    <!-- ═══════ GO OFFLINE ═══════ -->
+    <div class="offline-wrap">
+      <button class="offline-btn" onclick="openModal('offlineModal')">
+        <div class="offline-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="13 5 20 12 13 19" />
+            <polyline points="6 5 13 12 6 19" />
+          </svg>
+        </div>
+        <span class="offline-label">GO OFFLINE</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ═══════ BRANDED MODAL ═══════ -->
+  <div class="modal-overlay" id="brandedModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Branded Partner Benefit</h2>
+        <button class="modal-close" onclick="closeModal('brandedModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div
+          style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:16px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.3rem">⏱</span>
+          <div>
+            <div style="font-size:.92rem;font-weight:800;color:#92400e;margin-bottom:4px">10 Extra Seconds!</div>
+            <div style="font-size:.82rem;color:#78350f;line-height:1.5">Branded Porter partners get 10 extra seconds to
+              accept each trip — giving you more time to review the request before deciding.</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:600"><span>✅</span> Priority
+            trip allocation</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:600"><span>✅</span> 10s
+            extra acceptance time</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:600"><span>✅</span>
+            Exclusive branded incentives</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:600"><span>✅</span> Higher
+            customer trust</div>
+        </div>
+        <button
+          style="width:100%;height:48px;border-radius:12px;border:none;background:#d97706;color:#fff;font-family:Manrope,sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;transition:background .15s"
+          onmouseover="this.style.background='#b45309'" onmouseout="this.style.background='#d97706'"
+          onclick="showToast('Redirecting to branding page...'); closeModal('brandedModal')">Get Branded Now →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ NOTICEBOARD DETAIL MODAL ═══════ -->
+  <div class="modal-overlay" id="noticeModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Noticeboard</h2>
+        <button class="modal-close" onclick="closeModal('noticeModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div
+          style="background:linear-gradient(135deg,#1e3a8a,#2563eb);border-radius:12px;padding:16px;margin-bottom:16px">
+          <div
+            style="font-size:.7rem;font-weight:800;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">
+            📦 PORTER NOTICE</div>
+          <div style="font-size:1rem;font-weight:800;color:#fff;margin-bottom:10px">Drop Location Par Time Par Pahuche
+          </div>
+          <div style="font-size:.84rem;color:rgba(255,255,255,.85);line-height:1.7">Late hone se bachne ke liye Google
+            ETA aur route follow karein!<br><br><strong style="color:#fff">Safe drive karein aur jaldbazi se bachein
+              🚫</strong></div>
+        </div>
+        <div style="font-size:.84rem;color:var(--sub);line-height:1.7;margin-bottom:16px">
+          ✅ Always follow the GPS route provided in the app.<br>
+          ✅ Maintain safe speed and avoid shortcuts.<br>
+          ✅ Arrive on time to maintain your rating.<br>
+          ✅ Contact support if you face any issues.<br>
+        </div>
+        <button
+          style="width:100%;height:46px;border-radius:10px;border:none;background:var(--blue-mid);color:#fff;font-family:Manrope,sans-serif;font-size:.9rem;font-weight:800;cursor:pointer"
+          onclick="closeModal('noticeModal')">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ GO OFFLINE CONFIRM MODAL ═══════ -->
+  <div class="modal-overlay" id="offlineModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>Go Offline?</h2>
+        <button class="modal-close" onclick="closeModal('offlineModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="offline-confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10" />
+          </svg>
+        </div>
+        <div class="offline-confirm-title">Go Offline</div>
+        <div class="offline-confirm-sub">You won't receive any new trip requests while offline. You can come back online
+          anytime.</div>
+        <div class="confirm-actions">
+          <button class="btn btn-outline" onclick="closeModal('offlineModal')">Stay Online</button>
+          <button class="btn btn-red" onclick="goOffline()">Go Offline</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ═══════════════ TIMER LOGIC ═══════════════
+    const TOTAL_TIME = 15;
+    let timeLeft = TOTAL_TIME;
+    let timerInterval = null;
+    let tripHandled = false;
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          expireTrip();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      const label = `${mins}:${String(secs).padStart(2, '0')}`;
+      const el = document.getElementById('timerBadge');
+      const el2 = document.getElementById('timerText');
+      if (el) el.textContent = label;
+      if (el2) el2.textContent = `${timeLeft}s`;
+
+      // Change color when < 5s
+      const btn = document.getElementById('acceptBtn');
+      if (timeLeft <= 5 && btn) {
+        btn.style.background = 'linear-gradient(135deg, #991b1b, #dc2626, #ef4444)';
+        btn.style.boxShadow = '0 6px 28px rgba(220,38,38,.45)';
+      }
+    }
+
+    function expireTrip() {
+      if (tripHandled) return;
+      tripHandled = true;
+      const overlay = document.getElementById('declinedOverlay');
+      overlay.classList.add('show');
+      showToast('⏱ Trip request expired');
+      setTimeout(() => {
+        overlay.classList.remove('show');
+        resetTrip();
+      }, 2800);
+    }
+
+    function resetTrip() {
+      tripHandled = false;
+      timeLeft = TOTAL_TIME;
+      clearInterval(timerInterval);
+      // Reset button style
+      const btn = document.getElementById('acceptBtn');
+      if (btn) {
+        btn.style.background = '';
+        btn.style.boxShadow = '';
+      }
+      updateTimerDisplay();
+      // Reset progress bar by re-cloning
+      const fill = document.getElementById('progressFill');
+      const clone = fill.cloneNode(true);
+      fill.parentNode.replaceChild(clone, clone);
+      clone.style.animation = 'none';
+      clone.offsetHeight; // reflow
+      clone.style.animation = `drain ${TOTAL_TIME}s linear forwards`;
+      startTimer();
+      showToast('🔄 New trip request received');
+    }
+
+    // ═══════════════ ACCEPT ═══════════════
+    function acceptTrip() {
+      if (tripHandled) return;
+      tripHandled = true;
+      clearInterval(timerInterval);
+      const overlay = document.getElementById('acceptedOverlay');
+      overlay.classList.add('show');
+      showToast('✅ Trip accepted! Navigate to pickup.');
+      setTimeout(() => {
+        overlay.classList.remove('show');
+        // Show "navigate" state in card
+        document.querySelector('.accept-wrap').innerHTML = `
+        <div style="display:flex;gap:10px">
+          <button style="flex:1;height:52px;border-radius:12px;border:2px solid var(--border);background:#fff;color:var(--text);font-family:Manrope,sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="showToast('Calling customer...')">📞 Call</button>
+          <button style="flex:2;height:52px;border-radius:12px;border:none;background:linear-gradient(135deg,#1c4ed8,#2563eb);color:#fff;font-family:Manrope,sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;box-shadow:var(--shadow-blue)" onclick="showToast('Opening navigation...')">🗺 Navigate</button>
+        </div>`;
+      }, 1800);
+    }
+
+    // ═══════════════ COPY ADDRESS ═══════════════
+    function copyAddress(addr) {
+      navigator.clipboard.writeText(addr).then(() => {
+        showToast('📋 Address copied!');
+      }).catch(() => {
+        showToast('📋 ' + addr.slice(0, 40) + '...');
+      });
+    }
+
+    // ═══════════════ LANGUAGE CHANGE ═══════════════
+    function onLangChange() {
+      const lang = document.getElementById('langSelect');
+      const names = { en: 'English', hi: 'हिंदी', mr: 'मराठी', ta: 'தமிழ்', te: 'తెలుగు', kn: 'ಕನ್ನಡ', gu: 'ગુજરાતી' };
+      showToast(`Language changed to ${names[lang.value]}`);
+    }
+
+    // ═══════════════ GO OFFLINE ═══════════════
+    function goOffline() {
+      closeModal('offlineModal');
+      clearInterval(timerInterval);
+      tripHandled = true;
+      const page = document.querySelector('.page');
+      const tripCard = document.getElementById('tripCard');
+      tripCard.style.opacity = '.4';
+      tripCard.style.pointerEvents = 'none';
+
+      // Swap offline button
+      document.querySelector('.offline-wrap').innerHTML = `
+      <button style="width:100%;height:58px;border-radius:14px;border:none;background:var(--green);color:#fff;font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 6px 28px rgba(22,163,74,.38);transition:all .18s" onclick="goOnline()">
+        <span>🟢</span> GO ONLINE
+      </button>`;
+      showToast('🔴 You are now Offline');
+    }
+
+    function goOnline() {
+      const tripCard = document.getElementById('tripCard');
+      tripCard.style.opacity = '';
+      tripCard.style.pointerEvents = '';
+      document.querySelector('.offline-wrap').innerHTML = `
+      <button class="offline-btn" onclick="openModal('offlineModal')">
+        <div class="offline-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="13 5 20 12 13 19"/><polyline points="6 5 13 12 6 19"/>
+          </svg>
+        </div>
+        <span class="offline-label">GO OFFLINE</span>
+      </button>`;
+      resetTrip();
+      showToast('🟢 You are now Online');
+    }
+
+    // ═══════════════ MODAL HELPERS ═══════════════
+    function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+      });
+    });
+
+    // ═══════════════ TOAST ═══════════════
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    // ═══════════════ INIT ═══════════════
+    startTimer();
+  </script>
+</body>
+
+</html>
