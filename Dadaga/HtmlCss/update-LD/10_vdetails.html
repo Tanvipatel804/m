@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --blue: #2563EB;
+      --blue-light: #EFF6FF;
+      --green: #16A34A;
+      --green-light: #F0FDF4;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --red: #EF4444;
+      --white: #ffffff;
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --radius: 10px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray-100);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px 40px;
+      color: var(--gray-900);
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 680px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: var(--gray-700);
+      transition: background 0.15s;
+    }
+
+    .btn-icon:hover {
+      background: var(--gray-100);
+    }
+
+    .header-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: var(--gray-900);
+    }
+
+    /* ── STEPPER ── */
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 22px 24px 26px;
+      position: relative;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Connector lines */
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 17px;
+      left: calc(50% + 20px);
+      right: calc(-50% + 20px);
+      height: 2px;
+      z-index: 0;
+    }
+
+    .step-item.done::after {
+      background: var(--blue);
+    }
+
+    .step-item.active::after {
+      background: var(--gray-200);
+      border-top: 2px dashed var(--gray-300);
+      height: 0;
+    }
+
+    .step-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      transition: all 0.25s;
+    }
+
+    .step-circle.done {
+      background: var(--blue);
+      color: white;
+    }
+
+    .step-circle.active {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 0 0 4px var(--blue-light);
+    }
+
+    .step-circle.inactive {
+      background: var(--gray-100);
+      color: var(--gray-400);
+      border: 2px solid var(--gray-200);
+    }
+
+    .step-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--gray-400);
+    }
+
+    .step-item.done .step-label {
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .step-item.active .step-label {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    /* ── FORM BODY ── */
+    .form-body {
+      padding: 4px 20px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--gray-100);
+      margin: 0 -20px 20px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .required {
+      color: var(--red);
+      margin-left: 1px;
+    }
+
+    /* Vehicle Number Input */
+    .input-box {
+      width: 100%;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 13px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--gray-900);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-box::placeholder {
+      color: var(--gray-400);
+      font-weight: 400;
+    }
+
+    .input-box:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .input-box.has-value {
+      font-weight: 600;
+    }
+
+    .input-box.error {
+      border-color: var(--red);
+    }
+
+    .error-msg {
+      font-size: 11.5px;
+      color: var(--red);
+      font-weight: 500;
+      display: none;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    /* ── RC CARD ── */
+    .rc-card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--white);
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .rc-card.uploaded {
+      background: var(--green-light);
+      border-color: #BBF7D0;
+    }
+
+    .rc-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    /* Upload button */
+    .btn-upload {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-upload:hover {
+      background: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .btn-upload:active {
+      transform: scale(0.98);
+    }
+
+    /* Uploaded state */
+    .uploaded-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .btn-edit-rc {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--blue);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+
+    .btn-edit-rc:hover {
+      background: var(--blue-light);
+    }
+
+    /* ── CITY SELECT ── */
+    .select-wrap {
+      position: relative;
+    }
+
+    .custom-select {
+      width: 100%;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 13px 40px 13px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--gray-400);
+      background: var(--white);
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, color 0.15s;
+    }
+
+    .custom-select.selected {
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    .custom-select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .select-chevron {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--gray-500);
+      transition: transform 0.2s;
+    }
+
+    .select-wrap:focus-within .select-chevron {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* ── VEHICLE TYPE (appears after city selected) ── */
+    .vtype-section {
+      margin-top: 4px;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .vtype-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    .vtype-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .vtype-btn {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 16px 8px 13px;
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .vtype-btn:hover {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+    }
+
+    .vtype-btn.selected {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      box-shadow: 0 0 0 2px var(--blue);
+    }
+
+    .vtype-icon {
+      color: var(--gray-500);
+      transition: color 0.2s;
+    }
+
+    .vtype-btn.selected .vtype-icon,
+    .vtype-btn:hover .vtype-icon {
+      color: var(--blue);
+    }
+
+    .vtype-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-500);
+      transition: color 0.2s;
+    }
+
+    .vtype-btn.selected .vtype-label,
+    .vtype-btn:hover .vtype-label {
+      color: var(--blue);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 14px 20px 18px;
+      border-top: 1px solid var(--gray-100);
+      background: var(--white);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: not-allowed;
+      background: var(--gray-200);
+      color: var(--gray-400);
+      transition: all 0.25s ease;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-submit.active {
+      background: var(--blue);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-submit.active:hover {
+      background: #1d4ed8;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit.active:active {
+      transform: translateY(0);
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--gray-900);
+      color: white;
+      padding: 11px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 100;
+      pointer-events: none;
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── SUCCESS MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px 28px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+      transform: scale(0.88);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    }
+
+    .modal-overlay.show .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      width: 62px;
+      height: 62px;
+      background: var(--green-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .modal-btn:hover {
+      background: #1d4ed8;
+    }
+
+    #rcInput {
+      display: none;
+    }
+
+    @media (max-width: 400px) {
+      body {
+        padding: 0;
+      }
+
+      .page-wrapper {
+        border-radius: 0;
+        min-height: 100vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- HEADER -->
+    <div class="header">
+      <button class="btn-icon" onclick="handleBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M5 12l7 7M5 12l7-7" />
+        </svg>
+      </button>
+      <span class="header-title">Vehicle Details</span>
+      <button class="btn-icon" onclick="handleSupport()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-3a9 9 0 0 1 18 0v3" />
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+          <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- STEPPER -->
+    <div class="stepper">
+
+      <div class="step-item done">
+        <div class="step-circle done">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <span class="step-label">Owner</span>
+      </div>
+
+      <div class="step-item active">
+        <div class="step-circle active">2</div>
+        <span class="step-label">Vehicle</span>
+      </div>
+
+      <div class="step-item">
+        <div class="step-circle inactive">3</div>
+        <span class="step-label">Driver</span>
+      </div>
+
+    </div>
+
+    <!-- FORM BODY -->
+    <div class="form-body">
+
+      <div class="divider"></div>
+
+      <!-- Vehicle Number -->
+      <div class="field-group">
+        <label class="field-label" for="vehicleNum">
+          Vehicle Number<span class="required">*</span>
+        </label>
+        <input class="input-box" id="vehicleNum" type="text" placeholder="Vehicle Number" maxlength="15"
+          autocomplete="off" oninput="onVehicleInput(this)" />
+        <span class="error-msg" id="vnErr">Please enter at least 5 characters</span>
+      </div>
+
+      <!-- Vehicle RC -->
+      <div class="rc-card" id="rcCard">
+        <span class="rc-title">Vehicle RC</span>
+        <div id="rcRight">
+          <button class="btn-upload" onclick="triggerRCUpload()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            Upload
+          </button>
+        </div>
+      </div>
+      <input type="file" id="rcInput" accept="image/*,.pdf" onchange="onRCSelected(this)">
+
+      <!-- City of Operation -->
+      <div class="field-group">
+        <label class="field-label">Select the city of operation</label>
+        <div class="select-wrap">
+          <select class="custom-select" id="citySelect" onchange="onCityChange(this)">
+            <option value="" disabled selected>Select the city of operation</option>
+            <option value="Pune">Pune</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Jaipur">Jaipur</option>
+            <option value="Surat">Surat</option>
+            <option value="Nagpur">Nagpur</option>
+            <option value="Indore">Indore</option>
+          </select>
+          <span class="select-chevron">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Vehicle Type (shown after city selected) -->
+      <div class="vtype-section" id="vtypeSection">
+        <label class="field-label">Select Vehicle Type</label>
+        <div class="vtype-grid">
+
+          <button class="vtype-btn" onclick="selectType('Truck', this)">
+            <div class="vtype-icon">
+              <!-- Truck SVG -->
+              <svg width="38" height="32" viewBox="0 0 56 42" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="8" width="32" height="24" rx="2" />
+                <path d="M34 16 L34 32 L52 32 L52 24 L46 16 Z" />
+                <path d="M34 16 H46 L52 24 H34" />
+                <circle cx="11" cy="35" r="5" />
+                <circle cx="43" cy="35" r="5" />
+                <line x1="2" y1="20" x2="34" y2="20" />
+              </svg>
+            </div>
+            <span class="vtype-label">Truck</span>
+          </button>
+
+          <button class="vtype-btn" onclick="selectType('3W', this)">
+            <div class="vtype-icon">
+              <!-- Auto-rickshaw SVG -->
+              <svg width="38" height="32" viewBox="0 0 56 42" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="8" width="36" height="22" rx="3" />
+                <path d="M40 14 L52 14 L52 30 L40 30" />
+                <path d="M40 20 H52" />
+                <circle cx="13" cy="35" r="5" />
+                <circle cx="43" cy="35" r="5" />
+                <circle cx="28" cy="35" r="5" />
+                <line x1="4" y1="20" x2="40" y2="20" />
+              </svg>
+            </div>
+            <span class="vtype-label">3W</span>
+          </button>
+
+          <button class="vtype-btn" onclick="selectType('2W', this)">
+            <div class="vtype-icon">
+              <!-- Bike SVG -->
+              <svg width="38" height="32" viewBox="0 0 56 42" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="32" r="8" />
+                <circle cx="44" cy="32" r="8" />
+                <path d="M12 32 L24 14 L36 14 L44 32" />
+                <path d="M30 14 L36 24 L44 24" />
+                <path d="M26 10 C26 10 32 8 38 10 L36 14 L26 14 Z" />
+                <line x1="24" y1="14" x2="24" y2="20" />
+              </svg>
+            </div>
+            <span class="vtype-label">2W</span>
+          </button>
+
+        </div>
+      </div>
+
+    </div><!-- /form-body -->
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">Submit</button>
+    </div>
+
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <div class="modal-title">Details Submitted!</div>
+      <div class="modal-desc">Your vehicle details have been saved. You can now proceed to add the driver information.
+      </div>
+      <button class="modal-btn" onclick="goToDriver()">Continue to Driver →</button>
+    </div>
+  </div>
+
+  <script>
+    const S = { vehicleNum: '', rcUploaded: false, city: '', vehicleType: null };
+
+    /* Vehicle number */
+    function onVehicleInput(el) {
+      const v = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      el.value = v;
+      S.vehicleNum = v;
+      const err = document.getElementById('vnErr');
+      if (v.length > 0 && v.length < 5) {
+        el.classList.add('error'); err.classList.add('show');
+      } else {
+        el.classList.remove('error'); err.classList.remove('show');
+      }
+      v.length > 0
+        ? el.classList.add('has-value')
+        : el.classList.remove('has-value');
+      validate();
+    }
+
+    /* RC Upload */
+    function triggerRCUpload() { document.getElementById('rcInput').click(); }
+
+    function onRCSelected(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      S.rcUploaded = true;
+      const card = document.getElementById('rcCard');
+      const right = document.getElementById('rcRight');
+      card.classList.add('uploaded');
+      right.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="uploaded-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Uploaded
+        </span>
+        <button class="btn-edit-rc" onclick="triggerRCUpload()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+          </svg>
+          Edit
+        </button>
+      </div>`;
+      showToast('✓ ' + file.name + ' uploaded');
+      validate();
+    }
+
+    /* City select */
+    function onCityChange(el) {
+      S.city = el.value;
+      el.classList.add('selected');
+      // Reveal vehicle type section
+      document.getElementById('vtypeSection').classList.add('visible');
+      validate();
+    }
+
+    /* Vehicle type */
+    function selectType(type, btn) {
+      document.querySelectorAll('.vtype-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      S.vehicleType = type;
+      validate();
+    }
+
+    /* Validation */
+    function validate() {
+      const ok = S.vehicleNum.length >= 5 && S.rcUploaded && S.city && S.vehicleType;
+      const btn = document.getElementById('submitBtn');
+      btn.classList.toggle('active', !!ok);
+    }
+
+    /* Submit */
+    function handleSubmit() {
+      const btn = document.getElementById('submitBtn');
+      if (!btn.classList.contains('active')) {
+        if (S.vehicleNum.length < 5) {
+          document.getElementById('vehicleNum').focus();
+          showToast('Please enter a valid vehicle number');
+        } else if (!S.rcUploaded) {
+          showToast('Please upload your Vehicle RC document');
+        } else if (!S.city) {
+          showToast('Please select a city of operation');
+        } else if (!S.vehicleType) {
+          showToast('Please select a vehicle type');
+        }
+        return;
+      }
+      document.getElementById('modalOverlay').classList.add('show');
+    }
+
+    /* Navigation */
+    function handleBack() { showToast('Going back to Owner details…'); }
+    function handleSupport() { showToast('Opening support…'); }
+    function goToDriver() {
+      document.getElementById('modalOverlay').classList.remove('show');
+      showToast('Proceeding to Driver details…');
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', function (e) {
+      if (e.target === this) this.classList.remove('show');
+    });
+
+    /* Toast */
+    let _t;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(_t);
+      _t = setTimeout(() => el.classList.remove('show'), 2800);
+    }
+  </script>
+</body>
+
+</html>
