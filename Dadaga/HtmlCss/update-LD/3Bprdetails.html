@@ -53,7 +53,8 @@
 
     /* ── SIDEBAR ── */
     .sidebar {
-      background: linear-gradient(155deg, var(--pd) 0%, var(--pm) 55%, var(--pl) 100%);
+      /* background: linear-gradient(155deg, var(--pd) 0%, var(--pm) 55%, var(--pl) 100%); */
+      background-color: #18141f;
       display: flex;
       flex-direction: column;
       position: sticky;
@@ -72,6 +73,11 @@
       align-items: center;
       gap: .5rem;
       margin-bottom: 1.75rem;
+      font-family: 'Sora', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--od);
+      letter-spacing: 2px;
     }
 
     .brand-logo {
@@ -1243,6 +1249,32 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* logo */
+    .sb-brand-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: rgb(251, 64, 64);
+      letter-spacing: -.2px;
+    }
+
+    .sb-brand-text em {
+      color: var(--or);
+      font-style: normal;
+    }
+
+    .sb-badge {
+      background: rgba(249, 115, 22, .25);
+      color: #6f3e05;
+      font-size: .58rem;
+      font-weight: 700;
+      padding: .1rem .45rem;
+      border-radius: 20px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      margin-left: .3rem;
+    }
   </style>
 </head>
 
@@ -1259,7 +1291,9 @@
                 d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
             </svg>
           </div>
-          <span class="brand-name">L<em>Ö</em>RRY<span class="brand-tag">Partner</span></span>
+          <!-- <span class="brand-name">L<em>Ö</em>RRY<span class="brand-tag">Partner</span></span> -->
+          <span class="sb-brand-text">L<em>Ö</em>RRY<em style="color: purple;">GÖ</em><span
+              class="sb-badge">Pilot</span></span><br>
         </div>
         <div class="sb-av-wrap">
           <div class="sb-av">
