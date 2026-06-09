@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vehicle Details</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --blue: #1A56DB;
+      --blue-dark: #1447B4;
+      --blue-bg: #EBF2FF;
+      --green: #16A34A;
+      --green-bg: #F0FDF4;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --dark: #111827;
+      --red: #EF4444;
+      --white: #fff;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: #1c1c2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .phone {
+      width: 100%;
+      min-height: 100dvh;
+      /* max-height: 844px; */
+      background: #F3F4F6;
+      border-radius: 40px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, .55);
+      position: absolute
+    }
+
+    @media(max-width:430px) {
+      .phone {
+        border-radius: 0;
+        /* max-height: 100dvh; */
+      }
+
+      html,
+      body {
+        background: #F3F4F6
+      }
+    }
+
+    /* ── Top bar ── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      padding: 13px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      flex-shrink: 0;
+      position: relative
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 12px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--dark);
+      font-size: 26px;
+      font-weight: 300;
+      border-radius: 8px;
+      transition: background .15s
+    }
+
+    .back-btn:hover {
+      background: var(--gray-100)
+    }
+
+    .top-title {
+      flex: 1;
+      text-align: left;
+      padding-left: 34px;
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dark)
+    }
+
+    .headset-btn {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--dark);
+      border-radius: 50%;
+      transition: background .15s
+    }
+
+    .headset-btn:hover {
+      background: var(--gray-100)
+    }
+
+    /* ── Stepper ── */
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 24px 16px;
+      background: #fff;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--gray-200)
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1
+    }
+
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+      position: relative;
+      z-index: 1
+    }
+
+    .step.done .step-circle {
+      background: var(--blue);
+      color: #fff;
+      border: none
+    }
+
+    .step.active .step-circle {
+      border: 2.5px solid var(--blue);
+      color: var(--blue);
+      background: #fff
+    }
+
+    .step.inactive .step-circle {
+      border: 2px solid var(--gray-400);
+      color: var(--gray-400);
+      background: #fff
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-500)
+    }
+
+    .step.done .step-label {
+      color: var(--blue)
+    }
+
+    .step.active .step-label {
+      color: var(--blue);
+      font-weight: 700
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      margin-top: 17px;
+      background-image: repeating-linear-gradient(to right, #D1D5DB 0, #D1D5DB 5px, transparent 5px, transparent 10px)
+    }
+
+    .step-line.solid {
+      background-image: none;
+      background: var(--blue)
+    }
+
+    /* ── Scrollable body ── */
+    .body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px 110px;
+      display: flex;
+      flex-direction: column
+    }
+
+    .body::-webkit-scrollbar {
+      width: 0
+    }
+
+    /* ── Labels ── */
+    .section-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px
+    }
+
+    .req {
+      color: var(--red);
+      font-size: 14px
+    }
+
+    /* ── Vehicle count ── */
+    .vehicle-count-section {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px
+    }
+
+    .vehicle-count-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .count-stepper {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .count-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1.5px solid var(--gray-200);
+      background: #fff;
+      color: var(--dark);
+      font-size: 20px;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .count-btn:hover {
+      border-color: var(--blue);
+      background: var(--blue-bg);
+      color: var(--blue)
+    }
+
+    .count-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed
+    }
+
+    .count-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue);
+      min-width: 30px;
+      text-align: center
+    }
+
+    .count-hint {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-left: auto
+    }
+
+    /* ── Vehicle section card ── */
+    .vehicle-section {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 14px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 430px;
+      transition: box-shadow .2s, border-color .2s
+    }
+
+    .vehicle-section:focus-within {
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, .08);
+      border-color: rgba(26, 86, 219, .3)
+    }
+
+    .vs-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid var(--gray-100);
+      flex-shrink: 0
+    }
+
+    .vs-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .vs-badge {
+      width: 26px;
+      height: 26px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif
+    }
+
+    .saved-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+      background: var(--green-bg);
+      border: 1px solid #BBF7D0;
+      padding: 3px 8px;
+      border-radius: 20px;
+      display: none;
+      align-items: center;
+      gap: 4px
+    }
+
+    .saved-badge.show {
+      display: flex
+    }
+
+    /* scrollable body inside card */
+    .vs-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow-y: auto;
+      flex: 1;
+      overscroll-behavior: contain
+    }
+
+    .vs-body::-webkit-scrollbar {
+      width: 3px
+    }
+
+    .vs-body::-webkit-scrollbar-thumb {
+      background: var(--gray-200);
+      border-radius: 4px
+    }
+
+    /* fields */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      gap: 3px
+    }
+
+    .input-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 12px 13px;
+      transition: border-color .2s, box-shadow .2s
+    }
+
+    .input-card:focus-within {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, .09)
+    }
+
+    .input-card.error {
+      border-color: var(--red) !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, .09) !important
+    }
+
+    .text-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      background: transparent
+    }
+
+    .text-input.uc {
+      text-transform: uppercase
+    }
+
+    .text-input::placeholder {
+      color: var(--gray-400);
+      text-transform: none;
+      font-weight: 400
+    }
+
+    .select-wrap {
+      position: relative
+    }
+
+    .select-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      background: transparent;
+      appearance: none;
+      cursor: pointer
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      pointer-events: none
+    }
+
+    /* RC card */
+    .rc-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 12px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s
+    }
+
+    .rc-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, .07)
+    }
+
+    .rc-card.uploaded {
+      border-color: var(--green);
+      background: var(--green-bg)
+    }
+
+    .rc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark)
+    }
+
+    .rc-status {
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 600;
+      margin-top: 2px;
+      display: none;
+      align-items: center;
+      gap: 3px
+    }
+
+    .rc-status.show {
+      display: flex
+    }
+
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      padding: 5px 10px;
+      border-radius: 8px;
+      transition: background .15s;
+      white-space: nowrap
+    }
+
+    .upload-btn:hover {
+      background: var(--blue-bg)
+    }
+
+    /* photo upload */
+    .photo-area {
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 10px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: border-color .2s, background .15s;
+      background: #fafafa;
+      position: relative;
+      overflow: hidden;
+      min-height: 90px
+    }
+
+    .photo-area:hover {
+      border-color: var(--blue);
+      background: var(--blue-bg)
+    }
+
+    .photo-area.has-photo {
+      border-style: solid;
+      border-color: var(--green);
+      background: transparent;
+      padding: 0
+    }
+
+    .photo-area .ph-icon {
+      color: var(--gray-400)
+    }
+
+    .photo-area .ph-text {
+      font-size: 13px;
+      color: var(--gray-500);
+      font-weight: 500
+    }
+
+    .photo-area .ph-hint {
+      font-size: 11px;
+      color: var(--gray-400)
+    }
+
+    .photo-preview {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 9px;
+      display: none
+    }
+
+    .photo-preview.show {
+      display: block
+    }
+
+    .photo-change-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .4);
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      gap: 6px
+    }
+
+    .photo-area.has-photo:hover .photo-change-overlay {
+      display: flex
+    }
+
+    /* two col */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    /* section actions — sticky */
+    .vs-actions {
+      display: flex;
+      gap: 10px;
+      padding: 11px 16px 14px;
+      border-top: 1px solid var(--gray-200);
+      flex-shrink: 0;
+      background: #fff;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, .05)
+    }
+
+    .btn-save,
+    .btn-edit {
+      flex: 1;
+      padding: 11px;
+      border-radius: 10px;
+      border: none;
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #2563EB, #1447B4);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(26, 86, 219, .3)
+    }
+
+    .btn-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(26, 86, 219, .4)
+    }
+
+    .btn-save:active {
+      transform: scale(.97)
+    }
+
+    .btn-save:disabled {
+      background: var(--gray-200);
+      color: var(--gray-500);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    .btn-edit {
+      background: #fff;
+      color: var(--blue);
+      border: 1.5px solid var(--blue)
+    }
+
+    .btn-edit:hover {
+      background: var(--blue-bg)
+    }
+
+    .btn-edit:active {
+      transform: scale(.97)
+    }
+
+    .btn-edit:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    /* saved lock */
+    .vehicle-section.saved .vs-body input,
+    .vehicle-section.saved .vs-body select {
+      pointer-events: none;
+      color: var(--gray-700)
+    }
+
+    .vehicle-section.saved .photo-area,
+    .vehicle-section.saved .rc-card {
+      pointer-events: none
+    }
+
+    .vehicle-section.saved .vs-body {
+      opacity: .88
+    }
+
+    /* ── Operation section ── */
+    .operation-section {
+      margin-bottom: 20px
+    }
+
+    .op-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      overflow: hidden
+    }
+
+    .op-card.error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, .09)
+    }
+
+    .op-row {
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .op-row:last-child {
+      border-bottom: none
+    }
+
+    .op-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .12s
+    }
+
+    .op-trigger:hover {
+      background: var(--gray-100)
+    }
+
+    .op-trigger-left {
+      display: flex;
+      align-items: center;
+      gap: 9px
+    }
+
+    .op-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .op-icon.country {
+      background: #EFF6FF;
+      color: #2563EB
+    }
+
+    .op-icon.state {
+      background: #F0FDF4;
+      color: #16A34A
+    }
+
+    .op-icon.city {
+      background: #FFF7ED;
+      color: #EA580C
+    }
+
+    .op-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 1px
+    }
+
+    .op-lbl {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark)
+    }
+
+    .op-sub {
+      font-size: 11px;
+      color: var(--gray-400);
+      font-weight: 400
+    }
+
+    .op-sub.has-val {
+      color: var(--blue);
+      font-weight: 600
+    }
+
+    .op-arrow {
+      color: var(--gray-400);
+      transition: transform .22s;
+      flex-shrink: 0
+    }
+
+    .op-arrow.open {
+      transform: rotate(180deg)
+    }
+
+    /* chips */
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 0 14px 10px
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--blue-bg);
+      color: var(--blue);
+      border: 1px solid #BFDBFE;
+      border-radius: 20px;
+      padding: 3px 8px 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .chip-x {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #BFDBFE;
+      color: #1D4ED8;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 0
+    }
+
+    .chip-x:hover {
+      background: #93C5FD
+    }
+
+    /* floating dropdown portal — attached to .phone via JS */
+    .op-panel {
+      position: absolute;
+      background: #fff;
+      border: 1.5px solid var(--blue);
+      border-radius: 10px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, .18);
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      max-height: 220px;
+      overflow: hidden;
+    }
+
+    .op-panel.open {
+      display: flex
+    }
+
+    .op-search {
+      padding: 9px 12px 8px;
+      border-bottom: 1px solid var(--gray-100);
+      flex-shrink: 0
+    }
+
+    .op-search input {
+      width: 100%;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--dark);
+      outline: none
+    }
+
+    .op-search input:focus {
+      border-color: var(--blue)
+    }
+
+    .op-list {
+      overflow-y: auto;
+      flex: 1
+    }
+
+    .op-list::-webkit-scrollbar {
+      width: 3px
+    }
+
+    .op-list::-webkit-scrollbar-thumb {
+      background: var(--gray-200);
+      border-radius: 4px
+    }
+
+    .op-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--gray-100);
+      transition: background .1s;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--dark)
+    }
+
+    .op-item:last-child {
+      border-bottom: none
+    }
+
+    .op-item:hover {
+      background: var(--blue-bg)
+    }
+
+    .op-item.sel {
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-weight: 700
+    }
+
+    .op-chk {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1.5px solid var(--gray-300);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s, border-color .15s
+    }
+
+    .op-item.sel .op-chk {
+      background: var(--blue);
+      border-color: var(--blue)
+    }
+
+    .op-empty {
+      padding: 14px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray-400);
+      font-style: italic
+    }
+
+    .op-group-header {
+      padding: 7px 14px 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-500);
+      background: var(--gray-100);
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      z-index: 1
+    }
+
+    .op-row.locked .op-trigger {
+      cursor: default;
+      opacity: .5;
+      pointer-events: none
+    }
+
+    .op-row.locked .op-trigger:hover {
+      background: transparent
+    }
+
+    .op-trigger.active-panel {
+      background: var(--blue-bg) !important
+    }
+
+    .op-trigger.active-panel .op-lbl {
+      color: var(--blue)
+    }
+
+    .op-trigger.active-panel .op-arrow {
+      color: var(--blue)
+    }
+
+    .op-row.locked {
+      opacity: .55
+    }
+
+    /* select-all row inside panel */
+    .op-select-all {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      cursor: pointer;
+      border-bottom: 2px solid var(--gray-200);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      background: var(--blue-bg);
+      transition: background .1s
+    }
+
+    .op-select-all:hover {
+      background: #DBEAFE
+    }
+
+    .op-count-badge {
+      margin-left: auto;
+      font-size: 11px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 10px;
+      padding: 1px 7px;
+      font-weight: 700
+    }
+
+    /* ── Bottom bar ── */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, #F3F4F6 80%, transparent);
+      padding: 10px 16px 20px
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 17px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      cursor: pointer;
+      transition: background .25s, transform .15s, box-shadow .25s;
+      background: var(--gray-200);
+      color: var(--gray-500);
+      box-shadow: none
+    }
+
+    .btn-submit.active {
+      background: linear-gradient(135deg, #2563EB, #1447B4);
+      color: #fff;
+      box-shadow: 0 6px 22px rgba(26, 86, 219, .35)
+    }
+
+    .btn-submit.active:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(26, 86, 219, .44)
+    }
+
+    .btn-submit.active:active {
+      transform: scale(.97)
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 30px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+      z-index: 50
+    }
+
+    .toast.show {
+      opacity: 1
+    }
+
+    /* ── Success overlay ── */
+    .success-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 60;
+      background: rgba(22, 163, 74, .96);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      border-radius: inherit
+    }
+
+    .success-overlay.show {
+      display: flex;
+      animation: flashIn .35s ease
+    }
+
+    @keyframes flashIn {
+      from {
+        opacity: 0;
+        transform: scale(.95)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    .success-overlay p {
+      font-family: 'Sora', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .success-overlay span {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .8)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone">
+
+    <!-- Success overlay -->
+    <div class="success-overlay" id="successOverlay">
+      <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="9 12 11 14 15 10" />
+      </svg>
+      <p>Details Submitted!</p>
+      <span>Proceeding to Driver Details…</span>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="back-btn" onclick="window.history.back()">&#8249;</div>
+      <span class="top-title">Vehicle Details</span>
+      <div class="headset-btn" onclick="showToast('Support coming soon')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+          <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <div class="step done">
+        <div class="step-circle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg></div>
+        <span class="step-label">Owner</span>
+      </div>
+      <div class="step-line solid"></div>
+      <div class="step active">
+        <div class="step-circle">2</div>
+        <span class="step-label">Vehicle</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step inactive">
+        <div class="step-circle">3</div>
+        <span class="step-label">Driver</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="body" id="mainBody">
+
+      <!-- Vehicle count -->
+      <div class="vehicle-count-section">
+        <div class="vehicle-count-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" style="color:var(--blue)">
+            <rect x="1" y="3" width="15" height="13" rx="2" />
+            <path d="M16 8h5l3 5v3h-8V8z" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>
+          How many vehicles do you own? <span class="req">*</span>
+        </div>
+        <div class="count-stepper">
+          <button class="count-btn" id="btnDec" onclick="changeCount(-1)" disabled>−</button>
+          <span class="count-value" id="countVal">1</span>
+          <button class="count-btn" id="btnInc" onclick="changeCount(1)">+</button>
+          <span class="count-hint" id="countHint">1 vehicle</span>
+        </div>
+      </div>
+
+      <!-- Vehicle sections -->
+      <div id="vsContainer"></div>
+
+      <!-- Area of operation -->
+      <div class="operation-section">
+        <p class="section-label">Select area of operation <span class="req">*</span></p>
+        <div class="op-card" id="opCard">
+
+          <!-- Country -->
+          <div class="op-row" id="opRowcountry">
+            <div class="op-trigger" id="triggerCountry" onclick="togglePanel('country')">
+              <div class="op-trigger-left">
+                <div class="op-icon country">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path
+                      d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                </div>
+                <div class="op-texts">
+                  <span class="op-lbl">Country</span>
+                  <span class="op-sub" id="subCountry">Select countries</span>
+                </div>
+              </div>
+              <svg class="op-arrow" id="arrowCountry" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="chips-row" id="chipsCountry"></div>
+          </div>
+
+          <!-- State -->
+          <div class="op-row locked" id="opRowstate">
+            <div class="op-trigger" id="triggerState" onclick="togglePanel('state')">
+              <div class="op-trigger-left">
+                <div class="op-icon state">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <div class="op-texts">
+                  <span class="op-lbl">State / Province</span>
+                  <span class="op-sub" id="subState">Select countries first</span>
+                </div>
+              </div>
+              <svg class="op-arrow" id="arrowState" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="chips-row" id="chipsState"></div>
+          </div>
+
+          <!-- City -->
+          <div class="op-row locked" id="opRowcity">
+            <div class="op-trigger" id="triggerCity" onclick="togglePanel('city')">
+              <div class="op-trigger-left">
+                <div class="op-icon city">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <div class="op-texts">
+                  <span class="op-lbl">City</span>
+                  <span class="op-sub" id="subCity">Select states first</span>
+                </div>
+              </div>
+              <svg class="op-arrow" id="arrowCity" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="chips-row" id="chipsCity"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- end .body -->
+
+    <!-- Submit bar -->
+    <div class="bottom-bar">
+      <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">Submit</button>
+    </div>
+
+    <!-- Floating op panels — portal attached to .phone -->
+    <div class="op-panel" id="panelCountry">
+      <div class="op-search"><input type="text" placeholder="Search country…" oninput="filterList('country',this.value)"
+          id="srchCountry"></div>
+      <div class="op-list" id="listCountry"></div>
+    </div>
+    <div class="op-panel" id="panelState">
+      <div class="op-search"><input type="text" placeholder="Search state / province…"
+          oninput="filterList('state',this.value)" id="srchState"></div>
+      <div class="op-list" id="listState"></div>
+    </div>
+    <div class="op-panel" id="panelCity">
+      <div class="op-search"><input type="text" placeholder="Search city…" oninput="filterList('city',this.value)"
+          id="srchCity"></div>
+      <div class="op-list" id="listCity"></div>
+    </div>
+
+  </div><!-- end .phone -->
+
+  <script>
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let vehicleCount = 1;
+let vehicleData  = {};   // { 1: { saved, rcUploaded, photoUploaded }, … }
+let openPanel    = null; // 'country'|'state'|'city'|null
+
+const opSel = { country: [], state: [], city: [] };
+
+// ═══════════════════════════════════════════════
+//  WORLD DATA  (country → state/province → cities)
+// ═══════════════════════════════════════════════
+const countryFlags = {
+  'India':'🇮🇳','United States':'🇺🇸','United Kingdom':'🇬🇧',
+  'United Arab Emirates':'🇦🇪','Saudi Arabia':'🇸🇦','Germany':'🇩🇪',
+  'France':'🇫🇷','Canada':'🇨🇦','Australia':'🇦🇺','China':'🇨🇳',
+  'Japan':'🇯🇵','Singapore':'🇸🇬','Malaysia':'🇲🇾','Pakistan':'🇵🇰',
+  'Bangladesh':'🇧🇩','Brazil':'🇧🇷','South Africa':'🇿🇦','Nigeria':'🇳🇬',
+  'Kenya':'🇰🇪','Indonesia':'🇮🇩','Turkey':'🇹🇷','Egypt':'🇪🇬',
+  'South Korea':'🇰🇷','Philippines':'🇵🇭','Thailand':'🇹🇭','Vietnam':'🇻🇳',
+  'Mexico':'🇲🇽','Argentina':'🇦🇷','Italy':'🇮🇹','Spain':'🇪🇸',
+  'Netherlands':'🇳🇱','Russia':'🇷🇺','Qatar':'🇶🇦','Kuwait':'🇰🇼',
+  'Bahrain':'🇧🇭','Oman':'🇴🇲',
+};
+
+const worldData = {
+  'India':{
+    'Andhra Pradesh':['Visakhapatnam','Vijayawada','Guntur','Nellore','Kurnool','Tirupati','Rajahmundry'],
+    'Arunachal Pradesh':['Itanagar','Naharlagun','Pasighat','Tawang'],
+    'Assam':['Guwahati','Silchar','Dibrugarh','Jorhat','Nagaon','Tinsukia'],
+    'Bihar':['Patna','Gaya','Muzaffarpur','Bhagalpur','Darbhanga','Purnia'],
+    'Chhattisgarh':['Raipur','Bhilai','Durg','Bilaspur','Korba','Raigarh'],
+    'Delhi':['New Delhi','Dwarka','Rohini','Saket','Lajpat Nagar','Karol Bagh','Connaught Place','Janakpuri'],
+    'Goa':['Panaji','Margao','Vasco da Gama','Mapusa','Ponda'],
+    'Gujarat':['Ahmedabad','Surat','Vadodara','Rajkot','Gandhinagar','Bhavnagar','Jamnagar','Anand'],
+    'Haryana':['Gurugram','Faridabad','Ambala','Karnal','Hisar','Panipat','Rohtak','Sonipat'],
+    'Himachal Pradesh':['Shimla','Manali','Dharamshala','Solan','Mandi'],
+    'Jharkhand':['Ranchi','Jamshedpur','Dhanbad','Bokaro','Deoghar'],
+    'Karnataka':['Bangalore','Mysore','Mangalore','Hubli','Belgaum','Shimoga','Tumkur','Bidar'],
+    'Kerala':['Thiruvananthapuram','Kochi','Kozhikode','Thrissur','Kollam','Palakkad','Alappuzha'],
+    'Madhya Pradesh':['Bhopal','Indore','Gwalior','Jabalpur','Ujjain','Sagar','Rewa'],
+    'Maharashtra':['Mumbai','Pune','Nagpur','Nashik','Aurangabad','Solapur','Kolhapur','Amravati'],
+    'Manipur':['Imphal','Thoubal','Bishnupur','Churachandpur'],
+    'Meghalaya':['Shillong','Tura','Jowai','Nongstoin'],
+    'Mizoram':['Aizawl','Lunglei','Champhai'],
+    'Nagaland':['Kohima','Dimapur','Mokokchung'],
+    'Odisha':['Bhubaneswar','Cuttack','Rourkela','Brahmapur','Puri','Sambalpur'],
+    'Punjab':['Chandigarh','Ludhiana','Amritsar','Jalandhar','Patiala','Mohali','Bathinda'],
+    'Rajasthan':['Jaipur','Jodhpur','Udaipur','Kota','Ajmer','Bikaner','Alwar','Bharatpur'],
+    'Sikkim':['Gangtok','Namchi','Mangan'],
+    'Tamil Nadu':['Chennai','Coimbatore','Madurai','Tiruchirappalli','Salem','Tirunelveli','Vellore','Erode'],
+    'Telangana':['Hyderabad','Warangal','Nizamabad','Karimnagar','Khammam','Mahbubnagar'],
+    'Tripura':['Agartala','Udaipur','Dharmanagar'],
+    'Uttar Pradesh':['Lucknow','Kanpur','Agra','Varanasi','Meerut','Allahabad','Bareilly','Moradabad'],
+    'Uttarakhand':['Dehradun','Haridwar','Roorkee','Rishikesh','Nainital','Haldwani'],
+    'West Bengal':['Kolkata','Siliguri','Asansol','Durgapur','Howrah','Bardhaman','Malda'],
+  },
+  'United States':{
+    'Alabama':['Birmingham','Montgomery','Huntsville','Mobile','Tuscaloosa'],
+    'Alaska':['Anchorage','Fairbanks','Juneau'],
+    'Arizona':['Phoenix','Tucson','Mesa','Chandler','Scottsdale','Tempe','Gilbert'],
+    'Arkansas':['Little Rock','Fort Smith','Fayetteville','Springdale'],
+    'California':['Los Angeles','San Francisco','San Diego','Sacramento','San Jose','Fresno','Oakland','Long Beach'],
+    'Colorado':['Denver','Colorado Springs','Aurora','Fort Collins','Boulder','Lakewood'],
+    'Connecticut':['Bridgeport','New Haven','Hartford','Stamford'],
+    'Florida':['Miami','Orlando','Tampa','Jacksonville','Fort Lauderdale','St. Petersburg','Tallahassee'],
+    'Georgia':['Atlanta','Augusta','Columbus','Savannah','Athens','Macon'],
+    'Hawaii':['Honolulu','Hilo','Pearl City','Kailua'],
+    'Idaho':['Boise','Meridian','Nampa','Idaho Falls'],
+    'Illinois':['Chicago','Aurora','Naperville','Joliet','Rockford','Springfield'],
+    'Indiana':['Indianapolis','Fort Wayne','Evansville','South Bend','Bloomington'],
+    'Iowa':['Des Moines','Cedar Rapids','Davenport','Sioux City'],
+    'Kansas':['Wichita','Overland Park','Kansas City','Topeka'],
+    'Kentucky':['Louisville','Lexington','Bowling Green','Owensboro'],
+    'Louisiana':['New Orleans','Baton Rouge','Shreveport','Lafayette'],
+    'Maryland':['Baltimore','Columbia','Germantown','Silver Spring'],
+    'Massachusetts':['Boston','Worcester','Springfield','Cambridge','Lowell'],
+    'Michigan':['Detroit','Grand Rapids','Warren','Sterling Heights','Ann Arbor','Lansing'],
+    'Minnesota':['Minneapolis','Saint Paul','Rochester','Duluth'],
+    'Missouri':['Kansas City','Saint Louis','Springfield','Columbia'],
+    'Nevada':['Las Vegas','Reno','Henderson','North Las Vegas','Sparks'],
+    'New Jersey':['Newark','Jersey City','Paterson','Elizabeth','Trenton'],
+    'New York':['New York City','Buffalo','Rochester','Albany','Syracuse','Yonkers'],
+    'North Carolina':['Charlotte','Raleigh','Greensboro','Durham','Winston-Salem'],
+    'Ohio':['Columbus','Cleveland','Cincinnati','Toledo','Akron','Dayton'],
+    'Oregon':['Portland','Salem','Eugene','Gresham','Hillsboro'],
+    'Pennsylvania':['Philadelphia','Pittsburgh','Allentown','Erie','Reading'],
+    'Tennessee':['Nashville','Memphis','Knoxville','Chattanooga','Clarksville'],
+    'Texas':['Houston','Dallas','Austin','San Antonio','Fort Worth','El Paso','Arlington','Plano'],
+    'Virginia':['Virginia Beach','Norfolk','Chesapeake','Richmond','Newport News'],
+    'Washington':['Seattle','Spokane','Tacoma','Vancouver','Bellevue','Olympia'],
+    'Wisconsin':['Milwaukee','Madison','Green Bay','Kenosha','Racine'],
+  },
+  'United Kingdom':{
+    'England':['London','Manchester','Birmingham','Leeds','Liverpool','Bristol','Sheffield','Newcastle','Nottingham','Leicester'],
+    'Northern Ireland':['Belfast','Londonderry','Lisburn','Newry','Armagh','Ballymena'],
+    'Scotland':['Edinburgh','Glasgow','Aberdeen','Dundee','Inverness','Stirling'],
+    'Wales':['Cardiff','Swansea','Newport','Bangor','Wrexham','Barry'],
+  },
+  'United Arab Emirates':{
+    'Abu Dhabi':['Abu Dhabi City','Al Ain','Ruwais','Madinat Zayed','Khalifa City','Mohammed Bin Zayed City','Musaffah'],
+    'Ajman':['Ajman City','Masfout','Manama','Al Jurf'],
+    'Dubai':['Downtown Dubai','Deira','Bur Dubai','Jumeirah','Al Quoz','Jebel Ali','Dubai Marina','Business Bay','Hatta'],
+    'Fujairah':['Fujairah City','Dibba Al Fujairah','Kalba','Masafi','Al Bithnah'],
+    'Ras Al Khaimah':['RAK City','Digdaga','Al Jazirah Al Hamra','Khatt','Al Hamra'],
+    'Sharjah':['Sharjah City','Khor Fakkan','Kalba','Dhaid','Al Hamriyah'],
+    'Umm Al Quwain':['UAQ City','Falaj Al Mualla','Al Salamah','Al Raas'],
+  },
+  'Saudi Arabia':{
+    'Al Jawf':['Sakaka','Quryyat','Dumat Al Jandal'],
+    'Asir':['Abha','Khamis Mushait','Bisha','Najran','Sarat Abidah'],
+    'Eastern Province':['Dammam','Al Khobar','Dhahran','Jubail','Hofuf','Qatif','Ras Tanura'],
+    'Hail':['Hail City','Baqaa','Smirah'],
+    'Madinah':['Medina','Yanbu','Al Ula','Badr'],
+    'Makkah':['Mecca','Jeddah','Taif','Rabigh','Al Qunfudhah'],
+    'Najran':['Najran City','Sharurah','Hubuna'],
+    'Northern Borders':['Arar','Rafha','Turaif'],
+    'Riyadh':['Riyadh City','Al Kharj','Al Majmaah','Shaqra','Dawadmi','Diriyah'],
+    'Tabuk':['Tabuk City','Haql','Umluj','Al Wajh','Duba'],
+  },
+  'Germany':{
+    'Baden-Württemberg':['Stuttgart','Karlsruhe','Freiburg','Heidelberg','Ulm','Mannheim','Heilbronn'],
+    'Bavaria':['Munich','Nuremberg','Augsburg','Regensburg','Ingolstadt','Würzburg','Erlangen'],
+    'Berlin':['Mitte','Charlottenburg','Prenzlauer Berg','Kreuzberg','Marzahn','Spandau'],
+    'Brandenburg':['Potsdam','Brandenburg an der Havel','Cottbus'],
+    'Bremen':['Bremen City','Bremerhaven'],
+    'Hamburg':['Hamburg City','Altona','Wandsbek','Harburg','Eimsbüttel'],
+    'Hesse':['Frankfurt','Wiesbaden','Kassel','Darmstadt','Offenbach'],
+    'Lower Saxony':['Hanover','Braunschweig','Osnabrück','Oldenburg','Göttingen','Wolfsburg'],
+    'North Rhine-Westphalia':['Cologne','Düsseldorf','Dortmund','Essen','Duisburg','Bochum','Bielefeld','Münster'],
+    'Rhineland-Palatinate':['Mainz','Kaiserslautern','Koblenz','Trier'],
+    'Saxony':['Dresden','Leipzig','Chemnitz','Zwickau'],
+    'Thuringia':['Erfurt','Jena','Gera','Weimar','Eisenach'],
+  },
+  'France':{
+    'Auvergne-Rhône-Alpes':['Lyon','Grenoble','Saint-Étienne','Clermont-Ferrand','Annecy','Valence'],
+    'Bourgogne-Franche-Comté':['Dijon','Besançon','Belfort','Chalon-sur-Saône'],
+    'Brittany':['Rennes','Brest','Quimper','Lorient','Vannes'],
+    'Centre-Val de Loire':['Tours','Orléans','Bourges','Chartres'],
+    'Grand Est':['Strasbourg','Reims','Metz','Nancy','Mulhouse'],
+    'Hauts-de-France':['Lille','Amiens','Roubaix','Tourcoing','Dunkirk'],
+    'Île-de-France':['Paris','Versailles','Boulogne-Billancourt','Saint-Denis','Nanterre','Créteil'],
+    'Normandy':['Rouen','Caen','Le Havre','Cherbourg'],
+    'Nouvelle-Aquitaine':['Bordeaux','Limoges','Poitiers','Pau','Bayonne'],
+    'Occitanie':['Toulouse','Montpellier','Nîmes','Perpignan','Béziers'],
+    'Pays de la Loire':['Nantes','Angers','Le Mans','Saint-Nazaire'],
+    'Provence-Alpes-Côte d\'Azur':['Marseille','Nice','Toulon','Aix-en-Provence','Cannes'],
+  },
+  'Canada':{
+    'Alberta':['Calgary','Edmonton','Red Deer','Lethbridge','Medicine Hat','Grande Prairie'],
+    'British Columbia':['Vancouver','Victoria','Surrey','Burnaby','Richmond','Kelowna','Abbotsford'],
+    'Manitoba':['Winnipeg','Brandon','Steinbach','Thompson','Portage la Prairie'],
+    'New Brunswick':['Moncton','Saint John','Fredericton','Miramichi'],
+    'Newfoundland and Labrador':["St. John's",'Corner Brook','Gander'],
+    'Nova Scotia':['Halifax','Dartmouth','Cape Breton','Truro'],
+    'Ontario':['Toronto','Ottawa','Hamilton','London','Brampton','Mississauga','Windsor','Kitchener','Markham'],
+    'Prince Edward Island':['Charlottetown','Summerside'],
+    'Quebec':['Montreal','Quebec City','Laval','Gatineau','Longueuil','Sherbrooke'],
+    'Saskatchewan':['Saskatoon','Regina','Prince Albert','Moose Jaw'],
+  },
+  'Australia':{
+    'Australian Capital Territory':['Canberra','Belconnen','Tuggeranong'],
+    'New South Wales':['Sydney','Newcastle','Wollongong','Central Coast','Albury','Wagga Wagga','Orange'],
+    'Northern Territory':['Darwin','Alice Springs','Palmerston','Katherine'],
+    'Queensland':['Brisbane','Gold Coast','Sunshine Coast','Townsville','Cairns','Toowoomba'],
+    'South Australia':['Adelaide','Mount Gambier','Whyalla','Murray Bridge','Port Augusta'],
+    'Tasmania':['Hobart','Launceston','Devonport','Burnie'],
+    'Victoria':['Melbourne','Geelong','Ballarat','Bendigo','Shepparton','Wodonga','Mildura'],
+    'Western Australia':['Perth','Fremantle','Mandurah','Bunbury','Albany','Geraldton','Kalgoorlie'],
+  },
+  'China':{
+    'Anhui':['Hefei','Wuhu','Bengbu','Huainan','Tongling'],
+    'Beijing':['Dongcheng','Xicheng','Chaoyang','Fengtai','Haidian','Shijingshan'],
+    'Fujian':['Fuzhou','Xiamen','Quanzhou','Zhangzhou','Putian'],
+    'Guangdong':['Guangzhou','Shenzhen','Dongguan','Foshan','Zhuhai','Zhongshan','Huizhou'],
+    'Hubei':['Wuhan','Yichang','Xiangyang','Jingzhou','Huangshi'],
+    'Hunan':['Changsha','Zhuzhou','Xiangtan','Hengyang','Yueyang'],
+    'Jiangsu':['Nanjing','Suzhou','Wuxi','Changzhou','Nantong','Xuzhou'],
+    'Liaoning':['Shenyang','Dalian','Anshan','Fushun','Jinzhou'],
+    'Shandong':['Jinan','Qingdao','Zibo','Yantai','Weifang','Linyi'],
+    'Shanghai':['Huangpu','Jing\'an','Pudong','Hongkou','Yangpu','Changning','Minhang'],
+    'Sichuan':['Chengdu','Mianyang','Deyang','Nanchong','Leshan'],
+    'Zhejiang':['Hangzhou','Ningbo','Wenzhou','Shaoxing','Jinhua','Huzhou'],
+  },
+  'Japan':{
+    'Aichi':['Nagoya','Toyota','Okazaki','Kasugai','Ichinomiya','Toyohashi'],
+    'Chiba':['Chiba City','Funabashi','Matsudo','Kashiwa','Ichikawa'],
+    'Fukuoka':['Fukuoka City','Kitakyushu','Kurume','Omuta','Iizuka'],
+    'Kanagawa':['Yokohama','Kawasaki','Sagamihara','Fujisawa','Kamakura'],
+    'Osaka':['Osaka City','Sakai','Higashiosaka','Toyonaka','Suita','Namba'],
+    'Saitama':['Saitama City','Kawaguchi','Kawagoe','Tokorozawa'],
+    'Tokyo':['Shinjuku','Shibuya','Minato','Chiyoda','Asakusa','Akihabara','Harajuku','Ikebukuro','Ginza'],
+  },
+  'Singapore':{
+    'Central Region':['Marina Bay','Orchard','Chinatown','Little India','Clarke Quay','Bugis','Tanjong Pagar'],
+    'East Region':['Tampines','Pasir Ris','Bedok','Changi','Geylang','Katong'],
+    'North Region':['Woodlands','Sembawang','Yishun','Ang Mo Kio','Mandai'],
+    'North-East Region':['Sengkang','Punggol','Hougang','Serangoon','Bishan','Toa Payoh'],
+    'West Region':['Jurong East','Jurong West','Clementi','Buona Vista','Queenstown','Boon Lay'],
+  },
+  'Malaysia':{
+    'Johor':['Johor Bahru','Iskandar Puteri','Batu Pahat','Muar','Kluang','Pontian'],
+    'Kedah':['Alor Setar','Sungai Petani','Kulim','Langkawi'],
+    'Kelantan':['Kota Bharu','Pasir Mas','Tanah Merah'],
+    'Kuala Lumpur':['Bukit Bintang','Chow Kit','Bangsar','Mont Kiara','KLCC','Kepong','Cheras'],
+    'Negeri Sembilan':['Seremban','Port Dickson','Nilai','Bahau'],
+    'Pahang':['Kuantan','Temerloh','Bentong','Raub'],
+    'Penang':['George Town','Butterworth','Bukit Mertajam','Nibong Tebal','Bayan Lepas'],
+    'Perak':['Ipoh','Taiping','Teluk Intan','Manjung'],
+    'Sabah':['Kota Kinabalu','Sandakan','Tawau','Lahad Datu','Keningau'],
+    'Sarawak':['Kuching','Miri','Sibu','Bintulu'],
+    'Selangor':['Shah Alam','Petaling Jaya','Subang Jaya','Klang','Rawang','Puchong','Sepang'],
+  },
+  'Pakistan':{
+    'Azad Kashmir':['Muzaffarabad','Mirpur','Kotli','Rawalakot'],
+    'Balochistan':['Quetta','Turbat','Khuzdar','Chaman','Gwadar','Hub'],
+    'Islamabad Capital Territory':['Islamabad','Rawalpindi'],
+    'Khyber Pakhtunkhwa':['Peshawar','Mardan','Mingora','Kohat','Abbottabad','Mansehra'],
+    'Punjab':['Lahore','Faisalabad','Rawalpindi','Gujranwala','Multan','Sialkot','Bahawalpur','Sargodha'],
+    'Sindh':['Karachi','Hyderabad','Sukkur','Larkana','Nawabshah','Mirpurkhas','Khairpur'],
+  },
+  'Bangladesh':{
+    'Barisal Division':['Barisal','Bhola','Patuakhali','Pirojpur'],
+    'Chittagong Division':['Chittagong','Comilla','Cox\'s Bazar','Brahmanbaria','Feni','Noakhali'],
+    'Dhaka Division':['Dhaka','Gazipur','Narayanganj','Tangail','Manikganj','Faridpur'],
+    'Khulna Division':['Khulna','Jessore','Satkhira','Bagerhat','Narail'],
+    'Rajshahi Division':['Rajshahi','Bogra','Pabna','Sirajganj','Natore'],
+    'Rangpur Division':['Rangpur','Dinajpur','Kurigram','Gaibandha'],
+    'Sylhet Division':['Sylhet','Moulvibazar','Habiganj','Sunamganj'],
+  },
+  'Brazil':{
+    'Bahia':['Salvador','Feira de Santana','Vitória da Conquista','Ilhéus','Camaçari'],
+    'Ceará':['Fortaleza','Caucaia','Juazeiro do Norte','Sobral'],
+    'Minas Gerais':['Belo Horizonte','Uberlândia','Contagem','Juiz de Fora','Montes Claros'],
+    'Paraná':['Curitiba','Londrina','Maringá','Ponta Grossa','Cascavel'],
+    'Rio de Janeiro':['Rio de Janeiro City','Niterói','Nova Iguaçu','Duque de Caxias','Petrópolis'],
+    'Rio Grande do Sul':['Porto Alegre','Caxias do Sul','Canoas','Pelotas'],
+    'Santa Catarina':['Joinville','Florianópolis','Blumenau','São José'],
+    'São Paulo':['São Paulo City','Campinas','Santos','São Bernardo','Osasco','Guarulhos','Sorocaba'],
+  },
+  'South Africa':{
+    'Eastern Cape':['Port Elizabeth','East London','Mthatha','Queenstown','Grahamstown'],
+    'Free State':['Bloemfontein','Welkom','Kroonstad','Sasolburg'],
+    'Gauteng':['Johannesburg','Pretoria','Ekurhuleni','Tshwane','Soweto','Centurion','Boksburg'],
+    'KwaZulu-Natal':['Durban','Pietermaritzburg','Richards Bay','Newcastle','Empangeni'],
+    'Limpopo':['Polokwane','Tzaneen','Thohoyandou','Mokopane'],
+    'Mpumalanga':['Mbombela','Witbank','Middelburg','Secunda'],
+    'North West':['Rustenburg','Mahikeng','Klerksdorp','Potchefstroom'],
+    'Western Cape':['Cape Town','Stellenbosch','Paarl','George','Knysna','Mossel Bay'],
+  },
+  'Nigeria':{
+    'Abuja FCT':['Abuja City','Gwagwalada','Kuje','Bwari','Abaji'],
+    'Anambra':['Awka','Onitsha','Nnewi','Ekwulobia'],
+    'Enugu':['Enugu City','Nsukka','Agbani'],
+    'Kano':['Kano City','Wudil','Gaya','Bichi','Rano'],
+    'Lagos':['Lagos Island','Victoria Island','Ikeja','Lekki','Surulere','Ikorodu','Alimosho'],
+    'Oyo':['Ibadan','Oyo City','Ogbomoso','Iseyin'],
+    'Rivers':['Port Harcourt','Obio-Akpor','Okrika','Eleme','Bonny'],
+  },
+  'Kenya':{
+    'Coast':['Mombasa','Malindi','Kilifi','Lamu','Voi'],
+    'Nairobi':['Nairobi CBD','Westlands','Karen','Eastlands','Kasarani','Embakasi','Kibera'],
+    'Nyanza':['Kisumu','Kisii','Migori','Homa Bay'],
+    'Rift Valley':['Nakuru','Eldoret','Kericho','Narok','Kitale'],
+    'Western':['Kakamega','Bungoma','Busia','Vihiga'],
+  },
+  'Indonesia':{
+    'Bali':['Denpasar','Kuta','Seminyak','Ubud','Gianyar','Singaraja'],
+    'Central Java':['Semarang','Solo','Yogyakarta','Magelang','Salatiga','Pekalongan'],
+    'East Java':['Surabaya','Malang','Kediri','Blitar','Madiun','Jember'],
+    'Jakarta':['Central Jakarta','North Jakarta','South Jakarta','East Jakarta','West Jakarta','Tangerang'],
+    'North Sumatra':['Medan','Binjai','Tebing Tinggi','Pematangsiantar'],
+    'South Sulawesi':['Makassar','Pare-Pare','Palopo'],
+    'West Java':['Bandung','Bogor','Bekasi','Depok','Cimahi','Sukabumi','Tasikmalaya'],
+  },
+  'Turkey':{
+    'Adana':['Adana City','Seyhan','Yüreğir','Ceyhan'],
+    'Ankara':['Çankaya','Keçiören','Yenimahalle','Mamak','Altındağ','Sincan'],
+    'Antalya':['Muratpaşa','Konyaaltı','Kepez','Alanya','Manavgat','Serik'],
+    'Bursa':['Osmangazi','Nilüfer','Yıldırım','Gemlik'],
+    'İstanbul':['Fatih','Beyoğlu','Kadıköy','Üsküdar','Beşiktaş','Şişli','Sarıyer','Bakırköy','Pendik'],
+    'İzmir':['Konak','Bornova','Karşıyaka','Buca','Çiğli','Bayraklı'],
+    'Kayseri':['Melikgazi','Kocasinan','Talas'],
+    'Konya':['Selçuklu','Meram','Karatay','Ereğli'],
+  },
+  'Egypt':{
+    'Alexandria':['Alexandria City','Sidi Gaber','Smoha','Roushdy','Montazah','Agami'],
+    'Aswan':['Aswan City','Edfu','Kom Ombo'],
+    'Cairo':['Cairo City','Heliopolis','Nasr City','Maadi','Zamalek','New Cairo','Helwan','Shubra'],
+    'Giza':['Giza City','6th of October','Sheikh Zayed','Imbaba','Dokki'],
+    'Luxor':['Luxor City','Karnak','West Bank'],
+    'Port Said':['Port Said City','Port Fuad'],
+    'Suez':['Suez City','Ain Sokhna'],
+  },
+  'South Korea':{
+    'Busan':['Haeundae','Suyeong','Nam-gu','Dong-gu','Busanjin','Sasang'],
+    'Daegu':['Jung-gu','Nam-gu','Buk-gu','Dalseo','Suseong'],
+    'Daejeon':['Yuseong','Seo-gu','Dong-gu','Jung-gu'],
+    'Gyeonggi':['Suwon','Seongnam','Bucheon','Ansan','Goyang','Yongin','Hwaseong'],
+    'Incheon':['Namdong','Bupyeong','Yeonsu','Jung-gu','Seo-gu'],
+    'Jeju':['Jeju City','Seogwipo','Aewol'],
+    'Seoul':['Gangnam','Jongno','Mapo','Seongdong','Nowon','Songpa','Seocho','Yongsan','Hongdae'],
+  },
+  'Philippines':{
+    'Central Luzon':['Angeles','San Fernando','Olongapo','Cabanatuan','Malolos'],
+    'Central Visayas':['Cebu City','Mandaue','Lapu-Lapu','Talisay','Danao'],
+    'Davao Region':['Davao City','Tagum','Panabo','Mati'],
+    'Metro Manila':['Manila','Quezon City','Makati','Pasig','Taguig','Mandaluyong','Caloocan','Marikina'],
+    'Northern Mindanao':['Cagayan de Oro','Iligan','Oroquieta'],
+    'Western Visayas':['Iloilo City','Bacolod','Roxas','Kalibo'],
+  },
+  'Thailand':{
+    'Bangkok':['Pathum Wan','Chatuchak','Bang Kapi','Lat Phrao','Thon Buri','Nonthaburi'],
+    'Chiang Mai':['Chiang Mai City','Hang Dong','San Kamphaeng','Mae Rim'],
+    'Chonburi':['Pattaya','Chonburi City','Si Racha','Laem Chabang'],
+    'Khon Kaen':['Khon Kaen City','Chum Phae','Ban Phai'],
+    'Phuket':['Phuket City','Patong','Kamala','Kata','Karon'],
+    'Songkhla':['Hat Yai','Songkhla City','Na Thawi'],
+  },
+  'Vietnam':{
+    'Da Nang':['Hai Chau','Cam Le','Ngu Hanh Son','Lien Chieu'],
+    'Ha Noi':['Hoan Kiem','Ba Dinh','Dong Da','Hai Ba Trung','Cau Giay','Long Bien','Tay Ho'],
+    'Ho Chi Minh City':['District 1','District 3','District 7','Binh Thanh','Tan Binh','Phu Nhuan','Go Vap'],
+    'Khanh Hoa':['Nha Trang','Cam Ranh','Ninh Hoa'],
+    'Thua Thien Hue':['Hue City','Thuan An','Huong Tra'],
+  },
+  'Mexico':{
+    'Baja California':['Tijuana','Mexicali','Ensenada','Tecate'],
+    'Chihuahua':['Chihuahua City','Ciudad Juárez','Delicias'],
+    'Guanajuato':['León','Guanajuato City','Irapuato','Celaya'],
+    'Jalisco':['Guadalajara','Zapopan','Tlaquepaque','Tonalá','Puerto Vallarta'],
+    'Mexico City':['Cuauhtémoc','Iztapalapa','Gustavo A. Madero','Coyoacán','Xochimilco'],
+    'Nuevo León':['Monterrey','San Nicolás','Guadalupe','Apodaca'],
+    'Puebla':['Puebla City','Tehuacán','San Martín Texmelucan'],
+    'Veracruz':['Veracruz City','Xalapa','Coatzacoalcos','Orizaba'],
+  },
+  'Argentina':{
+    'Buenos Aires Province':['Buenos Aires City','La Plata','Mar del Plata','Bahía Blanca','Quilmes'],
+    'Córdoba':['Córdoba City','Villa María','Río Cuarto','San Francisco'],
+    'Mendoza':['Mendoza City','San Rafael','Godoy Cruz','Guaymallén'],
+    'Santa Fe':['Rosario','Santa Fe City','Rafaela','Villa Gobernador Gálvez'],
+    'Tucumán':['San Miguel de Tucumán','Concepción','Aguilares'],
+  },
+  'Italy':{
+    'Campania':['Naples','Salerno','Caserta','Avellino'],
+    'Emilia-Romagna':['Bologna','Parma','Modena','Reggio Emilia','Ferrara','Rimini'],
+    'Lazio':['Rome','Latina','Frosinone','Viterbo'],
+    'Lombardy':['Milan','Brescia','Bergamo','Monza','Como','Varese','Pavia'],
+    'Piedmont':['Turin','Novara','Asti','Alessandria','Cuneo'],
+    'Sicily':['Palermo','Catania','Messina','Syracuse','Agrigento'],
+    'Tuscany':['Florence','Prato','Livorno','Pisa','Siena','Arezzo'],
+    'Veneto':['Venice','Verona','Padua','Vicenza','Treviso'],
+  },
+  'Spain':{
+    'Andalusia':['Seville','Málaga','Córdoba','Granada','Almería','Cádiz'],
+    'Basque Country':['Bilbao','San Sebastián','Vitoria-Gasteiz','Barakaldo'],
+    'Catalonia':['Barcelona','Tarragona','Lleida','Girona','Badalona','Sabadell'],
+    'Community of Madrid':['Madrid','Móstoles','Alcalá de Henares','Fuenlabrada','Leganés'],
+    'Galicia':['Vigo','A Coruña','Ourense','Santiago de Compostela'],
+    'Valencia':['Valencia City','Alicante','Elche','Castellón de la Plana'],
+  },
+  'Netherlands':{
+    'Gelderland':['Nijmegen','Arnhem','Apeldoorn','Ede'],
+    'Noord-Holland':['Amsterdam','Haarlem','Zaandam','Alkmaar'],
+    'Noord-Brabant':['Eindhoven','Tilburg','Breda','Den Bosch','Helmond'],
+    'South Holland':['Rotterdam','The Hague','Leiden','Dordrecht','Delft'],
+    'Utrecht':['Utrecht City','Amersfoort','Veenendaal','Zeist'],
+  },
+  'Russia':{
+    'Krasnodar Krai':['Krasnodar','Sochi','Novorossiysk'],
+    'Moscow Oblast':['Moscow','Balashikha','Khimki','Podolsk','Korolyov'],
+    'Novosibirsk Oblast':['Novosibirsk','Berdsk','Iskitim'],
+    'Saint Petersburg':['Saint Petersburg City','Pushkin','Kolpino','Peterhof'],
+    'Sverdlovsk Oblast':['Yekaterinburg','Nizhny Tagil','Kamensk-Uralsky'],
+    'Tatarstan':['Kazan','Naberezhnye Chelny','Nizhnekamsk'],
+  },
+  'Qatar':{
+    'Ad Dawhah':['Doha City','West Bay','Pearl Qatar','Lusail','Old Doha'],
+    'Al Khor':['Al Khor City','Al Thakhira','Ras Laffan'],
+    'Al Rayyan':['Al Rayyan City','Education City','Aspire Zone'],
+    'Al Wakrah':['Al Wakrah City','Al Wukair','Mesaieed'],
+    'Umm Salal':['Umm Salal Muhammad','Umm Salal Ali'],
+  },
+  'Kuwait':{
+    'Al Ahmadi':['Ahmadi City','Fahaheel','Mangaf','Abu Halifa','Fintas'],
+    'Al Asimah':['Kuwait City','Shuwaikh','Shamiya','Dasman'],
+    'Al Farwaniyah':['Farwaniya City','Khaitan','Riggae','Andalous'],
+    'Al Jahra':['Jahra City','Saad Al Abdullah','Sulaibikhat'],
+    'Hawalli':['Salmiya','Hawalli City','Rumaithiya','Bayan'],
+    'Mubarak Al-Kabeer':['Mubarak Al-Kabeer City','Abu Fatira','Fnaitees'],
+  },
+  'Bahrain':{
+    'Capital Governorate':['Manama','Adliya','Juffair','Seef','Tubli'],
+    'Central Governorate':['Isa Town','Hamad Town','Sanad'],
+    'Muharraq Governorate':['Muharraq City','Arad','Busaiteen','Hidd'],
+    'Northern Governorate':['Riffa','Zallaq','Budaiya','Saar'],
+    'Southern Governorate':['Isa Town South','Awali','Sitra'],
+  },
+  'Oman':{
+    'Ad Dakhiliyah':['Nizwa','Bahla','Adam','Manah'],
+    'Al Batinah North':['Sohar','Shinas','Liwa','Saham'],
+    'Al Batinah South':['Rustaq','Al Awabi','Nakhl','Barka'],
+    'Dhofar':['Salalah','Mirbat','Rakhyut','Thumrait'],
+    'Masqat':['Muscat City','Seeb','Mutrah','Bawshar','Al Amerat'],
+    'Musandam':['Khasab','Bukha','Lima'],
+  },
+};
+
+
+// ═══════════════════════════════════════════════
+//  VEHICLE DATA
+// ═══════════════════════════════════════════════
+const manufacturers = ['Tata Motors','Ashok Leyland','Mahindra','Eicher','BharatBenz','Force Motors','Volvo','Scania','MAN','Isuzu'];
+const modelsByMfr = {
+  'Tata Motors':['Prima 4928.S','Signa 4825.TK','LPS 4018','Ultra 1518.T','Ace HT+','T.16'],
+  'Ashok Leyland':['U-Truck 2518','Captain 3518','Dost+','Partner','Boss 1415','Ecomet 1615'],
+  'Mahindra':['Blazo X 35','Furio 14','Jeeto S','Supro Profit Truck','Bolero Pik-Up','Imperio'],
+  'Eicher':['Pro 6025','Pro 2095XP','Pro 3015','Pro 8031','Pro 1110','Pro 2110'],
+  'BharatBenz':['4028T','3528R','2523R','1415R','914R','3523R'],
+  'Force Motors':['Traveller 3700','Traveller 4020','Trump 40','Trump 50','Gurkha'],
+  'Volvo':['FH16 750','FM 460','FMX 500','FL 280','FH 540'],
+  'Scania':['R 500','G 410','P 320','S 730','R 650'],
+  'MAN':['TGX 18.580','TGS 26.480','TGM 12.290','TGL 8.190'],
+  'Isuzu':['ELF 150','ELF 250','NMR 71','NQR 90','FVR 34'],
+};
+const loadCapacities = ['Less than 1 ton','1–2 tons','2–3.5 tons','3.5–7 tons','7–10 tons','10–15 tons','15–20 tons','20–25 tons','25+ tons'];
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+function init() {
+  renderVehicleSections();
+  checkForm();
+}
+
+// ═══════════════════════════════════════════════
+//  VEHICLE COUNT
+// ═══════════════════════════════════════════════
+function changeCount(delta) {
+  const n = vehicleCount + delta;
+  if (n < 1 || n > 10) return;
+  vehicleCount = n;
+  document.getElementById('countVal').textContent  = n;
+  document.getElementById('countHint').textContent = n === 1 ? '1 vehicle' : n + ' vehicles';
+  document.getElementById('btnDec').disabled = n <= 1;
+  document.getElementById('btnInc').disabled = n >= 10;
+  renderVehicleSections();
+  checkForm();
+}
+
+// ═══════════════════════════════════════════════
+//  BUILD / RENDER VEHICLE SECTIONS
+// ═══════════════════════════════════════════════
+function renderVehicleSections() {
+  const c = document.getElementById('vsContainer');
+  const existing = c.querySelectorAll('.vehicle-section').length;
+  if (vehicleCount > existing) {
+    for (let i = existing + 1; i <= vehicleCount; i++) {
+      if (!vehicleData[i]) vehicleData[i] = { saved:false, rcUploaded:false, photoUploaded:false };
+      c.appendChild(buildVS(i));
+    }
+  } else {
+    for (let i = existing; i > vehicleCount; i--) {
+      const el = document.getElementById('vs'+i);
+      if (el) el.remove();
+    }
+  }
+}
+
+function buildVS(idx) {
+  const div = document.createElement('div');
+  div.className = 'vehicle-section';
+  div.id = 'vs' + idx;
+  div.innerHTML = `
+    <div class="vs-header">
+      <div class="vs-title">
+        <div class="vs-badge">${idx}</div>
+        Vehicle ${idx}
+      </div>
+      <div class="saved-badge" id="savedBadge${idx}">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Saved
+      </div>
+    </div>
+
+    <div class="vs-body">
+
+      <!-- Vehicle Number -->
+      <div class="field-group">
+        <label class="field-label">Vehicle Number <span class="req">*</span></label>
+        <div class="input-card" id="fVNum${idx}">
+          <input class="text-input uc" type="text" id="vNum${idx}" placeholder="e.g. MH01AB1234" maxlength="11"
+            oninput="this.value=this.value.replace(/[^A-Z0-9]/gi,'').toUpperCase(); checkForm()">
+        </div>
+      </div>
+
+      <!-- Vehicle RC -->
+      <div class="field-group">
+        <label class="field-label">Vehicle RC <span class="req">*</span></label>
+        <div class="rc-card" id="rcCard${idx}" onclick="triggerRC(${idx})">
+          <div>
+            <div class="rc-title">Upload RC Document</div>
+            <div class="rc-status" id="rcStatus${idx}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Uploaded
+            </div>
+          </div>
+          <button class="upload-btn" id="rcBtn${idx}" onclick="event.stopPropagation();triggerRC(${idx})">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+          <input type="file" id="rcInput${idx}" accept="image/*,.pdf" style="display:none" onchange="handleRC(this,${idx})">
+        </div>
+      </div>
+
+      <!-- Manufacturer + Model -->
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Manufacturer <span class="req">*</span></label>
+          <div class="input-card" id="fMfr${idx}">
+            <div class="select-wrap">
+              <select class="select-input" id="mfr${idx}" onchange="onMfrChange(${idx})">
+                <option value="">Select</option>
+                ${manufacturers.map(m=>`<option value="${m}">${m}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Model <span class="req">*</span></label>
+          <div class="input-card" id="fModel${idx}">
+            <div class="select-wrap">
+              <select class="select-input" id="model${idx}" onchange="checkForm()">
+                <option value="">Select</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Load Capacity -->
+      <div class="field-group">
+        <label class="field-label">Load Capacity <span class="req">*</span></label>
+        <div class="input-card" id="fLoad${idx}">
+          <div class="select-wrap">
+            <select class="select-input" id="load${idx}" onchange="checkForm()">
+              <option value="">Select capacity</option>
+              ${loadCapacities.map(c=>`<option value="${c}">${c}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicle Photo -->
+      <div class="field-group">
+        <label class="field-label">Vehicle Photo</label>
+        <div class="photo-area" id="photoArea${idx}" onclick="triggerPhoto(${idx})">
+          <svg class="ph-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <span class="ph-text">Tap to upload vehicle photo</span>
+          <span class="ph-hint">JPG, PNG up to 10MB</span>
+          <img class="photo-preview" id="photoPrev${idx}" src="" alt="">
+          <div class="photo-change-overlay">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Change Photo
+          </div>
+        </div>
+        <input type="file" id="photoInput${idx}" accept="image/*" style="display:none" onchange="handlePhoto(this,${idx})">
+      </div>
+
+    </div><!-- end vs-body -->
+
+    <!-- Actions — sticky bottom -->
+    <div class="vs-actions">
+      <button class="btn-save" id="saveBtn${idx}" onclick="saveVS(${idx})">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Vehicle ${idx}
+      </button>
+      <button class="btn-edit" id="editBtn${idx}" onclick="editVS(${idx})" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit
+      </button>
+    </div>
+  `;
+  return div;
+}
+
+// ═══════════════════════════════════════════════
+//  MANUFACTURER → MODEL
+// ═══════════════════════════════════════════════
+function onMfrChange(idx) {
+  const mfr = document.getElementById('mfr'+idx).value;
+  const sel = document.getElementById('model'+idx);
+  sel.innerHTML = '<option value="">Select model</option>';
+  (modelsByMfr[mfr]||[]).forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; sel.appendChild(o);
+  });
+  checkForm();
+}
+
+// ═══════════════════════════════════════════════
+//  RC UPLOAD
+// ═══════════════════════════════════════════════
+function triggerRC(idx) {
+  if (document.getElementById('vs'+idx).classList.contains('saved')) return;
+  document.getElementById('rcInput'+idx).click();
+}
+function handleRC(input, idx) {
+  if (!input.files||!input.files[0]) return;
+  vehicleData[idx].rcUploaded = true;
+  document.getElementById('rcCard'+idx).classList.add('uploaded');
+  document.getElementById('rcStatus'+idx).classList.add('show');
+  const n = input.files[0].name;
+  document.getElementById('rcBtn'+idx).innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Change`;
+  showToast((n.length>22?n.slice(0,22)+'…':n)+' uploaded');
+  checkForm();
+}
+
+// ═══════════════════════════════════════════════
+//  PHOTO UPLOAD
+// ═══════════════════════════════════════════════
+function triggerPhoto(idx) {
+  if (document.getElementById('vs'+idx).classList.contains('saved')) return;
+  document.getElementById('photoInput'+idx).click();
+}
+function handlePhoto(input, idx) {
+  if (!input.files||!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const area = document.getElementById('photoArea'+idx);
+    const prev = document.getElementById('photoPrev'+idx);
+    prev.src = e.target.result; prev.classList.add('show');
+    area.classList.add('has-photo');
+    area.querySelector('.ph-icon').style.display='none';
+    area.querySelector('.ph-text').style.display='none';
+    area.querySelector('.ph-hint').style.display='none';
+    vehicleData[idx].photoUploaded = true;
+    showToast('Photo uploaded'); checkForm();
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+// ═══════════════════════════════════════════════
+//  SAVE / EDIT VEHICLE
+// ═══════════════════════════════════════════════
+function saveVS(idx) {
+  const vn   = document.getElementById('vNum'+idx).value.trim();
+  const rc   = vehicleData[idx].rcUploaded;
+  const mfr  = document.getElementById('mfr'+idx).value;
+  const mdl  = document.getElementById('model'+idx).value;
+  const load = document.getElementById('load'+idx).value;
+
+  let err = false;
+  if (vn.length < 5)  { flashErr('fVNum'+idx);  err=true; }
+  if (!rc)            { flashErr('rcCard'+idx);  err=true; }
+  if (!mfr)           { flashErr('fMfr'+idx);    err=true; }
+  if (!mdl)           { flashErr('fModel'+idx);  err=true; }
+  if (!load)          { flashErr('fLoad'+idx);   err=true; }
+  if (err) { showToast('Please fill all required fields'); return; }
+
+  vehicleData[idx].saved = true;
+  document.getElementById('vs'+idx).classList.add('saved');
+  document.getElementById('savedBadge'+idx).classList.add('show');
+  document.getElementById('saveBtn'+idx).disabled = true;
+  document.getElementById('editBtn'+idx).disabled = false;
+  showToast('Vehicle '+idx+' saved ✓');
+  checkForm();
+}
+
+function editVS(idx) {
+  vehicleData[idx].saved = false;
+  document.getElementById('vs'+idx).classList.remove('saved');
+  document.getElementById('savedBadge'+idx).classList.remove('show');
+  document.getElementById('saveBtn'+idx).disabled = false;
+  document.getElementById('editBtn'+idx).disabled = true;
+  checkForm();
+}
+
+function flashErr(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('error');
+  setTimeout(()=>el.classList.remove('error'), 2000);
+}
+
+// ═══════════════════════════════════════════════
+//  OPERATION: COUNTRY → STATE → CITY
+// ═══════════════════════════════════════════════
+function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function togglePanel(type) {
+  const row = document.getElementById('opRow'+type);
+  if (row.classList.contains('locked')) return;
+
+  const panel = document.getElementById('panel'+cap(type));
+  const arrow = document.getElementById('arrow'+cap(type));
+  const isOpen = panel.classList.contains('open');
+
+  // close all
+  ['country','state','city'].forEach(t => {
+    document.getElementById('panel'+cap(t)).classList.remove('open');
+    document.getElementById('arrow'+cap(t)).classList.remove('open');
+  });
+
+  if (!isOpen) {
+    // position panel below the trigger row using phone-relative coords
+    positionPanel(type);
+    panel.classList.add('open');
+    arrow.classList.add('open');
+    openPanel = type;
+    updateOpUI(); // update trigger highlights
+    const si = document.getElementById('srch'+cap(type));
+    if (si) { si.value = ''; setTimeout(()=>si.focus(),50); }
+    rebuildList(type, '');
+  } else {
+    openPanel = null;
+    updateOpUI();
+  }
+}
+
+function positionPanel(type) {
+  const trigger = document.getElementById('trigger'+cap(type));
+  const panel   = document.getElementById('panel'+cap(type));
+  const phone   = document.querySelector('.phone');
+
+  const tr = trigger.getBoundingClientRect();
+  const pr = phone.getBoundingClientRect();
+
+  const top  = tr.bottom - pr.top;
+  const left = tr.left   - pr.left;
+  const w    = tr.width;
+
+  // check if panel would go below phone bottom; if so, open upward
+  const maxH = 220;
+  const spaceBelow = pr.bottom - tr.bottom;
+  const spaceAbove = tr.top - pr.top;
+
+  panel.style.left   = left + 'px';
+  panel.style.width  = w + 'px';
+
+  if (spaceBelow >= maxH || spaceBelow >= spaceAbove) {
+    panel.style.top    = top + 'px';
+    panel.style.bottom = 'auto';
+    panel.style.maxHeight = Math.min(maxH, spaceBelow - 8) + 'px';
+    panel.style.borderRadius = '0 0 10px 10px';
+  } else {
+    const panelH = Math.min(maxH, spaceAbove - 8);
+    panel.style.bottom = (pr.height - (tr.top - pr.top)) + 'px';
+    panel.style.top    = 'auto';
+    panel.style.maxHeight = panelH + 'px';
+    panel.style.borderRadius = '10px 10px 0 0';
+  }
+}
+
+function rebuildList(type, filter) {
+  const listEl = document.getElementById('list'+cap(type));
+  const lf = (filter||'').toLowerCase();
+  const chk = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  let html = '';
+
+  if (type === 'country') {
+    const items = Object.keys(worldData).filter(c => !lf || c.toLowerCase().includes(lf)).sort();
+    if (!items.length) { listEl.innerHTML = '<div class="op-empty">No countries found</div>'; return; }
+    const selCount = opSel.country.filter(c => items.includes(c)).length;
+    const allSel = items.length > 0 && selCount === items.length;
+    const chkStyle = allSel ? 'background:var(--blue);border-color:var(--blue)' : '';
+    html += '<div class="op-select-all" onclick="selectAll(\'country\',' + JSON.stringify(items) + ')">'
+      + '<div class="op-chk" style="' + chkStyle + '">' + (allSel ? chk : '') + '</div>'
+      + (allSel ? 'Deselect All' : 'Select All')
+      + '<span class="op-count-badge">' + items.length + '</span>'
+      + '</div>';
+    html += items.map(function(item) {
+      const sel = opSel.country.includes(item);
+      const esc = item.replace(/'/g, "\\'");
+      const flag = countryFlags[item] || '🌐';
+      return '<div class="op-item' + (sel ? ' sel' : '') + '" onclick="toggleItem(\'country\',\'' + esc + '\')">'
+        + '<div class="op-chk">' + (sel ? chk : '') + '</div>'
+        + '<span style="font-size:16px;line-height:1;flex-shrink:0">' + flag + '</span>'
+        + '<span>' + item + '</span>'
+        + '</div>';
+    }).join('');
+
+  } else if (type === 'state') {
+    let found = false;
+    opSel.country.forEach(function(c) {
+      const states = Object.keys(worldData[c]||{}).filter(function(s){ return !lf || s.toLowerCase().includes(lf); }).sort();
+      if (!states.length) return;
+      found = true;
+      const flag = countryFlags[c] || '🌐';
+      const cSelCount = states.filter(function(s){ return opSel.state.includes(s); }).length;
+      const allCSel = cSelCount === states.length;
+      html += '<div class="op-group-header" style="display:flex;align-items:center;justify-content:space-between">'
+        + '<span>' + flag + ' ' + c + '</span>'
+        + '<span style="font-size:10px;font-weight:700;color:var(--blue);cursor:pointer;padding:2px 7px;background:#DBEAFE;border-radius:8px" onclick="event.stopPropagation();selectAll(\'state\',' + JSON.stringify(states) + ')">' + (allCSel ? 'Deselect' : 'Select All') + '</span>'
+        + '</div>';
+      html += states.map(function(s) {
+        const sel = opSel.state.includes(s);
+        const esc = s.replace(/'/g, "\\'");
+        const cityCount = Object.keys((worldData[c]||{})[s]||{}).length || ((worldData[c]||{})[s]||[]).length;
+        return '<div class="op-item' + (sel ? ' sel' : '') + '" onclick="toggleItem(\'state\',\'' + esc + '\')">'
+          + '<div class="op-chk">' + (sel ? chk : '') + '</div>'
+          + '<span style="flex:1">' + s + '</span>'
+          + '<span style="font-size:10px;color:var(--gray-400);margin-left:4px;white-space:nowrap">' + ((worldData[c]||{})[s]||[]).length + ' cities</span>'
+          + '</div>';
+      }).join('');
+    });
+    if (!found) { listEl.innerHTML = '<div class="op-empty">No states found</div>'; return; }
+
+  } else {
+    let found = false;
+    opSel.state.forEach(function(s) {
+      let parentCountry = null;
+      opSel.country.forEach(function(c) { if ((worldData[c]||{})[s]) parentCountry = c; });
+      if (!parentCountry) return;
+      const cities = ((worldData[parentCountry]||{})[s]||[]).filter(function(ci){ return !lf || ci.toLowerCase().includes(lf); });
+      if (!cities.length) return;
+      found = true;
+      const flag = countryFlags[parentCountry] || '🌐';
+      const cSelCount = cities.filter(function(ci){ return opSel.city.includes(ci); }).length;
+      const allCSel = cSelCount === cities.length;
+      html += '<div class="op-group-header" style="display:flex;align-items:center;justify-content:space-between">'
+        + '<span>' + flag + ' ' + s + '</span>'
+        + '<span style="font-size:10px;font-weight:700;color:var(--blue);cursor:pointer;padding:2px 7px;background:#DBEAFE;border-radius:8px" onclick="event.stopPropagation();selectAll(\'city\',' + JSON.stringify(cities) + ')">' + (allCSel ? 'Deselect' : 'Select All') + '</span>'
+        + '</div>';
+      html += cities.map(function(ci) {
+        const sel = opSel.city.includes(ci);
+        const esc = ci.replace(/'/g, "\\'");
+        return '<div class="op-item' + (sel ? ' sel' : '') + '" onclick="toggleItem(\'city\',\'' + esc + '\')">'
+          + '<div class="op-chk">' + (sel ? chk : '') + '</div>'
+          + '<span>' + ci + '</span>'
+          + '</div>';
+      }).join('');
+    });
+    if (!found) { listEl.innerHTML = '<div class="op-empty">No cities found</div>'; return; }
+  }
+
+  listEl.innerHTML = html;
+}
+
+function selectAll(type, items) {
+  const allSel = items.every(function(i){ return opSel[type].includes(i); });
+  if (allSel) {
+    opSel[type] = opSel[type].filter(function(x){ return !items.includes(x); });
+  } else {
+    items.forEach(function(i){ if (!opSel[type].includes(i)) opSel[type].push(i); });
+  }
+  if (type === 'country') {
+    opSel.state = opSel.state.filter(function(s){
+      return opSel.country.some(function(c){ return Object.keys(worldData[c]||{}).includes(s); });
+    });
+    opSel.city = [];
+  }
+  if (type === 'state') {
+    opSel.city = opSel.city.filter(function(ci){
+      return opSel.state.some(function(s){
+        return opSel.country.some(function(c){ return ((worldData[c]||{})[s]||[]).includes(ci); });
+      });
+    });
+  }
+  updateOpUI();
+  rebuildList(type, document.getElementById('srch'+cap(type)) ? document.getElementById('srch'+cap(type)).value : '');
+  checkForm();
+}
+
+
+function filterList(type, val) { rebuildList(type, val); }
+
+function toggleItem(type, item) {
+  const arr = opSel[type];
+  const i = arr.indexOf(item);
+  if (i === -1) arr.push(item); else arr.splice(i, 1);
+
+  // cascade clear downstream
+  if (type === 'country') {
+    opSel.state = opSel.state.filter(s =>
+      opSel.country.some(c => Object.keys(worldData[c]||{}).includes(s)));
+    opSel.city = [];
+  }
+  if (type === 'state') {
+    opSel.city = opSel.city.filter(ci =>
+      opSel.state.some(s =>
+        opSel.country.some(c => ((worldData[c]||{})[s]||[]).includes(ci))));
+  }
+
+  updateOpUI();
+  rebuildList(type, document.getElementById('srch'+cap(type))?.value||'');
+  checkForm();
+}
+
+function removeChip(type, item) {
+  opSel[type] = opSel[type].filter(x => x !== item);
+  if (type === 'country') {
+    opSel.state = opSel.state.filter(s =>
+      opSel.country.some(c => Object.keys(worldData[c]||{}).includes(s)));
+    opSel.city = [];
+  }
+  if (type === 'state') {
+    opSel.city = opSel.city.filter(ci =>
+      opSel.state.some(s =>
+        opSel.country.some(c => ((worldData[c]||{})[s]||[]).includes(ci))));
+  }
+  updateOpUI();
+  if (openPanel) rebuildList(openPanel, document.getElementById('srch'+cap(openPanel))?.value||'');
+  checkForm();
+}
+
+function updateOpUI() {
+  // ── Country ──
+  renderChips('country');
+  const cSub = document.getElementById('subCountry');
+  if (opSel.country.length) {
+    cSub.textContent = opSel.country.length === 1
+      ? (countryFlags[opSel.country[0]]||'') + ' ' + opSel.country[0]
+      : opSel.country.length + ' countries selected';
+    cSub.classList.add('has-val');
+  } else {
+    cSub.textContent = 'Tap to select countries';
+    cSub.classList.remove('has-val');
+  }
+
+  // ── State ──
+  const stRow = document.getElementById('opRowstate');
+  const stUnlocked = opSel.country.length > 0;
+  stRow.classList.toggle('locked', !stUnlocked);
+  if (!stUnlocked) { closePanel('state'); closePanel('city'); }
+  renderChips('state');
+  const sSub = document.getElementById('subState');
+  if (opSel.state.length) {
+    const totalStates = opSel.country.reduce((n,c)=>n+Object.keys(worldData[c]||{}).length,0);
+    sSub.textContent = opSel.state.length + ' of ' + totalStates + ' state' + (opSel.state.length!==1?'s':'') + ' selected';
+    sSub.classList.add('has-val');
+  } else {
+    sSub.textContent = stUnlocked ? 'Tap to select states / provinces' : 'Select countries first';
+    sSub.classList.remove('has-val');
+  }
+
+  // ── City ──
+  const ciRow = document.getElementById('opRowcity');
+  const ciUnlocked = opSel.state.length > 0;
+  ciRow.classList.toggle('locked', !ciUnlocked);
+  if (!ciUnlocked) closePanel('city');
+  renderChips('city');
+  const ciSub = document.getElementById('subCity');
+  if (opSel.city.length) {
+    const totalCities = opSel.state.reduce((n,s)=>{
+      let ct=0;
+      opSel.country.forEach(c=>{ ct+=(((worldData[c]||{})[s])||[]).length; });
+      return n+ct;
+    },0);
+    ciSub.textContent = opSel.city.length + ' of ' + totalCities + ' cit' + (opSel.city.length!==1?'ies':'y') + ' selected';
+    ciSub.classList.add('has-val');
+  } else {
+    ciSub.textContent = ciUnlocked ? 'Tap to select cities' : 'Select states first';
+    ciSub.classList.remove('has-val');
+  }
+
+  // ── Active trigger highlight ──
+  ['country','state','city'].forEach(t => {
+    const tr = document.getElementById('trigger'+cap(t));
+    if (tr) tr.classList.toggle('active-panel', openPanel === t);
+  });
+}
+
+function closePanel(type) {
+  const p = document.getElementById('panel'+cap(type));
+  p.classList.remove('open');
+  document.getElementById('arrow'+cap(type)).classList.remove('open');
+  if (openPanel === type) openPanel = null;
+}
+
+function renderChips(type) {
+  const row = document.getElementById('chips'+cap(type));
+  row.innerHTML = opSel[type].map(item => {
+    const esc = item.replace(/'/g,"\\'");
+    return `<div class="chip">${item}<button class="chip-x" onclick="event.stopPropagation();removeChip('${type}','${esc}')">✕</button></div>`;
+  }).join('');
+}
+
+// close panels on outside click (exclude triggers and panels themselves)
+document.addEventListener('click', e => {
+  if (!openPanel) return;
+  const panel   = document.getElementById('panel'+cap(openPanel));
+  const trigger = document.getElementById('trigger'+cap(openPanel));
+  if (!panel.contains(e.target) && !trigger.contains(e.target)) {
+    closePanel(openPanel);
+  }
+});
+
+// reposition open panel on scroll
+document.getElementById('mainBody').addEventListener('scroll', () => {
+  if (openPanel) positionPanel(openPanel);
+}, { passive: true });
+
+// ═══════════════════════════════════════════════
+//  FORM VALIDATION
+// ═══════════════════════════════════════════════
+function checkForm() {
+  let allSaved = true;
+  for (let i = 1; i <= vehicleCount; i++) {
+    if (!vehicleData[i]||!vehicleData[i].saved) { allSaved=false; break; }
+  }
+  const valid = allSaved && opSel.city.length > 0;
+  document.getElementById('submitBtn').classList.toggle('active', valid);
+}
+
+// ═══════════════════════════════════════════════
+//  SUBMIT
+// ═══════════════════════════════════════════════
+function handleSubmit() {
+  let allSaved = true;
+  for (let i = 1; i <= vehicleCount; i++) {
+    if (!vehicleData[i]||!vehicleData[i].saved) { allSaved=false; break; }
+  }
+  if (!allSaved) { showToast('Please save all vehicle sections'); return; }
+  if (!opSel.city.length) {
+    const card = document.getElementById('opCard');
+    card.classList.add('error');
+    setTimeout(()=>card.classList.remove('error'), 2000);
+    showToast('Please select at least one city');
+    return;
+  }
+  document.getElementById('successOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('successOverlay').classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+init();
+  </script>
+</body>
+
+</html>
